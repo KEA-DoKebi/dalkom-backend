@@ -1,10 +1,10 @@
 spring:
   application:
   datasource:
-    url: ${ROCAL_DATABASE_URL}
+    url: ${LOCAL_DATABASE_URL}
     driver-class-name: org.mariadb.jdbc.Driver
-    username: ${ROCAL_DATABASE_USERNAME}
-    password: ${ROCAL_DATABASE_PASSWORD}
+    username: ${LOCAL_DATABASE_USERNAME}
+    password: ${LOCAL_DATABASE_PASSWORD}
     jpa:
       database: mysql
       open-in-view: false
