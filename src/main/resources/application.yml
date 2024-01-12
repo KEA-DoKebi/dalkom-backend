@@ -34,4 +34,5 @@ jwt:
   max-age:
     access: 604800
     refresh: 604800
+    
 
