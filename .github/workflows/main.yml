@@ -6,7 +6,7 @@ on:
 jobs:
   failOnPR:
     runs-on: ubuntu-latest
-    if: contains(github.head_ref, 'DOK-') && contains(github.head_ref, '/feat/') && github.base_ref == 'dev'
+    if: github.base_ref == 'dev'
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
