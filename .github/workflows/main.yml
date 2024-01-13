@@ -1,12 +1,10 @@
 name: 아직 workflow 개발이 되지 않아 fail 처리
 on:
-  pull_request:
-    branches:
-      - dev
+  pull_request
+  
 jobs:
   failOnPR:
     runs-on: ubuntu-latest
-    if: github.base_ref == 'dev'
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
