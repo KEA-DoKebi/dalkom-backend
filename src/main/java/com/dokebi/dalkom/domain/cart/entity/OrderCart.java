@@ -2,7 +2,7 @@ package com.dokebi.dalkom.domain.cart.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.user.entitiy.User;
+import com.dokebi.dalkom.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
