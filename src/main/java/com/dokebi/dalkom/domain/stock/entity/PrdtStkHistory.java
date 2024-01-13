@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "prdtStkHistory")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class prdtStkHistory extends EntityDate {
+public class PrdtStkHistory extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class prdtStkHistory extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "prdtStockSeq")
-    private prdtStock prdtStock;
+    private PrdtStock prdtStock;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;

@@ -1,15 +1,13 @@
 package com.dokebi.dalkom.domain.order.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.cart.entity.ordrCart;
-import com.dokebi.dalkom.domain.user.entitiy.user;
+import com.dokebi.dalkom.domain.user.entitiy.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +16,7 @@ import java.util.List;
 @Setter
 @Table(name = "ordr")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ordr extends EntityDate {
+public class Ordr extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +24,7 @@ public class ordr extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
-    private user user;
+    private User user;
 
     @Column(name = "rcvrName", nullable = false)
     private String receiverName;
@@ -47,6 +45,6 @@ public class ordr extends EntityDate {
     private String ordrState;
 
     @OneToMany(mappedBy = "ordr")
-    private List<ordrDetail> ordrDetail = new ArrayList<>();
+    private List<OrdrDetail> ordrDetail = new ArrayList<>();
 
 }

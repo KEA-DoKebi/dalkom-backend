@@ -1,9 +1,8 @@
 package com.dokebi.dalkom.domain.admin.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.inqury.entity.inquiry;
-import com.dokebi.dalkom.domain.notice.entity.notice;
-import com.dokebi.dalkom.domain.stock.entity.prdtStkHistory;
+import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
+import com.dokebi.dalkom.domain.notice.entity.Notice;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.List;
 @Setter
 @Table(name = "admin")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class admin extends EntityDate {
+public class Admin extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +43,9 @@ public class admin extends EntityDate {
 
 
     @OneToMany(mappedBy = "admin")
-    private List<inquiry> inquiry = new ArrayList<>();
+    private List<Inquiry> inquiry = new ArrayList<>();
 
     @OneToMany(mappedBy = "admin")
-    private List<notice> notice = new ArrayList<>();
+    private List<Notice> notice = new ArrayList<>();
 
 }

@@ -1,22 +1,20 @@
 package com.dokebi.dalkom.domain.notice.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.admin.entity.admin;
-import com.dokebi.dalkom.domain.user.entitiy.user;
+import com.dokebi.dalkom.domain.admin.entity.Admin;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "notice")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class notice extends EntityDate {
+public class Notice extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +22,7 @@ public class notice extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "adminSeq")
-    private admin admin;
+    private Admin admin;
 
     @Column(name = "title", nullable = false)
     private String title;

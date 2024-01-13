@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "prdtOption")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class prdtOption extends EntityDate {
+public class PrdtOption extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

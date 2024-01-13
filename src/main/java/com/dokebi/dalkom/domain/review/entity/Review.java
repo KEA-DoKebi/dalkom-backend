@@ -1,8 +1,8 @@
 package com.dokebi.dalkom.domain.review.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.order.entity.ordrDetail;
-import com.dokebi.dalkom.domain.user.entitiy.user;
+import com.dokebi.dalkom.domain.order.entity.OrdrDetail;
+import com.dokebi.dalkom.domain.user.entitiy.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "review")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class review extends EntityDate {
+public class Review extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,11 @@ public class review extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
-    private user user;
+    private User user;
 
     @OneToOne
     @JoinColumn(name = "orderDetailSeq")
-    private ordrDetail ordrDetail;
+    private OrdrDetail ordrDetail;
 
     @Column(name = "content", nullable = false)
     private Long content;

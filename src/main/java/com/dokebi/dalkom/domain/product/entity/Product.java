@@ -1,10 +1,10 @@
 package com.dokebi.dalkom.domain.product.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.cart.entity.ordrCart;
-import com.dokebi.dalkom.domain.category.entity.category;
-import com.dokebi.dalkom.domain.order.entity.ordrDetail;
-import com.dokebi.dalkom.domain.stock.entity.prdtStock;
+import com.dokebi.dalkom.domain.cart.entity.OrderCart;
+import com.dokebi.dalkom.domain.category.entity.Category;
+import com.dokebi.dalkom.domain.order.entity.OrdrDetail;
+import com.dokebi.dalkom.domain.stock.entity.PrdtStock;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class product extends EntityDate {
+public class Product extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class product extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "categorySeq")
-    private category category;
+    private Category category;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -48,15 +48,15 @@ public class product extends EntityDate {
     private String state;
 
     @OneToMany(mappedBy = "product")
-    private List<prdtStock> prdtStock = new ArrayList<>();
+    private List<PrdtStock> prdtStock = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<prdtImage> prdtImage = new ArrayList<>();
+    private List<PrdtImage> prdtImage = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<ordrDetail> ordrDetail = new ArrayList<>();
+    private List<OrdrDetail> ordrDetail = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<ordrCart> ordrCart = new ArrayList<>();
+    private List<OrderCart> OrderCart = new ArrayList<>();
 
 }

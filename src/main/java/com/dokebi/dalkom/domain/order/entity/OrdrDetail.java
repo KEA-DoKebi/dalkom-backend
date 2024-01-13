@@ -1,9 +1,9 @@
 package com.dokebi.dalkom.domain.order.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.option.entity.prdtOption;
-import com.dokebi.dalkom.domain.product.entity.product;
-import com.dokebi.dalkom.domain.review.entity.review;
+import com.dokebi.dalkom.domain.option.entity.PrdtOption;
+import com.dokebi.dalkom.domain.product.entity.Product;
+import com.dokebi.dalkom.domain.review.entity.Review;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "ordrDetail")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ordrDetail extends EntityDate {
+public class OrdrDetail extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +24,15 @@ public class ordrDetail extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "ordrSeq")
-    private ordr ordr;
+    private Ordr ordr;
 
     @ManyToOne
     @JoinColumn(name = "productSeq")
-    private product product;
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "prdtOptionSeq")
-    private prdtOption prdtOption;
+    private PrdtOption prdtOption;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
@@ -41,5 +41,5 @@ public class ordrDetail extends EntityDate {
     private Integer price;
 
     @OneToOne(mappedBy = "ordrDetail")
-    private review review;
+    private Review review;
 }

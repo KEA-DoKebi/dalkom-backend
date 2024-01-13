@@ -1,7 +1,8 @@
-package com.dokebi.dalkom.domain.mileage.entity;
+package com.dokebi.dalkom.domain.cart.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.user.entitiy.user;
+import com.dokebi.dalkom.domain.product.entity.Product;
+import com.dokebi.dalkom.domain.user.entitiy.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,25 +13,26 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "milgHistory")
+@Table(name = "ordrCart")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class milgHistory extends EntityDate {
+public class OrderCart extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long milgHistorySeq;
+    private Long ordrCartSeq;
+
+    @ManyToOne
+    @JoinColumn(name = "productSeq")
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
-    private user user;
+    private User user;
+
+    @Column(name = "optionDetail")
+    private String optionDetail;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
-
-    @Column(name = "balance", nullable = false)
-    private Integer balance;
-
-    @Column(name = "type", nullable = false)
-    private String type;
 
 }

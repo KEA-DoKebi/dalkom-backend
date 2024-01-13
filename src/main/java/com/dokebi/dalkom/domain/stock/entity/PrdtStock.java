@@ -1,11 +1,8 @@
 package com.dokebi.dalkom.domain.stock.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.cart.entity.ordrCart;
-import com.dokebi.dalkom.domain.option.entity.prdtOption;
-import com.dokebi.dalkom.domain.product.entity.prdtImage;
-import com.dokebi.dalkom.domain.product.entity.product;
-import com.dokebi.dalkom.domain.user.entitiy.user;
+import com.dokebi.dalkom.domain.option.entity.PrdtOption;
+import com.dokebi.dalkom.domain.product.entity.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +17,7 @@ import java.util.List;
 @Setter
 @Table(name = "prdtStock")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class prdtStock extends EntityDate {
+public class PrdtStock extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +25,16 @@ public class prdtStock extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "productSeq")
-    private product product;
+    private Product product;
 
     @ManyToOne
     @JoinColumn(name = "prdtOptionSeq")
-    private prdtOption prdtOption;
+    private PrdtOption prdtOption;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
     @OneToMany(mappedBy = "prdtStock")
-    private List<prdtStkHistory> prdtStkHistory = new ArrayList<>();
+    private List<PrdtStkHistory> prdtStkHistory = new ArrayList<>();
 
 }
