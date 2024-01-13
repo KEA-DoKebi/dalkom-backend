@@ -3,7 +3,7 @@ package com.dokebi.dalkom.domain.inqury.entity;
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.user.entitiy.User;
+import com.dokebi.dalkom.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
