@@ -1,9 +1,9 @@
 package com.dokebi.dalkom.domain.inqury.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.admin.entity.admin;
-import com.dokebi.dalkom.domain.category.entity.category;
-import com.dokebi.dalkom.domain.user.entitiy.user;
+import com.dokebi.dalkom.domain.admin.entity.Admin;
+import com.dokebi.dalkom.domain.category.entity.Category;
+import com.dokebi.dalkom.domain.user.entitiy.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "inquiry")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class inquiry extends EntityDate {
+public class Inquiry extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,15 +25,15 @@ public class inquiry extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "categorySeq")
-    private category category;
+    private Category category;
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
-    private user user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "adminSeq")
-    private admin admin;
+    private Admin admin;
 
     @Column(name = "title", nullable = false)
     private String title;

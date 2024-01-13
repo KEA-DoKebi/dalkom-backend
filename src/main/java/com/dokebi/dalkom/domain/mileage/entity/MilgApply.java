@@ -1,7 +1,7 @@
 package com.dokebi.dalkom.domain.mileage.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.user.entitiy.user;
+import com.dokebi.dalkom.domain.user.entitiy.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table(name = "milgApply")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class milgApply extends EntityDate {
+public class MilgApply extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class milgApply extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
-    private user user;
+    private User user;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;

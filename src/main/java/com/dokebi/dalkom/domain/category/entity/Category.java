@@ -1,9 +1,8 @@
 package com.dokebi.dalkom.domain.category.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.cart.entity.ordrCart;
-import com.dokebi.dalkom.domain.inqury.entity.inquiry;
-import com.dokebi.dalkom.domain.product.entity.product;
+import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
+import com.dokebi.dalkom.domain.product.entity.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.List;
 @Setter
 @Table(name = "category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class category extends EntityDate {
+public class Category extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +33,8 @@ public class category extends EntityDate {
     private String imageUrl;
 
     @OneToMany(mappedBy = "category")
-    private List<product> product = new ArrayList<>();
+    private List<Product> product = new ArrayList<>();
 
     @OneToMany(mappedBy = "category")
-    private List<inquiry> inquiry = new ArrayList<>();
+    private List<Inquiry> inquiry = new ArrayList<>();
 }

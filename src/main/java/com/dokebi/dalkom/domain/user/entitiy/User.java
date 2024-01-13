@@ -5,12 +5,12 @@ import javax.persistence.*;
 
 import com.dokebi.dalkom.common.EntityDate;
 
-import com.dokebi.dalkom.domain.cart.entity.ordrCart;
-import com.dokebi.dalkom.domain.inqury.entity.inquiry;
-import com.dokebi.dalkom.domain.mileage.entity.milgApply;
-import com.dokebi.dalkom.domain.mileage.entity.milgHistory;
-import com.dokebi.dalkom.domain.order.entity.ordr;
-import com.dokebi.dalkom.domain.review.entity.review;
+import com.dokebi.dalkom.domain.cart.entity.OrderCart;
+import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
+import com.dokebi.dalkom.domain.mileage.entity.MilgApply;
+import com.dokebi.dalkom.domain.mileage.entity.MilgHistory;
+import com.dokebi.dalkom.domain.order.entity.Ordr;
+import com.dokebi.dalkom.domain.review.entity.Review;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ import java.util.List;
 @Setter
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class user extends EntityDate {
+public class User extends EntityDate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userSeq;
@@ -62,22 +62,22 @@ public class user extends EntityDate {
 	private LocalDateTime deleteDate;
 
 	@OneToMany(mappedBy = "user")
-	private List<milgHistory> milgHistory = new ArrayList<>();
+	private List<MilgHistory> milgHistory = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<milgApply> milgApply = new ArrayList<>();
+	private List<MilgApply> milgApply = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<ordr> ordr = new ArrayList<>();
+	private List<Ordr> ordr = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<ordrCart> ordrCart = new ArrayList<>();
+	private List<OrderCart> OrderCart = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<review> review = new ArrayList<>();
+	private List<Review> review = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<inquiry> inquiry = new ArrayList<>();
+	private List<Inquiry> inquiry = new ArrayList<>();
 
 }
 

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "prdtImage")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class prdtImage extends EntityDate {
+public class PrdtImage extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class prdtImage extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "productSeq")
-    private product product;
+    private Product product;
 
     @Column(name = "imageUrl", nullable = false)
     private String imageUrl;
