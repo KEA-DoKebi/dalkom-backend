@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.6.5'
+	id 'org.springframework.boot' version '2.6.0'
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
@@ -31,6 +31,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	testImplementation 'org.projectlombok:lombok:1.18.28'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -38,6 +40,8 @@ dependencies {
 
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 	testImplementation 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'mysql:mysql-connector-java'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA
 }
 
 tasks.named('test') {

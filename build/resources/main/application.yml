@@ -1,21 +1,27 @@
 spring:
   application:
+  redis:
+    host: ${LOCAL_REDIS_IP}
+    port: ${LOCAL_REDIS_PORT}
+    username: ${LOCAL_REDIS_USERNAME}
+    password: ${LOCAL_REDIS_PASSWORD}
   datasource:
     url: ${LOCAL_DATABASE_URL}
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${LOCAL_DATABASE_USERNAME}
     password: ${LOCAL_DATABASE_PASSWORD}
-    jpa:
-      database: mysql
-      open-in-view: false
-      show-sql: true
-      hibernate:
-
-        #table 자동생성
-        ddl-auto:
-        properties:
-          hibernate:
-            format_sql: true
+  jpa:
+    database: mysql
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      properties:
+        hibernate:
+          format_sql: true
 
   # 로깅 설정
   logging:
