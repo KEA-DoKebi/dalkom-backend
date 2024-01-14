@@ -1,0 +1,12 @@
+name: 아직 workflow 개발이 되지 않아 fail 처리
+on:
+  pull_request
+  
+jobs:
+  failOnPR:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+    - name: Fail Step
+      run: exit 1

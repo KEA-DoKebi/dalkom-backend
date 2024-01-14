@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.user.entitiy;
+package com.dokebi.dalkom.domain.user.entity;
 
 
 import javax.persistence.*;

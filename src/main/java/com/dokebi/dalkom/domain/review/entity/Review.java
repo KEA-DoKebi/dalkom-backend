@@ -1,8 +1,8 @@
 package com.dokebi.dalkom.domain.review.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.order.entity.OrderDetail;
-import com.dokebi.dalkom.domain.user.entitiy.User;
+import com.dokebi.dalkom.domain.order.entity.OrdrDetail;
+import com.dokebi.dalkom.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -2,7 +2,7 @@ package com.dokebi.dalkom.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.dokebi.dalkom.domain.user.entitiy.User;
+import com.dokebi.dalkom.domain.user.entity.User;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 	// boolean existsByNickname(String nickname);
