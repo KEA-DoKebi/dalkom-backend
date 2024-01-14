@@ -1,7 +1,7 @@
 package com.dokebi.dalkom.domain.review.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.order.entity.OrdrDetail;
+import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.user.entitiy.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class Review extends EntityDate {
 
     @OneToOne
     @JoinColumn(name = "orderDetailSeq")
-    private OrdrDetail ordrDetail;
+    private OrderDetail ordrDetail;
 
     @Column(name = "content", nullable = false)
     private Long content;

@@ -9,7 +9,7 @@ import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
 import com.dokebi.dalkom.domain.mileage.entity.MilgApply;
 import com.dokebi.dalkom.domain.mileage.entity.MilgHistory;
-import com.dokebi.dalkom.domain.order.entity.Ordr;
+import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.review.entity.Review;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -68,7 +68,7 @@ public class User extends EntityDate {
 	private List<MilgApply> milgApply = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Ordr> ordr = new ArrayList<>();
+	private List<Order> ordr = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
 	private List<OrderCart> OrderCart = new ArrayList<>();

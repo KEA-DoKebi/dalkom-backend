@@ -3,7 +3,7 @@ package com.dokebi.dalkom.domain.product.entity;
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.order.entity.OrdrDetail;
+import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.stock.entity.PrdtStock;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -54,7 +54,7 @@ public class Product extends EntityDate {
     private List<PrdtImage> prdtImage = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<OrdrDetail> ordrDetail = new ArrayList<>();
+    private List<OrderDetail> ordrDetail = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<OrderCart> OrderCart = new ArrayList<>();
