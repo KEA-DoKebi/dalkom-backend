@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.dokebi.dalkom.domain.cart.dto.OrderCartCreateRequest;
+import com.dokebi.dalkom.domain.cart.dto.OrderCartDeleteRequest;
 import com.dokebi.dalkom.domain.cart.dto.OrderCartReadResponse;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.cart.repository.OrderCartRepository;
@@ -31,13 +32,18 @@ public class OrderCartService {
 	}
 
 	@Transactional
-	public Integer createOrderCart(Long userSeq, OrderCartCreateRequest request) {
+	public void createOrderCart(Long userSeq, OrderCartCreateRequest request) {
 		User user = userRepository.findByUserSeq(userSeq);
 		Product product = productRepository.findByProductSeq(request.getProductSeq());
 
 		OrderCart orderCart = new OrderCart(user, product, request.getOptionDetail(), request.getAmount());
 		orderCartRepository.save(orderCart);
+	}
 
-		return 200;
+	@Transactional
+	public void deleteOrderCart(OrderCartDeleteRequest request) {
+		for (Long orderCartSeq : request.getOrderCartSeqList()) {
+			orderCartRepository.deleteById(orderCartSeq);
+		}
 	}
 }
