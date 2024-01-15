@@ -51,7 +51,7 @@ public class Product extends EntityDate {
     private List<ProductStock> productStock = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<PrdtImage> productImage = new ArrayList<>();
+    private List<ProductImage> productImage = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> ordrDetail = new ArrayList<>();

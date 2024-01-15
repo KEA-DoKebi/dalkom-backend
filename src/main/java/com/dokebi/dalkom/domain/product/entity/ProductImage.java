@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "prdtImage")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PrdtImage extends EntityDate {
+public class ProductImage extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
