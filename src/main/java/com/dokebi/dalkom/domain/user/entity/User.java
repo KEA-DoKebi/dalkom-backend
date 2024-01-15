@@ -1,25 +1,29 @@
 package com.dokebi.dalkom.domain.user.entity;
 
-
-import javax.persistence.*;
-
-import com.dokebi.dalkom.common.EntityDate;
-
-import com.dokebi.dalkom.domain.cart.entity.OrderCart;
-import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
-import com.dokebi.dalkom.domain.mileage.entity.MilgApply;
-import com.dokebi.dalkom.domain.mileage.entity.MilgHistory;
-import com.dokebi.dalkom.domain.order.entity.Ordr;
-import com.dokebi.dalkom.domain.review.entity.Review;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.dokebi.dalkom.common.EntityDate;
+import com.dokebi.dalkom.domain.cart.entity.OrderCart;
+import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
+import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
+import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
+import com.dokebi.dalkom.domain.order.entity.Order;
+import com.dokebi.dalkom.domain.review.entity.Review;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -62,13 +66,13 @@ public class User extends EntityDate {
 	private LocalDateTime deletedAt;
 
 	@OneToMany(mappedBy = "user")
-	private List<MilgHistory> milgHistory = new ArrayList<>();
+	private List<MileageHistory> mileageHistoryList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<MilgApply> milgApply = new ArrayList<>();
+	private List<MileageApply> mileageApplyList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Ordr> ordr = new ArrayList<>();
+	private List<Order> orderList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
 	private List<OrderCart> OrderCart = new ArrayList<>();
