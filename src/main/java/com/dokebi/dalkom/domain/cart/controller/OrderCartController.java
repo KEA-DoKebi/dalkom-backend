@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.cart.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.dto.OrderCartCreateRequest;
+import com.dokebi.dalkom.domain.cart.dto.OrderCartDeleteRequest;
 import com.dokebi.dalkom.domain.cart.service.OrderCartService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,15 @@ public class OrderCartController {
 	@PostMapping("api/cart/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createOrderCart(@PathVariable Long userSeq, @RequestBody OrderCartCreateRequest request) {
-		return Response.success(orderCartService.createOrderCart(userSeq, request));
+		orderCartService.createOrderCart(userSeq, request);
+		return Response.success();
+	}
+
+	// CART-003 (특정 유저의 장바구니에서 상품 삭제)
+	@DeleteMapping("api/cart")
+	@ResponseStatus(HttpStatus.OK)
+	public Response deleteOrderCart(@RequestBody OrderCartDeleteRequest request) {
+		orderCartService.deleteOrderCart(request);
+		return Response.success();
 	}
 }
