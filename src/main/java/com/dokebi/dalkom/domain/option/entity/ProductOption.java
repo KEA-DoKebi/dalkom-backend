@@ -26,9 +26,9 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductOption extends EntityDate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productOptionSeq;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long productOptionSeq;
 
 	@Column(name = "optionCode", nullable = false)
 	private String optionCode;
@@ -40,5 +40,5 @@ public class ProductOption extends EntityDate {
 	private String detail;
 
 	@OneToMany(mappedBy = "prdtStock")
-	private List<ProductStockHistory> prdtStkHistory = new ArrayList<>();
+	private List<ProductStockHistory> productStockHistoryList = new ArrayList<>();
 }

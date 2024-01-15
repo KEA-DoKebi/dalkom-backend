@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
-public interface ProductRepository extends JpaRepository<Product,Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 	Product findByProductSeq(Long productSeq);
 
 	@Query("select p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.amount AS stock FROM Product p "

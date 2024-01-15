@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
-import com.dokebi.dalkom.domain.product.dto.ProductCreateReqeust;
+import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 
@@ -26,16 +26,18 @@ public class ProductController {
 	public Response readProduct(@PathVariable Long productSeq) {
 		return Response.success(productService.readProduct(productSeq));
 	}
+
 	@GetMapping("api/products/categories/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response getProductsByCategory(@PathVariable Long categorySeq) {
 		return Response.success(productService.getProductsByCategory(categorySeq));
 	}
+
 	@PostMapping("/api/products")
-	public Response createProduct(@RequestBody ProductCreateReqeust productCreateReqeustDto){
-		Product product=productCreateReqeustDto.getProduct();
-		Integer initialStockAmount=productCreateReqeustDto.getInitialStockAmount();
-		return Response.success(productService.createProduct(product,initialStockAmount));
+	public Response createProduct(@RequestBody ProductCreateRequest productCreateRequestDto) {
+		Product product = productCreateRequestDto.getProduct();
+		Integer initialStockAmount = productCreateRequestDto.getInitialStockAmount();
+		return Response.success(productService.createProduct(product, initialStockAmount));
 	}
 
 }

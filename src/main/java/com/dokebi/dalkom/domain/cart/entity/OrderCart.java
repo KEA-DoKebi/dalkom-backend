@@ -1,14 +1,22 @@
 package com.dokebi.dalkom.domain.cart.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.user.entity.User;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -17,22 +25,22 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderCart extends EntityDate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ordrCartSeq;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long orderCartSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "productSeq")
-    private Product product;
+	@ManyToOne
+	@JoinColumn(name = "productSeq")
+	private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "userSeq")
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "userSeq")
+	private User user;
 
-    @Column(name = "optionDetail")
-    private String optionDetail;
+	@Column(name = "optionDetail")
+	private String optionDetail;
 
-    @Column(name = "amount", nullable = false)
-    private Integer amount;
+	@Column(name = "amount", nullable = false)
+	private Integer amount;
 
 }
