@@ -30,6 +30,8 @@ public class OrderCreateRequestDto {
 	private String rcvrMobileNum;
 	private String rcvrMemo;
 
+
+
 }
 
 
