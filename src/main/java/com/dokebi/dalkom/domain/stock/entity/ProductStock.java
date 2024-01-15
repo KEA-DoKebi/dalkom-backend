@@ -31,7 +31,7 @@ public class ProductStock extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productStockSeq;
+	private Long prdtStockSeq;
 
 	@ManyToOne
 	@JoinColumn(name = "productSeq")

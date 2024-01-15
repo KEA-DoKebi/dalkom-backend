@@ -26,9 +26,11 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MileageApply extends EntityDate {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long mileageApplySeq;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long milgApplySeq;
+
 
 	@ManyToOne
 	@JoinColumn(name = "userSeq")

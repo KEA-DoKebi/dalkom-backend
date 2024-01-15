@@ -25,7 +25,7 @@ public class ProductImage extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productImageSeq;
+	private Long prdtImageSeq;
 
 	@ManyToOne
 	@JoinColumn(name = "productSeq")

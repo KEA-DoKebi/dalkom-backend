@@ -25,7 +25,7 @@ public class ProductStockHistory extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productStockHistorySeq;
+	private Long prdtStkHistorySeq;
 
 	@ManyToOne
 	@JoinColumn(name = "prdtStockSeq")
