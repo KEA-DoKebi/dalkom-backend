@@ -20,7 +20,7 @@ public class ProductService {
 	private final ProductStockRepository productStockRepository;
 
 	@Transactional
-	public Product createProduct(Product product,Integer initialStockAmount){
+	public Product createProduct(Product product, Integer initialStockAmount) {
 		Product savedProduct = productRepository.save(product);
 
 		// 초기 재고 등록
