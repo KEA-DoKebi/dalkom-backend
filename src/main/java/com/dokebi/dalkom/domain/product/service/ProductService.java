@@ -37,8 +37,7 @@ public class ProductService {
 		return productRepository.getProductsByCategory(categorySeq);
 	}
 
-	public Product readProduct(Long productSeq){
+	public Product readProduct(Long productSeq) {
 		return productRepository.findByProductSeq(productSeq);
-
 	}
 }

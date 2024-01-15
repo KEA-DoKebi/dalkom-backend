@@ -13,6 +13,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Product findByProductSeq(Long productSeq);
 
 	@Query("select p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.amount AS stock FROM Product p "
-		+ "LEFT JOIN ProductStock ps WHERE p.category.categorySeq = :categorySeq")
+		+ "LEFT JOIN ProductStock ps ON p.category.categorySeq = :categorySeq")
 	List<ProductByCategoryResponse> getProductsByCategory(@Param("categorySeq") Long categorySeq);
 }

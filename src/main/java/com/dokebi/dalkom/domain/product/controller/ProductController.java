@@ -22,22 +22,32 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 	private final ProductService productService;
 
-	@GetMapping("api/products/{productSeq}")
-	public Response readProduct(@PathVariable Long productSeq) {
-		return Response.success(productService.readProduct(productSeq));
-	}
-
+	// PRODUCTS-001(카테고리 별 상품 목록 조회)
 	@GetMapping("api/products/categories/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response getProductsByCategory(@PathVariable Long categorySeq) {
 		return Response.success(productService.getProductsByCategory(categorySeq));
 	}
 
+	// PRODUCTS-002(상품 상세 정보 조회)
+	@GetMapping("api/products/{productSeq}")
+	public Response readProduct(@PathVariable Long productSeq) {
+		return Response.success(productService.readProduct(productSeq));
+	}
+
+	// PRODUCTS-003(상품 정보 추가)
 	@PostMapping("/api/products")
 	public Response createProduct(@RequestBody ProductCreateRequest productCreateRequestDto) {
 		Product product = productCreateRequestDto.getProduct();
 		Integer initialStockAmount = productCreateRequestDto.getInitialStockAmount();
 		return Response.success(productService.createProduct(product, initialStockAmount));
 	}
+
+	// PRODUCTS-004(상품 리스트 조회)
+	// @GetMapping("api/products")
+	// @ResponseStatus(HttpStatus.OK)
+	// public Response getProductsByCategory(@PathVariable Long categorySeq) {
+	// 	return Response.success(productService.getProductsByCategory(categorySeq));
+	// }
 
 }

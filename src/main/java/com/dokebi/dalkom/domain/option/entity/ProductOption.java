@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.stock.entity.ProductStockHistory;
+import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,6 +39,6 @@ public class ProductOption extends EntityDate {
 	@Column(name = "detail", nullable = false)
 	private String detail;
 
-	@OneToMany(mappedBy = "prdtStock")
-	private List<ProductStockHistory> productStockHistoryList = new ArrayList<>();
+	@OneToMany(mappedBy = "productOption")
+	private List<ProductStock> productStockList = new ArrayList<>();
 }
