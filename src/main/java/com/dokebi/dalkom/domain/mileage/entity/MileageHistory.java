@@ -8,18 +8,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "milgApply")
+@Table(name = "milgHistory")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MilgApply extends EntityDate {
+public class MileageHistory extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long milgApplySeq;
+    private Long mileageHistorySeq;
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
@@ -28,10 +27,10 @@ public class MilgApply extends EntityDate {
     @Column(name = "amount", nullable = false)
     private Integer amount;
 
-    @Column(name = "approvedState", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'N'")
-    private String approveState;
+    @Column(name = "balance", nullable = false)
+    private Integer balance;
 
-    @Column(name = "approvedAt")
-    private LocalDateTime approvedAt;
+    @Column(name = "type", nullable = false)
+    private String type;
 
 }

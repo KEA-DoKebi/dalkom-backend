@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.product.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,14 +16,14 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PrdtImage extends EntityDate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long prdtImageSeq;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long productImageSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "productSeq")
-    private Product product;
+	@ManyToOne
+	@JoinColumn(name = "productSeq")
+	private Product product;
 
-    @Column(name = "imageUrl", nullable = false)
-    private String imageUrl;
+	@Column(name = "imageUrl", nullable = false)
+	private String imageUrl;
 }

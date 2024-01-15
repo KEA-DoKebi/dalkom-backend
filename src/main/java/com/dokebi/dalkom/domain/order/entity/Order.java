@@ -16,11 +16,11 @@ import java.util.List;
 @Setter
 @Table(name = "ordr")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ordr extends EntityDate {
+public class Order extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ordrSeq;
+    private Long orderSeq;
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
@@ -44,7 +44,7 @@ public class Ordr extends EntityDate {
     @Column(name = "ordrState", nullable = false)
     private String ordrState;
 
-    @OneToMany(mappedBy = "ordr")
-    private List<OrdrDetail> ordrDetail = new ArrayList<>();
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> ordrDetail = new ArrayList<>();
 
 }

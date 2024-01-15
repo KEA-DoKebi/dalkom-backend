@@ -7,7 +7,6 @@ spring:
     password: ${LOCAL_REDIS_PASSWORD}
   datasource:
     url: ${LOCAL_DATABASE_URL}
-    driver-class-name: org.mariadb.jdbc.Driver
     username: ${LOCAL_DATABASE_USERNAME}
     password: ${LOCAL_DATABASE_PASSWORD}
   jpa:
@@ -40,4 +39,3 @@ jwt:
   max-age:
     access: 604800
     refresh: 604800
-

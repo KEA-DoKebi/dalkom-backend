@@ -10,4 +10,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 	// @Modifying
 	// @Query("UPDATE User u SET u.password = :password, u.nickname = :nickname, u.profileImgSeq = :profileImgSeq WHERE u.userSeq = :userSeq")
 	// void updateByUserSeq(Long userSeq, String password, String nickname,String profileImgSeq);
+	User findByUserSeq(Long userSeq);
+
 }

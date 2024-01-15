@@ -7,9 +7,9 @@ import com.dokebi.dalkom.common.EntityDate;
 
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
-import com.dokebi.dalkom.domain.mileage.entity.MilgApply;
-import com.dokebi.dalkom.domain.mileage.entity.MilgHistory;
-import com.dokebi.dalkom.domain.order.entity.Ordr;
+import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
+import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
+import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.review.entity.Review;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -62,13 +62,13 @@ public class User extends EntityDate {
 	private LocalDateTime deleteDate;
 
 	@OneToMany(mappedBy = "user")
-	private List<MilgHistory> milgHistory = new ArrayList<>();
+	private List<MileageHistory> milgHistory = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<MilgApply> milgApply = new ArrayList<>();
+	private List<MileageApply> milgApply = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
-	private List<Ordr> ordr = new ArrayList<>();
+	private List<Order> ordr = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user")
 	private List<OrderCart> OrderCart = new ArrayList<>();

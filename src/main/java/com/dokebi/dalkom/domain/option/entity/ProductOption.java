@@ -13,11 +13,11 @@ import javax.persistence.*;
 @Setter
 @Table(name = "prdtOption")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PrdtOption extends EntityDate {
+public class ProductOption extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long prdtOptionSeq;
+    private Long productOptionSeq;
 
     @Column(name = "optionCode", nullable = false)
     private String optionCode;
