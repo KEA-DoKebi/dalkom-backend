@@ -42,12 +42,4 @@ public class ProductController {
 		Integer initialStockAmount = productCreateRequestDto.getInitialStockAmount();
 		return Response.success(productService.createProduct(product, initialStockAmount));
 	}
-
-	// PRODUCTS-004(상품 리스트 조회)
-	// @GetMapping("api/products")
-	// @ResponseStatus(HttpStatus.OK)
-	// public Response getProductsByCategory(@PathVariable Long categorySeq) {
-	// 	return Response.success(productService.getProductsByCategory(categorySeq));
-	// }
-
 }
