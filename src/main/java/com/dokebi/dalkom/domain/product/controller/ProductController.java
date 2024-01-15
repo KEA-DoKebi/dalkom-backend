@@ -23,7 +23,7 @@ public class ProductController {
 	private final ProductService productService;
 
 	@GetMapping("api/products/{productSeq}")
-	public Response readProduct(@PathVariable Long productSeq){
+	public Response readProduct(@PathVariable Long productSeq) {
 		return Response.success(productService.readProduct(productSeq));
 	}
 	@GetMapping("api/products/categories/{categorySeq}")

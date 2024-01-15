@@ -15,7 +15,6 @@ public class OrderService {
 	private final UserRepository userRepository;
 	private final OrderDetailRepository orderDetailRepository;
 
-
 	//db에서 빼올값
 	//dto->entity
 	//db 에저장
@@ -59,11 +58,6 @@ public class OrderService {
 	// 	order.setCreateDate(order.createDate);
 	// 	return order;
 	// }
-
-
-
-
-
 
 }
 

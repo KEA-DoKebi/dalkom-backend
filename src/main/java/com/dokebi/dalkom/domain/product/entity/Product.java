@@ -21,42 +21,42 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends EntityDate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productSeq;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long productSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "categorySeq")
-    private Category category;
+	@ManyToOne
+	@JoinColumn(name = "categorySeq")
+	private Category category;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @Column(name = "price", nullable = false)
-    private Integer price;
+	@Column(name = "price", nullable = false)
+	private Integer price;
 
-    @Column(name = "info", nullable = false)
-    private String info;
+	@Column(name = "info", nullable = false)
+	private String info;
 
-    @Column(name = "imageUrl", nullable = false)
-    private String imageUrl;
+	@Column(name = "imageUrl", nullable = false)
+	private String imageUrl;
 
-    @Column(name = "company", nullable = false)
-    private String company;
+	@Column(name = "company", nullable = false)
+	private String company;
 
-    @Column(name = "state", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'Y'")
-    private String state;
+	@Column(name = "state", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'Y'")
+	private String state;
 
     @OneToMany(mappedBy = "product")
     private List<ProductStock> productStock = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<PrdtImage> productImage = new ArrayList<>();
+    private List<ProductImage> productImage = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> ordrDetail = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product")
-    private List<OrderCart> OrderCart = new ArrayList<>();
+	@OneToMany(mappedBy = "product")
+	private List<OrderCart> OrderCart = new ArrayList<>();
 
 }

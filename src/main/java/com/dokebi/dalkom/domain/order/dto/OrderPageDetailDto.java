@@ -3,7 +3,6 @@ package com.dokebi.dalkom.domain.order.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -25,6 +24,5 @@ public class OrderPageDetailDto {
 	private Integer productPrice;
 
 	// 만들어 낼 값
-
 
 }

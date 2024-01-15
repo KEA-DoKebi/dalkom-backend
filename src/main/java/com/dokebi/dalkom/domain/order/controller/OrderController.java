@@ -32,10 +32,9 @@ public class OrderController {
 
 	//주문 페이지로의 이동
 	@GetMapping("/api/order/user/{userSeq}")
-	public void orderPageGet(@PathVariable("userSeq") String userSeq, OrderPageDto opd){
+	public void orderPageGet(@PathVariable("userSeq") String userSeq, OrderPageDto opd) {
 		System.out.println("userSeq" + userSeq);
-		System.out.println("orders"+opd.getOrders());
+		System.out.println("orders" + opd.getOrders());
 	}
-
 
 }
