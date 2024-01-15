@@ -1,8 +1,11 @@
 package com.dokebi.dalkom.domain.product.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
@@ -29,7 +32,12 @@ public class ProductService {
 
 	}
 
-	public Product readProduct(Long productSeq) {
+	@Transactional
+	public List<ProductByCategoryResponse> getProductsByCategory(Long categorySeq) {
+		return productRepository.getProductsByCategory(categorySeq);
+	}
+
+	public Product readProduct(Long productSeq){
 		return productRepository.findByProductSeq(productSeq);
 
 	}
