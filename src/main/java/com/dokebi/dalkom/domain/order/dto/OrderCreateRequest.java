@@ -9,12 +9,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCreateRequestDto {
+public class OrderCreateRequest {
 	//private Long userSeq;
 	private String receiverName;
 	private String receiverAddress;
 	private String receiverMobileNum;
 	private String receiverMemo;
+
+
 
 }
 
