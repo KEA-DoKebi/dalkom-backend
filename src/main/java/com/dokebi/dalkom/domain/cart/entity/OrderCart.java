@@ -43,4 +43,10 @@ public class OrderCart extends EntityDate {
 	@Column(name = "amount", nullable = false)
 	private Integer amount;
 
+	public OrderCart(User user, Product product, String optionDetail, Integer amount) {
+		this.user = user;
+		this.product = product;
+		this.optionDetail = optionDetail;
+		this.amount = amount;
+	}
 }
