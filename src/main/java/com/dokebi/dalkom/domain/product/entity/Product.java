@@ -68,5 +68,4 @@ public class Product extends EntityDate {
 
 	@OneToMany(mappedBy = "product")
 	private List<OrderCart> OrderCartList = new ArrayList<>();
-
 }
