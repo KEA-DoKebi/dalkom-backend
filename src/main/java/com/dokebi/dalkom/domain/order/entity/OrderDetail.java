@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.order.entity;
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.option.entity.PrdtOption;
 import com.dokebi.dalkom.domain.product.entity.Product;
+import com.dokebi.dalkom.domain.review.entity.Review;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,6 +41,6 @@ public class OrderDetail extends EntityDate {
 	@Column(name = "price", nullable = false)
 	private Integer price;
 
-	// @OneToOne(mappedBy = "ordrDetail")
-	// private Review review;
+	@OneToOne(mappedBy = "ordrDetail")
+	private Review review;
 }

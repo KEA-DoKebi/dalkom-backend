@@ -13,15 +13,15 @@ import javax.persistence.*;
 @Setter
 @Table(name = "prdtStkHistory")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PrdtStkHistory extends EntityDate {
+public class ProductStockHistory extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long prdtStkHistorySeq;
+    private Long productStockHistorySeq;
 
     @ManyToOne
     @JoinColumn(name = "prdtStockSeq")
-    private PrdtStock prdtStock;
+    private ProductStock prdtStock;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
