@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreateReqeustDto {
+public class ProductCreateReqeust {
 	private Product product;
 	private Integer initialStockAmount;
 
