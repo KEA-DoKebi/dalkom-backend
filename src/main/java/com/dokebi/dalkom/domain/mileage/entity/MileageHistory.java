@@ -18,7 +18,7 @@ public class MileageHistory extends EntityDate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mileageHistorySeq;
+    private Long milgHistorySeq;
 
     @ManyToOne
     @JoinColumn(name = "userSeq")
