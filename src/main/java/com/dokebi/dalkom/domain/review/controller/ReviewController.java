@@ -17,10 +17,17 @@ public class ReviewController {
 
 	private final ReviewService reviewService;
 
-	// 5번 api (사용자별 리뷰 조회) - 입력받은 productSeq의 리뷰 리스트 반환
+	// REVIEWS-001 (상품별 리뷰 조회) - 입력받은 productSeq의 리뷰 목록 반환
 	@GetMapping("api/reviews/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByProduct(@PathVariable Long productSeq) {
 		return Response.success(reviewService.getReviewListByProduct(productSeq));
+	}
+
+	// REVIEWS-002 (사용자별 리뷰 조회) - 입력받은 userSeq의 리뷰 목록 반환
+	@GetMapping("api/reviews/users/{userSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readReviewByUser(@PathVariable Long userSeq) {
+		return Response.success(reviewService.getReviewListByUser(userSeq));
 	}
 }

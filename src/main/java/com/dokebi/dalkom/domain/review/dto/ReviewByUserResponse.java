@@ -7,13 +7,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+public class ReviewByUserResponse {
 
-public class ReviewByProductResponse {
-
-	private String nickname;
 	private String content;
+	private Integer rating;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
-	private Integer rating;
+	private String name;
+	private String imageUrl;
+	private String detail;
 
 }
