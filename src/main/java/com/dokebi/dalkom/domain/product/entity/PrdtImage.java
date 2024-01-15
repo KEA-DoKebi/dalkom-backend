@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.product.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class PrdtImage extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long prdtImageSeq;
+	private Long productImageSeq;
 
 	@ManyToOne
 	@JoinColumn(name = "productSeq")

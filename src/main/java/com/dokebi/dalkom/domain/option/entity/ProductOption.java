@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.stock.entity.PrdtStkHistory;
+import com.dokebi.dalkom.domain.stock.entity.ProductStockHistory;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,11 +24,11 @@ import lombok.Setter;
 @Setter
 @Table(name = "prdtOption")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PrdtOption extends EntityDate {
+public class ProductOption extends EntityDate {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long prdtOptionSeq;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long productOptionSeq;
 
 	@Column(name = "optionCode", nullable = false)
 	private String optionCode;
@@ -40,5 +40,5 @@ public class PrdtOption extends EntityDate {
 	private String detail;
 
 	@OneToMany(mappedBy = "prdtStock")
-	private List<PrdtStkHistory> prdtStkHistory = new ArrayList<>();
+	private List<ProductStockHistory> prdtStkHistory = new ArrayList<>();
 }

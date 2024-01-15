@@ -3,8 +3,8 @@ package com.dokebi.dalkom.domain.product.entity;
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.order.entity.OrdrDetail;
-import com.dokebi.dalkom.domain.stock.entity.PrdtStock;
+import com.dokebi.dalkom.domain.order.entity.OrderDetail;
+import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,14 +47,14 @@ public class Product extends EntityDate {
 	@Column(name = "state", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'Y'")
 	private String state;
 
-	@OneToMany(mappedBy = "product")
-	private List<PrdtStock> prdtStock = new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    private List<ProductStock> productStock = new ArrayList<>();
 
-	@OneToMany(mappedBy = "product")
-	private List<PrdtImage> prdtImage = new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    private List<PrdtImage> productImage = new ArrayList<>();
 
-	@OneToMany(mappedBy = "product")
-	private List<OrdrDetail> ordrDetail = new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    private List<OrderDetail> ordrDetail = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product")
 	private List<OrderCart> OrderCart = new ArrayList<>();
