@@ -20,7 +20,7 @@ public class ReviewController {
 	// 5번 api (사용자별 리뷰 조회) - 입력받은 productSeq의 리뷰 리스트 반환
 	@GetMapping("api/reviews/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response getReviewsByProduct(@PathVariable Long productSeq) {
+	public Response readReviewByProduct(@PathVariable Long productSeq) {
 		return Response.success(reviewService.getReviewListByProduct(productSeq));
 	}
 }
