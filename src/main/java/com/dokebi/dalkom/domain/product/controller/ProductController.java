@@ -37,9 +37,9 @@ public class ProductController {
 
 	// PRODUCTS-003(상품 정보 추가)
 	@PostMapping("/api/products")
-	public Response createProduct(@RequestBody ProductCreateRequest productCreateRequestDto) {
-		Product product = productCreateRequestDto.getProduct();
-		Integer initialStockAmount = productCreateRequestDto.getInitialStockAmount();
+	public Response createProduct(@RequestBody ProductCreateRequest productCreateRequest) {
+		Product product = productCreateRequest.getProduct();
+		Integer initialStockAmount = productCreateRequest.getInitialStockAmount();
 		return Response.success(productService.createProduct(product, initialStockAmount));
 	}
 }
