@@ -27,15 +27,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "WHERE p.productSeq = :productSeq")
 	ReadProductDetailDTO getProductDetailBySeq(@Param("productSeq") Long productSeq);
 
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.StockListDTO(ps.productStockSeq, "
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.StockListDTO(ps.prdtStockSeq, "
 		+ "ps.amount) FROM ProductStock ps "
 		+ "WHERE ps.product.productSeq = :productSeq")
 	List<StockListDTO> getStockListBySeq(@Param("productSeq") Long productSeq);
 
-	@Query("SELECT po.productOptionSeq, "
-		+ "po.detail FROM ProductOption po "
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.OptionListDTO(po.prdtOptionSeq, "
+		+ "po.detail) FROM ProductOption po "
 		+ "INNER JOIN ProductStock ps "
-		+ "ON po.productOptionSeq = ps.productOption.productOptionSeq AND ps.product.productSeq = :productSeq")
+		+ "ON po.prdtOptionSeq = ps.productOption.prdtOptionSeq AND ps.product.productSeq = :productSeq")
 	List<OptionListDTO> getOptionListBySeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT pi.imageUrl FROM ProductImage pi "

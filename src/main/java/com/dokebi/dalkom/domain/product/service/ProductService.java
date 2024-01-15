@@ -45,8 +45,8 @@ public class ProductService {
 	public ReadProductDetailResponse readProduct(Long productSeq) {
 		ReadProductDetailDTO productDetailDTO = productRepository.getProductDetailBySeq(productSeq);
 		List<StockListDTO> stockList = productRepository.getStockListBySeq(productSeq);
-		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
 		List<OptionListDTO> optionList = productRepository.getOptionListBySeq(productSeq);
+		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
 	}
 }
