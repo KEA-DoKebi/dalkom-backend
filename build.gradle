@@ -3,7 +3,6 @@ plugins {
     id 'org.springframework.boot' version '2.6.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.sonarqube' version "4.0.0.2929"
-
 }
 
 group = 'com.dokebi'
@@ -43,7 +42,7 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
     testImplementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'mysql:mysql-connector-java'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' //JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
 }
 
 tasks.named('test') {
@@ -59,11 +58,4 @@ dependencyManagement {
 bootJar {
     archivesBaseName = 'dalkom'
     archiveFileName = 'dalkom.jar'
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectKey", "KEA-DoKebi_dalkom-backend_AY0ILkkA7nQIqqNyuD-r"
-        property "sonar.host.url", "https://b3a1-203-249-127-39.ngrok-free.app"
-    }
 }
