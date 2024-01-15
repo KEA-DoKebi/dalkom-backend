@@ -48,10 +48,10 @@ public class Product extends EntityDate {
     private String state;
 
     @OneToMany(mappedBy = "product")
-    private List<ProductStock> prdtStock = new ArrayList<>();
+    private List<ProductStock> productStock = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<PrdtImage> prdtImage = new ArrayList<>();
+    private List<PrdtImage> productImage = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
     private List<OrderDetail> ordrDetail = new ArrayList<>();

@@ -1,7 +1,7 @@
 package com.dokebi.dalkom.domain.stock.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.option.entity.PrdtOption;
+import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,7 +29,7 @@ public class ProductStock extends EntityDate {
 
     @ManyToOne
     @JoinColumn(name = "prdtOptionSeq")
-    private PrdtOption prdtOption;
+    private ProductOption prdtOption;
 
     @Column(name = "amount", nullable = false)
     private Integer amount;

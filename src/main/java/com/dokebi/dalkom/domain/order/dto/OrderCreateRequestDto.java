@@ -25,10 +25,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OrderCreateRequestDto {
 	//private Long userSeq;
-	private String rcvrName;
-	private String rcvrAddress;
-	private String rcvrMobileNum;
-	private String rcvrMemo;
+	private String receiverName;
+	private String receiverAddress;
+	private String receiverMobileNum;
+	private String receiverMemo;
 
 
 

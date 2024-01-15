@@ -1,7 +1,7 @@
 package com.dokebi.dalkom.domain.order.entity;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.option.entity.PrdtOption;
+import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.review.entity.Review;
 
@@ -33,7 +33,7 @@ public class OrderDetail extends EntityDate {
 
 	@ManyToOne
 	@JoinColumn(name = "prdtOptionSeq")
-	private PrdtOption prdtOption;
+	private ProductOption productOption;
 
 	@Column(name = "amount", nullable = false)
 	private Integer amount;

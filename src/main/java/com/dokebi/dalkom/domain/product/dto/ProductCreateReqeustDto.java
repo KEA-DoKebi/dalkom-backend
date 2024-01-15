@@ -14,4 +14,5 @@ import lombok.Setter;
 public class ProductCreateReqeustDto {
 	private Product product;
 	private Integer initialStockAmount;
+
 }
