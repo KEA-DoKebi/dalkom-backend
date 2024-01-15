@@ -55,6 +55,13 @@ dependencyManagement {
 	}
 }
 
+sonarqube {
+    properties {
+        property "sonar.java.binaries", "build/classes/java/main"
+    }
+}
+
+
 bootJar{
 	archivesBaseName = 'dalkom'
 	archiveFileName = 'dalkom.jar'
