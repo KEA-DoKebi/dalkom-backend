@@ -3,10 +3,12 @@ package com.dokebi.dalkom.domain.admin.dto;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminDto {
