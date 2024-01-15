@@ -8,8 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.dokebi.dalkom.common.EntityDate;
 
 import lombok.AccessLevel;
@@ -21,17 +19,20 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class PrdtImage extends EntityDate {
+public class PrdtStock extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long prdtImageSeq;
+	private Long prdtStockSeq;
 
 	@ManyToOne
 	@JoinColumn(name = "productSeq", nullable = false)
 	private Product productSeq;
 
+	@ManyToOne
+	@JoinColumn(name = "prdtOptionSeq")
+	private PrdtOption prdtOptionSeq;
+
 	@Column(nullable = false)
-	@ColumnDefault("defaultImageUrl")
-	private String imageUrl;
+	private Integer amount;
 }

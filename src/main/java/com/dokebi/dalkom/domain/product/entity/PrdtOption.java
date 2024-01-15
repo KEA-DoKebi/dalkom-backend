@@ -6,8 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.ColumnDefault;
-
 import com.dokebi.dalkom.common.EntityDate;
 
 import lombok.AccessLevel;
@@ -19,33 +17,18 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Product extends EntityDate {
+public class PrdtOption extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productSeq;
+	private Long prdtOptionSeq;
 
-	// @ManyToOne
-	// @JoinColumn(name = "categorySeq")
-	// private Category category;
+	@Column(nullable = false)
+	private Integer optionCode;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String name;
 
 	@Column(nullable = false)
-	private Integer price;
-
-	@Column(nullable = false)
-	private String info;
-
-	@Column(nullable = false)
-	@ColumnDefault("defaultImageUrl")
-	private String imageUrl;
-
-	@Column(nullable = false)
-	private String company;
-
-	@Column(nullable = false)
-	@ColumnDefault("Y")
-	private Character state;
+	private String detail;
 }

@@ -5,8 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.ColumnDefault;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.dokebi.dalkom.common.EntityDate;
 
@@ -19,33 +19,19 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Product extends EntityDate {
+public class PrdtStkHistory extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productSeq;
+	private Long prdtStkHistorySeq;
 
-	// @ManyToOne
-	// @JoinColumn(name = "categorySeq")
-	// private Category category;
-
-	@Column(nullable = false, unique = true)
-	private String name;
+	@ManyToOne
+	@JoinColumn(name = "prdtStockSeq", nullable = false)
+	private PrdtStock prdtStockSeq;
 
 	@Column(nullable = false)
-	private Integer price;
+	private Integer amount;
 
 	@Column(nullable = false)
-	private String info;
-
-	@Column(nullable = false)
-	@ColumnDefault("defaultImageUrl")
-	private String imageUrl;
-
-	@Column(nullable = false)
-	private String company;
-
-	@Column(nullable = false)
-	@ColumnDefault("Y")
-	private Character state;
+	private Integer amountChanged;
 }
