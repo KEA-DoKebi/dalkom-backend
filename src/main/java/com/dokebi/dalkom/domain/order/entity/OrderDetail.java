@@ -49,6 +49,6 @@ public class OrderDetail extends EntityDate {
 	@Column(name = "price", nullable = false)
 	private Integer price;
 
-	@OneToOne(mappedBy = "ordrDetail")
+	@OneToOne(mappedBy = "orderDetail")
 	private Review review;
 }

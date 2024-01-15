@@ -44,7 +44,7 @@ public class ProductStock extends EntityDate {
 	@Column(name = "amount", nullable = false)
 	private Integer amount;
 
-	@OneToMany(mappedBy = "prdtStock")
+	@OneToMany(mappedBy = "productStock")
 	private List<ProductStockHistory> productStockHistoryList = new ArrayList<>();
 
 }
