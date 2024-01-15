@@ -14,22 +14,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductService {
 	private final ProductRepository productRepository;
-	private final ProductStockRepository prdtStockRepository;
+	private final ProductStockRepository productStockRepository;
 
 	@Transactional
-	public Product createProduct(Product product,Integer initialStockAmount){
+	public Product createProduct(Product product, Integer initialStockAmount) {
 		Product savedProduct = productRepository.save(product);
 
 		// 초기 재고 등록
 		ProductStock initialStock = new ProductStock();
 		initialStock.setProduct(savedProduct);
 		initialStock.setAmount(initialStockAmount);
-		prdtStockRepository.save(initialStock);
+		productStockRepository.save(initialStock);
 		return savedProduct;
 
 	}
 
-	public Product readProduct(Long productSeq){
+	public Product readProduct(Long productSeq) {
 		return productRepository.findByProductSeq(productSeq);
 
 	}
