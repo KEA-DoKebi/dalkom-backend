@@ -1,15 +1,25 @@
 package com.dokebi.dalkom.domain.order.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.user.entity.User;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -18,33 +28,33 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends EntityDate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderSeq;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long orderSeq;
 
-    @ManyToOne
-    @JoinColumn(name = "userSeq")
-    private User user;
+	@ManyToOne
+	@JoinColumn(name = "userSeq")
+	private User user;
 
-    @Column(name = "rcvrName", nullable = false)
-    private String receiverName;
+	@Column(name = "rcvrName", nullable = false)
+	private String receiverName;
 
-    @Column(name = "rcvrAddress", nullable = false)
-    private String receiverAddress;
+	@Column(name = "rcvrAddress", nullable = false)
+	private String receiverAddress;
 
-    @Column(name = "rcvrMobileNum", nullable = false)
-    private String receiverMobileNum;
+	@Column(name = "rcvrMobileNum", nullable = false)
+	private String receiverMobileNum;
 
-    @Column(name = "rcvrMemo", nullable = false)
-    private String receiverMemo;
+	@Column(name = "rcvrMemo", nullable = false)
+	private String receiverMemo;
 
-    @Column(name = "totalPrice", nullable = false)
-    private Integer totalPrice;
+	@Column(name = "totalPrice", nullable = false)
+	private Integer totalPrice;
 
-    @Column(name = "ordrState", nullable = false)
-    private String ordrState;
+	@Column(name = "ordrState", nullable = false)
+	private String orderState;
 
-    @OneToMany(mappedBy = "order")
-    private List<OrderDetail> ordrDetail = new ArrayList<>();
+	@OneToMany(mappedBy = "order")
+	private List<OrderDetail> orderDetailList = new ArrayList<>();
 
 }
