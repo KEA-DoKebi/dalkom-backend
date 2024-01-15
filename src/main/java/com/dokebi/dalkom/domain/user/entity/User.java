@@ -47,7 +47,7 @@ public class User extends EntityDate {
 	private String address;
 
 	@Column(name = "joinedAt", nullable = false)
-	private LocalDateTime joinedAt;
+	private String joinedAt;
 
 	@Column(name = "nickname", nullable = false, unique = true)
 	private String nickname;
@@ -56,10 +56,10 @@ public class User extends EntityDate {
 	private String mileage;
 
 	@Column(name = "state", nullable = false)
-	private String state;
+	private String deleteState;
 
 	@Column(name = "deletedAt")
-	private LocalDateTime deleteDate;
+	private LocalDateTime deletedAt;
 
 	@OneToMany(mappedBy = "user")
 	private List<MilgHistory> milgHistory = new ArrayList<>();
@@ -79,5 +79,18 @@ public class User extends EntityDate {
 	@OneToMany(mappedBy = "user")
 	private List<Inquiry> inquiry = new ArrayList<>();
 
+
+	public User (String empId, String password, String name, String email, String address, String joinedAt, String nickname, String mileage){
+		this.empId = empId;
+		this.password = password;
+		this.name = name;
+		this.email = email;
+		this.address = address;
+		this.joinedAt = joinedAt;
+		this.nickname = nickname;
+		this.mileage = mileage;
+		this.deleteState = "N";
+
+	}
 }
 

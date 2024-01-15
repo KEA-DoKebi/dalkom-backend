@@ -4,7 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dokebi.dalkom.domain.user.entity.User;
 
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
+
+	User findByEmail(String email);
+
+	boolean existsByEmail(String email);
+
+	boolean existsByNickname(String nickname);
 	// boolean existsByNickname(String nickname);
 	//
 	// @Modifying
