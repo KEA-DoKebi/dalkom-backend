@@ -21,12 +21,14 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 	private final OrderRepository orderRepository;
-	private final ProductService productService ;
+	private final ProductService productService;
 	private final UserRepository userRepository;
 	private final OrderDetailRepository orderDetailRepository;
 
@@ -80,27 +82,35 @@ public class OrderService {
 	//
 	// }
 
-	//주문 상품 조회
-	// public List<OrderPageDetailDto> readProductBySeq(List<OrderPageDetailDto> orders) {
-	// 	List<OrderPageDetailDto> result = new ArrayList<OrderPageDetailDto>();
-	// 	result = orders.stream().map(ord -> {
-	// 			// 사용자가 주문한 상품에 대한 정보 조회
-	// 			ReadProductDetailResponse productInfo = productService.readProduct(ord.getProductSeq());
-	//
-	// 			// OrderPageItemDTO로 변환
-	// 			OrderPageDetailDto orderPageItemDTO = new OrderPageDetailDto();
-	// 			orderPageItemDTO.set(productInfo.getInfo());
-	// 			OrderPageDetailDto.
-	// 			OrderPageDetailDto.
-	// 			return orderPageItemDTO;
-	// 		})
-	// 		.collect(Collectors.toList());
-	// }
+	// 주문서 내역 조회
+	public List<OrderPageDetailDto> readProductBySeq(List<OrderPageDetailDto> orders) {
+		List<OrderPageDetailDto> result = new ArrayList<>();
+		orders.stream().map(ord -> {
+				// 사용자가 주문한 상품에 대한 정보 조회
+				ReadProductDetailResponse productInfo = productService.readProduct(ord.getProductSeq());
+				log.info(productInfo.toString());
+				// OrderPageDetailDto로 변환
+				OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto();
+				//db에서 받은값
+				orderPageDetailDTO.setProductSeq(ord.getProductSeq());
+				orderPageDetailDTO.setProductName(productInfo.getName());
+				orderPageDetailDTO.setProductOptionSeq(ord.getProductSeq()); //선택한 옵션 받아오기
+				orderPageDetailDTO.setProductPrice(productInfo.getPrice()); //
 
+				orderPageDetailDTO.setProductAmount(ord.getProductAmount()); // 개수 받아오기
+				result.add(orderPageDetailDTO);
+				log.info(result.toString());
+				return null;
+			})
+			.collect(Collectors.toList());
+
+		return result;
+
+	}
 
 	//사용자별 상품 조회
-	public List<OrderDto> readOrderByUserSeq(Long userSeq){
-		List<Order> orders =orderRepository.findByUser_UserSeq(userSeq);
+	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
+		List<Order> orders = orderRepository.findByUser_UserSeq(userSeq);
 
 		return orders.stream()
 			.map(order ->
@@ -113,8 +123,9 @@ public class OrderService {
 			.collect(Collectors.toList());
 
 	}
+
 	//주문별 주문 조회
-	public OrderDto readOrderByOrderSeq(Long orderSeq){
+	public OrderDto readOrderByOrderSeq(Long orderSeq) {
 		Order order = orderRepository.findByOrdrSeq(orderSeq);
 		return new OrderDto(order.getOrdrSeq(),
 			order.getReceiverName(),
@@ -125,8 +136,8 @@ public class OrderService {
 	}
 	//주문 전체 조회
 
-	public List<OrderDto> readOrderByAll(){
-		List<Order> orders =orderRepository.findAll();
+	public List<OrderDto> readOrderByAll() {
+		List<Order> orders = orderRepository.findAll();
 		return orders.stream()
 			.map(order ->
 				new OrderDto(order.getOrdrSeq(),
