@@ -36,4 +36,10 @@ public class ProductStockHistory extends EntityDate {
 
 	@Column(name = "amountChanged", nullable = false)
 	private Integer amountChanged;
+
+	public ProductStockHistory(ProductStock productStock, Integer amount, Integer amountChanged) {
+		this.productStock = productStock;
+		this.amount = amount;
+		this.amountChanged = amountChanged;
+	}
 }
