@@ -18,11 +18,9 @@ public class ProductStockService {
 
 	@Transactional
 	public void editStock(Long stockSeq, Integer amount) {
-		int amountChanged;
-
 		ProductStock stock = stockRepository.findByPrdtStockSeq(stockSeq);
 
-		amountChanged = amount - stock.getAmount();
+		int amountChanged = amount - stock.getAmount();
 		stock.setAmount(amount);
 
 		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, amountChanged);
