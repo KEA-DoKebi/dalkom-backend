@@ -15,4 +15,5 @@ public class ReviewByProductResponse {
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private Integer rating;
+
 }

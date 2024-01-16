@@ -5,7 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
+import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
+import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
@@ -28,16 +33,27 @@ public class ProductService {
 		initialStock.setProduct(savedProduct);
 		initialStock.setAmount(initialStockAmount);
 		productStockRepository.save(initialStock);
-		return savedProduct;
 
+		return savedProduct;
 	}
 
 	@Transactional
-	public List<ProductByCategoryResponse> getProductsByCategory(Long categorySeq) {
+	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
 		return productRepository.getProductsByCategory(categorySeq);
 	}
 
-	public Product readProduct(Long productSeq) {
-		return productRepository.findByProductSeq(productSeq);
+	//쿼리 결과를 조합해서 return하는 메서드
+	public ReadProductDetailResponse readProduct(Long productSeq) {
+		ReadProductDetailDTO productDetailDTO = productRepository.getProductDetailBySeq(productSeq);
+		List<StockListDTO> stockList = productRepository.getStockListBySeq(productSeq);
+		List<OptionListDTO> optionList = productRepository.getOptionListBySeq(productSeq);
+		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
+
+		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
+	}
+
+	@Transactional
+	public List<ReadProductResponse> readProductList() {
+		return productRepository.getProductList();
 	}
 }

@@ -25,8 +25,8 @@ public class ProductController {
 	// PRODUCTS-001(카테고리 별 상품 목록 조회)
 	@GetMapping("api/products/categories/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response getProductsByCategory(@PathVariable Long categorySeq) {
-		return Response.success(productService.getProductsByCategory(categorySeq));
+	public Response readProductListByCategory(@PathVariable Long categorySeq) {
+		return Response.success(productService.readProductListByCategory(categorySeq));
 	}
 
 	// PRODUCTS-002(상품 상세 정보 조회)
@@ -41,5 +41,13 @@ public class ProductController {
 		Product product = productCreateRequestDto.getProduct();
 		Integer initialStockAmount = productCreateRequestDto.getInitialStockAmount();
 		return Response.success(productService.createProduct(product, initialStockAmount));
+	}
+
+
+	// PRODUCT-004(상품 리스트 조회)
+	@GetMapping("api/products")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductList() {
+		return Response.success(productService.readProductList());
 	}
 }
