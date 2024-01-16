@@ -16,11 +16,13 @@ import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
 import com.dokebi.dalkom.domain.notice.entity.Notice;
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Data
 @Getter
 @Setter
 @Table(name = "admin")
