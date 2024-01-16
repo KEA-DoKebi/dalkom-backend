@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.cart.dto;
+package com.dokebi.dalkom.domain.stock.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCartCreateRequest {
 
-	private Long productSeq;
-	private Long prdtOptionSeq;
+// PathVariable이 이미 존재하여 amount를 받기 위해 만든 DTO
+public class ProductStockEditRequest {
 	private Integer amount;
 }

@@ -36,7 +36,7 @@ public class OrderCartService {
 		User user = userRepository.findByUserSeq(userSeq);
 		Product product = productRepository.findByProductSeq(request.getProductSeq());
 
-		OrderCart orderCart = new OrderCart(user, product, request.getOptionDetail(), request.getAmount());
+		OrderCart orderCart = new OrderCart(user, product, request.getPrdtOptionSeq(), request.getAmount());
 		orderCartRepository.save(orderCart);
 	}
 
