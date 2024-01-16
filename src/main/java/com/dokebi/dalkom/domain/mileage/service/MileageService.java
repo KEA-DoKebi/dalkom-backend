@@ -18,11 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 public class MileageService {
 	private final MileageHistoryRepository mileageHistoryRepository;
 
-
 	public Integer readMileageByUserSeq(Long userSeq) {
 		log.info(String.valueOf(mileageHistoryRepository.findMileageByUserSeq(userSeq)));
+		
 		return  mileageHistoryRepository.findMileageByUserSeq(userSeq);
-
 	}
 
 	public List<MileageHistoryDto> readMileageHistoryByUserSeq(Long userSeq) {
@@ -36,6 +35,4 @@ public class MileageService {
 				history.getAmount()))
 			.collect(Collectors.toList());
 	}
-
-
 }
