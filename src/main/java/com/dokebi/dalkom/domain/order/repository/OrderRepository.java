@@ -18,5 +18,4 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	//전체 주문조회
 	List<Order> findAll();
-
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
-import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,9 +37,8 @@ public class ProductController {
 	// PRODUCTS-003(상품 정보 추가)
 	@PostMapping("/api/products")
 	public Response createProduct(@RequestBody ProductCreateRequest productCreateRequest) {
-		Product product = productCreateRequest.getProduct();
-		Integer initialStockAmount = productCreateRequest.getInitialStockAmount();
-		return Response.success(productService.createProduct(product, initialStockAmount));
+		productService.createProduct(productCreateRequest);
+		return Response.success();
 	}
 
 	// PRODUCT-004(상품 리스트 조회)
