@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dokebi.dalkom.domain.user.entity.User;
 
+ 
+ 
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	User findByUserSeq(Long userSeq);
@@ -13,6 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	boolean existsByEmail(String email);
 
 	boolean existsByNickname(String nickname);
+ 
 	// boolean existsByNickname(String nickname);
 
 	//
