@@ -11,6 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+// 상품 생성 requestBody
+// TODO 상품 상세 이미지 추가(후순위)
 public class ProductCreateRequest {
 	private Product product;
 	private Integer initialStockAmount;
