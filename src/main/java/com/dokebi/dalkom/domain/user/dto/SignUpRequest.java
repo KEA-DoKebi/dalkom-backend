@@ -44,10 +44,6 @@ public class SignUpRequest {
 
 	private String mileage;
 
-	// public static User toEntity(SignUpRequest req, PasswordEncoder encoder) {
-	//     return new User(req.userId, encoder.encode(req.password), req.nickname, req.email, req.profileImgSeq);
-	// }
-
 	public static User toEntity(SignUpRequest req) {
 		return new User(req.empId, req.password, req.name, req.email, req.address, req.joinedAt, req.nickname,
 			req.mileage);

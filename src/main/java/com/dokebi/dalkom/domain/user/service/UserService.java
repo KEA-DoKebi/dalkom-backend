@@ -16,6 +16,7 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
+	@Transactional
 	public Response updateUser(Long userSeq, UserUpdateRequest req) {
 		try {
 			if (req.getPassword() != null)
