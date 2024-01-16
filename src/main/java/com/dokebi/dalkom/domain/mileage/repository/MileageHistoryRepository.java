@@ -12,8 +12,9 @@ import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 public interface MileageHistoryRepository extends JpaRepository<MileageHistory, Long> {
 	//유저별 마일리지 조회
 
-	@Query("SELECT m.balance FROM MileageHistory m WHERE m.user.userSeq = :userSeq")
-	Integer findMileageByUserSeq(@Param("userSeq") Long userSeq);
+	@Query("SELECT m.balance FROM MileageHistory m WHERE m.user.userSeq = :userSeq ORDER BY m.createdAt DESC")
+	List<Integer> findMileageByUserSeq(@Param("userSeq") Long userSeq);
+
 
 	//유저 내역 조회
 	@Query("SELECT m FROM MileageHistory m WHERE m.user.userSeq = :userSeq")
