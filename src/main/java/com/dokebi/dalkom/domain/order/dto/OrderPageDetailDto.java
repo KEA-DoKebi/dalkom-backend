@@ -17,11 +17,14 @@ public class OrderPageDetailDto {
 	// private Long userSeq;
 	private Long productSeq;
 	private Long productOptionSeq;
+	
 	// 상품 양
 	private Integer productAmount;
+
 	// DB에서 가져올 값
 	private String productName;
 	private Integer productPrice;
+
 	// 만들어 낼 값
 	private Integer totalPrice;
 

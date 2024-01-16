@@ -1,7 +1,5 @@
 package com.dokebi.dalkom.domain.order.dto;
 
-import com.dokebi.dalkom.domain.order.entity.Order;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +16,4 @@ public class OrderDto {
 	private String receiverMobileNum;
 	private String receiverMemo;
 	private Integer totalPrice;
-
-	public OrderDto(Order order) {
-	}
 }
