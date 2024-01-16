@@ -1,23 +1,15 @@
 package com.dokebi.dalkom.domain.order.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
-import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
-import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
-import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderService {
 	private final OrderRepository orderRepository;
-	private final ProductService productService ;
+	private final ProductService productService;
 	private final UserRepository userRepository;
 	private final OrderDetailRepository orderDetailRepository;
 
@@ -97,10 +89,9 @@ public class OrderService {
 	// 		.collect(Collectors.toList());
 	// }
 
-
 	//사용자별 상품 조회
-	public List<OrderDto> readOrderByUserSeq(Long userSeq){
-		List<Order> orders =orderRepository.findByUser_UserSeq(userSeq);
+	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
+		List<Order> orders = orderRepository.findByUser_UserSeq(userSeq);
 
 		return orders.stream()
 			.map(order ->
@@ -113,8 +104,9 @@ public class OrderService {
 			.collect(Collectors.toList());
 
 	}
+
 	//주문별 주문 조회
-	public OrderDto readOrderByOrderSeq(Long orderSeq){
+	public OrderDto readOrderByOrderSeq(Long orderSeq) {
 		Order order = orderRepository.findByOrdrSeq(orderSeq);
 		return new OrderDto(order.getOrdrSeq(),
 			order.getReceiverName(),
@@ -125,8 +117,8 @@ public class OrderService {
 	}
 	//주문 전체 조회
 
-	public List<OrderDto> readOrderByAll(){
-		List<Order> orders =orderRepository.findAll();
+	public List<OrderDto> readOrderByAll() {
+		List<Order> orders = orderRepository.findAll();
 		return orders.stream()
 			.map(order ->
 				new OrderDto(order.getOrdrSeq(),
