@@ -17,11 +17,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Product findByProductSeq(Long productSeq);
 
-
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse(p.productSeq, "
-		+ "p.name, p.price, p.state, p.imageUrl, p.company, ps.amount) FROM Product p "
-		+ "INNER JOIN ProductStock ps"
-		+ " ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq")
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse" +
+		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, CAST(SUM(ps.amount) AS int)) " +
+		"FROM Product p " +
+		"INNER JOIN ProductStock ps " +
+		"ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq " +
+		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
 	List<ProductByCategoryResponse> getProductsByCategory(@Param("categorySeq") Long categorySeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
@@ -45,6 +46,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	List<String> getProductImageBySeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse("
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company) FROM Product p")
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.productOption.detail, ps.amount)"
+		+ "FROM Product p INNER JOIN ProductStock ps "
+		+ "ON p.productSeq = ps.product.productSeq "
+		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC")
 	List<ReadProductResponse> getProductList();
 }

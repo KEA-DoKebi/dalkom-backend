@@ -29,20 +29,20 @@ public class ProductController {
 	}
 
 	// PRODUCTS-002(상품 상세 정보 조회)
-	@GetMapping("api/products/{productSeq}")
+	@GetMapping("api/product/{productSeq}")
 	public Response readProduct(@PathVariable Long productSeq) {
 		return Response.success(productService.readProduct(productSeq));
 	}
 
 	// PRODUCTS-003(상품 정보 추가)
-	@PostMapping("/api/products")
+	@PostMapping("/api/product")
 	public Response createProduct(@RequestBody ProductCreateRequest productCreateRequest) {
 		productService.createProduct(productCreateRequest);
 		return Response.success();
 	}
 
 	// PRODUCT-004(상품 리스트 조회)
-	@GetMapping("api/products")
+	@GetMapping("api/product")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductList() {
 		return Response.success(productService.readProductList());
