@@ -37,7 +37,7 @@ public class Admin extends EntityDate {
 	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "role", nullable = false)
+	@Column(name = "role", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT '2'")
 	private String role;
 
 	@Column(name = "nickname", nullable = false, unique = true)
@@ -54,5 +54,14 @@ public class Admin extends EntityDate {
 
 	@OneToMany(mappedBy = "admin")
 	private List<Notice> notice = new ArrayList<>();
+
+	public Admin(String adminId, String password, String nickname, String name, String depart) {
+		this.adminId = adminId;
+		this.password = password;
+		this.nickname = nickname;
+		this.name = name;
+		this.depart = depart;
+		this.role = "2";    //시스템에서 등록되는 관리자는 모두 일반관리자(2)이다.
+	}
 
 }
