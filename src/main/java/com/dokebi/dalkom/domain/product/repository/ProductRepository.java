@@ -46,6 +46,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	List<String> getProductImageBySeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse("
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company) FROM Product p")
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.productOption.detail, ps.amount)"
+		+ "FROM Product p INNER JOIN ProductStock ps "
+		+ "ON p.productSeq = ps.product.productSeq "
+		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC")
 	List<ReadProductResponse> getProductList();
 }
