@@ -23,30 +23,17 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderController {
 	private final OrderService orderService;
 
-	// //상세페이지에서 주문하기
-	// @PostMapping("/api/order/{productSeq}")
-	// public Response createOrder(
-	// 	@PathVariable Long productSeq,
-	// 	@RequestHeader(value = "userSeq") Long userSeq,
-	// 	@RequestBody OrderCreateRequest req){
-	// 	orderService.createOrder(req,productSeq,userSeq);
-	// 	return Response.success();
-	// }
-
 	// 주문 페이지 이동
 	@GetMapping("/api/ordersPage/{userSeq}")
 	public Response getOrderPageByProductSeq(@PathVariable("userSeq") Long userSeq,
 		@RequestBody OrderPageDto orderPageDto) {
-		// @RequestHeader(value = "userSeq") Long userSeq,
-		// @RequestBody OrderPageDetailDto orderPageDetailDto){
+
 		log.info("userSeq: " + userSeq);
 		log.info("orders : " + orderPageDto.getOrders());
 
 		return Response.success(orderService.readProductBySeq(orderPageDto.getOrders()));
 
 	}
-
-	// 장바구니 주문
 
 	// 사용자별 주문 조회
 	@GetMapping("/api/orders/users/{userSeq}")

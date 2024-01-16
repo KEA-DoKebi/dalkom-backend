@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCreateRequest {
-	//private Long userSeq;
 	private String receiverName;
 	private String receiverAddress;
 	private String receiverMobileNum;
