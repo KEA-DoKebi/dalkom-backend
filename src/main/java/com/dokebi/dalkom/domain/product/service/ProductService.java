@@ -37,6 +37,7 @@ public class ProductService {
 		Category category = categoryRepository.getById(request.getCategorySeq());
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
 			request.getImageUrl(), request.getCompany(), request.getState());
+		
 		productRepository.save(newProduct);
 
 		// 초기 재고 등록
@@ -47,8 +48,6 @@ public class ProductService {
 			productStockRepository.save(initialStock);
 		}
 	}
-
-
 
 	@Transactional
 	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
