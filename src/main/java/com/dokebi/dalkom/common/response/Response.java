@@ -11,19 +11,21 @@ import lombok.Getter;
 //응답 객체를 JSON으로 변환하려면 getter가 필요합니다
 @Getter
 public class Response {
-    private boolean success;
-    private int code;
-    private Result result;
+	private boolean success;
+	private int code;
+	private Result result;
 
-    public static Response success() { // 4
-        return new Response(true, 0, null);
-    }
-    //성공했을 때는 응답 데이터도 반환해줍니다.
-    public static <T> Response success(T data) { // 5
-        return new Response(true, 0, new Success<>(data));
-    }
-    //실패했을 때는 실패 메시지도 반환해줍니다.
-    public static Response failure(int code, String msg) { // 6
-        return new Response(false, code, new Failure(msg));
-    }
+	public static Response success() { // 4
+		return new Response(true, 0, null);
+	}
+
+	//성공했을 때는 응답 데이터도 반환해줍니다.
+	public static <T> Response success(T data) { // 5
+		return new Response(true, 0, new Success<>(data));
+	}
+
+	//실패했을 때는 실패 메시지도 반환해줍니다.
+	public static Response failure(int code, String msg) { // 6
+		return new Response(false, code, new Failure(msg));
+	}
 }

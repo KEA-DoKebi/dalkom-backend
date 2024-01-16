@@ -1,13 +1,21 @@
 package com.dokebi.dalkom.domain.mileage.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.user.entity.User;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import javax.persistence.*;
 
 @Entity
 @Getter
@@ -16,21 +24,22 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MileageHistory extends EntityDate {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mileageHistorySeq;
+    private Long milgHistorySeq;
 
-    @ManyToOne
-    @JoinColumn(name = "userSeq")
-    private User user;
 
-    @Column(name = "amount", nullable = false)
-    private Integer amount;
+	@ManyToOne
+	@JoinColumn(name = "userSeq")
+	private User user;
 
-    @Column(name = "balance", nullable = false)
-    private Integer balance;
+	@Column(name = "amount", nullable = false)
+	private Integer amount;
 
-    @Column(name = "type", nullable = false)
-    private String type;
+	@Column(name = "balance", nullable = false)
+	private Integer balance;
 
+	@Column(name = "type", nullable = false)
+	private String type;
 }

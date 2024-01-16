@@ -28,7 +28,7 @@ public class ProductOption extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long productOptionSeq;
+	private Long prdtOptionSeq;
 
 	@Column(name = "optionCode", nullable = false)
 	private String optionCode;

@@ -14,5 +14,4 @@ import lombok.Setter;
 public class ProductCreateRequest {
 	private Product product;
 	private Integer initialStockAmount;
-
 }

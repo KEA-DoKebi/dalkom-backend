@@ -29,7 +29,7 @@ public class OrderDetail extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long orderDetailSeq;
+	private Long ordrDetailSeq;
 
 	@ManyToOne
 	@JoinColumn(name = "ordrSeq")

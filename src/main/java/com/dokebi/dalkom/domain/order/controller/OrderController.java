@@ -65,5 +65,4 @@ public class OrderController {
 	public Response getOrders() {
 		return Response.success(orderService.readOrderByAll());
 	}
-
 }

@@ -30,9 +30,9 @@ public class OrderService {
 	private final UserRepository userRepository;
 	private final OrderDetailRepository orderDetailRepository;
 
-	//db에서 빼올값
-	//dto->entity
-	//db 에저장
+	// db에서 빼올값
+	// dto->entity
+	// db 에저장
 
 	// 장바구니 전체 주문
 	// public static OrderDetail createOrderItem(int itemId, User user, CartItem cartItem, SaleItem saleItem) {

@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 public class OptionListDTO {
 	private Long productOptionSeq;
 	private String detail;
+ 
 
 }
 
+ 

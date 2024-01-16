@@ -27,7 +27,7 @@ public class OrderCart extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long orderCartSeq;
+	private Long ordrCartSeq;
 
 	@ManyToOne
 	@JoinColumn(name = "productSeq")

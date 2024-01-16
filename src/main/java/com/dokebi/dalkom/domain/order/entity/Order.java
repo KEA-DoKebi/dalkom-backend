@@ -30,7 +30,7 @@ public class Order extends EntityDate {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long orderSeq;
+	private Long ordrSeq;
 
 	@ManyToOne
 	@JoinColumn(name = "userSeq")

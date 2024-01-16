@@ -12,9 +12,9 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.user.entity.User;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-<<<<<<< Updated upstream
+ 
 	//상품정보 조회
-=======
+ 
 	// 유저별 주문조회
 	List<Order> findByUser_UserSeq(Long userSeq );
 	//주문별 주문조회
@@ -28,5 +28,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
 
->>>>>>> Stashed changes
+ 
 }

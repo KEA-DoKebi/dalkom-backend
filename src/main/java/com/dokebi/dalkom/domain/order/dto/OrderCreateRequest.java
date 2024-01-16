@@ -15,9 +15,4 @@ public class OrderCreateRequest {
 	private String receiverAddress;
 	private String receiverMobileNum;
 	private String receiverMemo;
-
-
-
 }
-
-
