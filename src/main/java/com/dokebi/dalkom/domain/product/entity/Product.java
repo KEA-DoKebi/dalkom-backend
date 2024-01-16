@@ -55,7 +55,7 @@ public class Product extends EntityDate {
 	private String company;
 
 	@Column(name = "state", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'Y'")
-	private String state;
+	private Character state;
 
 	@OneToMany(mappedBy = "product")
 	private List<ProductStock> productStockList = new ArrayList<>();
@@ -68,4 +68,15 @@ public class Product extends EntityDate {
 
 	@OneToMany(mappedBy = "product")
 	private List<OrderCart> OrderCartList = new ArrayList<>();
+
+	public Product(Category category, String name, Integer price, String info, String imageUrl, String company,
+		Character state) {
+		this.category = category;
+		this.name = name;
+		this.price = price;
+		this.info = info;
+		this.imageUrl = imageUrl;
+		this.company = company;
+		this.state = state;
+	}
 }
