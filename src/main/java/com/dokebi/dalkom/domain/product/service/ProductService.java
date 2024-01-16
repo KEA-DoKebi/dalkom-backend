@@ -53,7 +53,7 @@ public class ProductService {
 		return productRepository.getProductsByCategory(categorySeq);
 	}
 
-	//쿼리 결과를 조합해서 return하는 메서드
+	// 쿼리 결과를 조합해서 return하는 메서드
 	public ReadProductDetailResponse readProduct(Long productSeq) {
 		ReadProductDetailDTO productDetailDTO = productRepository.getProductDetailBySeq(productSeq);
 		List<StockListDTO> stockList = productRepository.getStockListBySeq(productSeq);
