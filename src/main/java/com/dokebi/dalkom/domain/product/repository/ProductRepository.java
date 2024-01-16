@@ -17,6 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Product findByProductSeq(Long productSeq);
 
+
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse(p.productSeq, "
 		+ "p.name, p.price, p.state, p.imageUrl, p.company, ps.amount) FROM Product p "
 		+ "INNER JOIN ProductStock ps"
