@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.review.dto;
+package com.dokebi.dalkom.domain.inqury.dto;
 
 import java.time.LocalDateTime;
 
@@ -11,12 +11,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewByProductResponse {
+public class InquiryOneResponse {
 
-	private String nickname;
+	private String title;
 	private String content;
 	private LocalDateTime createdAt;
-	private LocalDateTime modifiedAt;
-	private Integer rating;
-
+	private String answerContent;
+	private LocalDateTime answeredAt;
+	private String nickname; // 관리자 닉네임
 }
