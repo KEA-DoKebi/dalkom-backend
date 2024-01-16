@@ -31,6 +31,12 @@ public class OrderCartController {
 		return Response.success(orderCartService.getOrderCartList(userSeq));
 	}
 
+	@GetMapping("api/cart/user/{userSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response asdsad(@PathVariable Long userSeq) {
+		return Response.success(orderCartService.getOrderCartList(userSeq));
+	}
+
 	// CART-002 (특정 유저의 장바구니에 상품 담기)
 	@PostMapping("api/cart/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
