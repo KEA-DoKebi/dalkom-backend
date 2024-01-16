@@ -2,14 +2,8 @@ package com.dokebi.dalkom.domain.order.repository;
 
 import java.util.List;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
-import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
-import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.user.entity.User;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
  

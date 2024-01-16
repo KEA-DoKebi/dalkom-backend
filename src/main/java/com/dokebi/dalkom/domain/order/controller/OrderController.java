@@ -39,8 +39,9 @@ public class OrderController {
 		@RequestBody OrderPageDto orderPageDto, Model model){
 		// @RequestHeader(value = "userSeq") Long userSeq,
 		// @RequestBody OrderPageDetailDto orderPageDetailDto){
-		System.out.println("userSeq : " + userSeq);
-		System.out.println("orders : " + orderPageDto.getOrders());
+		log.info("userSeq: "+userSeq);
+		log.info("orders : " + orderPageDto.getOrders());
+
 		// return Response.success(orderService.readOrderPageByProductSeq(productSeq));
 
 	}

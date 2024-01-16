@@ -12,7 +12,6 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
