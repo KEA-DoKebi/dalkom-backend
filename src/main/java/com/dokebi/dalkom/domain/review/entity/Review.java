@@ -15,6 +15,7 @@ import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.user.entity.User;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,8 +40,16 @@ public class Review extends EntityDate {
 	private OrderDetail orderDetail;
 
 	@Column(name = "content", nullable = false)
-	private Long content;
+	private String content;
 
 	@Column(name = "rating", nullable = false)
-	private Long rating;
+	private Integer rating;
+
+	@Builder
+	public Review(User user, OrderDetail orderDetail, String content, Integer rating) {
+		this.user = user;
+		this.orderDetail = orderDetail;
+		this.content = content;
+		this.rating = rating;
+	}
 }

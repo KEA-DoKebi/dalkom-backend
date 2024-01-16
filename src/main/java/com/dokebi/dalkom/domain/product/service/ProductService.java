@@ -15,6 +15,7 @@ import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
+import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
@@ -48,7 +49,7 @@ public class ProductService {
 	}
 
 	@Transactional
-	public List<ProductByCategoryResponse> getProductsByCategory(Long categorySeq) {
+	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
 		return productRepository.getProductsByCategory(categorySeq);
 	}
 
@@ -58,6 +59,12 @@ public class ProductService {
 		List<StockListDTO> stockList = productRepository.getStockListBySeq(productSeq);
 		List<OptionListDTO> optionList = productRepository.getOptionListBySeq(productSeq);
 		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
+
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
+	}
+
+	@Transactional
+	public List<ReadProductResponse> readProductList() {
+		return productRepository.getProductList();
 	}
 }

@@ -1,6 +1,4 @@
-package com.dokebi.dalkom.domain.cart.dto;
-
-import java.util.List;
+package com.dokebi.dalkom.domain.review.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCartDeleteRequest {
-	List<Long> orderCartSeqList;
+
+public class ReviewCreateRequest {
+
+	private Long orderDetailSeq;
+	private String content;
+	private Integer rating;
 }

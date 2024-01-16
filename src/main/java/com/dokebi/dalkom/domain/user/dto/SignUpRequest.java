@@ -17,6 +17,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignUpRequest {
+
+	@NotBlank(message = "사용할 id를 입력해주세요.")
+	private String userId;
+
 	@NotBlank(message = "사용할 id를 입력해주세요.")
 	private String empId;
 
@@ -44,12 +48,9 @@ public class SignUpRequest {
 
 	private String mileage;
 
-	// public static User toEntity(SignUpRequest req, PasswordEncoder encoder) {
-	//     return new User(req.userId, encoder.encode(req.password), req.nickname, req.email, req.profileImgSeq);
-	// }
-
 	public static User toEntity(SignUpRequest req) {
 		return new User(req.empId, req.password, req.name, req.email, req.address, req.joinedAt, req.nickname,
 			req.mileage);
 	}
+
 }
