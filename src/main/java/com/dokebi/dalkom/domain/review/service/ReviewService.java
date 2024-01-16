@@ -46,7 +46,7 @@ public class ReviewService {
 	public void createReview(Long userSeq, ReviewCreateRequest request) {
 
 		User user = userRepository.findByUserSeq(userSeq);
-		OrderDetail orderDetail = orderDetailRepository.findByOrderDetailSeq(request.getOrderDetailSeq());
+		OrderDetail orderDetail = orderDetailRepository.findByOrdrDetailSeq(request.getOrderDetailSeq());
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
 		reviewRepository.save(review);
 	}

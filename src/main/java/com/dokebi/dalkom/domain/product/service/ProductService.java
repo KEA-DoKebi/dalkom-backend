@@ -37,6 +37,8 @@ public class ProductService {
 		return savedProduct;
 	}
 
+
+
 	@Transactional
 	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
 		return productRepository.getProductsByCategory(categorySeq);
