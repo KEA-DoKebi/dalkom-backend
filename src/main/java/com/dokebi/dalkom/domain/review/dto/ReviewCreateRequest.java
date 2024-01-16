@@ -15,5 +15,4 @@ public class ReviewCreateRequest {
 	private Long orderDetailSeq;
 	private String content;
 	private Integer rating;
-
 }
