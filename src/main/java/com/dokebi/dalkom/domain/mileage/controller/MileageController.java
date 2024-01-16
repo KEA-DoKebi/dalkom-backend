@@ -28,6 +28,4 @@ public class MileageController {
 		return Response.success(mileageService.readMileageHistoryByUserSeq(userSeq));
 
 	}
-
-
 }
