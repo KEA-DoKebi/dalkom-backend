@@ -28,7 +28,6 @@ import lombok.Setter;
 @Table(name = "prdtStock")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class ProductStock extends EntityDate {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long prdtStockSeq;
