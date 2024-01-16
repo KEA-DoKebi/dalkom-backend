@@ -33,7 +33,6 @@ public class ProductService {
 		initialStock.setAmount(initialStockAmount);
 		productStockRepository.save(initialStock);
 		return savedProduct;
-
 	}
 
 	@Transactional

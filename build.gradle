@@ -59,3 +59,10 @@ bootJar {
     archivesBaseName = 'dalkom'
     archiveFileName = 'dalkom.jar'
 }
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "KEA-DoKebi_dalkom-backend_AY0ILkkA7nQIqqNyuD-r"
+        property "sonar.host.url", "https://b3a1-203-249-127-39.ngrok-free.app"
+    }
+}
