@@ -26,7 +26,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "prdtStock")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductStock extends EntityDate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,4 +46,9 @@ public class ProductStock extends EntityDate {
 	@OneToMany(mappedBy = "productStock")
 	private List<ProductStockHistory> productStockHistoryList = new ArrayList<>();
 
+	public ProductStock(Product product, ProductOption productOption, Integer amount) {
+		this.product = product;
+		this.productOption = productOption;
+		this.amount = amount;
+	}
 }
