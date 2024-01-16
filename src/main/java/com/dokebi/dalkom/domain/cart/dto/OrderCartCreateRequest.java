@@ -12,6 +12,6 @@ import lombok.Setter;
 public class OrderCartCreateRequest {
 
 	private Long productSeq;
-	private String optionDetail;
+	private Long prdtOptionSeq;
 	private Integer amount;
 }
