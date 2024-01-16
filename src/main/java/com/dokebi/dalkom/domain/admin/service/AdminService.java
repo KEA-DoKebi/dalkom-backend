@@ -5,9 +5,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.dto.AdminDto;
+import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
+import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,4 +28,25 @@ public class AdminService {
 		}
 		return adminDtoList;
 	}
+
+	public Response createAdmin(CreateAdminRequest req) {
+		try {
+			validateNickname(req.getNickname());
+
+			// 비밀번호 암호화
+			// String password = passwordEncoder.encode(req.getPassword());
+			// req.setPassword(password);
+			adminRepository.save(CreateAdminRequest.toEntity(req));
+		} catch (UserNicknameAlreadyExistsException e) {
+			return Response.failure(0, e.getMessage());
+		}
+		return Response.success();
+	}
+
+	private void validateNickname(String nickname) {
+		if (adminRepository.existsByNickname(nickname)) {
+			throw new UserNicknameAlreadyExistsException(nickname + "은 이미 사용중입니다.");
+		}
+	}
+
 }
