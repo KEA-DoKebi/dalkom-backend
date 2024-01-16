@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.cart.dto;
+package com.dokebi.dalkom.domain.stock.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCartReadResponse {
-
-	private Long orderCartSeq;
-	private String imageUrl;
-	private Integer price;
+public class ProductStockEditRequest {
 	private Integer amount;
 }

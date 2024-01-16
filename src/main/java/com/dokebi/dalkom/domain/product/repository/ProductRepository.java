@@ -17,11 +17,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Product findByProductSeq(Long productSeq);
 
-
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse(p.productSeq, "
-		+ "p.name, p.price, p.state, p.imageUrl, p.company, ps.amount) FROM Product p "
-		+ "INNER JOIN ProductStock ps"
-		+ " ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq")
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse" +
+		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, CAST(SUM(ps.amount) AS int)) " +
+		"FROM Product p " +
+		"INNER JOIN ProductStock ps " +
+		"ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq " +
+		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
 	List<ProductByCategoryResponse> getProductsByCategory(@Param("categorySeq") Long categorySeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
