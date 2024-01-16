@@ -37,16 +37,16 @@ public class OrderCart extends EntityDate {
 	@JoinColumn(name = "userSeq")
 	private User user;
 
-	@Column(name = "optionDetail")
-	private String optionDetail;
+	@Column(name = "prdtOptionSeq")
+	private Long prdtOptionSeq;
 
 	@Column(name = "amount", nullable = false)
 	private Integer amount;
 
-	public OrderCart(User user, Product product, String optionDetail, Integer amount) {
+	public OrderCart(User user, Product product, Long prdtOptionSeq, Integer amount) {
 		this.user = user;
 		this.product = product;
-		this.optionDetail = optionDetail;
+		this.prdtOptionSeq = prdtOptionSeq;
 		this.amount = amount;
 	}
 }
