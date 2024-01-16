@@ -23,7 +23,7 @@ public class MileageController {
 	}
 
 	// 유저 마일리지 내역 전체 조회
-	@GetMapping("api/mileage/history/user/{userSeq}")
+	@GetMapping("/api/mileage/history/user/{userSeq}")
 	public Response getMileageHistoryByUserSeq (@PathVariable("userSeq") Long userSeq){
 		return Response.success(mileageService.readMileageHistoryByUserSeq(userSeq));
 
