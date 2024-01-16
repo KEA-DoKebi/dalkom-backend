@@ -12,6 +12,8 @@ import com.dokebi.dalkom.domain.review.entity.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
+	Review findByReviewSeq(Long reviewSeq);
+
 	@Query("SELECT u.nickname, r.content, r.createdAt, r.modifiedAt, r.rating FROM Review r " +
 		"LEFT JOIN r.orderDetail od " +
 		"JOIN od.product p " +
