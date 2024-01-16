@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.option.dto.OptionCodeResponse;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class ProductOptionService {
 	private final ProductOptionRepository productOptionRepository;
 
 	@Transactional
-	public List<String> getOptionList() {
+	public List<OptionCodeResponse> getOptionList() {
 		return productOptionRepository.findAllOptionCode();
 	}
 

@@ -11,4 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OptionCodeResponse {
 	private String optionCode;
+	private String name;
 }
