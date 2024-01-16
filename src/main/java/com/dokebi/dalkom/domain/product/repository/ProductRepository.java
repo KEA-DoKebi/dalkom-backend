@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
+import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
@@ -41,4 +42,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("SELECT pi.imageUrl FROM ProductImage pi "
 		+ "WHERE pi.product.productSeq = :productSeq")
 	List<String> getProductImageBySeq(@Param("productSeq") Long productSeq);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse("
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company) FROM Product p")
+	List<ReadProductResponse> getProductList();
 }
