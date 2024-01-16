@@ -49,20 +49,20 @@ public class OrderController {
 	// 장바구니 주문
 
 	// 사용자별 주문 조회
-	@GetMapping("/api/orders/users/{userSeq}")
+	@GetMapping("/api/order/user/{userSeq}")
 	public Response getOrdersByUserSeq(@PathVariable("userSeq") Long userSeq) {
 
 		return Response.success(orderService.readOrderByUserSeq(userSeq));
 	}
 
 	// 특정 주문 조회
-	@GetMapping("/api/orders/{orderSeq}")
+	@GetMapping("/api/order/{orderSeq}")
 	public Response getOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq) {
 		return Response.success(orderService.readOrderByOrderSeq(orderSeq));
 	}
 
 	// 전체 주문 조회
-	@GetMapping("/api/orders")
+	@GetMapping("/api/order")
 	public Response getOrders() {
 		return Response.success(orderService.readOrderByAll());
 	}
