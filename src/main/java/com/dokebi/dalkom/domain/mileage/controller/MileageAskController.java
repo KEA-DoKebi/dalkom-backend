@@ -4,9 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
 import com.dokebi.dalkom.domain.mileage.service.MileageAskService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class MileageAskController {
 
 	// MILEAGE-005 (마일리지 충전 신청)
 	@PostMapping("/api/mileage/ask/user/{userSeq}")
-	public Response postMileageAsk(){
-		return Response.success();
+	public Response postMileageAsk(@PathVariable Long userSeq, @RequestBody MileageAskRequest request){
+		return mileageAskService.postMileageAsk(userSeq, request);
 	}
 }
