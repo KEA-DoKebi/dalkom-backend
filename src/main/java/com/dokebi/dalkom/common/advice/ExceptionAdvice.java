@@ -1,7 +1,13 @@
 package com.dokebi.dalkom.common.advice;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,4 +78,10 @@ public class ExceptionAdvice {
 	// @ResponseStatus(HttpStatus.BAD_REQUEST)
 	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
 	// 	return Response.failure(-1009,e.getHeaderName()+"요청 헤더가 누락되었습니다.");
+
+	@ExceptionHandler(OrderStockLackException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public Response orderStockLackException(){
+		return Response.failure(-1300,"재고가 부족합니다.");
+	}
 }
