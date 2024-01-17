@@ -58,4 +58,12 @@ public class Inquiry extends EntityDate {
 
 	@Column(name = "answeredAt")
 	private LocalDateTime answeredAt;
+
+	public Inquiry(Category category, User user, String title, String content, String answerState) {
+		this.category = category;
+		this.user = user;
+		this.title = title;
+		this.content = content;
+		this.answerState = answerState;
+	}
 }
