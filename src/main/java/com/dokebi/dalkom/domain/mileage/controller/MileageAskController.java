@@ -38,4 +38,5 @@ public class MileageAskController {
 	public Response postMileageAsk(@PathVariable Long userSeq, @RequestBody MileageAskRequest request){
 		return mileageAskService.postMileageAsk(userSeq, request);
 	}
+
 }
