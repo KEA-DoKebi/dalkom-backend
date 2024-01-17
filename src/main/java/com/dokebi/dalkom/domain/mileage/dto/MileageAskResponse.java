@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MileageAskDto {
+public class MileageAskResponse {
 	private Long userSeq;
 	private LocalDateTime createdAt;
 	private Integer balance;
