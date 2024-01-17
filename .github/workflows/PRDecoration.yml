@@ -4,7 +4,7 @@ on:
   pull_request
 
 jobs:
-  build:
+  PR_Decoration :
     name: Build and Analyze
     runs-on: ubuntu-latest
     steps:
