@@ -40,12 +40,14 @@ public class NoticeService {
 
 	@Transactional
 	public void createNotice(NoticeCreateRequest request) {
+
 		Admin admin = adminRepository.findByAdminSeq(request.getAdminSeq());
 		Notice notice = new Notice(admin, request.getTitle(), request.getContent(), request.getState());
 		noticeRepository.save(notice);
 	}
 
 	public void modifyNotice(Long noticeSeq, NoticeModifyRequest request) {
+
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
 		notice.setTitle(request.getTitle());
 		notice.setContent(request.getContent());
@@ -57,6 +59,7 @@ public class NoticeService {
 
 	@Transactional
 	public void deleteNotice(Long noticeSeq) {
+
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
 		noticeRepository.delete(notice);
 	}
