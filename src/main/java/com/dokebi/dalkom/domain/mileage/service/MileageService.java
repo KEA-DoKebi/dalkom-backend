@@ -18,12 +18,18 @@ import lombok.extern.slf4j.Slf4j;
 public class MileageService {
 	private final MileageHistoryRepository mileageHistoryRepository;
 
+	// 유저별 보유 마일리지  조회 서비스
 	public Integer readMileageByUserSeq(Long userSeq) {
-		log.info(String.valueOf(mileageHistoryRepository.findMileageByUserSeq(userSeq)));
-		
-		return  mileageHistoryRepository.findMileageByUserSeq(userSeq);
+		List<Integer> mileageList = mileageHistoryRepository.findMileageByUserSeq(userSeq);
+		if (!mileageList.isEmpty()) {
+			log.info("Mileage found: " + mileageList.get(0));
+			return mileageList.get(0);
+		} else {
+			log.info("No mileage found for user with userSeq: " + userSeq);
+			return 0;
+		}
 	}
-
+	// 유저별 마일리지 내역 조회 서비스
 	public List<MileageHistoryDto> readMileageHistoryByUserSeq(Long userSeq) {
 		List<MileageHistory> mileageHistories = mileageHistoryRepository.findMileageHistoriesByUserSeq(userSeq);
 
