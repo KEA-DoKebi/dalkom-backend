@@ -46,7 +46,7 @@ public class SignUpRequest {
 	@Pattern(regexp = "^[A-Za-z가-힣]+$", message = "닉네임은 한글 또는 알파벳만 입력해주세요.")
 	private String nickname;
 
-	private String mileage;
+	private Integer mileage;
 
 	public static User toEntity(SignUpRequest req) {
 		return new User(req.empId, req.password, req.name, req.email, req.address, req.joinedAt, req.nickname,

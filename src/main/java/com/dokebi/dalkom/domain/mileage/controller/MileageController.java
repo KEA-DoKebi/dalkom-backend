@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MileageController {
 	private final MileageService mileageService;
-	private final MileageAskService mileageAskService;
 
 	//유저 보유 마일리지 조회
 	@GetMapping("/api/mileage/user/{userSeq}")
@@ -33,23 +32,7 @@ public class MileageController {
 
 	}
 
-	// 마일리지 신청 조회 (관리자)
-	@GetMapping("/api/mileage/ask")
-	public Response getMileageAsk(){
-		return  Response.success(mileageAskService.readMileageAsk());
-	}
 
-	//마일리지 충전 신청
-	@PostMapping("/api/mileage/ask/user/{userSeq}")
-	public Response postMileageAsk(){
-		return Response.success();
-	}
-
-	//마일리지 승인 여부 변경 ( 관리자 )
-	@PutMapping("/api/milage/ask/{askSeq}")
-	public Response putMileageAskState(){
-		return  Response.success();
-	}
 
 
 }
