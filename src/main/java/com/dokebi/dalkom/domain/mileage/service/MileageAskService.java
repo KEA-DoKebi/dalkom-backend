@@ -45,7 +45,7 @@ public class MileageAskService {
 		Long userSeq = mileageApply.getUser().getUserSeq();
 		if ("N".equals(approvedState)) {
 			mileageApply.setApprovedState("Y");
-			mileageService.createMileageHistoryAndUpdateUser(userSeq,mileageApply.getAmount());
+			mileageService.createMileageHistoryAndUpdateUser(userSeq,mileageApply.getAmount(), "1");
 			mileageAskRepository.save(mileageApply);
 
 		}
