@@ -29,7 +29,6 @@ public class ProductStockService {
 
 		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, amountChanged);
 
-		stockRepository.save(stock);
 		stockHistoryRepository.save(stockHistory);
 	}
 
