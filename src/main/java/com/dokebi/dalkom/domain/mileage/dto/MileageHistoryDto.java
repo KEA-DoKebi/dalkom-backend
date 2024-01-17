@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.review.dto;
+package com.dokebi.dalkom.domain.mileage.dto;
 
 import java.time.LocalDateTime;
 
@@ -6,17 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class ReviewByProductResponse {
+@NoArgsConstructor
+@ToString
+public class MileageHistoryDto {
 
-	private String nickname;
-	private String content;
+	private String type;
 	private LocalDateTime createdAt;
-	private LocalDateTime modifiedAt;
-	private Integer rating;
+
+	private Integer balance;
+	private Integer amount;
 
 }

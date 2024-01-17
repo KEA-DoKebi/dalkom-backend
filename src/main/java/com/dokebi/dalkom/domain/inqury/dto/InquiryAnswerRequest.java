@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.cart.dto;
+package com.dokebi.dalkom.domain.inqury.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCartCreateRequest {
+public class InquiryAnswerRequest {
 
-	private Long productSeq;
-	private Long prdtOptionSeq;
-	private Integer amount;
+	private String answerContent;
+	private String answerState;
 }
