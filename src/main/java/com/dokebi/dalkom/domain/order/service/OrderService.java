@@ -23,6 +23,7 @@ import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -58,12 +59,12 @@ public class OrderService {
 			} catch (Exception e) {
 				return Response.failure(403, e.getMessage());
 			}
-			
+
 			totalPrice += (price * request.getAmountList().get(i));
 		}
 
 		// 어떤 사용자인지 조회
-		User user = userRepository.findByUserSeq(request.getUserSeq());
+		User user = userRepository.findByUserSeq(request.getUserSeq()).orElseThrow(UserNotFoundException::new);
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (totalPrice <= user.getMileage()) {

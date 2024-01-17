@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.product.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +16,7 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-	Product findByProductSeq(Long productSeq);
+	Optional<Product> findByProductSeq(Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse" +
 		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, CAST(SUM(ps.amount) AS int)) " +

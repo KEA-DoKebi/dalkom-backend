@@ -15,6 +15,7 @@ import com.dokebi.dalkom.domain.inqury.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
 import com.dokebi.dalkom.domain.inqury.repository.InquiryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -52,7 +53,7 @@ public class InquiryService {
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 
 		Category category = categoryRepository.findByCategorySeq(request.getCategorySeq());
-		User user = userRepository.findByUserSeq(userSeq);
+		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 		String answerState = "N";
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), answerState);
 		inquiryRepository.save(inquiry);
