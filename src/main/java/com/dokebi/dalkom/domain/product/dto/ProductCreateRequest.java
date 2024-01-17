@@ -19,7 +19,7 @@ public class ProductCreateRequest {
 	private String name;
 	private Integer price;
 	private String info;
-	private Character state;
+	private String state;
 	private String imageUrl;
 	private String company;
 	private List<OptionAmountDTO> prdtOptionList;

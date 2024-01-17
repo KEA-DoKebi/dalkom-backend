@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.mileage.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.apache.tomcat.jni.Local;
 
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -38,8 +41,15 @@ public class MileageApply extends EntityDate {
 	private Integer amount;
 
 	@Column(name = "approvedState", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'N'")
-	private String approveState;
+	private String approvedState;
 
 	@Column(name = "approvedAt")
 	private LocalDateTime approvedAt;
+
+	public MileageApply(User user, Integer amount, String approvedState, LocalDateTime approvedAt) {
+		this.user = user;
+		this.amount = amount;
+		this.approvedState = approvedState;
+		this.approvedAt = approvedAt;
+	}
 }
