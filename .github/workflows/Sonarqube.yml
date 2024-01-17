@@ -58,4 +58,4 @@ jobs:
           -Dsonar.host.url=$SONAR_HOST_URL \
           -Dsonar.token=$SONAR_TOKEN \
           -Dsonar.java.binaries=./build
-          -Dsonar.coverage.jacoco.xmlReportPaths=./build/reports/jacoco/test/jacocoTestReport.xml
+          -Dsonar.coverage.jacoco.xmlReportPaths='./build/reports/jacoco/test/jacocoTestReport.xml'
