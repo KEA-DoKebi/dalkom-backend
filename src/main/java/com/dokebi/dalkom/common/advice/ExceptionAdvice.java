@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
-import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 
 import lombok.extern.slf4j.Slf4j;
 
