@@ -23,7 +23,6 @@ public class MileageAskService {
 	public List<MileageAskDto> readMileageAsk() {
 		List<MileageApply> mileageApply = mileageApplyRepository.findAll();
 
-
 		return mileageApply.stream()
 			.map(ask -> new MileageAskDto(
 				ask.getUser().getUserSeq(),
@@ -37,8 +36,7 @@ public class MileageAskService {
 	public String putMileageAskState(Long askSeq){
 		String approvedState = mileageApplyRepository.findApproveStateByMilgApplySeq(askSeq);
 		log.info(approvedState);
+		
 		return approvedState;
-
 	}
-
 }
