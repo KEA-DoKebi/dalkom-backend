@@ -12,8 +12,6 @@ public interface MileageAskRepository extends JpaRepository<MileageApply,Long> {
 
 	List<MileageApply> findAll();
 
-	MileageApply findByMilgApplySeq(Long milgApplySeq);
-	// @Query("SELECT m.approveState FROM MileageApply m WHERE m.milgApplySeq = :milgApplySeq")
-	// String findApproveStateByMilgApplySeq(@Param("milgApplySeq") Long milgApplySeq);
-
+	@Query("SELECT m.approvedState FROM MileageApply m WHERE m.milgApplySeq = :milgApplySeq")
+	String findApproveStateByMilgApplySeq(@Param("milgApplySeq") Long milgApplySeq);
 }

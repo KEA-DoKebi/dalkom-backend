@@ -6,9 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.domain.mileage.dto.MileageAskResponse;
+import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.mileage.dto.MileageAskDto;
+import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.mileage.repository.MileageAskRepository;
+import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
+import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class MileageAskService {
-	private final MileageAskRepository mileageAskRepository;
-	private final MileageService mileageService;
+	private final MileageAskRepository mileageApplyRepository;
+	private final UserRepository userRepository;
 
 	public List<MileageAskResponse> readMileageAsk() {
 		List<MileageApply> mileageApply = mileageAskRepository.findAll();
@@ -29,7 +34,7 @@ public class MileageAskService {
 				ask.getCreatedAt(),
 				ask.getUser().getMileage(),
 				ask.getAmount(),
-				ask.getApproveState()))
+				ask.getApprovedState()))
 			.collect(Collectors.toList());
 	}
 	@Transactional
@@ -47,9 +52,17 @@ public class MileageAskService {
 			mileageAskRepository.save(mileageApply);
 
 		}
-		return "ok";
 	}
+	public Response postMileageAsk(Long userSeq, MileageAskRequest request) {
+		try {
+			User user = userRepository.findByUserSeq(userSeq);
 
+			MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
+			mileageApplyRepository.save(mileageApply);
 
-
+			return Response.success();
+		} catch (UserNotFoundException e) {
+			return Response.failure(404, "존재하지 않는 사용자이다.");
+		}
+	}
 }
