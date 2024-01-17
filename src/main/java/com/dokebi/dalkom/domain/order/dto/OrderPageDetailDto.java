@@ -14,6 +14,7 @@ import lombok.ToString;
 public class OrderPageDetailDto {
 	// 뷰로부터 전달받을 값
 
+	// private Long userSeq;
 	private Long productSeq;
 	private Long productOptionSeq;
 

@@ -57,4 +57,13 @@ public class Order extends EntityDate {
 	@OneToMany(mappedBy = "order")
 	private List<OrderDetail> orderDetailList = new ArrayList<>();
 
+	public Order(User user, String receiverName, String receiverAddress,
+		String receiverMobileNum, String receiverMemo, Integer totalPrice) {
+		this.user = user;
+		this.receiverName = receiverName;
+		this.receiverAddress = receiverAddress;
+		this.receiverMobileNum = receiverMobileNum;
+		this.receiverMemo = receiverMemo;
+		this.totalPrice = totalPrice;
+	}
 }
