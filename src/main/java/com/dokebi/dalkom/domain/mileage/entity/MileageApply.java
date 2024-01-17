@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.mileage.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -11,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.apache.tomcat.jni.Local;
 
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.user.entity.User;
