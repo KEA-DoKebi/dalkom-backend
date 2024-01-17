@@ -77,7 +77,6 @@ test {
 }
 
 jacocoTestReport {
-    ignoreFailures = true
     reports {
         xml.required = true
     }
