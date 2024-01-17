@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
+// TODO 음수로 내려가지 않게 예외처리하기
 public class ProductStockService {
 	private final ProductStockRepository stockRepository;
 	private final ProductStockHistoryRepository stockHistoryRepository;
@@ -29,7 +31,6 @@ public class ProductStockService {
 
 		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, amountChanged);
 
-		stockRepository.save(stock);
 		stockHistoryRepository.save(stockHistory);
 	}
 
@@ -47,13 +48,11 @@ public class ProductStockService {
 	}
 
 	@Transactional
-	public Boolean checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
+	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
 
 		if (stock.getAmount() - amountChanged < 0) {
 			throw new NotEnoughStockException();
-		} else {
-			return true;
 		}
 	}
 }

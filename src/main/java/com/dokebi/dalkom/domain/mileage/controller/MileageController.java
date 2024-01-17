@@ -32,11 +32,4 @@ public class MileageController {
 	public Response getMileageHistoryByUserSeq (@PathVariable("userSeq") Long userSeq){
 		return Response.success(mileageService.readMileageHistoryByUserSeq(userSeq));
 	}
-
-	// 유저 마일리지 내역 추가
-	@PostMapping("/api/mileage/history/user/{userSeq}")
-	public void postMileageHistoryByUserSeq(@PathVariable("userSeq") Long userSeq, @RequestBody Integer amount) {
-		  mileageService.createMileageHistoryAndUpdateUser(userSeq, amount);
-	}
-
 }
