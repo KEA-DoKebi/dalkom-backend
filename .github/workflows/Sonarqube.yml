@@ -4,7 +4,7 @@ on:
   push
 
 jobs:
-  sonarqube_scan:
+  Sonarqube_Analysis :
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -34,7 +34,7 @@ jobs:
 
     # Build with Gradle
     - name: Build with Gradle
-      run: ./gradlew test jacocoTestReport
+      run: ./gradlew test jacocoTestReport --continue
 
     # Download and setup SonarScanner
     - name: Install SonarScanner
