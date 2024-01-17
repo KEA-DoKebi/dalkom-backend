@@ -57,7 +57,7 @@ public class User extends EntityDate {
 	private String nickname;
 
 	@Column(name = "mileage", nullable = false)
-	private String mileage;
+	private Integer mileage;
 
 	@Column(name = "state", nullable = false)
 	private String deleteState;
@@ -84,7 +84,7 @@ public class User extends EntityDate {
 	private List<Inquiry> inquiry = new ArrayList<>();
 
 
-	public User (String empId, String password, String name, String email, String address, String joinedAt, String nickname, String mileage){
+	public User (String empId, String password, String name, String email, String address, String joinedAt, String nickname, Integer mileage){
 		this.empId = empId;
 		this.password = password;
 		this.name = name;
