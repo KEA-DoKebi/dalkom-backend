@@ -40,4 +40,11 @@ public class Notice extends EntityDate {
 
 	@Column(name = "state", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT 'N'")
 	private String state;
+
+	public Notice(Admin admin, String title, String content, String state) {
+		this.admin = admin;
+		this.title = title;
+		this.content = content;
+		this.state = state;
+	}
 }
