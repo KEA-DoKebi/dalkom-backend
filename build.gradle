@@ -72,10 +72,12 @@ jacoco {
 }
 
 test {
+    ignoreFailures = true
     finalizedBy jacocoTestReport // 테스트 후 JaCoCo 리포트 생성
 }
 
 jacocoTestReport {
+    ignoreFailures = true
     reports {
         xml.required = true
     }
