@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
+import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 
@@ -21,9 +22,9 @@ public class ExceptionAdvice {
 	// @ExceptionHandler(Exception.class)
 	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	// public Response exception(Exception e) {
-	//     //구체적인 에러 보여주기
-	//     log.info("e= {}",e.getMessage());
-	//     return Response.failure(-1000,"오류가 발생하였습니다.");
+	// 구체적인 에러 보여주기
+	// log.info("e= {}",e.getMessage());
+	// return Response.failure(-1000,"오류가 발생하였습니다.");
 	//
 	// }
 	// //401 에러
@@ -94,7 +95,12 @@ public class ExceptionAdvice {
 
 	// 주문
 
-	// 마일리지
+	// 마일리지 (1400)
+	@ExceptionHandler(MileageLackException.class)
+	@ResponseStatus(HttpStatus.PAYMENT_REQUIRED)//402
+	public Response mileageLackException() {
+		return Response.failure(-1400, "마일리지가 부족합니다.");
+	}
 
 	// 카트
 	@ExceptionHandler(OrderCartEmptyResultDataAccessException.class)
@@ -112,5 +118,4 @@ public class ExceptionAdvice {
 	// 문의
 
 	// 공지사항
-
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
@@ -113,7 +114,7 @@ public class OrderService {
 			// 모든 과정이 정상적으로 진행될 경우 Response.success() return
 			return Response.success();
 		} else {
-			return Response.failure(403, "보유 마일리지가 부족합니다.");
+			throw new MileageLackException();
 		}
 	}
 
