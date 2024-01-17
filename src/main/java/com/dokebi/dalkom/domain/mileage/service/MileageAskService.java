@@ -23,7 +23,6 @@ public class MileageAskService {
 	public List<MileageAskResponse> readMileageAsk() {
 		List<MileageApply> mileageApply = mileageAskRepository.findAll();
 
-
 		return mileageApply.stream()
 			.map(ask -> new MileageAskResponse(
 				ask.getUser().getUserSeq(),
