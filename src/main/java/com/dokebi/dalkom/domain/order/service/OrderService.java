@@ -125,6 +125,12 @@ public class OrderService {
 	public List<OrderPageDetailDto> readProductDetail(List<OrderPageDetailDto> orderList) {
 		List<OrderPageDetailDto> result = new ArrayList<>();
 		orderList.forEach(order -> {
+			// 선택한 상품
+			Long orderSeq = order.getProductSeq();
+			// 선택한 옵션
+			Long optionSeq = order.getProductOptionSeq();
+			// 선택한 개수
+			Integer productAmount = order.getProductAmount();
 
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
@@ -132,12 +138,13 @@ public class OrderService {
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto();
 
-			// db에서 받은 값
-			orderPageDetailDTO.setProductSeq(order.getProductSeq());
+			orderPageDetailDTO.setProductSeq(orderSeq);
 			orderPageDetailDTO.setProductName(productInfo.getName());
-			orderPageDetailDTO.setProductOptionSeq(order.getProductSeq()); // 선택한 옵션 받아오기
+			orderPageDetailDTO.setProductOptionSeq(optionSeq);
 			orderPageDetailDTO.setProductPrice(productInfo.getPrice());
-			orderPageDetailDTO.setProductAmount(order.getProductAmount()); // 개수 받아오기
+			orderPageDetailDTO.setProductAmount(productAmount);
+			// 재고 확인
+			productStockService.checkStock(orderSeq, optionSeq, productAmount);
 			orderPageDetailDTO.setTotalPrice(productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);

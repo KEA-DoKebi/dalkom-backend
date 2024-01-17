@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
+import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 
@@ -85,6 +86,29 @@ public class ExceptionAdvice {
 	// public Response memberNicknameAlreadyExistsException(UserNicknameAlreadyExistsException e){
 	//     return Response.failure(-1006,e.getMessage()+"은 중복된 닉네임 입니다.");
 	// }
+	//
+	// @ExceptionHandler (UserNotFoundException.class)
+	// @ResponseStatus(HttpStatus.NOT_FOUND)//404
+	// public Response memberNotFoundException() {
+	// 	return Response.failure(-1007,"요청한 회원을 찾을 수 없습니다.");
+	// }
+	//
+	// @ExceptionHandler (RoleNotFoundException.class)
+	// @ResponseStatus (HttpStatus.NOT_FOUND)//404
+	// public Response roleNotFoundException(){
+	// 	return Response.failure(-1008,"요청한 권한 등급을 찾을 수 없습니다. ");
+	// }
+	//
+	// @ExceptionHandler(MissingRequestHeaderException.class)
+	// @ResponseStatus(HttpStatus.BAD_REQUEST)
+	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
+	// 	return Response.failure(-1009,e.getHeaderName()+"요청 헤더가 누락되었습니다.");
+
+	@ExceptionHandler(OrderStockLackException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public Response orderStockLackException(){
+		return Response.failure(-1300,"재고가 부족합니다.");
+	}
 
 	// 상품
 	@ExceptionHandler(ProductNotFoundException.class)
@@ -110,6 +134,7 @@ public class ExceptionAdvice {
 	}
 
 	// 재고
+
 
 	// 카테고리
 
