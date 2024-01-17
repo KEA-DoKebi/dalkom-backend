@@ -68,6 +68,14 @@ sonarqube {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+test {
+    finalizedBy jacocoTestReport // 테스트 후 JaCoCo 리포트 생성
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
