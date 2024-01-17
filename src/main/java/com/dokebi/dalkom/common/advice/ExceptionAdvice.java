@@ -8,12 +8,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
+import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
 public class ExceptionAdvice {
+
+	// 공통 권한
+
 	// @ExceptionHandler(Exception.class)
 	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	// public Response exception(Exception e) {
@@ -41,7 +45,26 @@ public class ExceptionAdvice {
 	// public Response bindException(BindException e){
 	// 	return Response.failure(-1003,e.getBindingResult().getFieldError().getDefaultMessage());
 	// }
+
+	// @ExceptionHandler (UserNotFoundException.class)
+	// @ResponseStatus(HttpStatus.NOT_FOUND)//404
+	// public Response memberNotFoundException() {
+	// 	return Response.failure(-1007,"요청한 회원을 찾을 수 없습니다.");
+	// }
 	//
+	// @ExceptionHandler (RoleNotFoundException.class)
+	// @ResponseStatus (HttpStatus.NOT_FOUND)//404
+	// public Response roleNotFoundException(){
+	// 	return Response.failure(-1008,"요청한 권한 등급을 찾을 수 없습니다. ");
+	// }
+	//
+	// @ExceptionHandler(MissingRequestHeaderException.class)
+	// @ResponseStatus(HttpStatus.BAD_REQUEST)
+	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
+	// 	return Response.failure(-1009,e.getHeaderName()+"요청 헤더가 누락되었습니다.");
+
+	// 사용자 + 로그인
+
 	// @ExceptionHandler(LoginFailureException.class)
 	// @ResponseStatus(HttpStatus.UNAUTHORIZED)
 	// public Response loginFailureException(){
@@ -84,4 +107,27 @@ public class ExceptionAdvice {
 	public Response orderStockLackException(){
 		return Response.failure(-1300,"재고가 부족합니다.");
 	}
+
+	// 상품
+
+	// 주문
+
+	// 마일리지 (1400)
+	@ExceptionHandler (MileageLackException.class)
+	@ResponseStatus(HttpStatus.PAYMENT_REQUIRED)//402
+	public Response mileageLackException(){
+		return Response.failure(-1400, "마일리지가 부족합니다.");
+	}
+	// 카트
+
+	// 재고
+
+	// 카테고리
+
+	// 관리자 + 로그인
+
+	// 문의
+
+	// 공지사항
+
 }
