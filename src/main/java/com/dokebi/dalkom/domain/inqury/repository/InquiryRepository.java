@@ -12,6 +12,8 @@ import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
 
 public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 
+	Inquiry findByInquirySeq(Long inquirySeq);
+
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inqury.dto.InquiryListResponse("
 		+ "i.title, i.content, i.createdAt, i.answerState, i.answeredAt, i.answerContent) " +
 		"FROM Inquiry i " +
