@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
@@ -38,6 +39,7 @@ public class OrderService {
 	private final UserRepository userRepository;
 	private final ProductService productService;
 	private final ProductStockService productStockService;
+	private final MileageService mileageService;
 
 	// 결제 하기
 	public Response makeOrder(OrderCreateRequest request) {
@@ -51,12 +53,11 @@ public class OrderService {
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
 
-			try{
-				// checkAmount 코드
+			try {
+				productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
 			} catch (Exception e) {
 				return Response.failure(403, e.getMessage());
 			}
-
 			
 			totalPrice += (price * request.getAmountList().get(i));
 		}
@@ -104,8 +105,9 @@ public class OrderService {
 			}
 
 			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
-			user.setMileage(user.getMileage() - totalPrice);
-			userRepository.save(user);
+			Integer amount = (user.getMileage() - totalPrice);
+
+			mileageService.createMileageHistoryAndUpdateUser(user.getUserSeq(), amount, "2");
 
 			// 모든 과정이 정상적으로 진행될 경우 Response.success() return
 			return Response.success();
@@ -114,7 +116,7 @@ public class OrderService {
 		}
 	}
 
-	// 주문서 내역 조회
+	// 주문하기
 	public List<OrderPageDetailDto> readProductDetail(List<OrderPageDetailDto> orderList) {
 		List<OrderPageDetailDto> result = new ArrayList<>();
 		orderList.forEach(order -> {
