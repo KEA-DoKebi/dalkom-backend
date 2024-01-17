@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
@@ -29,11 +30,12 @@ public class MileageAskController {
 	//마일리지 충전 신청
 	@PostMapping("/api/mileage/ask/user/{userSeq}")
 	public Response postMileageAsk(){
+
 		return Response.success();
 	}
 
 	//마일리지 승인 여부 변경 ( 관리자 )
-	@PutMapping("/api/milage/ask/{milgApplySeq}")
+	@PutMapping("/api/mileage/ask/{milgApplySeq}")
 	public Response putMileageAskState(@PathVariable("milgApplySeq") Long milgApplySeq){
 		return  Response.success(mileageAskService.putMileageAskState(milgApplySeq));
 	}

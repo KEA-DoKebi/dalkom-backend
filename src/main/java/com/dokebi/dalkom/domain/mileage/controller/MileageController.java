@@ -4,9 +4,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryDto;
 import com.dokebi.dalkom.domain.mileage.service.MileageAskService;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 
@@ -32,7 +34,10 @@ public class MileageController {
 
 	}
 
-
-
+	// 유저 마일리지 내역 추가
+	@PostMapping("/api/mileage/history/user/{userSeq}")
+	public void postMileageHistoryByUserSeq(@PathVariable("userSeq") Long userSeq, @RequestBody Integer amount) {
+		  mileageService.createMileageHistoryAndUpdateUser(userSeq, amount);
+	}
 
 }
