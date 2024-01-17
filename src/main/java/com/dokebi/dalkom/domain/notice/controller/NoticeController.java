@@ -24,7 +24,7 @@ public class NoticeController {
 	private final NoticeService noticeService;
 
 	// NOTICE-001 (특정 공지 조회)
-	@GetMapping("api/notice/{noticeSeq}")
+	@GetMapping("/api/notice/{noticeSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readNotice(@PathVariable Long noticeSeq) {
 
@@ -32,7 +32,7 @@ public class NoticeController {
 	}
 
 	// NOTICE-002 (특정 공지 삭제)
-	@DeleteMapping("api/notice/{noticeSeq}")
+	@DeleteMapping("/api/notice/{noticeSeq}")
 	public Response deleteNotice(@PathVariable Long noticeSeq) {
 
 		noticeService.deleteNotice(noticeSeq);
@@ -40,7 +40,7 @@ public class NoticeController {
 	}
 
 	// NOTICE-003 (특정 공지 수정)
-	@PutMapping("api/notice/{noticeSeq}")
+	@PutMapping("/api/notice/{noticeSeq}")
 	public Response modifyNotice(@PathVariable Long noticeSeq, @RequestBody NoticeModifyRequest request) {
 
 		noticeService.modifyNotice(noticeSeq, request);
@@ -48,7 +48,7 @@ public class NoticeController {
 	}
 
 	// NOTICE-004 (공지 작성)
-	@PostMapping("api/notice")
+	@PostMapping("/api/notice")
 	public Response createNotice(@RequestBody NoticeCreateRequest request) {
 
 		noticeService.createNotice(request);
@@ -56,7 +56,7 @@ public class NoticeController {
 	}
 
 	// NOTICE-005 (공지 전체 조회)
-	@GetMapping("api/notice")
+	@GetMapping("/api/notice")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readNoticeList() {
 

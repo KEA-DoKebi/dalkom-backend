@@ -39,7 +39,7 @@ public class InquiryController {
 	}
 
 	// INQUIRY-003 (카테고리 별 문의 조회)
-	@GetMapping("api/inquiry/category/{categorySeq}")
+	@GetMapping("/api/inquiry/category/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readInquiryByCategory(@PathVariable Long categorySeq) {
 
@@ -47,7 +47,7 @@ public class InquiryController {
 	}
 
 	// INQUIRY-005 (특정 문의 조회)
-	@GetMapping("api/inquiry/{inquirySeq}")
+	@GetMapping("/api/inquiry/{inquirySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readInquiryOne(@PathVariable Long inquirySeq) {
 
@@ -55,7 +55,7 @@ public class InquiryController {
 	}
 
 	// INQUIRY-006 (문의 답변)
-	@PutMapping("api/inquiry/{inquirySeq}")
+	@PutMapping("/api/inquiry/{inquirySeq}")
 	public Response answerInquiry(@PathVariable Long inquirySeq, @RequestBody InquiryAnswerRequest request) {
 
 		inquiryService.answerInquiry(inquirySeq, request);
