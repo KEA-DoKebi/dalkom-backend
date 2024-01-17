@@ -23,22 +23,17 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderController {
 	private final OrderService orderService;
 
-	// //상세페이지에서 주문하기
-	// @PostMapping("/api/order/{productSeq}")
-	// public Response createOrder(
-	// 	@PathVariable Long productSeq,
-	// 	@RequestHeader(value = "userSeq") Long userSeq,
-	// 	@RequestBody OrderCreateRequest req){
-	// 	orderService.createOrder(req,productSeq,userSeq);
-	// 	return Response.success();
-	// }
+	// ORDER-001(사용자별 주문조회)
+	@GetMapping("/api/order/user/{userSeq}")
+	public Response getOrdersByUserSeq(@PathVariable("userSeq") Long userSeq) {
 
-	// 주문 페이지 이동
+		return Response.success(orderService.readOrderByUserSeq(userSeq));
+	}
+
+	// ORDER-002(주문하기)
 	@GetMapping("/api/ordersPage/{userSeq}")
 	public Response getOrderPageByProductSeq(@PathVariable("userSeq") Long userSeq,
 		@RequestBody OrderPageDto orderPageDto) {
-		// @RequestHeader(value = "userSeq") Long userSeq,
-		// @RequestBody OrderPageDetailDto orderPageDetailDto){
 		log.info("userSeq: " + userSeq);
 		log.info("orders : " + orderPageDto.getOrders());
 
@@ -46,22 +41,13 @@ public class OrderController {
 
 	}
 
-	// 장바구니 주문
-
-	// 사용자별 주문 조회
-	@GetMapping("/api/order/user/{userSeq}")
-	public Response getOrdersByUserSeq(@PathVariable("userSeq") Long userSeq) {
-
-		return Response.success(orderService.readOrderByUserSeq(userSeq));
-	}
-
-	// 특정 주문 조회
+	// ORDER-003(특정 주문 조회)
 	@GetMapping("/api/order/{orderSeq}")
 	public Response getOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq) {
 		return Response.success(orderService.readOrderByOrderSeq(orderSeq));
 	}
 
-	// 전체 주문 조회
+	// ORDER-005(전체 주문 조회)
 	@GetMapping("/api/order")
 	public Response getOrders() {
 		return Response.success(orderService.readOrderByAll());
