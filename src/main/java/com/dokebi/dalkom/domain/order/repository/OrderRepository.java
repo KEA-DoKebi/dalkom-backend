@@ -8,8 +8,6 @@ import com.dokebi.dalkom.domain.order.entity.Order;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-	//상품정보 조회
-
 	// 유저별 주문조회
 	List<Order> findByUser_UserSeq(Long userSeq);
 

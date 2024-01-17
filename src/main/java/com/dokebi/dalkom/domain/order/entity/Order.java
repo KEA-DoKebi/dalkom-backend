@@ -65,5 +65,6 @@ public class Order extends EntityDate {
 		this.receiverMobileNum = receiverMobileNum;
 		this.receiverMemo = receiverMemo;
 		this.totalPrice = totalPrice;
+		this.orderState = "배송준비중";
 	}
 }

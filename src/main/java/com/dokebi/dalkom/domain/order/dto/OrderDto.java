@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
+
 	private Long ordrSeq;
 	private String receiverName;
 	private String receiverAddress;

@@ -20,6 +20,7 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.product.service.ProductService;
+import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
@@ -36,6 +37,7 @@ public class OrderService {
 	private final ProductOptionRepository productOptionRepository;
 	private final UserRepository userRepository;
 	private final ProductService productService;
+	private final ProductStockService productStockService;
 
 	// 결제 하기
 	public Response makeOrder(OrderCreateRequest request) {
@@ -45,7 +47,17 @@ public class OrderService {
 		// totalPrice를 먼저 계산해준다.
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
 			Product product = productRepository.findByProductSeq(request.getProductSeqList().get(i));
+			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
+			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
+
+			try{
+				// checkAmount 코드
+			} catch (Exception e) {
+				return Response.failure(403, e.getMessage());
+			}
+
+			
 			totalPrice += (price * request.getAmountList().get(i));
 		}
 
@@ -83,6 +95,11 @@ public class OrderService {
 					amount,
 					price
 				);
+
+				// 각 상품마다 재고 확인 후 감소
+				productStockService.orderStock(productSeq, prdtOptionSeq, amount);
+
+				// 각 세부 주문 DB에 저장
 				orderDetailRepository.save(orderDetail);
 			}
 
@@ -93,8 +110,7 @@ public class OrderService {
 			// 모든 과정이 정상적으로 진행될 경우 Response.success() return
 			return Response.success();
 		} else {
-			// 일단 임의로 마일리지 부족할때의 오류코드를 401로 설정했습니다.
-			return Response.failure(401, "보유 마일리지가 부족합니다.");
+			return Response.failure(403, "보유 마일리지가 부족합니다.");
 		}
 	}
 

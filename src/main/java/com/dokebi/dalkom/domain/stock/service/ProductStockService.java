@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
+// TODO 음수로 내려가지 않게 예외처리하기
 public class ProductStockService {
 	private final ProductStockRepository stockRepository;
 	private final ProductStockHistoryRepository stockHistoryRepository;
@@ -24,6 +26,19 @@ public class ProductStockService {
 		stock.setAmount(amount);
 
 		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, amountChanged);
+
+		stockRepository.save(stock);
+		stockHistoryRepository.save(stockHistory);
+	}
+
+	@Transactional
+	public void orderStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
+		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
+
+		Integer amount = stock.getAmount() - amountChanged;
+		stock.setAmount(amount);
+
+		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, -amountChanged);
 
 		stockRepository.save(stock);
 		stockHistoryRepository.save(stockHistory);
