@@ -34,7 +34,7 @@ jobs:
 
     # Build with Gradle
     - name: Build with Gradle
-      run: ./gradlew ./gradlew build -x test
+      run: ./gradlew test jacocoTestReport
 
     - name: Generate JaCoCo coverage report
       run: ./gradlew jacocoTestReport
