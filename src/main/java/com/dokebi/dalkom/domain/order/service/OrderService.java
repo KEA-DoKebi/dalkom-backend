@@ -31,11 +31,13 @@ public class OrderService {
 	public List<OrderPageDetailDto> readProductBySeq(List<OrderPageDetailDto> orders) {
 		List<OrderPageDetailDto> result = new ArrayList<>();
 		orders.forEach(ord -> {
+
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(ord.getProductSeq());
 
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto();
+
 			// db에서 받은 값
 			orderPageDetailDTO.setProductSeq(ord.getProductSeq());
 			orderPageDetailDTO.setProductName(productInfo.getName());
@@ -43,8 +45,10 @@ public class OrderService {
 			orderPageDetailDTO.setProductPrice(productInfo.getPrice());
 			orderPageDetailDTO.setProductAmount(ord.getProductAmount()); // 개수 받아오기
 			orderPageDetailDTO.setTotalPrice(productInfo.getPrice()*ord.getProductAmount());
+
 			result.add(orderPageDetailDTO);
 		});
+
 		return result;
 	}
 

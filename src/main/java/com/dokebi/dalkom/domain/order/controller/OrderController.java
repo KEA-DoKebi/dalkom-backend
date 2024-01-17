@@ -34,24 +34,17 @@ public class OrderController {
 	// }
 
 	// 주문 페이지 이동
-	@GetMapping("/api/ordersPage/{userSeq}")
-	public Response getOrderPageByProductSeq(@PathVariable("userSeq") Long userSeq,
-		@RequestBody OrderPageDto orderPageDto) {
-		// @RequestHeader(value = "userSeq") Long userSeq,
+	@GetMapping("/api/ordersPage")
+	public Response getOrderPageByProductSeq(@RequestBody OrderPageDto orderPageDto) {
 		// @RequestBody OrderPageDetailDto orderPageDetailDto){
-		log.info("userSeq: " + userSeq);
 		log.info("orders : " + orderPageDto.getOrders());
 
 		return Response.success(orderService.readProductBySeq(orderPageDto.getOrders()));
-
 	}
-
-	// 장바구니 주문
 
 	// 사용자별 주문 조회
 	@GetMapping("/api/order/user/{userSeq}")
 	public Response getOrdersByUserSeq(@PathVariable("userSeq") Long userSeq) {
-
 		return Response.success(orderService.readOrderByUserSeq(userSeq));
 	}
 
