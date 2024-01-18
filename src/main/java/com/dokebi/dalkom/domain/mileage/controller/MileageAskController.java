@@ -23,19 +23,19 @@ public class MileageAskController {
 
 	// MILEAGE-003 (마일리지 승인 여부 변경 (관리자))
 	@PutMapping("/api/milage/ask/{milgApplySeq}")
-	public Response putMileageAskState(@PathVariable("milgApplySeq") Long milgApplySeq){
-		return  Response.success(mileageAskService.putMileageAskState(milgApplySeq));
+	public Response putMileageAskState(@PathVariable("milgApplySeq") Long milgApplySeq) {
+		return Response.success(mileageAskService.putMileageAskState(milgApplySeq));
 	}
 
 	// MILEAGE-004 (마일리지 신청 조회 (관리자))
 	@GetMapping("/api/mileage/ask")
-	public Response getMileageAsk(){
-		return  Response.success(mileageAskService.readMileageAsk());
+	public Response getMileageAsk() {
+		return Response.success(mileageAskService.readMileageAsk());
 	}
 
 	// MILEAGE-005 (마일리지 충전 신청)
 	@PostMapping("/api/mileage/ask/user/{userSeq}")
-	public Response postMileageAsk(@PathVariable Long userSeq, @RequestBody MileageAskRequest request){
+	public Response postMileageAsk(@PathVariable Long userSeq, @RequestBody MileageAskRequest request) {
 		return mileageAskService.postMileageAsk(userSeq, request);
 	}
 
