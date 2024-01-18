@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
+import com.dokebi.dalkom.domain.user.dto.AuthResponse;
 import com.dokebi.dalkom.domain.user.service.TokenService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,18 +39,25 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		if (token != null) {
 			try {
 				//AccessToken 복호화
-				String userSeq = decryptAccessToken(token);
 
-				if (userSeq == null) {
+				AuthResponse authResponse = decryptAccessToken(token);
+				String loginSeq = authResponse.getSeq();
+
+				if (authResponse.getRole().equals("Admin")) {
+					//요청 헤더에 adminSeq 세팅
+					((HttpServletRequest)request).setAttribute("adminSeq", loginSeq);
+				} else {
+					//요청 헤더에 userSeq 세팅
+					((HttpServletRequest)request).setAttribute("userSeq", loginSeq);
+				}
+
+				if (loginSeq == null) {
 					handleRefreshTokenExpired(request, response);
 					return;
 				}
 
-				//요청 헤더에 userSeq 세팅
-				((HttpServletRequest)request).setAttribute("userSeq", userSeq);
-
 				//인증
-				setAuthentication(userSeq);
+				setAuthentication(loginSeq);
 			} catch (Exception e) {
 				log.error("Error processing token", e);
 			}
@@ -60,7 +68,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
 	}
 
-	private String decryptAccessToken(String accessToken) {
+	private AuthResponse decryptAccessToken(String accessToken) {
 		return tokenService.decryptAccessToken(accessToken);
 	}
 

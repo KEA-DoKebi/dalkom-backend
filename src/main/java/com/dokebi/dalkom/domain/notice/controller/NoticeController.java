@@ -14,6 +14,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.notice.dto.NoticeCreateRequest;
 import com.dokebi.dalkom.domain.notice.dto.NoticeModifyRequest;
 import com.dokebi.dalkom.domain.notice.service.NoticeService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,9 +53,8 @@ public class NoticeController {
 	// NOTICE-004 (공지 작성)
 	@PostMapping("/api/notice")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createNotice(@RequestBody NoticeCreateRequest request) {
-
-		noticeService.createNotice(request);
+	public Response createNotice(@LoginUser Long adminSeq, @RequestBody NoticeCreateRequest request) {
+		noticeService.createNotice(adminSeq, request);
 		return Response.success();
 	}
 

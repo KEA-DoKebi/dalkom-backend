@@ -16,6 +16,7 @@ import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
+import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -74,11 +75,11 @@ public class ExceptionAdvice {
 
 	// // 사용자 + 로그인
 
-	// @ExceptionHandler(LoginFailureException.class)
-	// @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
-	// public Response loginFailureException() {
-	// return Response.failure(-1004, "로그인에 실패하였습니다.");
-	// }
+	@ExceptionHandler(LoginFailureException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+	public Response loginFailureException() {
+		return Response.failure(-1004, "로그인에 실패하였습니다.");
+	}
 
 	// @ExceptionHandler(UserEmailAlreadyExistsException.class)
 	// @ResponseStatus(HttpStatus.CONFLICT) // 409

@@ -39,9 +39,9 @@ public class NoticeService {
 	}
 
 	@Transactional
-	public void createNotice(NoticeCreateRequest request) {
+	public void createNotice(Long adminSeq, NoticeCreateRequest request) {
 
-		Admin admin = adminRepository.findByAdminSeq(request.getAdminSeq());
+		Admin admin = adminRepository.findByAdminSeq(adminSeq);
 		Notice notice = new Notice(admin, request.getTitle(), request.getContent(), request.getState());
 		noticeRepository.save(notice);
 	}

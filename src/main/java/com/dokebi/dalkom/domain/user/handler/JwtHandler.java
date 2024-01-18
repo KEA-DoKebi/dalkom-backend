@@ -38,7 +38,14 @@ public class JwtHandler {
 	}
 
 	public String extractToken(Jws<Claims> claims) {
-		return claims.getBody().getSubject();
+
+		int length = claims.getBody().getSubject().split(",").length;
+		if (length > 1) {
+			String[] values = claims.getBody().getSubject().split(",");
+			return values[0];
+		} else {
+			return claims.getBody().getSubject();
+		}
 	}
 
 	public Jws<Claims> parse(String key, String token) {
