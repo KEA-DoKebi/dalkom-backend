@@ -44,6 +44,7 @@ dependencies {
     testImplementation 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'mysql:mysql-connector-java'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+    implementation 'io.jsonwebtoken:jjwt:0.9.1' // jwt
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
