@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Assign reviewers
-      uses: peter-evans/create-pull-request
+      uses: peter-evans/create-pull-request@v5.0.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         team-reviewers: 'Developer/back'
