@@ -3,17 +3,14 @@ package com.dokebi.dalkom.domain.mileage.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.mileage.repository.MileageAskRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -58,7 +55,7 @@ public class MileageAskService {
 		MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
 		mileageAskRepository.save(mileageApply);
 
- 	}
+	}
 
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
 		return mileageAskRepository.findByMilgApplySeq(milgApplySeq);

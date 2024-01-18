@@ -16,6 +16,7 @@ import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
+import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -155,6 +156,12 @@ public class ExceptionAdvice {
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
 	public Response notEnoughStockException() {
 		return Response.failure(-1601, "재고가 부족합니다.");
+	}
+
+	@ExceptionHandler(ProductStockNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response productStockNotFoundException() {
+		return Response.failure(-1602, "재고를 찾을 수 없습니다.");
 	}
 
 	// 옵션
