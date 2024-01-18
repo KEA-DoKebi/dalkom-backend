@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.dto.SubCategoryResponse;
+import com.dokebi.dalkom.domain.category.entity.Category;
+import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,5 +30,10 @@ public class CategoryService {
 	@Transactional
 	public List<SubCategoryResponse> getSubCategoryList(Long categorySeq) {
 		return categoryRepository.getSubCategoryList(categorySeq);
+	}
+
+	@Transactional
+	public Category readCategoryBySeq(Long categorySeq) {
+		return categoryRepository.findById(categorySeq).orElseThrow(CategoryNotFoundException::new);
 	}
 }

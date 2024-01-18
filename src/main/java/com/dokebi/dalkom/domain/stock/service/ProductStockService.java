@@ -48,6 +48,11 @@ public class ProductStockService {
 	}
 
 	@Transactional
+	public void createStock(ProductStock stock) {
+		stockRepository.save(stock);
+	}
+
+	@Transactional
 	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
 
@@ -55,4 +60,5 @@ public class ProductStockService {
 			throw new NotEnoughStockException();
 		}
 	}
+
 }
