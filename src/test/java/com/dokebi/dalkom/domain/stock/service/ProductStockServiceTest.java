@@ -1,4 +1,5 @@
 package com.dokebi.dalkom.domain.stock.service;
+
 import static org.mockito.BDDMockito.*;
 
 import org.assertj.core.api.Assertions;
@@ -25,8 +26,6 @@ public class ProductStockServiceTest {
 	@Mock
 	ProductStockHistoryRepository stockHistoryRepository;
 
-
-
 	@Test
 	@DisplayName("재고를 수정한다.")
 	void editStockTest() {
@@ -36,7 +35,7 @@ public class ProductStockServiceTest {
 		Integer amount = 10;
 
 		//레포지토리에서 리턴 받는 ProductStock 객체 설정
-		ProductStock productStock = new ProductStock(null,null,null);
+		ProductStock productStock = new ProductStock(null, null, null);
 		productStock.setPrdtStockSeq(1L);
 		productStock.setAmount(6);
 
@@ -44,14 +43,13 @@ public class ProductStockServiceTest {
 
 		//when
 		// productStockService.editStock를 실행한다.
-		productStockService.editStock(stockSeq,amount);
+		productStockService.updateStock(stockSeq, amount);
 
 		// then
 		// productStock
 		verify(stockHistoryRepository).save(any());
 
 	}
-
 
 	@Test
 	@DisplayName("재고가 0보다 작으면 Exception이 발생한다.")
@@ -61,14 +59,11 @@ public class ProductStockServiceTest {
 		Long stockSeq = 1L;
 		Integer amount = -1;
 
-
 		// when then
 		// productStock
-		Assertions.assertThatThrownBy(() -> productStockService.editStock(stockSeq,amount)).isInstanceOf(
+		Assertions.assertThatThrownBy(() -> productStockService.updateStock(stockSeq, amount)).isInstanceOf(
 			InvalidAmountException.class);
 
 	}
-
-
 
 }
