@@ -20,10 +20,12 @@ import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
+import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -49,7 +51,8 @@ public class OrderService {
 
 		// totalPrice를 먼저 계산해준다.
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
-			Product product = productRepository.findByProductSeq(request.getProductSeqList().get(i));
+			Product product = productRepository.findByProductSeq(request.getProductSeqList().get(i))
+				.orElseThrow(ProductNotFoundException::new);
 			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
@@ -59,12 +62,12 @@ public class OrderService {
 			} catch (Exception e) {
 				return Response.failure(403, e.getMessage());
 			}
-			
+
 			totalPrice += (price * request.getAmountList().get(i));
 		}
 
 		// 어떤 사용자인지 조회
-		User user = userRepository.findByUserSeq(request.getUserSeq());
+		User user = userRepository.findByUserSeq(request.getUserSeq()).orElseThrow(UserNotFoundException::new);
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (totalPrice <= user.getMileage()) {
@@ -86,7 +89,8 @@ public class OrderService {
 				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 				Integer amount = request.getAmountList().get(i);
 
-				Product product = productRepository.findByProductSeq(productSeq);
+				Product product = productRepository.findByProductSeq(productSeq)
+					.orElseThrow(ProductNotFoundException::new);
 				ProductOption productOption = productOptionRepository.getById(prdtOptionSeq);
 				Integer price = product.getPrice();
 
@@ -121,6 +125,12 @@ public class OrderService {
 	public List<OrderPageDetailDto> readProductDetail(List<OrderPageDetailDto> orderList) {
 		List<OrderPageDetailDto> result = new ArrayList<>();
 		orderList.forEach(order -> {
+			// 선택한 상품
+			Long orderSeq = order.getProductSeq();
+			// 선택한 옵션
+			Long optionSeq = order.getProductOptionSeq();
+			// 선택한 개수
+			Integer productAmount = order.getProductAmount();
 
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
@@ -128,12 +138,13 @@ public class OrderService {
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto();
 
-			// db에서 받은 값
-			orderPageDetailDTO.setProductSeq(order.getProductSeq());
+			orderPageDetailDTO.setProductSeq(orderSeq);
 			orderPageDetailDTO.setProductName(productInfo.getName());
-			orderPageDetailDTO.setProductOptionSeq(order.getProductSeq()); // 선택한 옵션 받아오기
+			orderPageDetailDTO.setProductOptionSeq(optionSeq);
 			orderPageDetailDTO.setProductPrice(productInfo.getPrice());
-			orderPageDetailDTO.setProductAmount(order.getProductAmount()); // 개수 받아오기
+			orderPageDetailDTO.setProductAmount(productAmount);
+			// 재고 확인
+			productStockService.checkStock(orderSeq, optionSeq, productAmount);
 			orderPageDetailDTO.setTotalPrice(productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);

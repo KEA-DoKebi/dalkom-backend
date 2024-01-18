@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.response.Response;
-import com.dokebi.dalkom.domain.mileage.dto.MileageAskResponse;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
+import com.dokebi.dalkom.domain.mileage.dto.MileageAskResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.mileage.repository.MileageAskRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -38,6 +38,7 @@ public class MileageAskService {
 				ask.getApprovedState()))
 			.collect(Collectors.toList());
 	}
+
 	@Transactional
 	public String putMileageAskState(Long milgApplySeq) {
 		MileageApply mileageApply = mileageAskRepository.findByMilgApplySeq(milgApplySeq);
@@ -45,16 +46,16 @@ public class MileageAskService {
 		Long userSeq = mileageApply.getUser().getUserSeq();
 		if ("N".equals(approvedState)) {
 			mileageApply.setApprovedState("Y");
-			mileageService.createMileageHistoryAndUpdateUser(userSeq,mileageApply.getAmount(), "1");
+			mileageService.createMileageHistoryAndUpdateUser(userSeq, mileageApply.getAmount(), "1");
 			mileageAskRepository.save(mileageApply);
-
 		}
-		return "ok";
 
+		return "ok";
 	}
+
 	public Response postMileageAsk(Long userSeq, MileageAskRequest request) {
 		try {
-			User user = userRepository.findByUserSeq(userSeq);
+			User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 
 			MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
 			mileageAskRepository.save(mileageApply);
