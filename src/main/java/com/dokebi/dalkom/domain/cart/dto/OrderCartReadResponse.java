@@ -11,12 +11,20 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OrderCartReadResponse {
 
+
 	private Long orderCartSeq;
+
 	private Long productSeq;
-	private String productName;
+
 	private Long prdtOptionSeq;
+
+	private String productName;
+
 	private String prdtOptionName;
+
 	private String imageUrl;
+
 	private Integer price;
+
 	private Integer amount;
 }

@@ -2,6 +2,12 @@ package com.dokebi.dalkom.domain.product.dto;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,33 +21,31 @@ import lombok.Setter;
 // 상품 생성 requestBody
 // TODO 상품 상세 이미지 추가(후순위)
 public class ProductCreateRequest {
-	private Long categorySeq;
-	private String name;
-	private Integer price;
-	private String info;
-	private String state;
-	private String imageUrl;
-	private String company;
-	private List<OptionAmountDTO> prdtOptionList;
 
-	public Boolean checkValue() {
-		if (categorySeq == null || categorySeq <= 0) {
-			return false;
-		} else if (name == null || name.isBlank()) {
-			return false;
-		} else if (price == null || price <= 0) {
-			return false;
-		} else if (info == null || info.isBlank()) {
-			return false;
-		} else if (state == null || (!state.equalsIgnoreCase("Y") && !state.equalsIgnoreCase("N"))) {
-			return false;
-		} else if (imageUrl == null || imageUrl.isBlank()) {
-			return false;
-		} else if (company == null || company.isBlank()) {
-			return false;
-		} else if (prdtOptionList == null || prdtOptionList.isEmpty()) {
-			return false;
-		}
-		return true;
-	}
+	@NotNull(message = "ProductCreateRequest categorySeq NotNull 에러")
+	@Positive(message = "ProductCreateRequest categorySeq Positive 에러")
+	private Long categorySeq;
+
+	@NotBlank(message = "ProductCreateRequest name NotBlank 에러")
+	private String name;
+
+	@NotNull(message = "ProductCreateRequest price NotNull 에러")
+	@Positive(message = "ProductCreateRequest price Positive 에러")
+	private Integer price;
+
+	@NotBlank(message = "ProductCreateRequest info NotBlank 에러")
+	private String info;
+
+	@NotNull(message = "ProductCreateRequest categorySeq NotNull 에러")
+	@Pattern(regexp = "^([YN])$", message = "ProductCreateRequest state Pattern 에러")
+	private String state;
+
+	@NotBlank(message = "ProductCreateRequest imageUrl NotBlank 에러")
+	private String imageUrl;
+
+	@NotBlank(message = "ProductCreateRequest company NotBlank 에러")
+	private String company;
+
+	@NotEmpty(message = "ProductCreateRequest prdtOptionList NotEmpty 에러")
+	private List<OptionAmountDTO> prdtOptionList;
 }

@@ -51,7 +51,7 @@ public class ProductStockControllerTest {
 			.andExpect(status().isOk());
 
 		//productStockController에서 productStockService editStock을 호출했는지 검증
-		verify(productStockService).editStock(stockSeq, req.getAmount());
+		verify(productStockService).updateStock(stockSeq, req.getAmount());
 
 	}
 

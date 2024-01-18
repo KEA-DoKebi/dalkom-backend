@@ -51,8 +51,7 @@ public class OrderService {
 
 		// totalPrice를 먼저 계산해준다.
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
-			Product product = productRepository.findByProductSeq(request.getProductSeqList().get(i))
-				.orElseThrow(ProductNotFoundException::new);
+			Product product = productService.findByProductSeq(request.getProductSeqList().get(i));
 			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
@@ -103,7 +102,7 @@ public class OrderService {
 				);
 
 				// 각 상품마다 재고 확인 후 감소
-				productStockService.orderStock(productSeq, prdtOptionSeq, amount);
+				productStockService.createStock(productSeq, prdtOptionSeq, amount);
 
 				// 각 세부 주문 DB에 저장
 				orderDetailRepository.save(orderDetail);
@@ -155,7 +154,7 @@ public class OrderService {
 
 	// 사용자별 상품 조회
 	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
-		List<Order> orders = orderRepository.findByUser_UserSeq(userSeq);
+		List<Order> orders = orderRepository.findOrderListByUserSeq(userSeq);
 
 		return orders.stream()
 			.map(order ->

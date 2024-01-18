@@ -13,11 +13,9 @@ import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.cart.repository.OrderCartRepository;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
-import com.dokebi.dalkom.domain.product.repository.ProductRepository;
+import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
-import com.dokebi.dalkom.domain.user.repository.UserRepository;
+import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,19 +24,17 @@ import lombok.RequiredArgsConstructor;
 public class OrderCartService {
 
 	private final OrderCartRepository orderCartRepository;
-	private final UserRepository userRepository;
-	private final ProductRepository productRepository;
+	private final UserService userService;
+	private final ProductService productService;
 
-	@Transactional
-	public List<OrderCartReadResponse> getOrderCartList(Long userSeq) {
-		return orderCartRepository.getOrderCartList(userSeq);
+	public List<OrderCartReadResponse> readOrderCartList(Long userSeq) {
+		return orderCartRepository.findOrderCartList(userSeq);
 	}
 
 	@Transactional
 	public void createOrderCart(Long userSeq, OrderCartCreateRequest request) {
-		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
-		Product product = productRepository.findByProductSeq(request.getProductSeq())
-			.orElseThrow(ProductNotFoundException::new);
+		User user = userService.readUserByUserSeq(userSeq);
+		Product product = productService.readProductByProductSeq(request.getProductSeq());
 
 		OrderCart orderCart = new OrderCart(user, product, request.getPrdtOptionSeq(), request.getAmount());
 		orderCartRepository.save(orderCart);
