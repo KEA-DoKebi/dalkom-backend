@@ -54,7 +54,6 @@ public class ProductStockControllerTest {
 
 		//productStockController에서 productStockService updateStock을 호출했는지 검증
 		verify(productStockService).updateStock(stockSeq, req.getAmount());
-
 	}
 
 	@Test
