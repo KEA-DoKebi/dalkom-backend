@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.6.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.sonarqube' version "4.0.0.2929"
+    id 'jacoco'
 }
 
 group = 'com.dokebi'
@@ -66,5 +67,20 @@ sonarqube {
     properties {
         property "sonar.projectKey", "KEA-DoKebi_dalkom-backend_AY0ILkkA7nQIqqNyuD-r"
         property "sonar.host.url", "https://b3a1-203-249-127-39.ngrok-free.app"
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+test {
+    ignoreFailures = true
+    finalizedBy jacocoTestReport // 테스트 후 JaCoCo 리포트 생성
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
     }
 }
