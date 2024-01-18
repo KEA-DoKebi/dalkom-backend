@@ -49,21 +49,16 @@ public class MileageService {
 	}
 
 	//관리자가 충전을 승인하는경우 마일리지 내역을 추가하는 서비스
-	public void createMileageHistoryAndUpdateUser(Long userSeq, Integer amount) {
-		User user = userService.readByUserSeq(userSeq);
-		if (user != null) {
-			MileageHistory mileageHistory = new MileageHistory(amount, user.getMileage() + amount, type, user);
-			mileageHistoryRepository.save(mileageHistory);
+	public void createMileageHistoryAndUpdateUser(Long userSeq, Integer amount,String type) {
+		User user = userService.readUserByUserSeq(userSeq);
+		MileageHistory mileageHistory = new MileageHistory(amount, user.getMileage() + amount, type, user);
+		mileageHistoryRepository.save(mileageHistory);
 
-			// 사용자의 마일리지 업데이트
-			user.setMileage(user.getMileage() + amount);
-			userService.updateUser(user);
-		} else {
-			log.error("User with userSeq={} not found.", userSeq);
-			// 사용자를 찾을 수 없는 경우 예외 처리 또는 적절한 로깅을 수행하세요.
-		}
+		// 사용자의 마일리지 업데이트
+		user.setMileage(user.getMileage() + amount);
+		userService.updateUser(user);
+
 	}
-
 
 
 

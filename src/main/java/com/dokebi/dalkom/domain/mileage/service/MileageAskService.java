@@ -41,7 +41,7 @@ public class MileageAskService {
 	}
 
 	@Transactional
-	public String putMileageAskState(Long milgApplySeq) {
+	public Response putMileageAskState(Long milgApplySeq) {
 		MileageApply mileageApply = mileageAskRepository.findByMilgApplySeq(milgApplySeq);
 		String approvedState = mileageApply.getApprovedState();
 		Long userSeq = mileageApply.getUser().getUserSeq();
@@ -51,27 +51,22 @@ public class MileageAskService {
 			mileageAskRepository.save(mileageApply);
 		}
 
-		return "ok";
+		return Response.success() ;
 	}
+
 	public Response createMileageAsk(Long userSeq, MileageAskRequest request) {
-		try {
-			User user =
-				userService.readByUserSeq(userSeq);
+		User user = userService.readUserByUserSeq(userSeq);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
+		mileageAskRepository.save(mileageApply);
 
-			MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
-			mileageAskRepository.save(mileageApply);
-
-			return Response.success();
-		} catch (UserNotFoundException e) {
-			return Response.failure(404, "존재하지 않는 사용자이다.");
-		}
+		return Response.success();
 	}
 
-	public List<MileageApply> readAll(){
+	public List<MileageApply> readAll() {
 		return mileageAskRepository.findAll();
 	}
 
-	public MileageApply readByMilgApplySeq(Long milgApplySeq){
+	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
 		return mileageAskRepository.findByMilgApplySeq(milgApplySeq);
 	}
 }
