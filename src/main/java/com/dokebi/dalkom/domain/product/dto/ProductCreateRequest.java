@@ -23,4 +23,25 @@ public class ProductCreateRequest {
 	private String imageUrl;
 	private String company;
 	private List<OptionAmountDTO> prdtOptionList;
+
+	public Boolean checkValue() {
+		if (categorySeq == null || categorySeq <= 0) {
+			return false;
+		} else if (name == null || name.isBlank()) {
+			return false;
+		} else if (price == null || price <= 0) {
+			return false;
+		} else if (info == null || info.isBlank()) {
+			return false;
+		} else if (state == null || (!state.equalsIgnoreCase("Y") && !state.equalsIgnoreCase("N"))) {
+			return false;
+		} else if (imageUrl == null || imageUrl.isBlank()) {
+			return false;
+		} else if (company == null || company.isBlank()) {
+			return false;
+		} else if (prdtOptionList == null || prdtOptionList.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
 }
