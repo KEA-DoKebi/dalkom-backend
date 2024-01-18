@@ -52,7 +52,7 @@ public class OrderService {
 
 		// totalPrice를 먼저 계산해준다.
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
-			Product product = productService.findByProductSeq(request.getProductSeqList().get(i));
+			Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
 			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
@@ -83,8 +83,8 @@ public class OrderService {
 				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 				Integer amount = request.getAmountList().get(i);
 
-				Product product = productService.findByProductSeq(productSeq);
-				ProductOption productOption = productOptionService.getByPrdtOptionSeq(prdtOptionSeq);
+				Product product = productService.readByProductSeq(productSeq);
+				ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
 				Integer price = product.getPrice();
 
 				OrderDetail orderDetail = new OrderDetail(
