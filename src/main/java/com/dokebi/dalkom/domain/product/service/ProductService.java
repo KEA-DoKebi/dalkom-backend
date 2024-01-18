@@ -44,7 +44,7 @@ public class ProductService {
 
 		// 초기 재고 등록
 		for (OptionAmountDTO optionAmountDTO : request.getPrdtOptionList()) {
-			ProductOption option = productOptionService.readOptionBySeq(optionAmountDTO.getPrdtOptionSeq());
+			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(optionAmountDTO.getPrdtOptionSeq());
 			ProductStock initialStock = new ProductStock(newProduct, option, optionAmountDTO.getAmount());
 
 			productStockService.createStock(initialStock);

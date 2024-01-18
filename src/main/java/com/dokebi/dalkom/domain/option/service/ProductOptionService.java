@@ -3,7 +3,6 @@ package com.dokebi.dalkom.domain.option.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.option.dto.OptionCodeResponse;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;

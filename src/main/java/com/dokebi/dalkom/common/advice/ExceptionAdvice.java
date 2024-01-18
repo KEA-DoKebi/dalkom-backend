@@ -11,7 +11,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
-import com.dokebi.dalkom.domain.option.exception.OptionNotFoundException;
+import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
@@ -158,9 +158,9 @@ public class ExceptionAdvice {
 	}
 
 	// 옵션
-	@ExceptionHandler(OptionNotFoundException.class)
+	@ExceptionHandler(ProductOptionNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response optionNotFoundException() {
+	public Response productOptionNotFoundException() {
 		return Response.failure(-1700, "옵션을 찾을 수 없습니다.");
 	}
 
