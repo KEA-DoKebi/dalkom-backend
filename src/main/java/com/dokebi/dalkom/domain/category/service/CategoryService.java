@@ -33,4 +33,9 @@ public class CategoryService {
 	public Category readCategoryByCategorySeq(Long categorySeq) {
 		return categoryRepository.findByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
 	}
+
+	@Transactional
+	public Category readCategoryBySeq(Long categorySeq) {
+		return categoryRepository.findById(categorySeq).orElseThrow(CategoryNotFoundException::new);
+	}
 }
