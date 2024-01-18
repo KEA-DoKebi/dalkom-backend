@@ -11,4 +11,4 @@ jobs:
       uses: peter-evans/create-pull-request@v5.0.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        team-reviewers: 'Developer/back'
+        team-reviewers: Developer/back
