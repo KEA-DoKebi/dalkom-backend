@@ -26,32 +26,25 @@ public class ProductCreateRequest {
 	@Positive
 	private Long categorySeq;
 
-	@NotNull
 	@NotBlank
 	private String name;
 
-	@NotNull
 	@Positive
 	private Integer price;
 
-	@NotNull
 	@NotBlank
 	private String info;
 
 	@NotNull
-	@NotBlank
 	@Pattern(regexp = "^([YN])$")
 	private String state;
 
-	@NotNull
 	@NotBlank
 	private String imageUrl;
 
-	@NotNull
 	@NotBlank
 	private String company;
 
-	@NotNull
 	@NotEmpty
 	private List<OptionAmountDTO> prdtOptionList;
 }
