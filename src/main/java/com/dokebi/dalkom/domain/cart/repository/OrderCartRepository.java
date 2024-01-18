@@ -12,8 +12,8 @@ import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 public interface OrderCartRepository extends JpaRepository<OrderCart, Long> {
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.cart.dto.OrderCartReadResponse" +
-		"(oc.ordrCartSeq, oc.product.productSeq, oc.product.name," +
-		"oc.prdtOptionSeq, po.name, oc.product.imageUrl," +
+		"(oc.ordrCartSeq, oc.product.productSeq, oc.prdtOptionSeq, " +
+		"oc.product.name, po.name, oc.product.imageUrl," +
 		"oc.product.price, oc.amount) " +
 		"FROM OrderCart oc " +
 		"JOIN ProductOption po ON oc.prdtOptionSeq = po.prdtOptionSeq " +
