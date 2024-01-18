@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		if (token != null) {
 			try {
 				//AccessToken 복호화
-
 				AuthResponse authResponse = decryptAccessToken(token);
 				String loginSeq = authResponse.getSeq();
 

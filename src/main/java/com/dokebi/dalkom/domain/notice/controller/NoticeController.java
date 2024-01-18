@@ -55,9 +55,9 @@ public class NoticeController {
 	// NOTICE-004 (공지 작성)
 	@PostMapping("/api/notice")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createNotice(@Valid @RequestBody NoticeCreateRequest request) {
+	public Response createNotice(@LoginUser Long adminSeq, @Valid @RequestBody NoticeCreateRequest request) {
 
-		noticeService.createNotice(request);
+		noticeService.createNotice(adminSeq, request);
 		return Response.success();
 	}
 
