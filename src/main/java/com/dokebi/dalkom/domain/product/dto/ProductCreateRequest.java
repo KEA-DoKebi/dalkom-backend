@@ -22,29 +22,30 @@ import lombok.Setter;
 // TODO 상품 상세 이미지 추가(후순위)
 public class ProductCreateRequest {
 
-	@NotNull
-	@Positive
+	@NotNull(message = "ProductCreateRequest categorySeq NotNull 에러")
+	@Positive(message = "ProductCreateRequest categorySeq Positive 에러")
 	private Long categorySeq;
 
-	@NotBlank
+	@NotBlank(message = "ProductCreateRequest name NotBlank 에러")
 	private String name;
 
-	@Positive
+	@NotNull(message = "ProductCreateRequest price NotNull 에러")
+	@Positive(message = "ProductCreateRequest price Positive 에러")
 	private Integer price;
 
-	@NotBlank
+	@NotBlank(message = "ProductCreateRequest info NotBlank 에러")
 	private String info;
 
-	@NotNull
-	@Pattern(regexp = "^([YN])$")
+	@NotNull(message = "ProductCreateRequest categorySeq NotNull 에러")
+	@Pattern(regexp = "^([YN])$", message = "ProductCreateRequest state Pattern 에러")
 	private String state;
 
-	@NotBlank
+	@NotBlank(message = "ProductCreateRequest imageUrl NotBlank 에러")
 	private String imageUrl;
 
-	@NotBlank
+	@NotBlank(message = "ProductCreateRequest company NotBlank 에러")
 	private String company;
 
-	@NotEmpty
+	@NotEmpty(message = "ProductCreateRequest prdtOptionList NotEmpty 에러")
 	private List<OptionAmountDTO> prdtOptionList;
 }

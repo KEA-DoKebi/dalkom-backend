@@ -27,7 +27,6 @@ public class OrderCartService {
 	private final UserService userService;
 	private final ProductService productService;
 
-	@Transactional
 	public List<OrderCartReadResponse> readOrderCartList(Long userSeq) {
 		return orderCartRepository.findOrderCartList(userSeq);
 	}
