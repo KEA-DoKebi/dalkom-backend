@@ -14,6 +14,7 @@ import com.dokebi.dalkom.domain.review.dto.ReviewModifyRequest;
 import com.dokebi.dalkom.domain.review.entity.Review;
 import com.dokebi.dalkom.domain.review.repository.ReviewRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class ReviewService {
 	@Transactional
 	public void createReview(Long userSeq, ReviewCreateRequest request) {
 
-		User user = userRepository.findByUserSeq(userSeq);
+		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 		OrderDetail orderDetail = orderDetailRepository.findByOrdrDetailSeq(request.getOrderDetailSeq());
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
 		reviewRepository.save(review);

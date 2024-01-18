@@ -23,7 +23,7 @@ public class ProductStockController {
 	// STOCK-001(재고 변경)
 	@PutMapping("api/stock/{stockSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductListByCategory(@PathVariable Long stockSeq,
+	public Response readStockListByCategory(@PathVariable Long stockSeq,
 		@RequestBody ProductStockEditRequest request) {
 		productStockService.editStock(stockSeq, request.getAmount());
 		return Response.success();
