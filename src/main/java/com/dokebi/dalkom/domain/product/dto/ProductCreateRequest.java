@@ -29,14 +29,15 @@ public class ProductCreateRequest {
 	@NotBlank(message = "ProductCreateRequest name NotBlank 에러")
 	private String name;
 
+	@NotNull(message = "ProductCreateRequest price NotNull 에러")
 	@Positive(message = "ProductCreateRequest price Positive 에러")
 	private Integer price;
 
 	@NotBlank(message = "ProductCreateRequest info NotBlank 에러")
 	private String info;
 
-	@NotNull(message = "ProductCreateRequest state NotNull 에러")
-	@Pattern(regexp = "^([YN])$")
+	@NotNull(message = "ProductCreateRequest categorySeq NotNull 에러")
+	@Pattern(regexp = "^([YN])$", message = "ProductCreateRequest state Pattern 에러")
 	private String state;
 
 	@NotBlank(message = "ProductCreateRequest imageUrl NotBlank 에러")

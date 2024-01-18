@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
+import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
-import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
+import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.product.dto.OptionAmountDTO;
 import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
@@ -22,7 +22,7 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
-import com.dokebi.dalkom.domain.stock.repository.ProductStockRepository;
+import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,13 +30,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductService {
 	private final ProductRepository productRepository;
-	private final ProductStockRepository productStockRepository;
-	private final CategoryRepository categoryRepository;
-	private final ProductOptionRepository productOptionRepository;
+	private final ProductStockService productStockService;
+	private final CategoryService categoryService;
+	private final ProductOptionService productOptionService;
 
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
-		Category category = categoryRepository.getById(request.getCategorySeq());
+		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
 
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
 			request.getImageUrl(), request.getCompany(), request.getState());
@@ -45,10 +45,10 @@ public class ProductService {
 
 		// 초기 재고 등록
 		for (OptionAmountDTO optionAmountDTO : request.getPrdtOptionList()) {
-			ProductOption option = productOptionRepository.getById(optionAmountDTO.getPrdtOptionSeq());
+			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(optionAmountDTO.getPrdtOptionSeq());
 			ProductStock initialStock = new ProductStock(newProduct, option, optionAmountDTO.getAmount());
 
-			productStockRepository.save(initialStock);
+			productStockService.createStock(initialStock);
 		}
 	}
 
@@ -79,7 +79,7 @@ public class ProductService {
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
 	}
 
-	public Product findByProductSeq(Long productSeq){
+	public Product findByProductSeq(Long productSeq) {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 

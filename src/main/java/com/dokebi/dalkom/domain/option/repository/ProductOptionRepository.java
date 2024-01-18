@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.option.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,5 +20,5 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
 	@Query("SELECT po.detail FROM ProductOption po WHERE po.optionCode =:optionCode")
 	List<String> findDetailByOptionCode(@Param("optionCode") String optionCode);
 
-	ProductOption findByPrdtOptionSeq(Long prdtOptionSeq);
+	Optional<ProductOption> findProductOptionByPrdtOptionSeq(Long prdtOptionSeq);
 }
