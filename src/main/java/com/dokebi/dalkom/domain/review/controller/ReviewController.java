@@ -26,7 +26,7 @@ public class ReviewController {
 	private final ReviewService reviewService;
 
 	// REVIEWS-001 (상품별 리뷰 조회) - 입력받은 productSeq의 리뷰 목록 반환
-	@GetMapping("api/review/product/{productSeq}")
+	@GetMapping("/api/review/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByProduct(@PathVariable Long productSeq) {
 
@@ -34,7 +34,7 @@ public class ReviewController {
 	}
 
 	// REVIEWS-002 (사용자별 리뷰 조회) - 입력받은 userSeq의 리뷰 목록 반환
-	@GetMapping("api/review/users/{userSeq}")
+	@GetMapping("/api/review/users/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByUser(@PathVariable Long userSeq) {
 
@@ -51,7 +51,7 @@ public class ReviewController {
 	}
 
 	// REVIEWS-004 (리뷰 수정)
-	@PutMapping("api/review/{reviewSeq}")
+	@PutMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response modifyReview(@PathVariable Long reviewSeq, @RequestBody ReviewModifyRequest request) {
 
@@ -60,7 +60,7 @@ public class ReviewController {
 	}
 
 	//REVIEWS-005 (리뷰 삭제)
-	@DeleteMapping("api/review/{reviewSeq}")
+	@DeleteMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteReview(@PathVariable Long reviewSeq) {
 

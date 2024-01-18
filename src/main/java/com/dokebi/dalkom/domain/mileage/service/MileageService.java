@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.mileage.service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,7 @@ public class MileageService {
 	private final MileageHistoryRepository mileageHistoryRepository;
 	private final UserService userService;
 
-	// 유저별 보유 마일리지  조회 서비스
+	// 유저 별 보유 마일리지 조회 서비스
 	public Integer readMileageByUserSeq(Long userSeq) {
 		List<Integer> mileageList = mileageHistoryRepository.findMileageByUserSeq(userSeq);
 		if (!mileageList.isEmpty()) {
@@ -53,7 +52,7 @@ public class MileageService {
 	public void createMileageHistoryAndUpdateUser(Long userSeq, Integer amount) {
 		User user = userService.readByUserSeq(userSeq);
 		if (user != null) {
-			MileageHistory mileageHistory = new MileageHistory(amount, user.getMileage() + amount, "2", user);
+			MileageHistory mileageHistory = new MileageHistory(amount, user.getMileage() + amount, type, user);
 			mileageHistoryRepository.save(mileageHistory);
 
 			// 사용자의 마일리지 업데이트

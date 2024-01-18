@@ -1,0 +1,42 @@
+spring:
+  application:
+  redis:
+    host: ${LOCAL_REDIS_IP}
+    port: ${LOCAL_REDIS_PORT}
+  datasource:
+    url: ${LOCAL_TEST_DATABASE_URL}
+    port: ${LOCAL_TEST_DATABASE_PORT}
+    username: ${LOCAL_TEST_DATABASE_USERNAME}
+    password: ${LOCAL_TEST_DATABASE_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    database: mysql
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      properties:
+        hibernate:
+          format_sql: true
+
+  # 로깅 설정
+  logging:
+    level:
+      org.hibernate.SQL: debug
+      org.hibernate.type: trace
+
+  # 서버 포트 설정
+server:
+  port: 8080
+
+jwt:
+  key:
+    access: ${JWT_ACCESS_KEY}
+    refresh: ${JWT_REFRESH_KEY}
+  max-age:
+    access: 604800
+    refresh: 604800
+

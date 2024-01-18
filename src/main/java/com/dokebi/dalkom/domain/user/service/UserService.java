@@ -52,13 +52,11 @@ public class UserService {
 		}
 	}
 
-	public User readByUserSeq(Long userSeq){
-		Optional<User> user = userRepository.findByUserSeq(userSeq);
-		return user.orElseThrow(UserNotFoundException::new);
-
-	}
-
 	public void updateUser(User user){
 		userRepository.save(user);
+	}
+	
+	public User readUserByUserSeq(Long userSeq) {
+		return userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 	}
 }
