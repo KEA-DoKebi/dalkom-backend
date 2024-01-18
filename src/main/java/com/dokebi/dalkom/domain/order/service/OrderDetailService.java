@@ -13,10 +13,6 @@ import lombok.RequiredArgsConstructor;
 public class OrderDetailService {
 	private final OrderDetailRepository orderDetailRepository;
 
-	public OrderDetail findByOrdrDetailSeq(Long ordrDetailSeq){
-		return orderDetailRepository.findByOrdrDetailSeq(ordrDetailSeq);
-	}
-
 	public void saveOrderDetail(OrderDetail orderDetail){
 		orderDetailRepository.save(orderDetail);
 	}
