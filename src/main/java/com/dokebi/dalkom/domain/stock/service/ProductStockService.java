@@ -16,13 +16,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProductStockService {
-
 	private final ProductStockRepository stockRepository;
 	private final ProductStockHistoryRepository stockHistoryRepository;
 
 	@Transactional
 	public void updateStock(Long stockSeq, Integer amount) {
-
 		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
 
 		if (amount < 0) {
@@ -38,8 +36,7 @@ public class ProductStockService {
 	}
 
 	@Transactional
-	public void createStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-
+	public void updateStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
@@ -56,13 +53,11 @@ public class ProductStockService {
 
 	@Transactional
 	public void createStock(ProductStock stock) {
-
 		stockRepository.save(stock);
 	}
 
 	@Transactional
 	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-
 		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
