@@ -34,7 +34,6 @@ public class MileageService {
 		}
 	}
 
-
 	// 유저별 마일리지 내역 조회 서비스
 	public List<MileageHistoryDto> readMileageHistoryByUserSeq(Long userSeq) {
 		List<MileageHistory> mileageHistories = mileageHistoryRepository.findMileageHistoryListByUserSeq(userSeq);
@@ -48,7 +47,7 @@ public class MileageService {
 			.collect(Collectors.toList());
 	}
 
-	//관리자가 충전을 승인하는경우 마일리지 내역을 추가하는 서비스
+	// 관리자가 충전을 승인하는경우 마일리지 내역을 추가하는 서비스
 	public void createMileageHistoryAndUpdateUser(Long userSeq, Integer amount,String type) {
 		User user = userService.readUserByUserSeq(userSeq);
 		MileageHistory mileageHistory = new MileageHistory(amount, user.getMileage() + amount, type, user);
@@ -57,9 +56,5 @@ public class MileageService {
 		// 사용자의 마일리지 업데이트
 		user.setMileage(user.getMileage() + amount);
 		userService.updateUser(user);
-
 	}
-
-
-
 }
