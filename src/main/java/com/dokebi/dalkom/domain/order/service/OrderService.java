@@ -102,7 +102,7 @@ public class OrderService {
 				);
 
 				// 각 상품마다 재고 확인 후 감소
-				productStockService.orderStock(productSeq, prdtOptionSeq, amount);
+				productStockService.createStock(productSeq, prdtOptionSeq, amount);
 
 				// 각 세부 주문 DB에 저장
 				orderDetailRepository.save(orderDetail);
