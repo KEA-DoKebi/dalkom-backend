@@ -18,6 +18,8 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
+import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
+import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.repository.ProductStockRepository;
@@ -35,9 +37,14 @@ public class ProductService {
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
 		Category category = categoryRepository.getById(request.getCategorySeq());
+
+		if (!request.checkValue()) {
+			throw new InvalidProductInputException();
+		}
+
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
 			request.getImageUrl(), request.getCompany(), request.getState());
-		
+
 		productRepository.save(newProduct);
 
 		// 초기 재고 등록
@@ -60,6 +67,11 @@ public class ProductService {
 		List<StockListDTO> stockList = productRepository.getStockListBySeq(productSeq);
 		List<OptionListDTO> optionList = productRepository.getOptionListBySeq(productSeq);
 		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
+
+		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
+			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
+			throw new ProductNotFoundException();
+		}
 
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
 	}

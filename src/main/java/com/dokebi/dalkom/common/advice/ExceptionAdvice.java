@@ -11,9 +11,10 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
+import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,7 +55,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)//404
 	public Response memberNotFoundException() {
-		return Response.failure(1001, "요청한 회원을 찾을 수 없습니다.");
+		return Response.failure(-1001, "요청한 회원을 찾을 수 없습니다.");
 	}
 	//
 	// @ExceptionHandler (RoleNotFoundException.class)
@@ -108,15 +109,21 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(OrderStockLackException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public Response orderStockLackException(){
-		return Response.failure(-1300,"재고가 부족합니다.");
+	public Response orderStockLackException() {
+		return Response.failure(-1300, "재고가 부족합니다.");
 	}
 
 	// 상품
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Response productNotFoundException() {
-		return Response.failure(1200, "요청한 상품을 찾을 수 없습니다.");
+		return Response.failure(-1200, "요청한 상품을 찾을 수 없습니다.");
+	}
+
+	@ExceptionHandler(InvalidProductInputException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public Response invalidProductInputException() {
+		return Response.failure(-1201, "입력값이 잘못되었습니다.");
 	}
 
 	// 주문
@@ -132,7 +139,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderCartEmptyResultDataAccessException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Response orderCartEmptyResultDataAccessException() {
-		return Response.failure(1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
+		return Response.failure(-1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
 	}
 
 	// 재고
