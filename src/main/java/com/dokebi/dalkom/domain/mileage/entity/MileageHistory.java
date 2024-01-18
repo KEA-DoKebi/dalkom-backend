@@ -1,7 +1,5 @@
 package com.dokebi.dalkom.domain.mileage.entity;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -43,7 +41,8 @@ public class MileageHistory extends EntityDate {
 	@Column(name = "type", nullable = false)
 	private String type;
 
-	public MileageHistory(Integer amount, Integer balance,  String type,User user) {
+	 
+	public MileageHistory(Integer amount, Integer balance, String type, User user) {
 		this.amount = amount;
 		this.balance = balance;
 		this.type = type;
