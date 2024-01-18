@@ -30,8 +30,8 @@ public class OrderCartService {
 	private final ProductRepository productRepository;
 
 	@Transactional
-	public List<OrderCartReadResponse> getOrderCartList(Long userSeq) {
-		return orderCartRepository.getOrderCartList(userSeq);
+	public List<OrderCartReadResponse> readOrderCartList(Long userSeq) {
+		return orderCartRepository.readOrderCartList(userSeq);
 	}
 
 	@Transactional
