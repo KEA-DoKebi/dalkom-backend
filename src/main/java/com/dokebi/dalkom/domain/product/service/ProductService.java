@@ -18,7 +18,6 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
@@ -38,13 +37,9 @@ public class ProductService {
 	public void createProduct(ProductCreateRequest request) {
 		Category category = categoryRepository.getById(request.getCategorySeq());
 
-		if (!request.checkValue()) {
-			throw new InvalidProductInputException();
-		}
-
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
 			request.getImageUrl(), request.getCompany(), request.getState());
-		
+
 		productRepository.save(newProduct);
 
 		// 초기 재고 등록
@@ -62,7 +57,11 @@ public class ProductService {
 
 	@Transactional
 	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
-		return productRepository.findProductsByCategory(categorySeq);
+		List<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq);
+		if (productList == null || productList.isEmpty()) {
+			throw new ProductNotFoundException();
+		}
+		return productList;
 	}
 
 	public ReadProductDetailResponse readProduct(Long productSeq) {
