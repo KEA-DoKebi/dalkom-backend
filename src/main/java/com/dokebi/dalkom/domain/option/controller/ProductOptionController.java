@@ -22,13 +22,15 @@ public class ProductOptionController {
 	@GetMapping("api/option")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOptionListByCategory() {
-		return Response.success(productOptionService.getOptionList());
+
+		return Response.success(productOptionService.readOptionList());
 	}
 
 	// OPTION-002(옵션 상세 조회)
 	@GetMapping("api/option/{optionCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOptionListByCategory(@PathVariable String optionCode) {
-		return Response.success(productOptionService.getOptionDetailList(optionCode));
+
+		return Response.success(productOptionService.readOptionDetailList(optionCode));
 	}
 }
