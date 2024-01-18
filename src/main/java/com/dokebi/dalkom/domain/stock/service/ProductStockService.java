@@ -19,7 +19,7 @@ public class ProductStockService {
 	private final ProductStockHistoryRepository stockHistoryRepository;
 
 	@Transactional
-	public void editStock(Long stockSeq, Integer amount) {
+	public void updateStock(Long stockSeq, Integer amount) {
 		ProductStock stock = stockRepository.findByPrdtStockSeq(stockSeq);
 		if (amount < 0) {
 			throw new InvalidAmountException();
@@ -33,7 +33,7 @@ public class ProductStockService {
 	}
 
 	@Transactional
-	public void orderStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
+	public void createStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
 
 		Integer amount = stock.getAmount() - amountChanged;

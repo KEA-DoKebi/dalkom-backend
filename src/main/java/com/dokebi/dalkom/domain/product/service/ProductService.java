@@ -57,19 +57,18 @@ public class ProductService {
 
 	@Transactional
 	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
-		List<ProductByCategoryResponse> productList = productRepository.getProductsByCategory(categorySeq);
+		List<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq);
 		if (productList == null || productList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 		return productList;
 	}
 
-	// 쿼리 결과를 조합해서 return하는 메서드
 	public ReadProductDetailResponse readProduct(Long productSeq) {
-		ReadProductDetailDTO productDetailDTO = productRepository.getProductDetailBySeq(productSeq);
-		List<StockListDTO> stockList = productRepository.getStockListBySeq(productSeq);
-		List<OptionListDTO> optionList = productRepository.getOptionListBySeq(productSeq);
-		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
+		ReadProductDetailDTO productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
+		List<StockListDTO> stockList = productRepository.findStockListBySeq(productSeq);
+		List<OptionListDTO> optionList = productRepository.findOptionListBySeq(productSeq);
+		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
 
 		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
 			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
@@ -85,6 +84,6 @@ public class ProductService {
 
 	@Transactional
 	public List<ReadProductResponse> readProductList() {
-		return productRepository.getProductList();
+		return productRepository.findProductList();
 	}
 }

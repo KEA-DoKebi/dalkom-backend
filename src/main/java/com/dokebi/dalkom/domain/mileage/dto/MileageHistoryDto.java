@@ -17,8 +17,6 @@ public class MileageHistoryDto {
 
 	private String type;
 	private LocalDateTime createdAt;
-
 	private Integer balance;
 	private Integer amount;
-
 }
