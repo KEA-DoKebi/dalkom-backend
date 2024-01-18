@@ -138,13 +138,13 @@ public class ExceptionAdvice {
 	// 재고
 	@ExceptionHandler(InvalidApplicationException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
-	public Response InvalidAmountException() {
+	public Response invalidAmountException() {
 		return Response.failure(-1600, "잘못된 입력값입니다.");
 	}
 
 	@ExceptionHandler(NotEnoughStockException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
-	public Response NotEnoughStockException() {
+	public Response notEnoughStockException() {
 		return Response.failure(-1601, "재고가 부족합니다.");
 	}
 
