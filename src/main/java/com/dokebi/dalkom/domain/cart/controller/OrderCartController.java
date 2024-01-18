@@ -28,7 +28,7 @@ public class OrderCartController {
 	@GetMapping("api/cart/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderCart(@PathVariable Long userSeq) {
-		return Response.success(orderCartService.getOrderCartList(userSeq));
+		return Response.success(orderCartService.readOrderCartList(userSeq));
 	}
 
 	// CART-002 (특정 유저의 장바구니에 상품 담기)
