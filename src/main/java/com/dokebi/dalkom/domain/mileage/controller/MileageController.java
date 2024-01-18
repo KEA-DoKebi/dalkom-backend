@@ -22,6 +22,7 @@ public class MileageController {
 	@GetMapping("/api/mileage/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageByUserSeq(@PathVariable("userSeq") Long userSeq) {
+
 		return Response.success(mileageService.readMileageByUserSeq(userSeq));
 	}
 
@@ -29,6 +30,7 @@ public class MileageController {
 	@GetMapping("/api/mileage/history/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageHistoryByUserSeq (@PathVariable("userSeq") Long userSeq){
+
 		return Response.success(mileageService.readMileageHistoryByUserSeq(userSeq));
 	}
 }

@@ -13,6 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MileageAskRequest {
+
 	@NotBlank(message = "MileageAskRequest amount NotBlank 에러")
 	@Positive(message = "MileageAskRequest amount Positive 에러")
 	private Integer amount;

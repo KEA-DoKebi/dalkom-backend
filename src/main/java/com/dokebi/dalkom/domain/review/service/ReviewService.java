@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-
 public class ReviewService {
 
 	private final ReviewRepository reviewRepository;

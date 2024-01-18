@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
+import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.repository.MileageAskRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -20,11 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class MileageAskService {
+
 	private final MileageAskRepository mileageAskRepository;
 	private final UserService userService;
 	private final MileageService mileageService;
 
 	public List<MileageAskResponse> readMileageAsk() {
+
 		List<MileageApply> mileageApply = mileageAskRepository.findAll();
 
 		return mileageApply.stream()
@@ -37,9 +40,15 @@ public class MileageAskService {
 			.collect(Collectors.toList());
 	}
 
+	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
+		return mileageAskRepository.findByMilgApplySeq(milgApplySeq)
+			.orElseThrow(MileageApplyNotFoundException::new);
+	}
+
 	@Transactional
 	public void updateMileageAskState(Long milgApplySeq) {
-		MileageApply mileageApply = mileageAskRepository.findByMilgApplySeq(milgApplySeq);
+
+		MileageApply mileageApply = readByMilgApplySeq(milgApplySeq);
 		String approvedState = mileageApply.getApprovedState();
 		Long userSeq = mileageApply.getUser().getUserSeq();
 		if ("N".equals(approvedState)) {
@@ -47,11 +56,13 @@ public class MileageAskService {
 			mileageService.createMileageHistoryAndUpdateUser(userSeq, mileageApply.getAmount(), "1");
 			mileageAskRepository.save(mileageApply);
 		}
-
 	}
 
+	@Transactional
 	public void createMileageAsk(Long userSeq, MileageAskRequest request) {
+
 		User user = userService.readUserByUserSeq(userSeq);
+
 		MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
 		mileageAskRepository.save(mileageApply);
 
@@ -59,5 +70,6 @@ public class MileageAskService {
 
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
 		return mileageAskRepository.findByMilgApplySeq(milgApplySeq);
+
 	}
 }

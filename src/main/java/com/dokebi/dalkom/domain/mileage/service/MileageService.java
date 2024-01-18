@@ -23,7 +23,7 @@ public class MileageService {
 
 	// 유저 별 보유 마일리지 조회 서비스
 	public Integer readMileageByUserSeq(Long userSeq) {
-		// 제일 위에있는 내역 불러오기
+		// 제일 위에 있는 내역 불러오기
 		List<Integer> mileageList = mileageHistoryRepository.findMileageByUserSeq(userSeq);
 		if (!mileageList.isEmpty()) {
 			return mileageList.get(0);
@@ -45,7 +45,7 @@ public class MileageService {
 			.collect(Collectors.toList());
 	}
 
-	// 관리자가 충전을 승인하는경우 마일리지 내역을 추가하는 서비스
+	// 관리자가 충전을 승인하는 경우 마일리지 내역을 추가하는 서비스
 	public void createMileageHistoryAndUpdateUser(Long userSeq, Integer amount, String type) {
 		User user = userService.readUserByUserSeq(userSeq);
 		MileageHistory mileageHistory = new MileageHistory(amount, user.getMileage() + amount, type, user);
