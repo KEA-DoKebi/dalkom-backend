@@ -21,7 +21,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		"JOIN Product p ON od.product.productSeq = p.productSeq " +
 		"JOIN User u ON r.user.userSeq = u.userSeq " +
 		"WHERE p.productSeq = :productSeq")
-	List<ReviewByProductResponse> getReviewListByProduct(@Param("productSeq") Long productSeq);
+	List<ReviewByProductResponse> readReviewListByProduct(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse("
 		+ "r.content, r.rating, r.createdAt, r.modifiedAt, p.name, p.imageUrl, o.detail) " +
@@ -30,5 +30,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		"JOIN ProductOption o ON od.productOption.prdtOptionSeq = o.prdtOptionSeq " +
 		"JOIN Product p ON od.product.productSeq = p.productSeq " +
 		"WHERE r.user.userSeq = :userSeq")
-	List<ReviewByUserResponse> getReviewListByUser(@Param("userSeq") Long userSeq);
+	List<ReviewByUserResponse> readReviewListByUser(@Param("userSeq") Long userSeq);
 }

@@ -35,13 +35,13 @@ public class ReviewService {
 	@Transactional
 	public List<ReviewByProductResponse> readReviewListByProduct(Long productSeq) {
 
-		return reviewRepository.getReviewListByProduct(productSeq);
+		return reviewRepository.readReviewListByProduct(productSeq);
 	}
 
 	@Transactional
 	public List<ReviewByUserResponse> readReviewListByUser(Long userSeq) {
 
-		return reviewRepository.getReviewListByUser(userSeq);
+		return reviewRepository.readReviewListByUser(userSeq);
 	}
 
 	@Transactional
