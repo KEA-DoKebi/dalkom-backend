@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Transactional
 public class OrderService {
-
 	private final OrderRepository orderRepository;
 	private final OrderDetailService orderDetailService;
 	private final ProductOptionService productOptionService;
@@ -95,7 +94,7 @@ public class OrderService {
 				);
 
 				// 각 상품마다 재고 확인 후 감소
-				productStockService.createStock(productSeq, prdtOptionSeq, amount);
+				productStockService.updateStock(productSeq, prdtOptionSeq, amount);
 
 				// 각 세부 주문 DB에 저장
 				orderDetailService.saveOrderDetail(orderDetail);
@@ -112,7 +111,6 @@ public class OrderService {
 
 	// 주문하기
 	public List<OrderPageDetailDto> readProductDetail(List<OrderPageDetailDto> orderList) {
-
 		List<OrderPageDetailDto> result = new ArrayList<>();
 		orderList.forEach(order -> {
 			// 선택한 상품
@@ -135,7 +133,6 @@ public class OrderService {
 
 			// 재고 확인
 			productStockService.checkStock(orderSeq, optionSeq, productAmount);
-
 			orderPageDetailDTO.setTotalPrice(productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);
@@ -146,7 +143,6 @@ public class OrderService {
 
 	// 사용자별 상품 조회
 	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
-
 		List<Order> orders = orderRepository.findOrderListByUserSeq(userSeq);
 
 		return orders.stream()
@@ -162,7 +158,6 @@ public class OrderService {
 
 	// 주문 별 주문 조회
 	public OrderDto readOrderByOrderSeq(Long orderSeq) {
-
 		Order order = orderRepository.findByOrdrSeq(orderSeq);
 
 		return new OrderDto(order.getOrdrSeq(),
@@ -175,7 +170,6 @@ public class OrderService {
 	// 주문 전체 조회
 
 	public List<OrderDto> readOrderByAll() {
-
 		List<Order> orders = orderRepository.findAll();
 
 		return orders.stream()

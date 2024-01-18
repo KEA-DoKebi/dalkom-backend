@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductStockController {
-
 	private final ProductStockService productStockService;
 
 	// STOCK-001(재고 변경)
@@ -28,7 +27,6 @@ public class ProductStockController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readStockListByCategory(@PathVariable Long stockSeq,
 		@Valid @RequestBody ProductStockEditRequest request) {
-
 		productStockService.updateStock(stockSeq, request.getAmount());
 		return Response.success();
 	}
