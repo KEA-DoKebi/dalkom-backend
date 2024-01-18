@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.cart.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +36,7 @@ public class OrderCartController {
 	// CART-002 (특정 유저의 장바구니에 상품 담기)
 	@PostMapping("api/cart/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createOrderCart(@PathVariable Long userSeq, @RequestBody OrderCartCreateRequest request) {
+	public Response createOrderCart(@PathVariable Long userSeq, @Valid @RequestBody OrderCartCreateRequest request) {
 		orderCartService.createOrderCart(userSeq, request);
 		return Response.success();
 	}
@@ -42,7 +44,7 @@ public class OrderCartController {
 	// CART-003 (특정 유저의 장바구니에서 상품 삭제)
 	@DeleteMapping("api/cart")
 	@ResponseStatus(HttpStatus.OK)
-	public Response deleteOrderCart(@RequestBody OrderCartDeleteRequest request) {
+	public Response deleteOrderCart(@Valid @RequestBody OrderCartDeleteRequest request) {
 		orderCartService.deleteOrderCart(request);
 		return Response.success();
 	}

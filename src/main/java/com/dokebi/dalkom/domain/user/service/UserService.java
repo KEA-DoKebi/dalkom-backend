@@ -50,6 +50,10 @@ public class UserService {
 		}
 	}
 
+	public void updateUser(User user){
+		userRepository.save(user);
+	}
+	
 	public User readUserByUserSeq(Long userSeq) {
 		return userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 	}
