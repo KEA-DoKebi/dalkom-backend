@@ -11,17 +11,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.dokebi.dalkom.domain.cart.dto.OrderCartCreateRequest;
+import com.dokebi.dalkom.domain.cart.dto.OrderCartDeleteRequest;
 import com.dokebi.dalkom.domain.cart.factory.OrderCartCreateRequestFactory;
+import com.dokebi.dalkom.domain.cart.factory.OrderCartDeleteRequestFactory;
 import com.dokebi.dalkom.domain.cart.service.OrderCartService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SpringBootTest
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 public class OrderCartControllerTest {
 
@@ -74,5 +77,21 @@ public class OrderCartControllerTest {
 			.andExpect(status().isOk());
 
 		verify(orderCartService).createOrderCart(userSeq, request);
+	}
+
+	@Test
+	@DisplayName("특정 유저의 장바구니에서 상품 삭제 테스트")
+	void deleteOrderCartTest() throws Exception {
+		// Given
+		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();
+
+		// When, Then
+		mockMvc.perform(
+				delete("/api/cart")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(asJsonString(request)))
+			.andExpect(status().isOk());
+
+		verify(orderCartService).deleteOrderCart(request);
 	}
 }

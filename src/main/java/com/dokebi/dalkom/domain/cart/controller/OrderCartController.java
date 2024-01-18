@@ -43,7 +43,7 @@ public class OrderCartController {
 	}
 
 	// CART-003 (특정 유저의 장바구니에서 상품 삭제)
-	@DeleteMapping("api/cart")
+	@DeleteMapping("/api/cart")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteOrderCart(@Valid @RequestBody OrderCartDeleteRequest request) {
 		orderCartService.deleteOrderCart(request);
