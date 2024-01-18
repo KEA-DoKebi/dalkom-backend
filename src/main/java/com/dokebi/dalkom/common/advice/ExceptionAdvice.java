@@ -11,10 +11,11 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
-import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
+import com.dokebi.dalkom.domain.notice.exception.NoticeNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
+import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
@@ -165,10 +166,12 @@ public class ExceptionAdvice {
 	}
 
 	// 옵션
-	@ExceptionHandler(ProductOptionNotFoundException.class)
+
+	// 리뷰
+	@ExceptionHandler(ReviewNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response productOptionNotFoundException() {
-		return Response.failure(-1700, "옵션을 찾을 수 없습니다.");
+	public Response reviewNotFoundException() {
+		return Response.failure(-1800, "요청한 리뷰를 찾을 수 없습니다.");
 	}
 
 	// 카테고리
@@ -183,4 +186,10 @@ public class ExceptionAdvice {
 	// 문의
 
 	// 공지사항
+	@ExceptionHandler(NoticeNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response noticeNotFoundException() {
+		return Response.failure(-2200, "요청한 공지를 찾을 수 없습니다.");
+	}
+
 }
