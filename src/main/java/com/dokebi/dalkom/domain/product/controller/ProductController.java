@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.product.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +38,7 @@ public class ProductController {
 
 	// PRODUCTS-003(상품 정보 추가)
 	@PostMapping("/api/product")
-	public Response createProduct(@RequestBody ProductCreateRequest productCreateRequest) {
+	public Response createProduct(@Valid @RequestBody ProductCreateRequest productCreateRequest) {
 		productService.createProduct(productCreateRequest);
 		return Response.success();
 	}
