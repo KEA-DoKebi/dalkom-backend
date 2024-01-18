@@ -31,5 +31,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		"JOIN Product p ON od.product.productSeq = p.productSeq " +
 		"WHERE r.user.userSeq = :userSeq")
 	List<ReviewByUserResponse> getReviewListByUser(@Param("userSeq") Long userSeq);
-
 }
