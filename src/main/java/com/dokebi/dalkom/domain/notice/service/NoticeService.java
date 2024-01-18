@@ -3,8 +3,6 @@ package com.dokebi.dalkom.domain.notice.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,13 +31,13 @@ public class NoticeService {
 	@Transactional
 	public NoticeOneResponse readNotice(Long noticeSeq) {
 
-		return noticeRepository.readNotice(noticeSeq);
+		return noticeRepository.findNotice(noticeSeq);
 	}
 
 	@Transactional
 	public List<NoticeListResponse> readNoticeList() {
 
-		return noticeRepository.readNoticeList();
+		return noticeRepository.findNoticeList();
 	}
 
 	@Transactional
@@ -50,7 +48,7 @@ public class NoticeService {
 		noticeRepository.save(notice);
 	}
 
-	public void updateNotice(Long noticeSeq, @Valid NoticeUpdateRequest request) {
+	public void updateNotice(Long noticeSeq, NoticeUpdateRequest request) {
 
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
 		notice.setTitle(request.getTitle());

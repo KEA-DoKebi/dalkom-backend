@@ -33,19 +33,19 @@ public class InquiryService {
 	@Transactional
 	public List<InquiryListResponse> readInquiryListByUser(Long userSeq) {
 
-		return inquiryRepository.readInquiryListByUser(userSeq);
+		return inquiryRepository.findInquiryListByUser(userSeq);
 	}
 
 	@Transactional
 	public List<InquiryListResponse> readInquiryListByCategory(Long categorySeq) {
 
-		return inquiryRepository.readInquiryListByCategory(categorySeq);
+		return inquiryRepository.findInquiryListByCategory(categorySeq);
 	}
 
 	@Transactional
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
 
-		return inquiryRepository.readInquiryOne(inquirySeq);
+		return inquiryRepository.findInquiryOne(inquirySeq);
 	}
 
 	@Transactional
