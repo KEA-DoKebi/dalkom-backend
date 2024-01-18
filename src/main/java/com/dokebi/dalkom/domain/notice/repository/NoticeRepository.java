@@ -18,10 +18,10 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 		+ " n.title, n.content, n.createdAt, n.admin.nickname, n.state) " +
 		"FROM Notice n " +
 		"WHERE n.noticeSeq = :noticeSeq")
-	NoticeOneResponse readNotice(@Param("noticeSeq") Long noticeSeq);
+	NoticeOneResponse findNotice(@Param("noticeSeq") Long noticeSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
 		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
 		"FROM Notice n ")
-	List<NoticeListResponse> readNoticeList();
+	List<NoticeListResponse> findNoticeList();
 }

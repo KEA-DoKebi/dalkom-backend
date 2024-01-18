@@ -11,8 +11,10 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
+import com.dokebi.dalkom.domain.inqury.exception.InquiryNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
+import com.dokebi.dalkom.domain.notice.exception.NoticeNotFoundException;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
@@ -224,6 +226,18 @@ public class ExceptionAdvice {
 	}
 
 	// 문의
+	@ExceptionHandler(InquiryNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response inquiryNotFoundException() {
+
+		return Response.failure(-2100, "해당 문의를 찾을 수 없습니다.");
+	}
 
 	// 공지사항
+	@ExceptionHandler(NoticeNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response noticeNotFoundException() {
+
+		return Response.failure(-2200, "해당 공지를 찾을 수 없습니다.");
+	}
 }
