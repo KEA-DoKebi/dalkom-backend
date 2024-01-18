@@ -6,28 +6,21 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
-import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
-import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
-import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
-import com.dokebi.dalkom.domain.user.repository.UserRepository;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -56,7 +49,7 @@ public class OrderService {
 			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
- 			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
+			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
 			totalPrice += (price * request.getAmountList().get(i));
 		}
 
@@ -96,7 +89,7 @@ public class OrderService {
 				);
 
 				// 각 상품마다 재고 확인 후 감소
-				productStockService.createStock(productSeq, prdtOptionSeq, amount);
+				productStockService.updateStock(productSeq, prdtOptionSeq, amount);
 
 				// 각 세부 주문 DB에 저장
 				orderDetailService.saveOrderDetail(orderDetail);
