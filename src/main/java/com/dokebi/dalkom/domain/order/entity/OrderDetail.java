@@ -51,4 +51,13 @@ public class OrderDetail extends EntityDate {
 
 	@OneToOne(mappedBy = "orderDetail")
 	private Review review;
+
+	public OrderDetail(Order order, Product product, ProductOption productOption,
+		Integer amount, Integer price) {
+		this.order = order;
+		this.product = product;
+		this.productOption = productOption;
+		this.amount = amount;
+		this.price = price;
+	}
 }

@@ -14,7 +14,7 @@ public class ReadProductResponse {
 	private Long productSeq;
 	private String name;
 	private Integer price;
-	private Character state;
+	private String state;
 	private String imageUrl;
 	private String company;
 	private String optionDetail;

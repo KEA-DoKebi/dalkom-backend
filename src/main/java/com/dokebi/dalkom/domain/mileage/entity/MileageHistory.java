@@ -24,11 +24,9 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MileageHistory extends EntityDate {
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long milgHistorySeq;
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long milgHistorySeq;
 
 	@ManyToOne
 	@JoinColumn(name = "userSeq")
@@ -42,4 +40,19 @@ public class MileageHistory extends EntityDate {
 
 	@Column(name = "type", nullable = false)
 	private String type;
+
+	// public  MileageHistory createMileageHistory(User user , Integer  amount, String description) {
+	// 	LocalDateTime createdAt = LocalDateTime.now();
+	// 	MileageHistory mileageHistory = new MileageHistory();
+	// 	mileageHistory.setUser(user);
+	// 	mileageHistory.setAmount(amount);
+	// 	return mileageHistory;
+	// }
+	public MileageHistory(Integer amount, Integer balance, String type, User user) {
+		this.amount = amount;
+		this.balance = balance;
+		this.type = type;
+		this.user = user;
+
+	}
 }
