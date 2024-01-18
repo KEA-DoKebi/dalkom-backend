@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.order.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,7 +55,7 @@ public class OrderController {
 	// ORDER-005(결제 하기)
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createOrder(@RequestBody OrderCreateRequest request) {
+	public Response createOrder(@Valid @RequestBody OrderCreateRequest request) {
 		orderService.createOrder(request);
 		return Response.success();
 	}
