@@ -31,7 +31,8 @@ public class stockIntegrationTest {
 
 	@Autowired
 	WebApplicationContext context;
-	@Autowired MockMvc mockMvc;
+	@Autowired
+	MockMvc mockMvc;
 
 	@BeforeEach
 	void beforeEach() {
@@ -55,6 +56,5 @@ public class stockIntegrationTest {
 					.content(objectMapper.writeValueAsString(req)))
 			.andExpect(status().isOk());
 	}
-
 
 }
