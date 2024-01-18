@@ -13,12 +13,8 @@ import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.cart.repository.OrderCartRepository;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
-import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
-import com.dokebi.dalkom.domain.user.repository.UserRepository;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
