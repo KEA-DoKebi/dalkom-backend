@@ -5,29 +5,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
-import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
-import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
-import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
-import com.dokebi.dalkom.domain.user.repository.UserRepository;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,7 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OrderService {
+
 	private final OrderRepository orderRepository;
 	private final OrderDetailService orderDetailService;
 	private final ProductOptionService productOptionService;
@@ -46,6 +42,7 @@ public class OrderService {
 	private final UserService userService;
 
 	// 결제 하기
+	@Transactional
 	public void createOrder(OrderCreateRequest request) {
 
 		int totalPrice = 0;
@@ -54,10 +51,12 @@ public class OrderService {
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
 			Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
 			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
+
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
- 			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
 			totalPrice += (price * request.getAmountList().get(i));
+
+			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
 		}
 
 		// 어떤 사용자인지 조회
@@ -80,11 +79,11 @@ public class OrderService {
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
 			for (int i = 0; i < request.getProductSeqList().size(); i++) {
 				Long productSeq = request.getProductSeqList().get(i);
-				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-				Integer amount = request.getAmountList().get(i);
-
 				Product product = productService.readByProductSeq(productSeq);
+				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 				ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
+
+				Integer amount = request.getAmountList().get(i);
 				Integer price = product.getPrice();
 
 				OrderDetail orderDetail = new OrderDetail(
@@ -113,6 +112,7 @@ public class OrderService {
 
 	// 주문하기
 	public List<OrderPageDetailDto> readProductDetail(List<OrderPageDetailDto> orderList) {
+
 		List<OrderPageDetailDto> result = new ArrayList<>();
 		orderList.forEach(order -> {
 			// 선택한 상품
@@ -127,14 +127,15 @@ public class OrderService {
 
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto();
-
 			orderPageDetailDTO.setProductSeq(orderSeq);
 			orderPageDetailDTO.setProductName(productInfo.getName());
 			orderPageDetailDTO.setProductOptionSeq(optionSeq);
 			orderPageDetailDTO.setProductPrice(productInfo.getPrice());
 			orderPageDetailDTO.setProductAmount(productAmount);
+
 			// 재고 확인
 			productStockService.checkStock(orderSeq, optionSeq, productAmount);
+
 			orderPageDetailDTO.setTotalPrice(productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);
@@ -145,6 +146,7 @@ public class OrderService {
 
 	// 사용자별 상품 조회
 	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
+
 		List<Order> orders = orderRepository.findOrderListByUserSeq(userSeq);
 
 		return orders.stream()
@@ -160,6 +162,7 @@ public class OrderService {
 
 	// 주문 별 주문 조회
 	public OrderDto readOrderByOrderSeq(Long orderSeq) {
+
 		Order order = orderRepository.findByOrdrSeq(orderSeq);
 
 		return new OrderDto(order.getOrdrSeq(),
@@ -172,6 +175,7 @@ public class OrderService {
 	// 주문 전체 조회
 
 	public List<OrderDto> readOrderByAll() {
+
 		List<Order> orders = orderRepository.findAll();
 
 		return orders.stream()
