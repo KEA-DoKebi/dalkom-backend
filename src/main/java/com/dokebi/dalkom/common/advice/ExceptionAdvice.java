@@ -108,15 +108,15 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(OrderStockLackException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public Response orderStockLackException(){
-		return Response.failure(-1300,"재고가 부족합니다.");
+	public Response orderStockLackException() {
+		return Response.failure(-1300, "재고가 부족합니다.");
 	}
 
 	// 상품
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Response productNotFoundException() {
-		return Response.failure(1200, "요청한 상품을 찾을 수 없습니다.");
+		return Response.failure(-1200, "요청한 상품을 찾을 수 없습니다.");
 	}
 
 	// 주문
@@ -132,19 +132,19 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderCartEmptyResultDataAccessException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Response orderCartEmptyResultDataAccessException() {
-		return Response.failure(1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
+		return Response.failure(-1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
 	}
 
 	// 재고
 	@ExceptionHandler(InvalidApplicationException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
-	public Response InvalidAmountException() {
+	public Response invalidAmountException() {
 		return Response.failure(-1600, "잘못된 입력값입니다.");
 	}
 
 	@ExceptionHandler(NotEnoughStockException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
-	public Response NotEnoughStockException() {
+	public Response notEnoughStockException() {
 		return Response.failure(-1601, "재고가 부족합니다.");
 	}
 
