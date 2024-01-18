@@ -27,15 +27,15 @@ public class OrderCreateRequest {
 	private Long userSeq;
 
 	@NotNull(message = "OrderCreateRequest receiverName NotNull 에러")
-	@Size(max = 10,message = "OrderCreateRequest receiverName Size 에러")
+	@Size(max = 10, message = "OrderCreateRequest receiverName Size 에러")
 	private String receiverName;
 
 	@NotNull(message = "OrderCreateRequest receiverAddress NotNull 에러")
-	@Size(max=200,message = "OrderCreateRequest receiverAddress Size 에러")
+	@Size(max = 200, message = "OrderCreateRequest receiverAddress Size 에러")
 	private String receiverAddress;
 
 	@NotNull(message = "OrderCreateRequest receiverMobileNum NotNull 에러")
-	@Size(max=30,message = "OrderCreateRequest receiverMobileNum Size 에러")
+	@Size(max = 30, message = "OrderCreateRequest receiverMobileNum Size 에러")
 	private String receiverMobileNum;
 
 	@NotNull(message = "OrderCreateRequest receiverMemo NotNull 에러")

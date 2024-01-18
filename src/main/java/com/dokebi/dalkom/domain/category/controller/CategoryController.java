@@ -21,6 +21,7 @@ public class CategoryController {
 	@GetMapping("api/category")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readCategories() {
+
 		return Response.success(categoryService.readCategoryList());
 	}
 
@@ -28,6 +29,7 @@ public class CategoryController {
 	@GetMapping("api/category/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readSubCategories(@PathVariable Long categorySeq) {
+
 		return Response.success(categoryService.readSubCategoryList(categorySeq));
 	}
 }

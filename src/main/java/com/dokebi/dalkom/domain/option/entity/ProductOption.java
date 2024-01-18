@@ -41,4 +41,11 @@ public class ProductOption extends EntityDate {
 
 	@OneToMany(mappedBy = "productOption")
 	private List<ProductStock> productStockList = new ArrayList<>();
+
+	public ProductOption(Long prdtOptionSeq, String optionCode, String name, String detail) {
+		this.prdtOptionSeq = prdtOptionSeq;
+		this.optionCode = optionCode;
+		this.name = name;
+		this.detail = detail;
+	}
 }

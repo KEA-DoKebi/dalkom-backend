@@ -44,7 +44,8 @@ public class ReviewController {
 	// REVIEWS-003 (리뷰 작성)
 	@PostMapping("/api/review/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createReview(@PathVariable Long userSeq, @Valid @RequestBody ReviewCreateRequest request) {
+	public Response createReview(@PathVariable Long userSeq,
+		@Valid @RequestBody ReviewCreateRequest request) {
 
 		reviewService.createReview(userSeq, request);
 		return Response.success();
@@ -53,9 +54,10 @@ public class ReviewController {
 	// REVIEWS-004 (리뷰 수정)
 	@PutMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response modifyReview(@PathVariable Long reviewSeq, @Valid @RequestBody ReviewUpdateRequest request) {
+	public Response updateReview(@PathVariable Long reviewSeq,
+		@Valid @RequestBody ReviewUpdateRequest request) {
 
-		reviewService.modifyReview(reviewSeq, request);
+		reviewService.updateReview(reviewSeq, request);
 		return Response.success();
 	}
 

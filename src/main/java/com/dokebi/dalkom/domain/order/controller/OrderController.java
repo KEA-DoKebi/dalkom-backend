@@ -24,35 +24,36 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderController {
 	private final OrderService orderService;
 
-	// ORDER-001(사용자별 주문 조회)
+	// ORDER-001 (사용자별 주문 조회)
 	@GetMapping("/api/order/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrdersByUserSeq(@PathVariable("userSeq") Long userSeq) {
 		return Response.success(orderService.readOrderByUserSeq(userSeq));
 	}
 
-	// ORDER-002(주문 하기)
+	// ORDER-002 (주문 하기)
 	@GetMapping("/api/order/orderListPage")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderPageByProductSeq(@RequestBody OrderPageDto orderPageDto) {
+	public Response readOrderPageByProductSeq(@Valid @RequestBody OrderPageDto orderPageDto) {
+
 		return Response.success(orderService.readProductDetail(orderPageDto.getOrderList()));
 	}
 
-	// ORDER-003(특정 주문 조회)
+	// ORDER-003 (특정 주문 조회)
 	@GetMapping("/api/order/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq) {
 		return Response.success(orderService.readOrderByOrderSeq(orderSeq));
 	}
 
-	// ORDER-004(전체 주문 조회)
+	// ORDER-004 (전체 주문 조회)
 	@GetMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrders() {
 		return Response.success(orderService.readOrderByAll());
 	}
 
-	// ORDER-005(결제 하기)
+	// ORDER-005 (결제 하기)
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createOrder(@Valid @RequestBody OrderCreateRequest request) {
