@@ -26,20 +26,18 @@ public class OrderCartController {
 
 	private final OrderCartService orderCartService;
 
-	// CART-001 (특정 유저의 장바구니 조회)
-	@GetMapping("api/cart/user/{userSeq}")
+	// CART-001 (특정 유저의 장바구니 리스트 조회)
+	@GetMapping("/api/cart/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderCart(@PathVariable Long userSeq) {
-
+	public Response readOrderCartList(@PathVariable Long userSeq) {
 		return Response.success(orderCartService.readOrderCartList(userSeq));
 	}
 
 	// CART-002 (특정 유저의 장바구니에 상품 담기)
-	@PostMapping("api/cart/user/{userSeq}")
+	@PostMapping("/api/cart/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createOrderCart(@PathVariable Long userSeq,
 		@Valid @RequestBody OrderCartCreateRequest request) {
-
 		orderCartService.createOrderCart(userSeq, request);
 		return Response.success();
 	}
@@ -48,7 +46,6 @@ public class OrderCartController {
 	@DeleteMapping("api/cart")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteOrderCart(@Valid @RequestBody OrderCartDeleteRequest request) {
-
 		orderCartService.deleteOrderCart(request);
 		return Response.success();
 	}

@@ -14,7 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCartCreateRequest {
-
 	@NotBlank(message = "OrderCartCreateRequest productSeq NotBlank 에러")
 	@PositiveOrZero(message = "OrderCartCreateRequest productSeq PositiveOrZero 에러")
 	private Long productSeq;
