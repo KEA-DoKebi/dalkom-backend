@@ -79,6 +79,10 @@ public class ProductService {
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
 	}
 
+	public Product findByProductSeq(Long productSeq){
+		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+	}
+
 	@Transactional
 	public List<ReadProductResponse> readProductList() {
 		return productRepository.findProductList();
