@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
-import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
+import com.dokebi.dalkom.domain.order.service.OrderDetailService;
 import com.dokebi.dalkom.domain.review.dto.ReviewByProductResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewCreateRequest;
@@ -29,7 +29,7 @@ public class ReviewService {
 
 	private final ReviewRepository reviewRepository;
 	private final UserService userService;
-	private final OrderDetailRepository orderDetailRepository;
+	private final OrderDetailService orderDetailService;
 
 	@Transactional
 	public List<ReviewByProductResponse> readReviewListByProduct(Long productSeq) {
@@ -47,13 +47,13 @@ public class ReviewService {
 	public void createReview(Long userSeq, ReviewCreateRequest request) {
 
 		User user = userService.readUserByUserSeq(userSeq);
-		OrderDetail orderDetail = orderDetailRepository.findByOrdrDetailSeq(request.getOrderDetailSeq());
+		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq());
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
 		reviewRepository.save(review);
 	}
 
 	@Transactional
-	public void modifyReview(Long reviewSeq, ReviewUpdateRequest request) {
+	public void updateReview(Long reviewSeq, ReviewUpdateRequest request) {
 
 		Review review = reviewRepository.findByReviewSeq(reviewSeq);
 		review.setContent(request.getContent());

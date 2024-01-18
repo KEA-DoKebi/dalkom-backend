@@ -10,6 +10,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.dto.AdminDto;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
+import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 
@@ -51,4 +52,7 @@ public class AdminService {
 		}
 	}
 
+	public Admin readAdminByAdminSeq(Long adminSeq) {
+		return adminRepository.findByAdminSeq(adminSeq).orElseThrow(AdminNotFoundException::new);
+	}
 }
