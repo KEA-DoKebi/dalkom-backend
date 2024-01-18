@@ -54,10 +54,10 @@ public class ReviewController {
 	// REVIEWS-004 (리뷰 수정)
 	@PutMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response modifyReview(@PathVariable Long reviewSeq,
+	public Response updateReview(@PathVariable Long reviewSeq,
 		@Valid @RequestBody ReviewUpdateRequest request) {
 
-		reviewService.modifyReview(reviewSeq, request);
+		reviewService.updateReview(reviewSeq, request);
 		return Response.success();
 	}
 

@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
+import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
+import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
@@ -188,6 +191,21 @@ public class ExceptionAdvice {
 		return Response.failure(-1700, "옵션을 찾을 수 없습니다.");
 	}
 
+	// 리뷰
+	@ExceptionHandler(ReviewNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response reviewNotFoundException() {
+
+		return Response.failure(-1800, "요청하신 리뷰를 찾을 수 없습니다.");
+	}
+
+	@ExceptionHandler(OrderDetailNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response orderDetailNotFoundException() {
+
+		return Response.failure(-1801, "요청하신 주문상세를 찾을 수 없습니다.");
+	}
+
 	// 카테고리
 	@ExceptionHandler(CategoryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
@@ -197,6 +215,12 @@ public class ExceptionAdvice {
 	}
 
 	// 관리자 + 로그인
+	@ExceptionHandler(AdminNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response adminNotFoundException() {
+
+		return Response.failure(-2000, "해당 관리자를 찾을 수 없습니다.");
+	}
 
 	// 문의
 
