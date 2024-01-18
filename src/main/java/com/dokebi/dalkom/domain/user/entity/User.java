@@ -83,8 +83,8 @@ public class User extends EntityDate {
 	@OneToMany(mappedBy = "user")
 	private List<Inquiry> inquiry = new ArrayList<>();
 
-
-	public User (String empId, String password, String name, String email, String address, String joinedAt, String nickname, Integer mileage){
+	public User(String empId, String password, String name, String email, String address, String joinedAt,
+		String nickname, Integer mileage) {
 		this.empId = empId;
 		this.password = password;
 		this.name = name;

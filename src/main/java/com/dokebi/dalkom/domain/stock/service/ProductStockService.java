@@ -37,6 +37,9 @@ public class ProductStockService {
 		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
 
 		Integer amount = stock.getAmount() - amountChanged;
+		if (amount < 0) {
+			throw new NotEnoughStockException();
+		}
 		stock.setAmount(amount);
 
 		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, amountChanged);
@@ -45,13 +48,11 @@ public class ProductStockService {
 	}
 
 	@Transactional
-	public Boolean checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
+	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
 
 		if (stock.getAmount() - amountChanged < 0) {
 			throw new NotEnoughStockException();
-		} else {
-			return true;
 		}
 	}
 }
