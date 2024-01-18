@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
+import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
+import com.dokebi.dalkom.domain.option.exception.OptionNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
@@ -155,7 +157,19 @@ public class ExceptionAdvice {
 		return Response.failure(-1601, "재고가 부족합니다.");
 	}
 
+	// 옵션
+	@ExceptionHandler(OptionNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response optionNotFoundException() {
+		return Response.failure(-1700, "옵션을 찾을 수 없습니다.");
+	}
+
 	// 카테고리
+	@ExceptionHandler(CategoryNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response CategoryNotFoundException() {
+		return Response.failure(-1900, "카테고리를 찾을 수 없습니다.");
+	}
 
 	// 관리자 + 로그인
 
