@@ -41,7 +41,7 @@ public class MileageAskService {
 	}
 
 	@Transactional
-	public void putMileageAskState(Long milgApplySeq) {
+	public void updateMileageAskState(Long milgApplySeq) {
 		MileageApply mileageApply = mileageAskRepository.findByMilgApplySeq(milgApplySeq);
 		String approvedState = mileageApply.getApprovedState();
 		Long userSeq = mileageApply.getUser().getUserSeq();

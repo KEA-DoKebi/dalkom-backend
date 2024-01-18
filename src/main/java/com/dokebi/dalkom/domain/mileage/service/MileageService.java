@@ -37,7 +37,7 @@ public class MileageService {
 
 	// 유저별 마일리지 내역 조회 서비스
 	public List<MileageHistoryDto> readMileageHistoryByUserSeq(Long userSeq) {
-		List<MileageHistory> mileageHistories = mileageHistoryRepository.findMileageHistoriesByUserSeq(userSeq);
+		List<MileageHistory> mileageHistories = mileageHistoryRepository.findMileageHistoryListByUserSeq(userSeq);
 
 		return mileageHistories.stream()
 			.map(history -> new MileageHistoryDto(
