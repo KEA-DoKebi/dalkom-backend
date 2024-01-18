@@ -16,5 +16,5 @@ public interface MileageHistoryRepository extends JpaRepository<MileageHistory, 
 
 	//유저 내역 조회
 	@Query("SELECT m FROM MileageHistory m WHERE m.user.userSeq = :userSeq")
-	List<MileageHistory> findMileageHistoriesByUserSeq(@Param("userSeq") Long userSeq);
+	List<MileageHistory> findMileageHistoryListByUserSeq(@Param("userSeq") Long userSeq);
 }
