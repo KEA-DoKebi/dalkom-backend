@@ -18,5 +18,5 @@ public interface OrderCartRepository extends JpaRepository<OrderCart, Long> {
 		"FROM OrderCart oc " +
 		"JOIN ProductOption po ON oc.prdtOptionSeq = po.prdtOptionSeq " +
 		"WHERE oc.user.userSeq = :userSeq")
-	List<OrderCartReadResponse> readOrderCartList(@Param("userSeq") Long userSeq);
+	List<OrderCartReadResponse> findOrderCartList(@Param("userSeq") Long userSeq);
 }
