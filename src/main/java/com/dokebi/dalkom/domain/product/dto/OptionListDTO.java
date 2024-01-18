@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 // ReadProductDetailResponse의 List용 DTO
 public class OptionListDTO {
+
 	private Long productOptionSeq;
 	private String detail;
 }
