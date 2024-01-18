@@ -21,9 +21,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SignService {
 
+	private final TokenService tokenService;
+	private final RedisService redisService;
 	private final UserRepository userRepository;
 	private final EmployeeRepository employeeRepository;
-	private final TokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
@@ -33,6 +34,7 @@ public class SignService {
 		String subject = createSubject(user);
 		String accessToken = tokenService.createAccessToken(subject);
 		String refreshToken = tokenService.createRefreshToken(subject);
+		redisService.setValues(accessToken, refreshToken);
 		return new LogInResponse(accessToken, refreshToken);
 	}
 

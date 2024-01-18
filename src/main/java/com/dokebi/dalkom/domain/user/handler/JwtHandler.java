@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -24,27 +25,36 @@ public class JwtHandler {
 			.compact();
 	}
 
-	public String extractSubjects(String encodedKey, String token) {
-		return parse(encodedKey, token).getBody().getSubject();
-	}
-
-	public boolean validate(String encodedKey, String token) {
+	public String validate(String encodedKey, String token) {
 		try {
-			parse(encodedKey, token);
-			return true;
+			Jws<Claims> claims = parse(encodedKey, token);
+			if (claims == null)
+				return null;
+			return extractToken(claims);
 
 		} catch (JwtException e) {
-			return false;
+			return null;
 		}
 	}
 
-	private Jws<Claims> parse(String key, String token) {
-		return Jwts.parser()
-			.setSigningKey(key)
-			.parseClaimsJws(untype(token));
+	public String extractToken(Jws<Claims> claims) {
+		return claims.getBody().getSubject();
+	}
+
+	public Jws<Claims> parse(String key, String token) {
+		try {
+			System.out.println("===토큰 유효====");
+			return Jwts.parser().setSigningKey(key).parseClaimsJws(untype(token));
+		} catch (ExpiredJwtException e) {
+			System.out.println("===토큰 만료===");
+			return null;
+
+		}
+
 	}
 
 	private String untype(String token) {
 		return token.substring(type.length());
 	}
+
 }
