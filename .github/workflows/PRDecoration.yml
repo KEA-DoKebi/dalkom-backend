@@ -29,13 +29,10 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
-      
+
     # Build with Gradle
     - name: Build with Gradle
       run: ./gradlew test jacocoTestReport
-
-    - name: Generate JaCoCo coverage report
-      run: ./gradlew jacocoTestReport
 
     - name: Run SonarQube analysis
       env:
@@ -51,5 +48,5 @@ jobs:
           -Dsonar.login=$SONAR_TOKEN \
           -Dsonar.pullrequest.base=${{ github.base_ref }} \
           -Dsonar.pullrequest.branch=${{ github.head_ref }} \
-          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
           -Dsonar.coverage.jacoco.xmlReportPaths='./build/reports/jacoco/test/jacocoTestReport.xml'
