@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.review.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +42,9 @@ public class ReviewController {
 	}
 
 	// REVIEWS-003 (리뷰 작성)
-	@PostMapping("api/review/user/{userSeq}")
+	@PostMapping("/api/review/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createReview(@PathVariable Long userSeq, @RequestBody ReviewCreateRequest request) {
+	public Response createReview(@PathVariable Long userSeq,@Valid @RequestBody ReviewCreateRequest request) {
 
 		reviewService.createReview(userSeq, request);
 		return Response.success();

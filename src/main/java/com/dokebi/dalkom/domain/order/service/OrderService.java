@@ -24,8 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderService {
 	private final OrderRepository orderRepository;
 	private final ProductService productService;
-	private final UserRepository userRepository;
-	private final OrderDetailRepository orderDetailRepository;
 
 	// 주문서 내역 조회
 	public List<OrderPageDetailDto> readProductBySeq(List<OrderPageDetailDto> orders) {
