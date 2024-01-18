@@ -32,12 +32,14 @@ public class ProductController {
 
 	// PRODUCTS-002(상품 상세 정보 조회)
 	@GetMapping("api/product/{productSeq}")
+	@ResponseStatus(HttpStatus.OK)
 	public Response readProduct(@PathVariable Long productSeq) {
 		return Response.success(productService.readProduct(productSeq));
 	}
 
 	// PRODUCTS-003(상품 정보 추가)
 	@PostMapping("/api/product")
+	@ResponseStatus(HttpStatus.OK)
 	public Response createProduct(@Valid @RequestBody ProductCreateRequest productCreateRequest) {
 		productService.createProduct(productCreateRequest);
 		return Response.success();

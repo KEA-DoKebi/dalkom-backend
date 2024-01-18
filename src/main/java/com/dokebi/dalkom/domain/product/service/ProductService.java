@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.product.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +79,7 @@ public class ProductService {
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
 	}
 
-	public Product findByProductSeq(Long productSeq) {
+	public Product readByProductSeq(Long productSeq) {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
@@ -86,4 +87,5 @@ public class ProductService {
 	public List<ReadProductResponse> readProductList() {
 		return productRepository.findProductList();
 	}
+
 }

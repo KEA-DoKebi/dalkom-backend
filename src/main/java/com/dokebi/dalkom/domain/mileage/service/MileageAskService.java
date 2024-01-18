@@ -57,10 +57,6 @@ public class MileageAskService {
 
 	}
 
-	public List<MileageApply> readAll() {
-		return mileageAskRepository.findAll();
-	}
-
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
 		return mileageAskRepository.findByMilgApplySeq(milgApplySeq);
 	}
