@@ -10,8 +10,6 @@ import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import io.lettuce.core.dynamic.annotation.Param;
 
 public interface ProductStockRepository extends JpaRepository<ProductStock, Long> {
-	
-	ProductStock findByPrdtStockSeq(Long productSeq);
 
 	@Query("SELECT ps "
 		+ "FROM ProductStock ps "
