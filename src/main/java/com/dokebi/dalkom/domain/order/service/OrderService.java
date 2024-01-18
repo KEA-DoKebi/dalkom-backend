@@ -11,6 +11,7 @@ import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
+import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
@@ -27,6 +28,7 @@ import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
+import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,16 +38,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderService {
 	private final OrderRepository orderRepository;
-	private final OrderDetailRepository orderDetailRepository;
-	private final ProductRepository productRepository;
-	private final ProductOptionRepository productOptionRepository;
-	private final UserRepository userRepository;
+	private final OrderDetailService orderDetailService;
+	private final ProductOptionService productOptionService;
 	private final ProductService productService;
 	private final ProductStockService productStockService;
 	private final MileageService mileageService;
+	private final UserService userService;
 
 	// 결제 하기
-	public Response makeOrder(OrderCreateRequest request) {
+	public void createOrder(OrderCreateRequest request) {
 
 		int totalPrice = 0;
 
@@ -55,18 +56,12 @@ public class OrderService {
 			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
-
-			try {
-				productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
-			} catch (Exception e) {
-				return Response.failure(403, e.getMessage());
-			}
-
+ 			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
 			totalPrice += (price * request.getAmountList().get(i));
 		}
 
 		// 어떤 사용자인지 조회
-		User user = userRepository.findByUserSeq(request.getUserSeq()).orElseThrow(UserNotFoundException::new);
+		User user = userService.readUserByUserSeq(request.getUserSeq());
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (totalPrice <= user.getMileage()) {
@@ -88,9 +83,8 @@ public class OrderService {
 				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 				Integer amount = request.getAmountList().get(i);
 
-				Product product = productRepository.findByProductSeq(productSeq)
-					.orElseThrow(ProductNotFoundException::new);
-				ProductOption productOption = productOptionRepository.getById(prdtOptionSeq);
+				Product product = productService.findByProductSeq(productSeq);
+				ProductOption productOption = productOptionService.getByPrdtOptionSeq(prdtOptionSeq);
 				Integer price = product.getPrice();
 
 				OrderDetail orderDetail = new OrderDetail(
@@ -105,16 +99,13 @@ public class OrderService {
 				productStockService.createStock(productSeq, prdtOptionSeq, amount);
 
 				// 각 세부 주문 DB에 저장
-				orderDetailRepository.save(orderDetail);
+				orderDetailService.saveOrderDetail(orderDetail);
 			}
 
 			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
 			Integer amount = (user.getMileage() - totalPrice);
 
 			mileageService.createMileageHistoryAndUpdateUser(user.getUserSeq(), amount, "2");
-
-			// 모든 과정이 정상적으로 진행될 경우 Response.success() return
-			return Response.success();
 		} else {
 			throw new MileageLackException();
 		}

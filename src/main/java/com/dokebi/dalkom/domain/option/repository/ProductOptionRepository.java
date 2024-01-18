@@ -18,4 +18,6 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
 
 	@Query("SELECT po.detail FROM ProductOption po WHERE po.optionCode =:optionCode")
 	List<String> findDetailByOptionCode(@Param("optionCode") String optionCode);
+
+	ProductOption findByPrdtOptionSeq(Long prdtOptionSeq);
 }
