@@ -14,6 +14,7 @@ import lombok.ToString;
 
 // 상품 상세 responseBody
 public class ReadProductDetailResponse {
+
 	private Long categorySeq;
 	private String name;
 	private Integer price;
@@ -27,6 +28,7 @@ public class ReadProductDetailResponse {
 	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO, List<OptionListDTO> optionList,
 		List<StockListDTO> stockList,
 		List<String> productImageUrlList) {
+
 		this.categorySeq = productDetailDTO.getCategorySeq();
 		this.name = productDetailDTO.getName();
 		this.price = productDetailDTO.getPrice();

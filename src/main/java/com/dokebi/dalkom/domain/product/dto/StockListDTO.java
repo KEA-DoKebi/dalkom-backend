@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 // ReadProductDetailResponse의 List용 DTO
 public class StockListDTO {
+
 	private Long productStockSeq;
 	private Integer amount;
 }

@@ -65,5 +65,4 @@ public class ProductStockService {
 			throw new NotEnoughStockException();
 		}
 	}
-
 }

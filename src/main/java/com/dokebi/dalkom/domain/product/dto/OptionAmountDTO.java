@@ -12,6 +12,7 @@ import lombok.Setter;
 
 // ProductCreateRequest의 List용 DTO
 public class OptionAmountDTO {
+
 	private Long prdtOptionSeq;
 	private Integer amount;
 }

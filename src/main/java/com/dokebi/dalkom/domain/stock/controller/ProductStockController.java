@@ -30,5 +30,4 @@ public class ProductStockController {
 		productStockService.updateStock(stockSeq, request.getAmount());
 		return Response.success();
 	}
-
 }

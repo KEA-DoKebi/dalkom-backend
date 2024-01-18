@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class OrderPageDetailDto {
+
 	// 뷰로부터 전달받을 값
 
 	// private Long userSeq;

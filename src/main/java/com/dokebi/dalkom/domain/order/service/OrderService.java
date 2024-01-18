@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
@@ -29,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderDetailService orderDetailService;
@@ -39,6 +41,7 @@ public class OrderService {
 	private final UserService userService;
 
 	// 결제 하기
+	@Transactional
 	public void createOrder(OrderCreateRequest request) {
 
 		int totalPrice = 0;
@@ -47,10 +50,12 @@ public class OrderService {
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
 			Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
 			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
+
 			Integer amount = request.getAmountList().get(i);
 			Integer price = product.getPrice();
-			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
 			totalPrice += (price * request.getAmountList().get(i));
+
+			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
 		}
 
 		// 어떤 사용자인지 조회
@@ -73,11 +78,11 @@ public class OrderService {
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
 			for (int i = 0; i < request.getProductSeqList().size(); i++) {
 				Long productSeq = request.getProductSeqList().get(i);
-				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-				Integer amount = request.getAmountList().get(i);
-
 				Product product = productService.readByProductSeq(productSeq);
+				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 				ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
+
+				Integer amount = request.getAmountList().get(i);
 				Integer price = product.getPrice();
 
 				OrderDetail orderDetail = new OrderDetail(
@@ -120,12 +125,12 @@ public class OrderService {
 
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto();
-
 			orderPageDetailDTO.setProductSeq(orderSeq);
 			orderPageDetailDTO.setProductName(productInfo.getName());
 			orderPageDetailDTO.setProductOptionSeq(optionSeq);
 			orderPageDetailDTO.setProductPrice(productInfo.getPrice());
 			orderPageDetailDTO.setProductAmount(productAmount);
+
 			// 재고 확인
 			productStockService.checkStock(orderSeq, optionSeq, productAmount);
 			orderPageDetailDTO.setTotalPrice(productInfo.getPrice() * order.getProductAmount());

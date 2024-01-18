@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
+import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
@@ -58,6 +59,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response memberNotFoundException() {
+
 		return Response.failure(-1001, "요청한 회원을 찾을 수 없습니다.");
 	}
 	//
@@ -113,6 +115,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderStockLackException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response orderStockLackException() {
+
 		return Response.failure(-1300, "재고가 부족합니다.");
 	}
 
@@ -120,12 +123,14 @@ public class ExceptionAdvice {
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response productNotFoundException() {
+
 		return Response.failure(-1200, "요청한 상품을 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(InvalidProductInputException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response invalidProductInputException() {
+
 		return Response.failure(-1201, "입력값이 잘못되었습니다.");
 	}
 
@@ -135,13 +140,22 @@ public class ExceptionAdvice {
 	@ExceptionHandler(MileageLackException.class)
 	@ResponseStatus(HttpStatus.PAYMENT_REQUIRED) // 402
 	public Response mileageLackException() {
+
 		return Response.failure(-1400, "마일리지가 부족합니다.");
+	}
+
+	@ExceptionHandler(MileageApplyNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public Response mileageApplyNotFoundException() {
+
+		return Response.failure(-1401, "찾고자 하는 마일리지 신청 정보를 찾을 수 없습니다.");
 	}
 
 	// 카트
 	@ExceptionHandler(OrderCartEmptyResultDataAccessException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderCartEmptyResultDataAccessException() {
+
 		return Response.failure(-1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
 	}
 
@@ -149,12 +163,14 @@ public class ExceptionAdvice {
 	@ExceptionHandler(InvalidApplicationException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
 	public Response invalidAmountException() {
+
 		return Response.failure(-1600, "잘못된 입력값입니다.");
 	}
 
 	@ExceptionHandler(NotEnoughStockException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
 	public Response notEnoughStockException() {
+
 		return Response.failure(-1601, "재고가 부족합니다.");
 	}
 
@@ -168,6 +184,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(ProductOptionNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response productOptionNotFoundException() {
+
 		return Response.failure(-1700, "옵션을 찾을 수 없습니다.");
 	}
 
@@ -175,6 +192,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(CategoryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response CategoryNotFoundException() {
+
 		return Response.failure(-1900, "카테고리를 찾을 수 없습니다.");
 	}
 
