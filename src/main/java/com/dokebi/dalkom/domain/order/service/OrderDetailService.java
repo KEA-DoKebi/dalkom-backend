@@ -6,6 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
 import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
+import com.dokebi.dalkom.domain.order.repository.OrderRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dokebi.dalkom.domain.order.entity.OrderDetail;
+import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
+import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 
 import lombok.RequiredArgsConstructor;
 
