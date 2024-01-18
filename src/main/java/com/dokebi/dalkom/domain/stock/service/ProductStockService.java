@@ -7,6 +7,7 @@ import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.entity.ProductStockHistory;
 import com.dokebi.dalkom.domain.stock.exception.InvalidAmountException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
+import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.stock.repository.ProductStockHistoryRepository;
 import com.dokebi.dalkom.domain.stock.repository.ProductStockRepository;
 
@@ -20,10 +21,12 @@ public class ProductStockService {
 
 	@Transactional
 	public void editStock(Long stockSeq, Integer amount) {
-		ProductStock stock = stockRepository.findByPrdtStockSeq(stockSeq);
+		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
+
 		if (amount < 0) {
 			throw new InvalidAmountException();
 		}
+
 		int amountChanged = amount - stock.getAmount();
 		stock.setAmount(amount);
 
@@ -34,7 +37,8 @@ public class ProductStockService {
 
 	@Transactional
 	public void orderStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
+		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)
+			.orElseThrow(ProductStockNotFoundException::new);
 
 		Integer amount = stock.getAmount() - amountChanged;
 		if (amount < 0) {
@@ -49,7 +53,8 @@ public class ProductStockService {
 
 	@Transactional
 	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq);
+		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)
+			.orElseThrow(ProductStockNotFoundException::new);
 
 		if (stock.getAmount() - amountChanged < 0) {
 			throw new NotEnoughStockException();
