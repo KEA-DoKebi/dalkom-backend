@@ -18,6 +18,7 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
+import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.repository.ProductStockRepository;
@@ -62,6 +63,10 @@ public class ProductService {
 		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
 
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
+	}
+
+	public Product findByProductSeq(Long productSeq){
+		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
 	@Transactional
