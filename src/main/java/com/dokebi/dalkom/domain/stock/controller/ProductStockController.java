@@ -24,7 +24,7 @@ public class ProductStockController {
 	@PutMapping("api/stock/{stockSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductListByCategory(@PathVariable Long stockSeq,
-						  @RequestBody ProductStockEditRequest request) {
+		@RequestBody ProductStockEditRequest request) {
 		productStockService.editStock(stockSeq, request.getAmount());
 		return Response.success();
 	}
