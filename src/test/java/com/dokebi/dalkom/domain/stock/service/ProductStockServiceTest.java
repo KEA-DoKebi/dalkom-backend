@@ -37,6 +37,8 @@ public class ProductStockServiceTest {
 		Integer amount = 10;
 		ProductStock productStock = new ProductStock(null, null, null);
 		productStock.setAmount(6);
+
+		//Mock 객체의 반응 설정
 		given(stockRepository.findById(stockSeq)).willReturn(Optional.of(productStock));
 
 		// when
@@ -51,7 +53,7 @@ public class ProductStockServiceTest {
 	void updateStockExceptionTest() {
 		// given
 		Long stockSeq = 1L;
-		Integer amount = -1;
+		Integer amount = -1; // 이상치 설정
 		ProductStock productStock = new ProductStock(null, null, null);
 		productStock.setAmount(10);
 
