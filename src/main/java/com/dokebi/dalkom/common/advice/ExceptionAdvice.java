@@ -121,7 +121,7 @@ public class ExceptionAdvice {
 	}
 
 	@ExceptionHandler(InvalidProductInputException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response invalidProductInputException() {
 		return Response.failure(-1201, "입력값이 잘못되었습니다.");
 	}
