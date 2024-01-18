@@ -1,12 +1,20 @@
 package com.dokebi.dalkom.domain.user.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.admin.entity.Admin;
+import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.dto.CheckEmployeeRequest;
+import com.dokebi.dalkom.domain.user.dto.LogInAdminRequest;
+import com.dokebi.dalkom.domain.user.dto.LogInRequest;
+import com.dokebi.dalkom.domain.user.dto.LogInResponse;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
+import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
 import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
@@ -16,9 +24,56 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SignService {
 
+	private final TokenService tokenService;
+	private final RedisService redisService;
+	private final AdminRepository adminRepository;
 	private final UserRepository userRepository;
 	private final EmployeeRepository employeeRepository;
-	//private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
+
+	@Transactional(readOnly = true)
+	public LogInResponse signIn(LogInRequest req) {
+		User user = userRepository.findByEmail(req.getEmail());
+		validatePassword(req, user);
+		String subject = createSubject(user);
+		String accessToken = tokenService.createAccessToken(subject);
+		String refreshToken = tokenService.createRefreshToken(subject);
+		redisService.setValues(accessToken, refreshToken);
+		return new LogInResponse(accessToken, refreshToken);
+	}
+
+	@Transactional(readOnly = true)
+	public LogInResponse signInAdmin(LogInAdminRequest req) {
+		Admin admin = adminRepository.findByAdminId(req.getAdminId());
+		if (admin == null)
+			throw new LoginFailureException();
+		validatePassword(req, admin);
+		String subject = createSubject(admin);
+		String accessToken = tokenService.createAccessToken(subject);
+		String refreshToken = tokenService.createRefreshToken(subject);
+		redisService.setValues(accessToken, refreshToken);
+		return new LogInResponse(accessToken, refreshToken);
+	}
+
+	private String createSubject(User user) {
+		return String.valueOf(user.getUserSeq());
+	}
+
+	private String createSubject(Admin admin) {
+		return String.valueOf(admin.getAdminSeq()) + ",Admin";
+	}
+
+	private void validatePassword(LogInRequest req, User user) {
+		if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+			throw new LoginFailureException();
+		}
+	}
+
+	private void validatePassword(LogInAdminRequest req, Admin admin) {
+		if (!passwordEncoder.matches(req.getPassword(), admin.getPassword())) {
+			throw new LoginFailureException();
+		}
+	}
 
 	@Transactional
 	public SignUpResponse signUp(SignUpRequest req) {
@@ -46,8 +101,8 @@ public class SignService {
 				req.setMileage(0);
 
 				// 비밀번호 암호화
-				// String password = passwordEncoder.encode(req.getPassword());
-				// req.setPassword(password);
+				String password = passwordEncoder.encode(req.getPassword());
+				req.setPassword(password);
 
 				// 회원 정보 저장
 				userRepository.save(SignUpRequest.toEntity(req));
@@ -99,11 +154,5 @@ public class SignService {
 		}
 		return true;
 	}
-
-	// private void validatePassword(LogInRequest req, User user) {
-	// 	if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-	// 		throw new LoginFailureException();
-	// 	}
-	// }
 
 }

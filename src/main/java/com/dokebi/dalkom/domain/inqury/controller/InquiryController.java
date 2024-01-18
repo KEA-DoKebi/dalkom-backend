@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.inqury.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +26,7 @@ public class InquiryController {
 
 	// INQUIRY-001 (문의 등록)
 	@PostMapping("api/inquiry/user/{userSeq}")
-	public Response createInquiry(@PathVariable Long userSeq, @RequestBody InquiryCreateRequest request) {
+	public Response createInquiry(@PathVariable Long userSeq, @Valid @RequestBody InquiryCreateRequest request) {
 
 		inquiryService.createInquiry(userSeq, request);
 		return Response.success();
@@ -35,7 +37,7 @@ public class InquiryController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readInquiryByUser(@PathVariable Long userSeq) {
 
-		return Response.success(inquiryService.getInquiryListByUser(userSeq));
+		return Response.success(inquiryService.readInquiryListByUser(userSeq));
 	}
 
 	// INQUIRY-003 (카테고리 별 문의 조회)
@@ -43,7 +45,7 @@ public class InquiryController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readInquiryByCategory(@PathVariable Long categorySeq) {
 
-		return Response.success(inquiryService.getInquiryListByCategory(categorySeq));
+		return Response.success(inquiryService.readInquiryListByCategory(categorySeq));
 	}
 
 	// INQUIRY-005 (특정 문의 조회)
@@ -51,12 +53,12 @@ public class InquiryController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readInquiryOne(@PathVariable Long inquirySeq) {
 
-		return Response.success(inquiryService.getInquiryOne(inquirySeq));
+		return Response.success(inquiryService.readInquiryOne(inquirySeq));
 	}
 
 	// INQUIRY-006 (문의 답변)
 	@PutMapping("/api/inquiry/{inquirySeq}")
-	public Response answerInquiry(@PathVariable Long inquirySeq, @RequestBody InquiryAnswerRequest request) {
+	public Response answerInquiry(@PathVariable Long inquirySeq, @Valid @RequestBody InquiryAnswerRequest request) {
 
 		inquiryService.answerInquiry(inquirySeq, request);
 		return Response.success();
