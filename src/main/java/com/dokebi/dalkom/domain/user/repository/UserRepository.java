@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.user.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -8,7 +10,7 @@ import com.dokebi.dalkom.domain.user.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	User findByUserSeq(Long userSeq);
+	Optional<User> findByUserSeq(Long userSeq);
 
 	User findByEmail(String email);
 

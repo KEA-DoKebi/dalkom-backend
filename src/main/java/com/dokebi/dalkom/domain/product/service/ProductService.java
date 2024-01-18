@@ -18,6 +18,8 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
+import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
+import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.repository.ProductStockRepository;
@@ -35,6 +37,11 @@ public class ProductService {
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
 		Category category = categoryRepository.getById(request.getCategorySeq());
+
+		if (!request.checkValue()) {
+			throw new InvalidProductInputException();
+		}
+
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
 			request.getImageUrl(), request.getCompany(), request.getState());
 		
@@ -49,23 +56,31 @@ public class ProductService {
 		}
 	}
 
-	@Transactional
-	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
-		return productRepository.getProductsByCategory(categorySeq);
+	public Product readProductByProductSeq(Long productSeq) {
+		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
-	// 쿼리 결과를 조합해서 return하는 메서드
+	@Transactional
+	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
+		return productRepository.findProductsByCategory(categorySeq);
+	}
+
 	public ReadProductDetailResponse readProduct(Long productSeq) {
-		ReadProductDetailDTO productDetailDTO = productRepository.getProductDetailBySeq(productSeq);
-		List<StockListDTO> stockList = productRepository.getStockListBySeq(productSeq);
-		List<OptionListDTO> optionList = productRepository.getOptionListBySeq(productSeq);
-		List<String> productImageUrlList = productRepository.getProductImageBySeq(productSeq);
+		ReadProductDetailDTO productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
+		List<StockListDTO> stockList = productRepository.findStockListBySeq(productSeq);
+		List<OptionListDTO> optionList = productRepository.findOptionListBySeq(productSeq);
+		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
+
+		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
+			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
+			throw new ProductNotFoundException();
+		}
 
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
 	}
 
 	@Transactional
 	public List<ReadProductResponse> readProductList() {
-		return productRepository.getProductList();
+		return productRepository.findProductList();
 	}
 }

@@ -71,7 +71,7 @@ public class SignService {
 
 			if (validateYn) {
 				// 임직원의 입사 기준에 따라 마일리지 세팅하는 로직 필요
-				req.setMileage("0");
+				req.setMileage(0);
 
 				// 비밀번호 암호화
 				String password = passwordEncoder.encode(req.getPassword());

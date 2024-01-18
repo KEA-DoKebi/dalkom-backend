@@ -5,7 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.user.dto.UserUpdateRequest;
+import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -46,5 +48,9 @@ public class UserService {
 		if (userRepository.existsByNickname(nickname)) {
 			throw new UserNicknameAlreadyExistsException(nickname + "은 이미 사용중입니다.");
 		}
+	}
+
+	public User readUserByUserSeq(Long userSeq) {
+		return userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 	}
 }
