@@ -1,7 +1,5 @@
 package com.dokebi.dalkom.domain.user.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

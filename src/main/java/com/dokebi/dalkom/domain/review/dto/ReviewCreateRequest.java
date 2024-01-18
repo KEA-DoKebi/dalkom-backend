@@ -1,9 +1,6 @@
 package com.dokebi.dalkom.domain.review.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
