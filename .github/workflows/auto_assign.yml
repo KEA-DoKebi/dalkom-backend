@@ -5,6 +5,9 @@ on:
 jobs:
   add-reviewers:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: kentaro-m/auto-assign-action@v1.2.6
         with:
