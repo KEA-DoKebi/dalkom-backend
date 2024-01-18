@@ -41,7 +41,7 @@ public class MileageAskService {
 	}
 
 	@Transactional
-	public Response putMileageAskState(Long milgApplySeq) {
+	public void putMileageAskState(Long milgApplySeq) {
 		MileageApply mileageApply = mileageAskRepository.findByMilgApplySeq(milgApplySeq);
 		String approvedState = mileageApply.getApprovedState();
 		Long userSeq = mileageApply.getUser().getUserSeq();
@@ -51,16 +51,14 @@ public class MileageAskService {
 			mileageAskRepository.save(mileageApply);
 		}
 
-		return Response.success() ;
 	}
 
-	public Response createMileageAsk(Long userSeq, MileageAskRequest request) {
+	public void createMileageAsk(Long userSeq, MileageAskRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 		MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
 		mileageAskRepository.save(mileageApply);
 
-		return Response.success();
-	}
+ 	}
 
 	public List<MileageApply> readAll() {
 		return mileageAskRepository.findAll();
