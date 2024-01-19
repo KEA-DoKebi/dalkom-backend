@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.user.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +25,7 @@ public class UserController {
 
 	@PutMapping("/api/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response updateUser(@LoginUser Long userSeq, @RequestBody UserUpdateRequest req) {
+	public Response updateUser(@LoginUser Long userSeq, @Valid @RequestBody UserUpdateRequest req) {
 		return userService.updateUser(userSeq, req);
 	}
 }

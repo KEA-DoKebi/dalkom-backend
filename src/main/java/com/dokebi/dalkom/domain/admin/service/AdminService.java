@@ -55,4 +55,8 @@ public class AdminService {
 	public Admin readAdminByAdminSeq(Long adminSeq) {
 		return adminRepository.findByAdminSeq(adminSeq).orElseThrow(AdminNotFoundException::new);
 	}
+
+	public Admin readAdminByAdminId(String adminId) {
+		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
+	}
 }

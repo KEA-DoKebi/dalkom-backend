@@ -16,7 +16,7 @@ public class RedisService {
 
 	// accessToken으로 refreshToken 가져오는 역할
 	@Transactional(readOnly = true)
-	public String getValues(String key) {
+	public String readValues(String key) {
 		ValueOperations<String, Object> values = redisTemplate.opsForValue();
 		if (values.get(key) == null) {
 			return "false";
@@ -25,7 +25,7 @@ public class RedisService {
 	}
 
 	// key : value 형식으로 accessToken : refreshToken 저장
-	public void setValues(String accessToken, String refreshToken) {
+	public void createValues(String accessToken, String refreshToken) {
 		ValueOperations<String, Object> values = redisTemplate.opsForValue();
 		values.set(accessToken, refreshToken);
 	}
