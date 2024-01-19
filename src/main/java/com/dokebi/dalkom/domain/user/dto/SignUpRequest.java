@@ -18,10 +18,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SignUpRequest {
 
-	@NotNull(message = "SignUpRequest userId notnull 에러")
-	@NotBlank(message = "SignUpRequest userId notblank 에러")
-	private String userId;
-
 	@NotNull(message = "SignUpRequest empId notnull 에러")
 	@NotBlank(message = "SignUpRequest empId notblank 에러")
 	private String empId;

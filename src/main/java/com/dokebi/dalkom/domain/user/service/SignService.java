@@ -15,6 +15,8 @@ import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
+import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
+import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
@@ -94,27 +96,19 @@ public class SignService {
 		// 임직원 데이터가 존재하는 경우
 		if (empYn) {
 			// 이메일, 닉네임 중복성 검사
-			boolean validateYn = validateSignUpInfo(req);
+			validateSignUpInfo(req);
+			// 임직원의 입사 기준에 따라 마일리지 세팅하는 로직 필요
+			req.setMileage(0);
 
-			if (validateYn) {
-				// 임직원의 입사 기준에 따라 마일리지 세팅하는 로직 필요
-				req.setMileage(0);
+			// 비밀번호 암호화
+			String password = passwordEncoder.encode(req.getPassword());
+			req.setPassword(password);
 
-				// 비밀번호 암호화
-				String password = passwordEncoder.encode(req.getPassword());
-				req.setPassword(password);
-
-				// 회원 정보 저장
-				userRepository.save(SignUpRequest.toEntity(req));
-				signUpResponse.setEmpId(req.getEmpId());
-				signUpResponse.setEmail(req.getEmail());
-				signUpResponse.setMessage("회원가입 성공");
-			} else {
-				// 이메일, 닉네임 중복성 검사 불통과
-				signUpResponse.setEmpId(req.getEmpId());
-				signUpResponse.setEmail(req.getEmail());
-				signUpResponse.setMessage("이미 가입한 사용자 혹은 닉네임 중복");
-			}
+			// 회원 정보 저장
+			userRepository.save(SignUpRequest.toEntity(req));
+			signUpResponse.setEmpId(req.getEmpId());
+			signUpResponse.setEmail(req.getEmail());
+			signUpResponse.setMessage("회원가입 성공");
 
 		} else {
 			// 임직원 데이터가 존재하지 않는 경우
@@ -141,18 +135,13 @@ public class SignService {
 	}
 
 	// 이메일, 닉네임 중복성 검사
-	private boolean validateSignUpInfo(SignUpRequest req) {
+	private void validateSignUpInfo(SignUpRequest req) {
 		if (userRepository.existsByEmail(req.getEmail())) {
-			//throw new UserEmailAlreadyExistsException(req.getEmail());
-			System.out.println("이메일 중복");
-			return false;
+			throw new UserEmailAlreadyExistsException(req.getEmail());
 		}
 		if (userRepository.existsByNickname(req.getNickname())) {
-			//throw new UserNicknameAlreadyExistsException(req.getNickname());
-			System.out.println("닉네임 중복");
-			return false;
+			throw new UserNicknameAlreadyExistsException(req.getNickname());
 		}
-		return true;
 	}
 
 }

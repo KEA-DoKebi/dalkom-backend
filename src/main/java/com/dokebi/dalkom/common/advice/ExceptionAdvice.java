@@ -23,7 +23,10 @@ import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
+import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
+import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
+import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,39 +37,18 @@ public class ExceptionAdvice {
 
 	// 공통 권한
 
-	// @ExceptionHandler(Exception.class)
-	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
-	// public Response exception(Exception e) {
-	// 	//구체적인 에러 보여주기
-	// 	log.info("e= {}", e.getMessage());
-	// 	return Response.failure(-1000, "오류가 발생하였습니다.");
-	// }
-
-	//401 에러
-	// @ExceptionHandler(AuthenticationEntryPointException.class)
-	// @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
-	// public Response authenticationEntryPoint(){
-	//     return Response.failure(-1001,"인증되지 않은 사용자입니다.");
-	// }
-
-	//403 에러
-	// @ExceptionHandler(AccessDeniedException.class)
-	// @ResponseStatus(HttpStatus.FORBIDDEN) // 403
-	// public Response accessDeniedException(){
-	//     return Response.failure(-1002,"접근이 거부되었습니다");
-	// }
-
-	// @ExceptionHandler(BindException.class)
-	// @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	// public Response bindException(BindException e){
-	//     return Response.failure(-1003,e.getBindingResult().getFieldError().getDefaultMessage());
-	// }
-
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response memberNotFoundException() {
+	public Response userNotFoundException() {
 
 		return Response.failure(-1001, "요청한 회원을 찾을 수 없습니다.");
+	}
+
+	@ExceptionHandler(EmployeeNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response employeeNotFoundException() {
+
+		return Response.failure(-1002, "임직원 정보를 찾을 수 없습니다.");
 	}
 	//
 	// @ExceptionHandler (RoleNotFoundException.class)
@@ -89,23 +71,18 @@ public class ExceptionAdvice {
 		return Response.failure(-1004, "로그인에 실패하였습니다.");
 	}
 
-	// @ExceptionHandler(UserEmailAlreadyExistsException.class)
-	// @ResponseStatus(HttpStatus.CONFLICT) // 409
-	// public Response memberEmailAlreadyExistsException(UserEmailAlreadyExistsException e) { // 4
-	// return Response.failure(-1005, e.getMessage() + "은 중복된 이메일 입니다.");
-	// }
+	@ExceptionHandler(UserEmailAlreadyExistsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response memberEmailAlreadyExistsException(UserEmailAlreadyExistsException e) { // 4
+		return Response.failure(-1005, e.getMessage() + "은 중복된 이메일 입니다.");
+	}
 
-	// @ExceptionHandler(UserNicknameAlreadyExistsException.class)
-	// @ResponseStatus(HttpStatus.CONFLICT) // 409
-	// public Response memberNicknameAlreadyExistsException(UserNicknameAlreadyExistsException e) {
-	// 	return Response.failure(-1006, e.getMessage() + "은 중복된 닉네임 입니다.");
-	// }
-	//
-	// @ExceptionHandler (UserNotFoundException.class)
-	// @ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	// public Response memberNotFoundException() {
-	// 	return Response.failure(-1007,"요청한 회원을 찾을 수 없습니다.");
-	// }
+	@ExceptionHandler(UserNicknameAlreadyExistsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response memberNicknameAlreadyExistsException(UserNicknameAlreadyExistsException e) {
+		return Response.failure(-1006, e.getMessage() + "은 중복된 닉네임 입니다.");
+	}
+
 	//
 	// @ExceptionHandler (RoleNotFoundException.class)
 	// @ResponseStatus (HttpStatus.NOT_FOUND) // 404
