@@ -37,7 +37,7 @@ public class TokenService {
 	}
 
 	public String readRefreshToken(String token) {
-		return redisService.getValues(token);
+		return redisService.readValues(token);
 	}
 
 	public AuthResponse decryptAccessToken(String accessToken) {
@@ -62,7 +62,7 @@ public class TokenService {
 				//리프레시를 통해 다시 토큰 만들기
 				//1. refreshToken 찾기
 				String refreshToken = readRefreshToken(token);
-				
+
 				//2. refreshToken 해석해서 userSeq 찾기, refreshToken 유효검사
 				String userSeq = jwtHandler.validate(refreshKey, refreshToken);
 				// 리프레시도 만료인 경우
