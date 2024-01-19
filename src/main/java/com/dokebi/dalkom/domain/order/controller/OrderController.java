@@ -28,7 +28,6 @@ public class OrderController {
 	@GetMapping("/api/order/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrdersByUserSeq(@PathVariable("userSeq") Long userSeq) {
-
 		return Response.success(orderService.readOrderByUserSeq(userSeq));
 	}
 
@@ -36,7 +35,6 @@ public class OrderController {
 	@GetMapping("/api/order/orderListPage")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderPageByProductSeq(@Valid @RequestBody OrderPageDto orderPageDto) {
-
 		return Response.success(orderService.readProductDetail(orderPageDto.getOrderList()));
 	}
 
@@ -44,7 +42,6 @@ public class OrderController {
 	@GetMapping("/api/order/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq) {
-
 		return Response.success(orderService.readOrderByOrderSeq(orderSeq));
 	}
 
@@ -52,7 +49,6 @@ public class OrderController {
 	@GetMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrders() {
-
 		return Response.success(orderService.readOrderByAll());
 	}
 
@@ -60,7 +56,6 @@ public class OrderController {
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createOrder(@Valid @RequestBody OrderCreateRequest request) {
-
 		orderService.createOrder(request);
 		return Response.success();
 	}

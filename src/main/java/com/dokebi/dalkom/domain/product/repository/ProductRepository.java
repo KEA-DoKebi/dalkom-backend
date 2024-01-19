@@ -52,4 +52,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ON p.productSeq = ps.product.productSeq "
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC")
 	List<ReadProductResponse> findProductList();
+
+
 }

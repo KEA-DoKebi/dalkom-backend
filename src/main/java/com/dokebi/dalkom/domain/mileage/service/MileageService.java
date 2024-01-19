@@ -23,7 +23,6 @@ public class MileageService {
 
 	// 유저 별 보유 마일리지 조회 서비스
 	public Integer readMileageByUserSeq(Long userSeq) {
-
 		// 제일 위에 있는 내역 불러오기
 		List<Integer> mileageList = mileageHistoryRepository.findMileageByUserSeq(userSeq);
 		if (!mileageList.isEmpty()) {

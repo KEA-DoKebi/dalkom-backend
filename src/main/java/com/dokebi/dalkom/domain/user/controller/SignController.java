@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.user.dto.LogInAdminRequest;
+import com.dokebi.dalkom.domain.user.dto.LogInRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.service.SignService;
@@ -20,9 +23,21 @@ public class SignController {
 
 	private final SignService signService;
 
-	@PostMapping("/api/users/sign-up")
-	@ResponseStatus(HttpStatus.CREATED)
+	@PostMapping("/api/user/sign-up")
+	@ResponseStatus(HttpStatus.OK)
 	public SignUpResponse signUp(@RequestBody SignUpRequest req) {
 		return signService.signUp(req);
+	}
+
+	@PostMapping("/api/user/login")
+	@ResponseStatus(HttpStatus.OK)
+	public Response signIn(@RequestBody LogInRequest req) {
+		return Response.success(signService.signIn(req));
+	}
+
+	@PostMapping("/api/admin/login")
+	@ResponseStatus(HttpStatus.OK)
+	public Response signInAdmin(@RequestBody LogInAdminRequest req) {
+		return Response.success(signService.signInAdmin(req));
 	}
 }

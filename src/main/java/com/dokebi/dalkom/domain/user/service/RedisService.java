@@ -1,7 +1,5 @@
 package com.dokebi.dalkom.domain.user.service;
 
-import java.time.Duration;
-
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -33,10 +31,10 @@ public class RedisService {
 	}
 
 	// key : value 형식으로 accessToken : refreshToken 저장, 레디스 기간도 설정
-	public void setValues(String accessToken, String refreshToken, Duration duration) {
-		ValueOperations<String, Object> values = redisTemplate.opsForValue();
-		values.set(accessToken, refreshToken, duration);
-	}
+	// public void setValues(String accessToken, String refreshToken, Duration duration) {
+	// 	ValueOperations<String, Object> values = redisTemplate.opsForValue();
+	// 	values.set(accessToken, refreshToken, duration);
+	// }
 
 	// 토큰 탈취당했을 때 어떤 방법 통해 삭제해서 해커 공격 방지하는 기능 구현하면 필요할 것 같습니다.
 	public void deleteValues(String key) {

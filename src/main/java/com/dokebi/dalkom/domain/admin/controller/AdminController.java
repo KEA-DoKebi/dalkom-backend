@@ -27,7 +27,7 @@ public class AdminController {
 	}
 
 	@PostMapping("/api/admin")
-	@ResponseStatus(HttpStatus.CREATED)
+	@ResponseStatus(HttpStatus.OK)
 	public Response createAdmin(@RequestBody CreateAdminRequest req) {
 		return adminService.createAdmin(req);
 	}
