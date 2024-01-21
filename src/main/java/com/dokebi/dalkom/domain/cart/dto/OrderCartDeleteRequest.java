@@ -16,7 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCartDeleteRequest {
-
 	@NotEmpty(message = "OrderCartDeleteRequest orderCartSeqList NotEmpty 에러")
 	List<Long> orderCartSeqList;
 }
