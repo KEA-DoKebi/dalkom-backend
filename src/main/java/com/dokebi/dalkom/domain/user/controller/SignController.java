@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.user.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,19 +27,19 @@ public class SignController {
 
 	@PostMapping("/api/user/sign-up")
 	@ResponseStatus(HttpStatus.OK)
-	public SignUpResponse signUp(@RequestBody SignUpRequest req) {
+	public SignUpResponse signUp(@Valid @RequestBody SignUpRequest req) {
 		return signService.signUp(req);
 	}
 
 	@PostMapping("/api/user/login")
 	@ResponseStatus(HttpStatus.OK)
-	public Response signIn(@RequestBody LogInRequest req) {
+	public Response signIn(@Valid @RequestBody LogInRequest req) {
 		return Response.success(signService.signIn(req));
 	}
 
 	@PostMapping("/api/admin/login")
 	@ResponseStatus(HttpStatus.OK)
-	public Response signInAdmin(@RequestBody LogInAdminRequest req) {
+	public Response signInAdmin(@Valid @RequestBody LogInAdminRequest req) {
 		return Response.success(signService.signInAdmin(req));
 	}
 }

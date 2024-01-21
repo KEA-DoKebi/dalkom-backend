@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.admin.entity.Admin;
-import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
+import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.user.dto.CheckEmployeeRequest;
 import com.dokebi.dalkom.domain.user.dto.LogInAdminRequest;
 import com.dokebi.dalkom.domain.user.dto.LogInRequest;
@@ -26,7 +26,7 @@ public class SignService {
 
 	private final TokenService tokenService;
 	private final RedisService redisService;
-	private final AdminRepository adminRepository;
+	private final AdminService adminService;
 	private final UserRepository userRepository;
 	private final EmployeeRepository employeeRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -38,20 +38,20 @@ public class SignService {
 		String subject = createSubject(user);
 		String accessToken = tokenService.createAccessToken(subject);
 		String refreshToken = tokenService.createRefreshToken(subject);
-		redisService.setValues(accessToken, refreshToken);
+		redisService.createValues(accessToken, refreshToken);
 		return new LogInResponse(accessToken, refreshToken);
 	}
 
 	@Transactional(readOnly = true)
 	public LogInResponse signInAdmin(LogInAdminRequest req) {
-		Admin admin = adminRepository.findByAdminId(req.getAdminId());
+		Admin admin = adminService.readAdminByAdminId(req.getAdminId());
 		if (admin == null)
 			throw new LoginFailureException();
 		validatePassword(req, admin);
 		String subject = createSubject(admin);
 		String accessToken = tokenService.createAccessToken(subject);
 		String refreshToken = tokenService.createRefreshToken(subject);
-		redisService.setValues(accessToken, refreshToken);
+		redisService.createValues(accessToken, refreshToken);
 		return new LogInResponse(accessToken, refreshToken);
 	}
 
