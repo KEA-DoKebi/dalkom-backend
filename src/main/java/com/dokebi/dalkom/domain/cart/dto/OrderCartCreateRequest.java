@@ -21,7 +21,7 @@ public class OrderCartCreateRequest {
 	private Long productSeq;
 
 	@NotNull(message = "OrderCartCreateRequest prdtOptionSeq NotNull 에러")
-	@PositiveOrZero(message = "OrderCartCreateRequest prdtOptionSeq  PositiveOrZero에러")
+	@PositiveOrZero(message = "OrderCartCreateRequest prdtOptionSeq  PositiveOrZero 에러")
 	private Long prdtOptionSeq;
 
 	@NotNull(message = "OrderCartCreateRequest amount NotNull 에러")

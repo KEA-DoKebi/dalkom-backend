@@ -35,9 +35,9 @@ public class OrderCartServiceTest {
 	@Mock
 	private OrderCartRepository orderCartRepository;
 	@Mock
-	ProductService productService;
+	private ProductService productService;
 	@Mock
-	UserService userService;
+	private UserService userService;
 	@Captor
 	private ArgumentCaptor<OrderCart> orderCartArgumentCaptor;
 	@Captor

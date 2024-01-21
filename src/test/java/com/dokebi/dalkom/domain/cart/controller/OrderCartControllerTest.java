@@ -27,13 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 public class OrderCartControllerTest {
-
 	@InjectMocks
 	private OrderCartController orderCartController;
-
 	@Mock
 	private OrderCartService orderCartService;
-
 	private MockMvc mockMvc;
 
 	@BeforeEach

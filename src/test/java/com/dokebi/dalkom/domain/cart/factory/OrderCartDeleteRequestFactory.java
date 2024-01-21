@@ -10,4 +10,9 @@ public class OrderCartDeleteRequestFactory {
 		List<Long> orderCartSeqList = Arrays.asList(1L, 2L, 3L);
 		return new OrderCartDeleteRequest(orderCartSeqList);
 	}
+
+	public static OrderCartDeleteRequest createOrderCartDeleteRequest(List<Long> list) {
+		List<Long> orderCartSeqList = list;
+		return new OrderCartDeleteRequest(orderCartSeqList);
+	}
 }
