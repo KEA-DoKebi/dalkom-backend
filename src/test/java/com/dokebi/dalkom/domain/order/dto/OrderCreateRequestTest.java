@@ -12,7 +12,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,21 +21,22 @@ public class OrderCreateRequestTest {
 	private Validator validator;
 
 	@BeforeEach
-	void beforeEach(){
+	void beforeEach() {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator=factory.getValidator();
+		validator = factory.getValidator();
 	}
+
 	@Test
-	void orderCreateRequestValidation(){
+	void orderCreateRequestValidation() {
 		OrderCreateRequest request = createOrderCreateRequest();
 		Set<ConstraintViolation<OrderCreateRequest>> violations =
 			validator.validate(request);
 
-		assertEquals(0,violations.size(),"위반 사항이 없습니다.");
+		assertEquals(0, violations.size(), "위반 사항이 없습니다.");
 	}
 
 	@Test
-	void orderCreateRequestValidation_userSeq_NotNull(){
+	void orderCreateRequestValidation_userSeq_NotNull() {
 		OrderCreateRequest request = createOrderCreateRequest(
 			null,
 			"John Doe",
@@ -55,7 +55,7 @@ public class OrderCreateRequestTest {
 	}
 
 	@Test
-	void orderCreateRequestValidation_userSeq_Positive(){
+	void orderCreateRequestValidation_userSeq_Positive() {
 		OrderCreateRequest request = createOrderCreateRequest(
 			-1L,
 			"John Doe",
@@ -74,7 +74,7 @@ public class OrderCreateRequestTest {
 	}
 
 	@Test
-	void orderCreateRequestValidation_receiverName_NotNull(){
+	void orderCreateRequestValidation_receiverName_NotNull() {
 		OrderCreateRequest request = createOrderCreateRequest(
 			1L,
 			null,
@@ -91,9 +91,10 @@ public class OrderCreateRequestTest {
 			.extracting("message")
 			.contains("OrderCreateRequest receiverName NotNull 에러");
 	}
+
 	// DTO OrderCreateRequest receiverName Size 에러 까지함
 	@Test
-	void orderCreateRequestValidation_receiverName_Size(){
+	void orderCreateRequestValidation_receiverName_Size() {
 		OrderCreateRequest request = createOrderCreateRequest(
 			1L,
 			"123 Main St",
@@ -112,7 +113,7 @@ public class OrderCreateRequestTest {
 	}
 
 	@Test
-	void orderCreateRequestValidation_receiverAddress_NotNull(){
+	void orderCreateRequestValidation_receiverAddress_NotNull() {
 		OrderCreateRequest request = createOrderCreateRequest(
 			1L,
 			null,
