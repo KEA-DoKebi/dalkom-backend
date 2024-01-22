@@ -38,7 +38,7 @@ public class ReviewController {
 	@GetMapping("/api/review/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByUser(@LoginUser Long userSeq) {
-		return Response.success(reviewService.readReviewListByUser(Long.valueOf(userSeq)));
+		return Response.success(reviewService.readReviewListByUser(userSeq));
 	}
 
 	// REVIEWS-003 (리뷰 작성)

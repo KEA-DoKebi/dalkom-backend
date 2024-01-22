@@ -1,8 +1,5 @@
 package com.dokebi.dalkom.domain.user.service;
 
-import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
-import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
-import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +13,10 @@ import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
 import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
+import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
+import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
@@ -109,10 +109,8 @@ public class SignService {
 	public boolean checkEmployee(SignUpRequest req) {
 
 		Employee employee = employeeRepository.findAllByEmpId(req.getEmpId());
-		if (employee != null &&
-				employee.getName().equals(req.getName()) &&
-				employee.getEmail().equals(req.getEmail()) &&
-				employee.getJoinedAt().equals(req.getJoinedAt())) {
+		if (employee != null && employee.getName().equals(req.getName()) && employee.getEmail().equals(req.getEmail())
+			&& employee.getJoinedAt().equals(req.getJoinedAt())) {
 			return true;
 		} else {
 			throw new EmployeeNotFoundException();
