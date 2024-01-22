@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
 import com.dokebi.dalkom.domain.mileage.service.MileageAskService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,9 +44,9 @@ public class MileageAskController {
 	}
 
 	// MILEAGE-005 (마일리지 충전 신청)
-	@PostMapping("/api/mileage/ask/user/{userSeq}")
+	@PostMapping("/api/mileage/ask/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createMileageAsk(@PathVariable Long userSeq,
+	public Response createMileageAsk(@LoginUser Long userSeq,
 		@Valid @RequestBody MileageAskRequest request){
 
 		   mileageAskService.createMileageAsk(userSeq, request);
