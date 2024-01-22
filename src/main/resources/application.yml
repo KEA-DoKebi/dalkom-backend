@@ -38,6 +38,6 @@ jwt:
     access: ${JWT_ACCESS_KEY}
     refresh: ${JWT_REFRESH_KEY}
   max-age:
-    access: 604800
-    refresh: 604800
+    access: 10800 #3시간
+    refresh: 604800 #일주일
 

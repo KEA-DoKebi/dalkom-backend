@@ -25,6 +25,6 @@ public class NoticeCreateRequest {
 	@Pattern(regexp = "[NY]", message = "NoticeCreateRequest state pattern 에러")
 	private String state;
 
-	@NotNull(message = "NoticeCreateRequest adminSeq notnull 에러")
-	private Long adminSeq;
+	// @NotNull(message = "NoticeCreateRequest adminSeq notnull 에러")
+	// private Long adminSeq;
 }

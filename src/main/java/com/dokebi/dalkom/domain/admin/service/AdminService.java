@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.admin.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dokebi.dalkom.common.response.Response;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminService {
 	private final AdminRepository adminRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	public List<AdminDto> readAll() {
 		List<Admin> adminList = adminRepository.findAll();
@@ -35,8 +37,8 @@ public class AdminService {
 			validateNickname(req.getNickname());
 
 			// 비밀번호 암호화
-			// String password = passwordEncoder.encode(req.getPassword());
-			// req.setPassword(password);
+			String password = passwordEncoder.encode(req.getPassword());
+			req.setPassword(password);
 			adminRepository.save(CreateAdminRequest.toEntity(req));
 		} catch (UserNicknameAlreadyExistsException e) {
 			return Response.failure(0, e.getMessage());
@@ -52,5 +54,9 @@ public class AdminService {
 
 	public Admin readAdminByAdminSeq(Long adminSeq) {
 		return adminRepository.findByAdminSeq(adminSeq).orElseThrow(AdminNotFoundException::new);
+	}
+
+	public Admin readAdminByAdminId(String adminId) {
+		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
 	}
 }
