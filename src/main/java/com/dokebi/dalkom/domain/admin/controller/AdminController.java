@@ -25,8 +25,8 @@ public class AdminController {
 	// ADMIN-006 (관리자 목록 조회)
 	@GetMapping("/api/admin")
 	@ResponseStatus(HttpStatus.OK)
-	public Response findAdmin() {
-		return Response.success(adminService.readAll());
+	public Response readAdminList() {
+		return Response.success(adminService.readAdminList());
 	}
 
 	// ADMIN-005 (관리자 생성)
