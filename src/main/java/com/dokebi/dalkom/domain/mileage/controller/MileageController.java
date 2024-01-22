@@ -2,7 +2,6 @@ package com.dokebi.dalkom.domain.mileage.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,7 +29,7 @@ public class MileageController {
 	// MILEAGE-002 (특정 유저 마일리지 내역 조회)
 	@GetMapping("/api/mileage/history/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readMileageHistoryByUserSeq (@LoginUser Long userSeq){
+	public Response readMileageHistoryByUserSeq(@LoginUser Long userSeq) {
 
 		return Response.success(mileageService.readMileageHistoryByUserSeq(userSeq));
 	}
