@@ -28,19 +28,19 @@ public class OrderServiceTest {
 	@InjectMocks
 	private OrderService orderService;
 	@Mock
-	private  OrderRepository orderRepository;
+	private OrderRepository orderRepository;
 	@Mock
-	private  OrderDetailService orderDetailService;
+	private OrderDetailService orderDetailService;
 	@Mock
-	private  ProductOptionService productOptionService;
+	private ProductOptionService productOptionService;
 	@Mock
-	private  ProductService productService;
+	private ProductService productService;
 	@Mock
-	private  ProductStockService productStockService;
+	private ProductStockService productStockService;
 	@Mock
-	private  MileageService mileageService;
+	private MileageService mileageService;
 	@Mock
-	private  UserService userService;
+	private UserService userService;
 
 	@Test
 	void createOrderTest() {
@@ -114,10 +114,8 @@ public class OrderServiceTest {
 	// }
 
 	@Test
-	void readOrderByUserSeq(){
+	void readOrderByUserSeq() {
 
 	}
-
-
 
 }

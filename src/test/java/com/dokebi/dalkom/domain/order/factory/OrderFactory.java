@@ -11,8 +11,8 @@ public class OrderFactory {
 
 	public static OrderPageDto createOrderPageDto() {
 		List<OrderPageDetailDto> orderList = new ArrayList<>();
-		orderList.add(createOrderPageDetailDto(1L, 1L, 1, "안경",50000  ));
-		orderList.add(createOrderPageDetailDto(2L, 2L, 2, "병원",30000  ));
+		orderList.add(createOrderPageDetailDto(1L, 1L, 1, "안경", 50000));
+		orderList.add(createOrderPageDetailDto(2L, 2L, 2, "병원", 30000));
 
 		return new OrderPageDto(orderList);
 	}
@@ -41,6 +41,7 @@ public class OrderFactory {
 			100
 		);
 	}
+
 	public static OrderDto createOrderDtoTwo() {
 		return new OrderDto(
 			2L,

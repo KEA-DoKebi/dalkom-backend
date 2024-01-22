@@ -1,5 +1,9 @@
 package com.dokebi.dalkom.domain.order.controller;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,10 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory;
@@ -30,7 +30,6 @@ public class OrderControllerTest {
 	MockMvc mockMvc;
 	@Mock
 	private ObjectMapper objectMapper;
-
 
 	@BeforeEach
 	void beforeEach() {
@@ -53,10 +52,11 @@ public class OrderControllerTest {
 
 	}
 
+	// ORDER-003(특정 주문 조회) 테스트
 	@Test
 	@DisplayName("특정 주문 조회 테스트")
 	void readOrderByOrderSeqTest() throws Exception {
-		Long orderSeq = 1L ;
+		Long orderSeq = 1L;
 
 		// when(실행)
 		mockMvc.perform(
@@ -73,8 +73,8 @@ public class OrderControllerTest {
 	void readOrdersTest() throws Exception {
 
 		mockMvc.perform(
-			get("/api/order"))
-				.andExpect(status().isOk());
+				get("/api/order"))
+			.andExpect(status().isOk());
 	}
 
 	@Test
