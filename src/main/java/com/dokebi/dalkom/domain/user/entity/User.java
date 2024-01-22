@@ -94,7 +94,6 @@ public class User extends EntityDate {
 		this.nickname = nickname;
 		this.mileage = mileage;
 		this.deleteState = "N";
-
 	}
 }
 
