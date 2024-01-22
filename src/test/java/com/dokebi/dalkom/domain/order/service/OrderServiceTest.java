@@ -23,7 +23,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
-
 public class OrderServiceTest {
 	@InjectMocks
 	private OrderService orderService;
@@ -117,5 +116,4 @@ public class OrderServiceTest {
 	void readOrderByUserSeq() {
 
 	}
-
 }
