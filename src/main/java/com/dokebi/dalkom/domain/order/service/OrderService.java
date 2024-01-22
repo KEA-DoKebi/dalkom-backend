@@ -100,14 +100,14 @@ public class OrderService {
 			Integer productAmount = order.getProductAmount();
 			// 재고 확인
 			productStockService.checkStock(productSeq, optionSeq, productAmount);
-			
+
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
 
 			// OrderPageDetailDto로 변환
-			OrderPageDetailDto orderPageDetailDTO =new OrderPageDetailDto(productSeq,optionSeq,productAmount,
-				productInfo.getName(),productInfo.getPrice(),productInfo.getPrice() * order.getProductAmount());
-			
+			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto(productSeq, optionSeq, productAmount,
+				productInfo.getName(), productInfo.getPrice(), productInfo.getPrice() * order.getProductAmount());
+
 			result.add(orderPageDetailDTO);
 		});
 
@@ -156,9 +156,7 @@ public class OrderService {
 			.collect(Collectors.toList());
 	}
 
-
-
-	private Integer calculateProductPrice(OrderCreateRequest request,int i) {
+	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
 		Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
 
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
@@ -170,7 +168,7 @@ public class OrderService {
 		return amount * price;
 	}
 
-	private OrderDetail createOrderDetail(Order order,OrderCreateRequest request,int i) {
+	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
 		Long productSeq = request.getProductSeqList().get(i);
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 		Integer amount = request.getAmountList().get(i);
@@ -188,7 +186,7 @@ public class OrderService {
 		);
 		ProductStock productStock = new ProductStock(product, productOption, amount);
 		productStockService.createStock(productStock);
-		
+
 		return orderDetail;
 	}
 }
