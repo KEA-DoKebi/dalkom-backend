@@ -49,7 +49,6 @@ public class OrderControllerTest {
 
 		//검증
 		verify(orderService).readOrderByUserSeq(userSeq);
-
 	}
 
 	// ORDER-003(특정 주문 조회) 테스트
@@ -65,13 +64,11 @@ public class OrderControllerTest {
 
 		//검증
 		verify(orderService).readOrderByOrderSeq(orderSeq);
-
 	}
 
 	@Test
 	@DisplayName("전체 주문 조회 테스트")
 	void readOrdersTest() throws Exception {
-
 		mockMvc.perform(
 				get("/api/order"))
 			.andExpect(status().isOk());
@@ -87,7 +84,5 @@ public class OrderControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(orderCreateRequest)))
 			.andExpect(status().isOk());
-
 	}
-
 }
