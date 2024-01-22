@@ -50,20 +50,20 @@ public class InquiryService {
 
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
+
 		User user = userService.readUserByUserSeq(userSeq);
 		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
-
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), "N");
 		inquiryRepository.save(inquiry);
 	}
 
 	@Transactional
 	public void answerInquiry(Long inquirySeq, InquiryAnswerRequest request) {
+
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq);
 		inquiry.setAnswerContent(request.getAnswerContent());
 		inquiry.setAnswerState(request.getAnswerState());
 		inquiry.setAnsweredAt(LocalDateTime.now());
-
 		inquiryRepository.save(inquiry);
 	}
 }

@@ -67,10 +67,9 @@ public class OrderCartControllerTest {
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory.createOrderCartCreateRequest();
 
 		// When, Then
-		mockMvc.perform(
-				post("/api/cart/user/{userSeq}", userSeq)
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(asJsonString(request)))
+		mockMvc.perform(post("/api/cart/user/{userSeq}", userSeq)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
 		verify(orderCartService).createOrderCart(userSeq, request);
