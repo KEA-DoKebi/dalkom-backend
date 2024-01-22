@@ -38,13 +38,18 @@ public class ReviewController {
 	@GetMapping("/api/review/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByUser(@LoginUser Long userSeq) {
-		return Response.success(reviewService.readReviewListByUser(Long.valueOf(userSeq)));
+		return Response.success(reviewService.readReviewListByUser(userSeq));
 	}
 
+	//public Response readReviewByUser(HttpServletRequest request) {
+	//	String userSeq = (String)request.getAttribute("userSeq");
+	//	return Response.success(reviewService.readReviewListByUser(Long.valueOf(userSeq)));
+	//}
+
 	// REVIEWS-003 (리뷰 작성)
-	@PostMapping("/api/review/user/{userSeq}")
+	@PostMapping("/api/review/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createReview(@PathVariable Long userSeq,
+	public Response createReview(@LoginUser Long userSeq,
 		@Valid @RequestBody ReviewCreateRequest request) {
 
 		reviewService.createReview(userSeq, request);
