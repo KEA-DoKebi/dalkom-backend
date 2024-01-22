@@ -37,7 +37,8 @@ public class ProductStockService {
 
 	@Transactional
 	public void updateStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)
+		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(
+				productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
 		Integer amount = stock.getAmount() - amountChanged;
@@ -58,7 +59,9 @@ public class ProductStockService {
 
 	@Transactional
 	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-		ProductStock stock = stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)
+		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(
+				productSeq,
+				prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
 		if (stock.getAmount() - amountChanged < 0) {

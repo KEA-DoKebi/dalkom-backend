@@ -74,7 +74,8 @@ public class ProductStockServiceTest {
 		Integer amountChanged = 5;
 		ProductStock productStock = new ProductStock(null, null, null);
 		productStock.setAmount(10);
-		given(stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)).willReturn(
+		given(stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq,
+			prdtOptionSeq)).willReturn(
 			Optional.of(productStock));
 
 		// when
@@ -93,7 +94,8 @@ public class ProductStockServiceTest {
 		Integer amountChanged = 15;
 		ProductStock productStock = new ProductStock(null, null, null);
 		productStock.setAmount(10);
-		given(stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)).willReturn(
+		given(stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq,
+			prdtOptionSeq)).willReturn(
 			Optional.of(productStock));
 
 		// when & then
@@ -124,7 +126,8 @@ public class ProductStockServiceTest {
 		Integer amountChanged = 5;
 		ProductStock productStock = new ProductStock(null, null, null);
 		productStock.setAmount(10);
-		given(stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)).willReturn(
+		given(stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq,
+			prdtOptionSeq)).willReturn(
 			Optional.of(productStock));
 
 		// when
@@ -143,7 +146,8 @@ public class ProductStockServiceTest {
 		Integer amountChanged = 15;
 		ProductStock productStock = new ProductStock(null, null, null);
 		productStock.setAmount(10);
-		given(stockRepository.findPrdtStockByOptionSeq(productSeq, prdtOptionSeq)).willReturn(
+		given(stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq,
+			prdtOptionSeq)).willReturn(
 			Optional.of(productStock));
 
 		// when & then
