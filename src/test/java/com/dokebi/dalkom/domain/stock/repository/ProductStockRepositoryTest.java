@@ -5,27 +5,28 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 
-@DataJpaTest
+@ExtendWith(MockitoExtension.class)
 public class ProductStockRepositoryTest {
 
-	@Autowired
+	@Mock
 	private ProductStockRepository productStockRepository;
 
 	@Test
 	void findPrdtStockByOptionSeqTest() {
 		// Given
 		Product product = new Product(); // 예제상 Product, ProductOption 엔티티의 생성자 및 설정자는 생략
-		ProductOption productOption = new ProductOption();
-		ProductStock stock = new ProductStock(product, productOption, 10);
+		product.setProductSeq(18L);
 
-		productStockRepository.save(stock);
+		ProductOption productOption = new ProductOption();
+		productOption.setPrdtOptionSeq(3L);
 
 		// When
 		Optional<ProductStock> foundStock = productStockRepository.findPrdtStockByOptionSeq(
