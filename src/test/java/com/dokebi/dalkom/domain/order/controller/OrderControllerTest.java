@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,8 +36,8 @@ public class OrderControllerTest {
 		mockMvc = MockMvcBuilders.standaloneSetup(orderController).build();
 	}
 
-	// ORDER-001(사용자별 주문 조회) 테스트
 	@Test
+	@DisplayName("사용자별 주문 조회 테스트")
 	void readOrdersByUserSeqTest() throws Exception {
 		// given(준비)
 		Long userSeq = 1L;
@@ -48,11 +49,11 @@ public class OrderControllerTest {
 
 		//검증
 		verify(orderService).readOrderByUserSeq(userSeq);
-
 	}
 
 	// ORDER-003(특정 주문 조회) 테스트
 	@Test
+	@DisplayName("특정 주문 조회 테스트")
 	void readOrderByOrderSeqTest() throws Exception {
 		Long orderSeq = 1L;
 
@@ -63,20 +64,18 @@ public class OrderControllerTest {
 
 		//검증
 		verify(orderService).readOrderByOrderSeq(orderSeq);
-
 	}
 
-	// ORDER-004(전체 주문 조회) 테스트
 	@Test
+	@DisplayName("전체 주문 조회 테스트")
 	void readOrdersTest() throws Exception {
-
 		mockMvc.perform(
 				get("/api/order"))
 			.andExpect(status().isOk());
 	}
 
-	// // ORDER-005(결제 하기) 테스트
 	@Test
+	@DisplayName("결제 하기 테스트")
 	void createOrderTest() throws Exception {
 		OrderCreateRequest orderCreateRequest = OrderCreateRequestFactory.createOrderCreateRequest();
 
@@ -85,7 +84,5 @@ public class OrderControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(orderCreateRequest)))
 			.andExpect(status().isOk());
-
 	}
-
 }
