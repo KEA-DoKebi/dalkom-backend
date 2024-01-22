@@ -25,18 +25,21 @@ public class SignController {
 
 	private final SignService signService;
 
+	// USER-004 (사용자 회원가입)
 	@PostMapping("/api/user/sign-up")
 	@ResponseStatus(HttpStatus.OK)
 	public SignUpResponse signUp(@Valid @RequestBody SignUpRequest req) {
 		return signService.signUp(req);
 	}
 
+	// USER-002 (사용자 로그인)
 	@PostMapping("/api/user/login")
 	@ResponseStatus(HttpStatus.OK)
 	public Response signIn(@Valid @RequestBody LogInRequest req) {
 		return Response.success(signService.signIn(req));
 	}
 
+	// ADMIN-003 (관리자 로그인)
 	@PostMapping("/api/admin/login")
 	@ResponseStatus(HttpStatus.OK)
 	public Response signInAdmin(@Valid @RequestBody LogInAdminRequest req) {

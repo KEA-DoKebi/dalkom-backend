@@ -23,6 +23,7 @@ public class UserController {
 
 	private final UserService userService;
 
+	// USER-003 (사용자 정보 수정)
 	@PutMapping("/api/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateUser(@LoginUser Long userSeq, @Valid @RequestBody UserUpdateRequest req) {
