@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 // ReadProductDetailResponse에 이하의 정보를 넣기 위한 DTO
 public class ReadProductDetailDTO {
+
 	private Long categorySeq;
 	private String name;
 	private Integer price;

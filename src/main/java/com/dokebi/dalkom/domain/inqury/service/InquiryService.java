@@ -31,21 +31,21 @@ public class InquiryService {
 	private final UserService userService;
 
 	@Transactional
-	public List<InquiryListResponse> getInquiryListByUser(Long userSeq) {
+	public List<InquiryListResponse> readInquiryListByUser(Long userSeq) {
 
-		return inquiryRepository.getInquiryListByUser(userSeq);
+		return inquiryRepository.findInquiryListByUser(userSeq);
 	}
 
 	@Transactional
-	public List<InquiryListResponse> getInquiryListByCategory(Long categorySeq) {
+	public List<InquiryListResponse> readInquiryListByCategory(Long categorySeq) {
 
-		return inquiryRepository.getInquiryListByCategory(categorySeq);
+		return inquiryRepository.findInquiryListByCategory(categorySeq);
 	}
 
 	@Transactional
-	public InquiryOneResponse getInquiryOne(Long inquirySeq) {
+	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
 
-		return inquiryRepository.getInquiryOne(inquirySeq);
+		return inquiryRepository.findInquiryOne(inquirySeq);
 	}
 
 	@Transactional

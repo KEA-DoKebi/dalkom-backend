@@ -11,7 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OrderCartReadResponse {
 
-
 	private Long orderCartSeq;
 
 	private Long productSeq;

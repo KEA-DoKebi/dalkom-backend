@@ -16,6 +16,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.review.dto.ReviewCreateRequest;
 import com.dokebi.dalkom.domain.review.dto.ReviewUpdateRequest;
 import com.dokebi.dalkom.domain.review.service.ReviewService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,17 +35,17 @@ public class ReviewController {
 	}
 
 	// REVIEWS-002 (사용자별 리뷰 조회) - 입력받은 userSeq의 리뷰 목록 반환
-	@GetMapping("/api/review/users/{userSeq}")
+	@GetMapping("/api/review/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readReviewByUser(@PathVariable Long userSeq) {
-
-		return Response.success(reviewService.readReviewListByUser(userSeq));
+	public Response readReviewByUser(@LoginUser Long userSeq) {
+		return Response.success(reviewService.readReviewListByUser(Long.valueOf(userSeq)));
 	}
 
 	// REVIEWS-003 (리뷰 작성)
 	@PostMapping("/api/review/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createReview(@PathVariable Long userSeq, @Valid @RequestBody ReviewCreateRequest request) {
+	public Response createReview(@PathVariable Long userSeq,
+		@Valid @RequestBody ReviewCreateRequest request) {
 
 		reviewService.createReview(userSeq, request);
 		return Response.success();
@@ -53,9 +54,10 @@ public class ReviewController {
 	// REVIEWS-004 (리뷰 수정)
 	@PutMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response modifyReview(@PathVariable Long reviewSeq, @Valid @RequestBody ReviewUpdateRequest request) {
+	public Response updateReview(@PathVariable Long reviewSeq,
+		@Valid @RequestBody ReviewUpdateRequest request) {
 
-		reviewService.modifyReview(reviewSeq, request);
+		reviewService.updateReview(reviewSeq, request);
 		return Response.success();
 	}
 

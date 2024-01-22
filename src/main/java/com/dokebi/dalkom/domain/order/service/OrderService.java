@@ -5,29 +5,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
-import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
-import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
-import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
-import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
-import com.dokebi.dalkom.domain.user.repository.UserRepository;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderDetailService orderDetailService;
@@ -46,6 +41,7 @@ public class OrderService {
 	private final UserService userService;
 
 	// 결제 하기
+	@Transactional
 	public void createOrder(OrderCreateRequest request) {
 
 		int totalPrice = 0;
