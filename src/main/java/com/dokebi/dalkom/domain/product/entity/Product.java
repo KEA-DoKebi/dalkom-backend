@@ -69,8 +69,8 @@ public class Product extends EntityDate {
 	@OneToMany(mappedBy = "product")
 	private List<OrderCart> orderCartList = new ArrayList<>();
 
-	public Product(Category category, String name, Integer price, String info, String imageUrl, String company,
-		String state) {
+	public Product(Category category, String name, Integer price,
+		String info, String imageUrl, String company, String state) {
 		this.category = category;
 		this.name = name;
 		this.price = price;

@@ -45,4 +45,10 @@ public class Category extends EntityDate {
 
 	@OneToMany(mappedBy = "category")
 	private List<Inquiry> inquiry = new ArrayList<>();
+
+	public Category(String name, Long parentSeq, String imageUrl) {
+		this.name = name;
+		this.parentSeq = parentSeq;
+		this.imageUrl = imageUrl;
+	}
 }
