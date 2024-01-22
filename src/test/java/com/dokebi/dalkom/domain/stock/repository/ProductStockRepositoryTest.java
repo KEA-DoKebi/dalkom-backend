@@ -29,7 +29,7 @@ public class ProductStockRepositoryTest {
 		productOption.setPrdtOptionSeq(3L);
 
 		// When
-		Optional<ProductStock> foundStock = productStockRepository.findPrdtStockByOptionSeq(
+		Optional<ProductStock> foundStock = productStockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(
 			product.getProductSeq(), productOption.getPrdtOptionSeq());
 
 		// Then
@@ -37,7 +37,7 @@ public class ProductStockRepositoryTest {
 		assertThat(foundStock.get().getAmount()).isEqualTo(10);
 
 		// When
-		Optional<ProductStock> notFoundStock = productStockRepository.findPrdtStockByOptionSeq(-1L, -1L);
+		Optional<ProductStock> notFoundStock = productStockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(-1L, -1L);
 
 		// Then
 		assertThat(notFoundStock).isEmpty();
