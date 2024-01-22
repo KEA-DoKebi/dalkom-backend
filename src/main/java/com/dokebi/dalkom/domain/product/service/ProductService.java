@@ -27,8 +27,10 @@ import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductService {
+
 	private final ProductRepository productRepository;
 	private final ProductStockService productStockService;
 	private final CategoryService categoryService;
@@ -36,6 +38,7 @@ public class ProductService {
 
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
+
 		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
 
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
@@ -45,7 +48,8 @@ public class ProductService {
 
 		// 초기 재고 등록
 		for (OptionAmountDTO optionAmountDTO : request.getPrdtOptionList()) {
-			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(optionAmountDTO.getPrdtOptionSeq());
+			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(
+				optionAmountDTO.getPrdtOptionSeq());
 			ProductStock initialStock = new ProductStock(newProduct, option, optionAmountDTO.getAmount());
 
 			productStockService.createStock(initialStock);
@@ -53,15 +57,17 @@ public class ProductService {
 	}
 
 	public Product readProductByProductSeq(Long productSeq) {
+
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
-	@Transactional
 	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
+
 		List<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq);
 		if (productList == null || productList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
+
 		return productList;
 	}
 
@@ -83,8 +89,8 @@ public class ProductService {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
-	@Transactional
 	public List<ReadProductResponse> readProductList() {
+
 		return productRepository.findProductList();
 	}
 

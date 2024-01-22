@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.inqury.dto.InquiryAnswerRequest;
 import com.dokebi.dalkom.domain.inqury.dto.InquiryCreateRequest;
@@ -16,8 +15,6 @@ import com.dokebi.dalkom.domain.inqury.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
 import com.dokebi.dalkom.domain.inqury.repository.InquiryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
-import com.dokebi.dalkom.domain.user.repository.UserRepository;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -34,21 +31,21 @@ public class InquiryService {
 	private final UserService userService;
 
 	@Transactional
-	public List<InquiryListResponse> getInquiryListByUser(Long userSeq) {
+	public List<InquiryListResponse> readInquiryListByUser(Long userSeq) {
 
-		return inquiryRepository.getInquiryListByUser(userSeq);
+		return inquiryRepository.findInquiryListByUser(userSeq);
 	}
 
 	@Transactional
-	public List<InquiryListResponse> getInquiryListByCategory(Long categorySeq) {
+	public List<InquiryListResponse> readInquiryListByCategory(Long categorySeq) {
 
-		return inquiryRepository.getInquiryListByCategory(categorySeq);
+		return inquiryRepository.findInquiryListByCategory(categorySeq);
 	}
 
 	@Transactional
-	public InquiryOneResponse getInquiryOne(Long inquirySeq) {
+	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
 
-		return inquiryRepository.getInquiryOne(inquirySeq);
+		return inquiryRepository.findInquiryOne(inquirySeq);
 	}
 
 	@Transactional

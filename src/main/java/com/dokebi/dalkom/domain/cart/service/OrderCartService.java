@@ -27,10 +27,6 @@ public class OrderCartService {
 	private final UserService userService;
 	private final ProductService productService;
 
-	public List<OrderCartReadResponse> readOrderCartList(Long userSeq) {
-		return orderCartRepository.findOrderCartList(userSeq);
-	}
-
 	@Transactional
 	public void createOrderCart(Long userSeq, OrderCartCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
@@ -38,6 +34,10 @@ public class OrderCartService {
 
 		OrderCart orderCart = new OrderCart(user, product, request.getPrdtOptionSeq(), request.getAmount());
 		orderCartRepository.save(orderCart);
+	}
+
+	public List<OrderCartReadResponse> readOrderCartList(Long userSeq) {
+		return orderCartRepository.findOrderCartList(userSeq);
 	}
 
 	@Transactional
