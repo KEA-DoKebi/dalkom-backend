@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.order.controller;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,23 +9,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
-import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory;
-import com.dokebi.dalkom.domain.order.factory.OrderPageDetailDtoFactory;
 import com.dokebi.dalkom.domain.order.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,8 +37,8 @@ public class OrderControllerTest {
 		mockMvc = MockMvcBuilders.standaloneSetup(orderController).build();
 	}
 
-	// ORDER-001(사용자별 주문 조회) 테스트
 	@Test
+	@DisplayName("사용자별 주문 조회 테스트")
 	void readOrdersByUserSeqTest() throws Exception {
 		// given(준비)
 		Long userSeq = 1L;
@@ -61,10 +53,8 @@ public class OrderControllerTest {
 
 	}
 
-
-
-	// ORDER-003(특정 주문 조회) 테스트
 	@Test
+	@DisplayName("특정 주문 조회 테스트")
 	void readOrderByOrderSeqTest() throws Exception {
 		Long orderSeq = 1L ;
 
@@ -78,8 +68,8 @@ public class OrderControllerTest {
 
 	}
 
-	// ORDER-004(전체 주문 조회) 테스트
 	@Test
+	@DisplayName("전체 주문 조회 테스트")
 	void readOrdersTest() throws Exception {
 
 		mockMvc.perform(
@@ -87,8 +77,8 @@ public class OrderControllerTest {
 				.andExpect(status().isOk());
 	}
 
-	// // ORDER-005(결제 하기) 테스트
 	@Test
+	@DisplayName("결제 하기 테스트")
 	void createOrderTest() throws Exception {
 		OrderCreateRequest orderCreateRequest = OrderCreateRequestFactory.createOrderCreateRequest();
 

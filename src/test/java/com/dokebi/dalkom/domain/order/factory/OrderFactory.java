@@ -3,13 +3,9 @@ package com.dokebi.dalkom.domain.order.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aspectj.weaver.ast.Or;
-
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
-import com.dokebi.dalkom.domain.order.entity.Order;
-import com.dokebi.dalkom.domain.user.entity.User;
 
 public class OrderFactory {
 
