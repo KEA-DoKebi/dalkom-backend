@@ -42,14 +42,14 @@ public class OrderCreateRequest {
 	private String receiverMemo;
 
 	@NotNull(message = "OrderCreateRequest productSeqList NotNull 에러")
-	@Positive(message = "OrderCreateRequest productSeqList Positive 에러")
+	@Size(min = 1, message = "OrderCreateRequest productSeqList 에러")
 	private List<Long> productSeqList;
 
 	@NotNull(message = "OrderCreateRequest prdtOptionSeqList NotNull 에러")
-	@Positive(message = "OrderCreateRequest prdtOptionSeqList Positive 에러")
+	@Size(min = 1, message = "OrderCreateRequest prdtOptionSeqList 에러.")
 	private List<Long> prdtOptionSeqList;
 
 	@NotNull(message = "OrderCreateRequest amountList NotNull 에러")
-	@Positive(message = "OrderCreateRequest amountList Positive 에러")
+	@Size(min = 1, message = "OrderCreateRequest amountList 에러.")
 	private List<Integer> amountList;
 }

@@ -27,4 +27,6 @@ public class OrderPageDetailDto {
 
 	// 만들어 낼 값
 	private Integer totalPrice;
+
+
 }

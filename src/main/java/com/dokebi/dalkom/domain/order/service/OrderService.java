@@ -52,12 +52,7 @@ public class OrderService {
 
 		// totalPrice를 먼저 계산해준다.
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
-			Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
-			Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-			Integer amount = request.getAmountList().get(i);
-			Integer price = product.getPrice();
- 			productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
-			totalPrice += (price * request.getAmountList().get(i));
+			totalPrice += calculateProductPrice(request, i);
 		}
 
 		// 어떤 사용자인지 조회
@@ -79,24 +74,9 @@ public class OrderService {
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
 			for (int i = 0; i < request.getProductSeqList().size(); i++) {
-				Long productSeq = request.getProductSeqList().get(i);
-				Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-				Integer amount = request.getAmountList().get(i);
 
-				Product product = productService.readByProductSeq(productSeq);
-				ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
-				Integer price = product.getPrice();
-
-				OrderDetail orderDetail = new OrderDetail(
-					order,
-					product,
-					productOption,
-					amount,
-					price
-				);
-
-				// 각 상품마다 재고 확인 후 감소
-				productStockService.createStock(productSeq, prdtOptionSeq, amount);
+				// 상세 주문 내역 생성
+				OrderDetail orderDetail = createOrderDetail(order, request, i);
 
 				// 각 세부 주문 DB에 저장
 				orderDetailService.saveOrderDetail(orderDetail);
@@ -116,27 +96,21 @@ public class OrderService {
 		List<OrderPageDetailDto> result = new ArrayList<>();
 		orderList.forEach(order -> {
 			// 선택한 상품
-			Long orderSeq = order.getProductSeq();
+			Long productSeq = order.getProductSeq();
 			// 선택한 옵션
 			Long optionSeq = order.getProductOptionSeq();
 			// 선택한 개수
 			Integer productAmount = order.getProductAmount();
-
+			// 재고 확인
+			productStockService.checkStock(productSeq, optionSeq, productAmount);
+			
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
 
 			// OrderPageDetailDto로 변환
-			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto();
-
-			orderPageDetailDTO.setProductSeq(orderSeq);
-			orderPageDetailDTO.setProductName(productInfo.getName());
-			orderPageDetailDTO.setProductOptionSeq(optionSeq);
-			orderPageDetailDTO.setProductPrice(productInfo.getPrice());
-			orderPageDetailDTO.setProductAmount(productAmount);
-			// 재고 확인
-			productStockService.checkStock(orderSeq, optionSeq, productAmount);
-			orderPageDetailDTO.setTotalPrice(productInfo.getPrice() * order.getProductAmount());
-
+			OrderPageDetailDto orderPageDetailDTO =new OrderPageDetailDto(productSeq,optionSeq,productAmount,
+				productInfo.getName(),productInfo.getPrice(),productInfo.getPrice() * order.getProductAmount());
+			
 			result.add(orderPageDetailDTO);
 		});
 
@@ -183,6 +157,42 @@ public class OrderService {
 					order.getReceiverMemo(),
 					order.getTotalPrice()))
 			.collect(Collectors.toList());
+	}
+
+
+
+	private Integer calculateProductPrice(OrderCreateRequest request,int i) {
+		Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
+
+		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
+		Integer amount = request.getAmountList().get(i);
+		Integer price = product.getPrice();
+
+		productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
+
+		return amount * price;
+	}
+
+	private OrderDetail createOrderDetail(Order order,OrderCreateRequest request,int i) {
+		Long productSeq = request.getProductSeqList().get(i);
+		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
+		Integer amount = request.getAmountList().get(i);
+
+		Product product = productService.readByProductSeq(productSeq);
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
+		Integer price = product.getPrice();
+
+		OrderDetail orderDetail = new OrderDetail(
+			order,
+			product,
+			productOption,
+			amount,
+			price
+		);
+
+		productStockService.createStock(productSeq, prdtOptionSeq, amount);
+		
+		return orderDetail;
 	}
 }
 
