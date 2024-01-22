@@ -14,6 +14,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.service.OrderService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,9 @@ public class OrderController {
 	private final OrderService orderService;
 
 	// ORDER-001 (사용자별 주문 조회)
-	@GetMapping("/api/order/user/{userSeq}")
+	@GetMapping("/api/order/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrdersByUserSeq(@PathVariable("userSeq") Long userSeq) {
+	public Response readOrdersByUserSeq(@LoginUser Long userSeq) {
 		return Response.success(orderService.readOrderByUserSeq(userSeq));
 	}
 
