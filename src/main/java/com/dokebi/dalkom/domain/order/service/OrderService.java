@@ -20,6 +20,7 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
+import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -185,8 +186,8 @@ public class OrderService {
 			amount,
 			price
 		);
-
-		productStockService.createStock(productSeq, prdtOptionSeq, amount);
+		ProductStock productStock = new ProductStock(product, productOption, amount);
+		productStockService.createStock(productStock);
 		
 		return orderDetail;
 	}
