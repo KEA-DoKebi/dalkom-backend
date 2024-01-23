@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class OrderReadResponseTest {
+class OrderReadResponseTest {
 
-	@Test
-	public void createOrderDto() {
+	@Test 
+	void createOrderDto() {
 		// Given
 		Long expectedOrdrSeq = 1L;
 		String expectedReceiverName = "홍길동";

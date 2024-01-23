@@ -43,7 +43,7 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
-public class OrderServiceTest {
+class OrderServiceTest {
 	@InjectMocks
 	private OrderService orderService;
 
@@ -186,7 +186,7 @@ public class OrderServiceTest {
 
 	@Test
 	@DisplayName("주문 상태 수정 서비스 테스트")
-	public void updateOrderStateTest(){
+	void updateOrderStateTest(){
 		Long orderSeq = 1L;
 		OrderStateUpdateRequest orderStateUpdateRequest =new OrderStateUpdateRequest();
 		orderStateUpdateRequest.setOrderState("11");
