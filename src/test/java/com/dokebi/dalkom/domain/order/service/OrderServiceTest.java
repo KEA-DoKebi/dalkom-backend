@@ -1,9 +1,5 @@
 package com.dokebi.dalkom.domain.order.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,11 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
-import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -25,30 +19,27 @@ import com.dokebi.dalkom.domain.user.service.UserService;
 
 import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-
 public class OrderServiceTest {
 	@InjectMocks
 	private OrderService orderService;
 	@Mock
-	private  OrderRepository orderRepository;
+	private OrderRepository orderRepository;
 	@Mock
-	private  OrderDetailService orderDetailService;
+	private OrderDetailService orderDetailService;
 	@Mock
-	private  ProductOptionService productOptionService;
+	private ProductOptionService productOptionService;
 	@Mock
-	private  ProductService productService;
+	private ProductService productService;
 	@Mock
-	private  ProductStockService productStockService;
+	private ProductStockService productStockService;
 	@Mock
-	private  MileageService mileageService;
+	private MileageService mileageService;
 	@Mock
-	private  UserService userService;
+	private UserService userService;
 
 	@Test
 	void createOrderTest() {
@@ -122,10 +113,7 @@ public class OrderServiceTest {
 	// }
 
 	@Test
-	void readOrderByUserSeq(){
+	void readOrderByUserSeq() {
 
 	}
-
-
-
 }

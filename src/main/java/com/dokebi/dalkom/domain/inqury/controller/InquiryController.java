@@ -15,6 +15,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.inqury.dto.InquiryAnswerRequest;
 import com.dokebi.dalkom.domain.inqury.dto.InquiryCreateRequest;
 import com.dokebi.dalkom.domain.inqury.service.InquiryService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,17 +26,17 @@ public class InquiryController {
 	private final InquiryService inquiryService;
 
 	// INQUIRY-001 (문의 등록)
-	@PostMapping("api/inquiry/user/{userSeq}")
-	public Response createInquiry(@PathVariable Long userSeq, @Valid @RequestBody InquiryCreateRequest request) {
+	@PostMapping("api/inquiry/user")
+	public Response createInquiry(@LoginUser Long userSeq, @Valid @RequestBody InquiryCreateRequest request) {
 
 		inquiryService.createInquiry(userSeq, request);
 		return Response.success();
 	}
 
 	// INQUIRY-002 (특정 유저의 문의 조회)
-	@GetMapping("api/inquiry/user/{userSeq}")
+	@GetMapping("api/inquiry/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readInquiryByUser(@PathVariable Long userSeq) {
+	public Response readInquiryByUser(@LoginUser Long userSeq) {
 
 		return Response.success(inquiryService.readInquiryListByUser(userSeq));
 	}

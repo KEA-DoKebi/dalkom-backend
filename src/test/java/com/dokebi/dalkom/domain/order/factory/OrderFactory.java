@@ -3,20 +3,16 @@ package com.dokebi.dalkom.domain.order.factory;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aspectj.weaver.ast.Or;
-
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
-import com.dokebi.dalkom.domain.order.entity.Order;
-import com.dokebi.dalkom.domain.user.entity.User;
 
 public class OrderFactory {
 
 	public static OrderPageDto createOrderPageDto() {
 		List<OrderPageDetailDto> orderList = new ArrayList<>();
-		orderList.add(createOrderPageDetailDto(1L, 1L, 1, "안경",50000  ));
-		orderList.add(createOrderPageDetailDto(2L, 2L, 2, "병원",30000  ));
+		orderList.add(createOrderPageDetailDto(1L, 1L, 1, "안경", 50000));
+		orderList.add(createOrderPageDetailDto(2L, 2L, 2, "병원", 30000));
 
 		return new OrderPageDto(orderList);
 	}
@@ -45,6 +41,7 @@ public class OrderFactory {
 			100
 		);
 	}
+
 	public static OrderDto createOrderDtoTwo() {
 		return new OrderDto(
 			2L,

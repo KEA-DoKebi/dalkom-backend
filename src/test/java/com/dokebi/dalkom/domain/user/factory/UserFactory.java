@@ -1,12 +1,8 @@
 package com.dokebi.dalkom.domain.user.factory;
 
-import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.user.entity.User;
 
 public class UserFactory {
-
-
-
 
 	public static User createUser() {
 		return new User(

@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,6 +34,8 @@ public class OrderControllerTest {
 	OrderService orderService;
 
 	MockMvc mockMvc;
+	@Mock
+	private ObjectMapper objectMapper;
 
 	@BeforeEach
 	void beforeEach() {
@@ -54,21 +57,24 @@ public class OrderControllerTest {
 
 	// ORDER-001(사용자별 주문 조회) 테스트
 	@Test
+	@DisplayName("사용자별 주문 조회 테스트")
 	void readOrdersByUserSeqTest() throws Exception {
 		// Given (준비)
-
+		Long userSeq = 1L;
 		// When (실행)
 		mockMvc.perform(get("/api/order/user"))
 			.andExpect(status().isOk());
 
-		// 검증
-		verify(orderService).readOrderByUserSeq(1L); // 여기서는 userSeq를 1L로 가정
+		// then(검증)
+		verify(orderService).readOrderByUserSeq(userSeq);
 
 	}
 
 	// ORDER-003(특정 주문 조회) 테스트
 	@Test
+	@DisplayName("특정 주문 조회 테스트")
 	void readOrderByOrderSeqTest() throws Exception {
+		// given
 		Long orderSeq = 1L;
 
 		// when(실행)
@@ -76,22 +82,22 @@ public class OrderControllerTest {
 				get("/api/order/{orderSeq}", orderSeq))
 			.andExpect(status().isOk());
 
-		//검증
+		// then(검증)
 		verify(orderService).readOrderByOrderSeq(orderSeq);
-
 	}
 
 	// ORDER-004(전체 주문 조회) 테스트
 	@Test
+	@DisplayName("전체 주문 조회 테스트")
 	void readOrdersTest() throws Exception {
-
 		mockMvc.perform(
 				get("/api/order"))
 			.andExpect(status().isOk());
 	}
 
-	// // ORDER-005(결제 하기) 테스트
+	// ORDER-005(결제 하기) 테스트
 	@Test
+	@DisplayName("결제 하기 테스트")
 	void createOrderTest() throws Exception {
 		OrderCreateRequest orderCreateRequest = OrderCreateRequestFactory.createOrderCreateRequest();
 
@@ -100,7 +106,5 @@ public class OrderControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(orderCreateRequest)))
 			.andExpect(status().isOk());
-
 	}
-
 }

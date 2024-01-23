@@ -15,11 +15,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InquiryAnswerRequest {
 
-	@NotNull(message = "InquiryAnswerRequest answerContent notnull 에러")
-	@NotBlank(message = "InquiryAnswerRequest answerContent notblank 에러")
+	@NotNull(message = "InquiryAnswerRequest answerContent NotNull 에러")
+	@NotBlank(message = "InquiryAnswerRequest answerContent NotBlank 에러")
 	private String answerContent;
 
-	@NotNull(message = "InquiryAnswerRequest answerState notnull 에러")
-	@Pattern(regexp = "[NY]", message = "InquiryAnswerRequest answerState pattern 에러")
+	@NotNull(message = "InquiryAnswerRequest answerState NotNull 에러")
+	@Pattern(regexp = "[NY]", message = "InquiryAnswerRequest answerState Pattern 에러")
 	private String answerState;
 }

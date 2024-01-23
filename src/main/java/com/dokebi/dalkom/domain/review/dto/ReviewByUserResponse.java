@@ -3,12 +3,14 @@ package com.dokebi.dalkom.domain.review.dto;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewByUserResponse {
@@ -20,5 +22,4 @@ public class ReviewByUserResponse {
 	private String name;
 	private String imageUrl;
 	private String detail;
-
 }
