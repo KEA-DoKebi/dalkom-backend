@@ -38,9 +38,7 @@ public class OrderControllerTest {
 	OrderController orderController;
 	@Mock
 	OrderService orderService;
-
 	MockMvc mockMvc;
-
 
 	@BeforeEach
 	void beforeEach() {
@@ -72,16 +70,16 @@ public class OrderControllerTest {
 		Long userSeq = 1L;
 
 		// 수정: Pageable을 직접 생성하지 않고, MockMvcRequestBuilders의 requestParam 메서드를 사용하여 생성
-		mockMvc.perform(
-				get("/api/order/user")
-					.param("page", "0")
-					.param("size", "5"))
+		mockMvc.perform(get("/api/order/user")
+				.param("page", "0")
+				.param("size", "5"))
 			.andExpect(status().isOk());
 
 		// then(검증)
 		// 수정: Pageable을 직접 생성하지 않고, Mockito의 any 메서드로 대체
 		verify(orderService).readOrderByUserSeq(eq(userSeq), any(Pageable.class));
 	}
+	
 	@Test
 	@DisplayName("특정 주문 조회 테스트")
 	void readOrderByOrderSeqTest() throws Exception {
@@ -89,8 +87,7 @@ public class OrderControllerTest {
 		Long orderSeq = 1L;
 
 		// when(실행)
-		mockMvc.perform(
-				get("/api/order/{orderSeq}", orderSeq))
+		mockMvc.perform(get("/api/order/{orderSeq}", orderSeq))
 			.andExpect(status().isOk());
 
 		// then(검증)
@@ -106,8 +103,7 @@ public class OrderControllerTest {
 					.param("size", "10"))
 			.andExpect(status().isOk());
 
-		verify(orderService).readOrderByAll( any(Pageable.class));
-
+		verify(orderService).readOrderByAll(any(Pageable.class));
 	}
 
 	@Test
@@ -125,14 +121,13 @@ public class OrderControllerTest {
 	@Test
 	@DisplayName("주문 상태 수정 테스트")
 	void updateOrderStateTest() throws Exception{
-		String orderState ="51";
+		String orderState = "51";
 		Long orderSeq = 13L;
 		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequest(orderState);
 
-		mockMvc.perform(put("/api/order/{orderSeq}/state",orderSeq)
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(new ObjectMapper().writeValueAsString(orderStateUpdateRequest)))
+		mockMvc.perform(put("/api/order/{orderSeq}/state", orderSeq)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(orderStateUpdateRequest)))
 			.andExpect(status().isOk());
-
 	}
 }
