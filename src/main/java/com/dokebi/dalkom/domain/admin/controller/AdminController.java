@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.admin.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +33,7 @@ public class AdminController {
 	// ADMIN-006 (관리자 목록 조회)
 	@GetMapping("/api/admin")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readAdminList() {
-		return Response.success(adminService.readAdminList());
+	public Response readAdminList(Pageable pageable) {
+		return Response.success(adminService.readAdminList(pageable));
 	}
 }

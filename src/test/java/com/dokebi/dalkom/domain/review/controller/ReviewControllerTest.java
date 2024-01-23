@@ -40,7 +40,7 @@ public class ReviewControllerTest {
 	private MockMvc mockMvc;
 
 	@BeforeEach
-	void setUp() {
+	void beforeEach() {
 		this.mockMvc = MockMvcBuilders
 			.standaloneSetup(reviewController)
 			.setCustomArgumentResolvers(
