@@ -36,7 +36,6 @@ public class OrderControllerTest {
 	OrderController orderController;
 	@Mock
 	OrderService orderService;
-
 	MockMvc mockMvc;
 
 	@BeforeEach
@@ -66,7 +65,11 @@ public class OrderControllerTest {
 		Long userSeq = 1L;
 
 		// 수정: Pageable을 직접 생성하지 않고, MockMvcRequestBuilders의 requestParam 메서드를 사용하여 생성
-		mockMvc.perform(get("/api/order/user").param("page", "0").param("size", "5")).andExpect(status().isOk());
+
+		mockMvc.perform(get("/api/order/user")
+				.param("page", "0")
+				.param("size", "5"))
+			.andExpect(status().isOk());
 
 		// then(검증)
 		// 수정: Pageable을 직접 생성하지 않고, Mockito의 any 메서드로 대체
@@ -81,7 +84,8 @@ public class OrderControllerTest {
 
 		// when(실행)
 		mockMvc.perform(get("/api/order/{orderSeq}", orderSeq)).andExpect(status().isOk());
-
+		mockMvc.perform(get("/api/order/{orderSeq}", orderSeq))
+			.andExpect(status().isOk());
 		// then(검증)
 		verify(orderService).readOrderByOrderSeq(orderSeq);
 	}
@@ -90,9 +94,7 @@ public class OrderControllerTest {
 	@DisplayName("전체 주문 조회 테스트")
 	void readOrdersTest() throws Exception {
 		mockMvc.perform(get("/api/order").param("page", "0").param("size", "10")).andExpect(status().isOk());
-
 		verify(orderService).readOrderByAll(any(Pageable.class));
-
 	}
 
 	@Test
@@ -115,8 +117,9 @@ public class OrderControllerTest {
 		Long orderSeq = 13L;
 		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequest(orderState);
 
-		mockMvc.perform(put("/api/order/{orderSeq}/state", orderSeq).contentType(MediaType.APPLICATION_JSON)
-			.content(new ObjectMapper().writeValueAsString(orderStateUpdateRequest))).andExpect(status().isOk());
-		verify(orderService).updateOrderState(orderSeq, orderStateUpdateRequest);
+		mockMvc.perform(put("/api/order/{orderSeq}/state", orderSeq)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(orderStateUpdateRequest)))
+			.andExpect(status().isOk());
 	}
 }

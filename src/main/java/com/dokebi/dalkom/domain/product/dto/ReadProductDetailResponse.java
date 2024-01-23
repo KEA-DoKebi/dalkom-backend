@@ -7,14 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// 상품 상세 responseBody
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
-// 상품 상세 responseBody
 public class ReadProductDetailResponse {
-
 	private Long categorySeq;
 	private String name;
 	private Integer price;
@@ -43,6 +41,4 @@ public class ReadProductDetailResponse {
 		this.name = name;
 		this.price = price;
 	}
-
-
 }

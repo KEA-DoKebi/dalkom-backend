@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 class OrderReadResponseTest {
-
 	@Test
 	void createOrderDto() {
 		// Given
@@ -17,7 +16,8 @@ class OrderReadResponseTest {
 		Integer expectedTotalPrice = 10000;
 
 		// When
-		OrderReadResponse orderReadResponse = new OrderReadResponse(expectedOrdrSeq, expectedReceiverName, expectedReceiverAddress,
+		OrderReadResponse orderReadResponse = new OrderReadResponse(expectedOrdrSeq, expectedReceiverName,
+			expectedReceiverAddress,
 			expectedReceiverMobileNum, expectedReceiverMemo, expectedTotalPrice);
 
 		// Then
