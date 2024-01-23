@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.inqury.dto;
+package com.dokebi.dalkom.domain.inquiry.dto;
 
 import java.time.LocalDateTime;
 
@@ -11,12 +11,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InquiryOneResponse {
+public class InquiryListResponse {
 
 	private String title;
 	private String content;
 	private LocalDateTime createdAt;
-	private String answerContent;
+	private String answerState;
 	private LocalDateTime answeredAt;
-	private String nickname; // 관리자 닉네임
+	private String answerContent;
 }

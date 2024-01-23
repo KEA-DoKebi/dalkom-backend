@@ -22,13 +22,14 @@ public class AdminService {
 	private final AdminRepository adminRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public List<AdminDto> readAll() {
+	public List<AdminDto> readAdminList() {
 		List<Admin> adminList = adminRepository.findAll();
 		List<AdminDto> adminDtoList = new ArrayList<>();
 		for (Admin admin : adminList) {
 			AdminDto adminDto = AdminDto.toDto(admin);
 			adminDtoList.add(adminDto);
 		}
+
 		return adminDtoList;
 	}
 
@@ -43,6 +44,7 @@ public class AdminService {
 		} catch (UserNicknameAlreadyExistsException e) {
 			return Response.failure(0, e.getMessage());
 		}
+
 		return Response.success();
 	}
 
