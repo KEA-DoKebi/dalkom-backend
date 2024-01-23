@@ -54,7 +54,7 @@ public class InquiryService {
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 
 		User user = userService.readUserByUserSeq(userSeq);
-		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
+		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), "N");
 		inquiryRepository.save(inquiry);
 	}
