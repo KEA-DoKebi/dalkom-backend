@@ -11,7 +11,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
 // 상품 상세 responseBody
 public class ReadProductDetailResponse {
 
@@ -25,8 +24,10 @@ public class ReadProductDetailResponse {
 	private List<StockListDTO> stockList;
 	private List<String> productImageUrlList;
 
-	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO, List<OptionListDTO> optionList,
-		List<StockListDTO> stockList, List<String> productImageUrlList) {
+	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO,
+		List<OptionListDTO> optionList,
+		List<StockListDTO> stockList,
+		List<String> productImageUrlList) {
 
 		this.categorySeq = productDetailDTO.getCategorySeq();
 		this.name = productDetailDTO.getName();
