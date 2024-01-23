@@ -1,8 +1,6 @@
 package com.dokebi.dalkom.domain.order.dto;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
 
 import lombok.Getter;
 
