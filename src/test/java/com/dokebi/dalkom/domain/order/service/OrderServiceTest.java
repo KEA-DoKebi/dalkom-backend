@@ -6,21 +6,31 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
+import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
+import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
+
+import java.util.Collections;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {
@@ -41,36 +51,63 @@ public class OrderServiceTest {
 	@Mock
 	private UserService userService;
 
+	@Mock
+	private Product mockProduct;
 	@Test
 	void createOrderTest() {
-		// Mock data
+		// given
 		OrderCreateRequest request = createOrderCreateRequest();
-		User user = createUser();
+		User mockUser = createUser();
 
-		// Mocking userService.readUserByUserSeq()
-		given(userService.readUserByUserSeq(anyLong())).willReturn(user);
+		given(mockProduct.getPrice()).willReturn(10000);
+		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
+		given(productService.readByProductSeq(anyLong())).willReturn(mockProduct);
+		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
+			new ProductOption(2L, "OP1", "의류 사이즈", "M"));
+		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
 
-		// Mocking user.getMileage()
-		given(user.getMileage()).willReturn(1000); // or any other desired value
-
-		// Mocking orderRepository.save()
-		doNothing().when(orderRepository).save(any(Order.class));
-
-		// Mocking orderDetailService.saveOrderDetail()
-		doNothing().when(orderDetailService).saveOrderDetail(any(OrderDetail.class));
-
-		// Mocking mileageService.createMileageHistoryAndUpdateUser()
-		doNothing().when(mileageService).createMileageHistoryAndUpdateUser(anyLong(), anyInt(), anyString());
-
-		// Perform the test
+		// when
 		orderService.createOrder(request);
 
-		// Verify that the required methods were called
-		verify(userService, times(1)).readUserByUserSeq(anyLong());
+		// then
 		verify(orderRepository, times(1)).save(any(Order.class));
-		verify(orderDetailService, times(1)).saveOrderDetail(any(OrderDetail.class));
-		verify(mileageService, times(1)).createMileageHistoryAndUpdateUser(anyLong(), anyInt(), anyString());
+		verify(orderDetailService, times(request.getProductSeqList().size())).saveOrderDetail(any(OrderDetail.class));
 	}
+
+	@Test
+	void createOrderWithMileageLackExceptionTest() {
+		// given
+		OrderCreateRequest request = createOrderCreateRequest();
+		User mockUser = createMockUserWithInsufficientMileage();
+
+		given(mockProduct.getPrice()).willReturn(10000);
+		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
+		given(productService.readByProductSeq(anyLong())).willReturn(mockProduct);
+
+		// when, then
+		assertThrows(MileageLackException.class, () -> orderService.createOrder(request));
+
+	}
+
+	@Test
+	void readProductDetailTest() {
+		// given
+		List<OrderPageDetailDto> orderList = Collections.singletonList(
+			createOrderPageDetailDto(3L, 3L, 100, "집업 자켓 아이보리", 97300));
+		ReadProductDetailResponse productDetailResponse = new ReadProductDetailResponse("집업 자켓 아이보리",
+			97300);
+
+		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
+		given(productService.readProduct(anyLong())).willReturn(productDetailResponse);
+
+		// when
+		List<OrderPageDetailDto> result = orderService.readProductDetail(orderList);
+
+		// then
+		assertNotNull(result);
+		assertEquals(orderList.size(), result.size());
+	}
+
 
 	// @Test
 	// void readProductDetailTest() {

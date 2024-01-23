@@ -39,4 +39,11 @@ public class ReadProductDetailResponse {
 		this.stockList = stockList;
 		this.productImageUrlList = productImageUrlList;
 	}
+
+	public ReadProductDetailResponse(String name, Integer price) {
+		this.name = name;
+		this.price = price;
+	}
+
+
 }

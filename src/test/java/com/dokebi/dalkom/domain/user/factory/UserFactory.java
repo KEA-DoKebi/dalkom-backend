@@ -13,6 +13,19 @@ public class UserFactory {
 			"123 Main St",
 			"2022-01-20",
 			"johnny",
+			100000
+		);
+	}
+
+	public static User createMockUserWithInsufficientMileage(){
+		return new User(
+			"john_doe",
+			"password123",
+			"John Doe",
+			"john@example.com",
+			"123 Main St",
+			"2022-01-20",
+			"johnny",
 			100
 		);
 	}
