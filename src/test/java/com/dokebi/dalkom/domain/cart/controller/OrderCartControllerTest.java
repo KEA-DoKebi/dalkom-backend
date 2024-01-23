@@ -79,7 +79,7 @@ public class OrderCartControllerTest {
 		Long userSeq = 1L;
 
 		// When, Then
-		mockMvc.perform(get("/api/cart/user/{userSeq}", userSeq)
+		mockMvc.perform(get("/api/cart/user", userSeq)
 				.param("page", "0")
 				.param("size", "10"))
 			.andExpect(status().isOk());
@@ -95,7 +95,7 @@ public class OrderCartControllerTest {
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory.createOrderCartCreateRequest();
 
 		// When, Then
-		mockMvc.perform(post("/api/cart/user/{userSeq}", userSeq)
+		mockMvc.perform(post("/api/cart/user", userSeq)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(request)))
 			.andExpect(status().isOk());

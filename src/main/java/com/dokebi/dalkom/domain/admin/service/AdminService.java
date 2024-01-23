@@ -26,7 +26,6 @@ public class AdminService {
 	private final PasswordEncoder passwordEncoder;
 
 	public Page<AdminDto> readAdminList(Pageable pageable) {
-
 		List<Admin> adminList = adminRepository.findAll();
 		List<AdminDto> adminDtoList = new ArrayList<>();
 		for (Admin admin : adminList) {
