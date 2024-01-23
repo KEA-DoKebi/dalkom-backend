@@ -1,7 +1,7 @@
 package com.dokebi.dalkom.domain.cart.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +18,5 @@ public interface OrderCartRepository extends JpaRepository<OrderCart, Long> {
 		"FROM OrderCart oc " +
 		"JOIN ProductOption po ON oc.prdtOptionSeq = po.prdtOptionSeq " +
 		"WHERE oc.user.userSeq = :userSeq")
-	List<OrderCartReadResponse> findOrderCartList(@Param("userSeq") Long userSeq);
+	Page<OrderCartReadResponse> findOrderCartList(@Param("userSeq") Long userSeq, Pageable pageable);
 }

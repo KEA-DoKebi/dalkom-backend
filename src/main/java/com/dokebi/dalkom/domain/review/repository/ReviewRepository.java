@@ -1,7 +1,7 @@
 package com.dokebi.dalkom.domain.review.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,7 +21,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		+ "JOIN Product p ON od.product.productSeq = p.productSeq "
 		+ "JOIN User u ON r.user.userSeq = u.userSeq "
 		+ "WHERE p.productSeq = :productSeq")
-	List<ReviewByProductResponse> findReviewListByProduct(@Param("productSeq") Long productSeq);
+	Page<ReviewByProductResponse> findReviewListByProduct(@Param("productSeq") Long productSeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse("
 		+ "r.content, r.rating, r.createdAt, r.modifiedAt, p.name, p.imageUrl, o.detail) "
@@ -30,5 +30,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		+ "JOIN ProductOption o ON od.productOption.prdtOptionSeq = o.prdtOptionSeq "
 		+ "JOIN Product p ON od.product.productSeq = p.productSeq "
 		+ "WHERE r.user.userSeq = :userSeq")
-	List<ReviewByUserResponse> findReviewListByUser(@Param("userSeq") Long userSeq);
+	Page<ReviewByUserResponse> findReviewListByUser(@Param("userSeq") Long userSeq, Pageable pageable);
 }

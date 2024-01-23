@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.review.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,16 +30,16 @@ public class ReviewController {
 	// REVIEWS-001 (상품별 리뷰 조회) - 입력받은 productSeq의 리뷰 목록 반환
 	@GetMapping("/api/review/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readReviewByProduct(@PathVariable Long productSeq) {
+	public Response readReviewByProduct(@PathVariable Long productSeq, Pageable pageable) {
 
-		return Response.success(reviewService.readReviewListByProduct(productSeq));
+		return Response.success(reviewService.readReviewListByProduct(productSeq, pageable));
 	}
 
 	// REVIEWS-002 (사용자별 리뷰 조회) - 입력받은 userSeq의 리뷰 목록 반환
 	@GetMapping("/api/review/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readReviewByUser(@LoginUser Long userSeq) {
-		return Response.success(reviewService.readReviewListByUser(userSeq));
+	public Response readReviewByUser(@LoginUser Long userSeq, Pageable pageable) {
+		return Response.success(reviewService.readReviewListByUser(userSeq, pageable));
 	}
 
 	//public Response readReviewByUser(HttpServletRequest request) {

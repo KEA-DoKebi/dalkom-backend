@@ -3,6 +3,8 @@ package com.dokebi.dalkom.domain.product.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +26,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		"INNER JOIN ProductStock ps " +
 		"ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq " +
 		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	List<ProductByCategoryResponse> findProductsByCategory(@Param("categorySeq") Long categorySeq);
+	Page<ProductByCategoryResponse> findProductsByCategoryDetail(@Param("categorySeq") Long categorySeq,
+		Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse" +
+		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, CAST(SUM(ps.amount) AS int)) " +
+		"FROM Product p " +
+		"JOIN p.productStockList ps " +
+		"JOIN p.category c " +
+		"WHERE c.parentSeq = :categorySeq " +
+		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+	Page<ProductByCategoryResponse> findProductsByCategory(@Param("categorySeq") Long categorySeq,
+		Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) FROM Product p "
@@ -46,12 +59,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "WHERE pi.product.productSeq = :productSeq")
 	List<String> findProductImageBySeq(@Param("productSeq") Long productSeq);
 
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse("
+	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse("
 		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.productOption.detail, ps.amount)"
-		+ "FROM Product p INNER JOIN ProductStock ps "
-		+ "ON p.productSeq = ps.product.productSeq "
-		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC")
-	List<ReadProductResponse> findProductList();
-
+		+ "FROM Product p INNER JOIN ProductStock ps ON p.productSeq = ps.product.productSeq "
+		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC",
+		countQuery = "SELECT COUNT(p) FROM Product p")
+	Page<ReadProductResponse> findProductList(Pageable pageable);
 
 }

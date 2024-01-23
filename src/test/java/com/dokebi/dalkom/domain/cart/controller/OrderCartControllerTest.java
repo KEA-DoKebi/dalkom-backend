@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -51,12 +52,14 @@ public class OrderCartControllerTest {
 	void readOrderCartListTest() throws Exception {
 		// Given
 		Long userSeq = 1L;
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
 
 		// When, Then
-		mockMvc.perform(get("/api/cart/user/{userSeq}", userSeq))
+		mockMvc.perform(get("/api/cart/user/{userSeq}?page={page}&size={size}", userSeq, page, size))
 			.andExpect(status().isOk());
 
-		verify(orderCartService).readOrderCartList(userSeq);
+		verify(orderCartService).readOrderCartList(userSeq, any(Pageable.class));
 	}
 
 	@Test

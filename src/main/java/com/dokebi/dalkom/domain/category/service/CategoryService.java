@@ -23,23 +23,14 @@ public class CategoryService {
 	private final CategoryRepository categoryRepository;
 
 	public List<CategoryResponse> readCategoryList() {
-
 		return categoryRepository.findCategoryList();
 	}
 
 	public List<SubCategoryResponse> readSubCategoryList(Long categorySeq) {
-
 		return categoryRepository.findSubCategoryList(categorySeq);
 	}
 
-	public Category readCategoryByCategorySeq(Long categorySeq) {
-
-		return readCategoryBySeq(categorySeq);
-	}
-
-	@Transactional
 	public Category readCategoryBySeq(Long categorySeq) {
-
-		return categoryRepository.findById(categorySeq).orElseThrow(CategoryNotFoundException::new);
+		return categoryRepository.findByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
 	}
 }
