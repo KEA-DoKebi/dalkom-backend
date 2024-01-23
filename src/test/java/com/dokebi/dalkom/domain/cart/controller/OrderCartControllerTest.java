@@ -59,7 +59,7 @@ public class OrderCartControllerTest {
 		mockMvc.perform(get("/api/cart/user/{userSeq}?page={page}&size={size}", userSeq, page, size))
 			.andExpect(status().isOk());
 
-		verify(orderCartService).readOrderCartList(eq(userSeq), any(Pageable.class));
+		verify(orderCartService).readOrderCartList(userSeq, any(Pageable.class));
 	}
 
 	@Test
