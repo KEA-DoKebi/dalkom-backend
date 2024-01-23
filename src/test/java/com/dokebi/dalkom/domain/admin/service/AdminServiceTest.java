@@ -13,6 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.dokebi.dalkom.common.response.Response;
@@ -35,6 +38,7 @@ public class AdminServiceTest {
 	@Test
 	void readAdminListTest() {
 		// Given
+		Pageable pageable = PageRequest.of(0, 3);
 		Admin admin1 = new Admin("adminId", "password",
 			"nickname", "name", "depart");
 		Admin admin2 = new Admin("adminId", "password",
@@ -53,11 +57,11 @@ public class AdminServiceTest {
 		when(adminRepository.findAll()).thenReturn(adminList);
 
 		// When
-		List<AdminDto> result = adminService.readAdminList();
+		Page<AdminDto> result = adminService.readAdminList(pageable);
 
 		// Then
-		for(int i = 0; i < result.size(); i++) {
-			AdminDto adminDto1 = result.get(i);
+		for(int i = 0; i < adminDtoList.size(); i++) {
+			AdminDto adminDto1 = result.getContent().get(i);
 			AdminDto adminDto2 = adminDtoList.get(i);
 
 			assertEquals(adminDto1, adminDto2);
