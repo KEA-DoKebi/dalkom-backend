@@ -3,14 +3,17 @@ package com.dokebi.dalkom.domain.order.service;
 
 import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderReadResponseFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,8 +28,10 @@ import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderDto;
+import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequestTest;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
@@ -65,6 +70,7 @@ public class OrderServiceTest {
 	}
 
 	@Test
+	@DisplayName("주문 생성 서비스 테스트 ")
 	void createOrderTest() {
 		// given
 		OrderCreateRequest request = createOrderCreateRequest();
@@ -86,6 +92,7 @@ public class OrderServiceTest {
 	}
 
 	@Test
+	@DisplayName("주문시 마일리지 부족 서비스 테스트")
 	void createOrderWithMileageLackExceptionTest() {
 		// given
 		OrderCreateRequest request = createOrderCreateRequest();
@@ -101,6 +108,7 @@ public class OrderServiceTest {
 	}
 
 	@Test
+	@DisplayName("주문 상품 상세 서비스 테스트")
 	void readProductDetailTest() {
 		// given
 		List<OrderPageDetailDto> orderList = Collections.singletonList(
@@ -119,75 +127,83 @@ public class OrderServiceTest {
 	}
 
 	@Test
+	@DisplayName("유저의 주문 목록 조회 서비스 테스트")
 	void readOrderByUserSeqTest() {
 		// given
 		Long userSeq = 1L;
 		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
 
-		// List<Order> orders = createOrderList();
-		// List<OrderDto> orders = new ArrayList<OrderDto>();
-		// orders.add(createOrderDtoOne());
-		// orders.add(createOrderDtoTwo());
+		List<OrderReadResponse> orderList = new ArrayList<>();
+		orderList.add(createOrderReadResponse());
+		orderList.add(createOrderReadResponse());
 
-		OrderDto fakeOrderDto1 = createOrderDtoOne();
-		OrderDto fakeOrderDto2 = createOrderDtoTwo();
-
-		List<OrderDto> orderDtoList = Arrays.asList(fakeOrderDto1, fakeOrderDto2);
-
-		Page<OrderDto> responsePage = new PageImpl<>(orderDtoList, pageable, orderDtoList.size());
-		// given(orderRepository.findOrderListByUserSeq(anyLong(), pageable)).willReturn(responsePage);
+		Page<OrderReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
 
 		when(orderService.readOrderByUserSeq(userSeq, pageable)).thenReturn(responsePage);
 
 		// when
-		Page<OrderDto> result = orderService.readOrderByUserSeq(userSeq, pageable);
+		Page<OrderReadResponse> result = orderService.readOrderByUserSeq(userSeq, pageable);
 
 		// then
 		assertNotNull(result);
-		assertEquals(orderDtoList.size(), result.toList().size());
+		assertEquals(orderList.size(), result.toList().size());
 
-		//
-		// Page<Order> responsePage = new PageImpl<>(orders, pageable, orders.size());
-		// given(orderRepository.findOrderListByUserSeq(anyLong(), pageable)).willReturn(responsePage);
-		//
-		// when(orderService.readOrderByUserSeq(userSeq, pageable)).thenReturn(responsePage);
-		//
-		// // when
-		// Page<OrderDto> result = orderService.readOrderByUserSeq(userSeq, pageable);
-		//
-		// // then
-		// assertNotNull(result);
-		// assertEquals(orders.size(), result.toList().size());
+
 	}
 
 	@Test
+	@DisplayName("주문코드로 주문 목록 조회 서비스 테스트")
 	void readOrderByOrderSeqTest() {
 		// given
 		Long orderSeq = 1L;
-		Order order = createOrder(); // OrderFactory를 사용
-		given(orderRepository.findByOrdrSeq(anyLong())).willReturn(order);
+		OrderReadResponse orderReadResponse = createOrderReadResponse(); // OrderFactory를 사용
+		given(orderRepository.findByOrdrSeq(anyLong())).willReturn(orderReadResponse);
 
 		// when
-		OrderDto result = orderService.readOrderByOrderSeq(orderSeq);
+		OrderReadResponse result = orderService.readOrderByOrderSeq(orderSeq);
 
 		// then
 		assertNotNull(result);
-		assertEquals(order.getOrdrSeq(), result.getOrdrSeq());
+		assertEquals(orderReadResponse.getOrdrSeq(), result.getOrdrSeq());
 	}
 
-	// @Test
-	// void readOrderByAllTest() {
-	// 	// given
-	// 	List<Order> orders = createOrderList(); // OrderFactory를 사용
-	// 	given(orderRepository.findAll()).willReturn(orders);
-	//
-	// 	// when
-	// 	List<OrderDto> result = orderService.readOrderByAll();
-	//
-	// 	// then
-	// 	assertNotNull(result);
-	// 	assertEquals(orders.size(), result.size());
-	// }
+	@Test
+	@DisplayName("모든 주문 목록 조회 서비스 테스트")
+	void readOrderByAllTest() {
+		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
+
+		// given
+		Page<OrderReadResponse> orderReadResponseList = createOrderList(); // OrderFactory를 사용
+		given(orderRepository.findAllOrders( pageable)).willReturn(orderReadResponseList);
+
+		// when
+		Page<OrderReadResponse> result = orderService.readOrderByAll(pageable);
+
+		// then
+		assertNotNull(result);
+		assertEquals(orderReadResponseList.getSize(), result.getSize());
+	}
+
+	@Test
+	@DisplayName("주문 상태 수정 서비스 테스트")
+	public void updateOrderStateTest(){
+		Long orderSeq = 1L;
+		OrderStateUpdateRequest orderStateUpdateRequest =new OrderStateUpdateRequest();
+		orderStateUpdateRequest.setOrderState("11");
+
+		Order order= createOrder();
+		order.setOrderState("12");
+
+		when(orderRepository.findById(orderSeq)).thenReturn(java.util.Optional.of(order));
+		when(orderRepository.save(any(Order.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+
+		orderService.updateOrderState(orderSeq, orderStateUpdateRequest);
+		verify(orderRepository, times(1)).findById(orderSeq);
+		verify(orderRepository, times(1)).save(order);
+
+
+
+	}
 
 	/** factory **/
 	private User createMockUser() {

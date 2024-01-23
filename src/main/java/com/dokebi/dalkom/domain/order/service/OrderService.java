@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,7 @@ import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderDto;
+import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.entity.Order;
@@ -116,46 +118,19 @@ public class OrderService {
 		return result;
 	}
 
-	// 사용자별 상품 조회
-	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
-		List<Order> orders = orderRepository.findOrderListByUserSeq(userSeq);
-
-		return orders.stream()
-			.map(order ->
-				new OrderDto(order.getOrdrSeq(),
-					order.getReceiverName(),
-					order.getReceiverAddress(),
-					order.getReceiverMobileNum(),
-					order.getReceiverMemo(),
-					order.getTotalPrice()))
-			.collect(Collectors.toList());
+	// 유저별 주문 조회
+	public Page<OrderReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
+		return orderRepository.findOrderListByUserSeq(userSeq,pageable);
 	}
 
-	// 주문 별 주문 조회
-	public OrderDto readOrderByOrderSeq(Long orderSeq) {
-		Order order = orderRepository.findByOrdrSeq(orderSeq);
-
-		return new OrderDto(order.getOrdrSeq(),
-			order.getReceiverName(),
-			order.getReceiverAddress(),
-			order.getReceiverMobileNum(),
-			order.getReceiverMemo(),
-			order.getTotalPrice());
+	// 주문별 주문 조회
+	public OrderReadResponse readOrderByOrderSeq(Long orderSeq) {
+		return orderRepository.findByOrdrSeq(orderSeq);
 	}
+
 	// 주문 전체 조회
-
-	public List<OrderDto> readOrderByAll() {
-		List<Order> orders = orderRepository.findAll();
-
-		return orders.stream()
-			.map(order ->
-				new OrderDto(order.getOrdrSeq(),
-					order.getReceiverName(),
-					order.getReceiverAddress(),
-					order.getReceiverMobileNum(),
-					order.getReceiverMemo(),
-					order.getTotalPrice()))
-			.collect(Collectors.toList());
+	public Page<OrderReadResponse> readOrderByAll(Pageable pageable) {
+		return orderRepository.findAllOrders(pageable);
 	}
 
 	// 주문 상태 수정
