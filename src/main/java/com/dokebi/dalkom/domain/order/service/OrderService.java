@@ -120,7 +120,7 @@ public class OrderService {
 
 	// 유저별 주문 조회
 	public Page<OrderReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
-		return orderRepository.findOrderListByUserSeq(userSeq,pageable);
+		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
 	}
 
 	// 주문별 주문 조회
