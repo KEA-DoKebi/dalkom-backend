@@ -71,8 +71,8 @@ public class InquiryControllerTest {
 
 		// When, Then
 		mockMvc.perform(post("/api/inquiry/user")
-			.contentType(MediaType.APPLICATION_JSON)
-			.content(asJsonString(request)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
 		verify(inquiryService).createInquiry(1L, request);

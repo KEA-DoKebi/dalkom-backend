@@ -56,6 +56,7 @@ public class InquiryController {
 
 	// INQUIRY-006 (문의 답변)
 	@PutMapping("/api/inquiry/{inquirySeq}")
+	@ResponseStatus(HttpStatus.OK)
 	public Response answerInquiry(@PathVariable Long inquirySeq,
 		@Valid @RequestBody InquiryAnswerRequest request) {
 		inquiryService.answerInquiry(inquirySeq, request);

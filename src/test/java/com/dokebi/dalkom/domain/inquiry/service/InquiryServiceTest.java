@@ -88,16 +88,17 @@ public class InquiryServiceTest {
 		InquiryListResponse response2 = InquiryListResponseFactory.createInquiryListResponse();
 
 		List<InquiryListResponse> expectedList = Arrays.asList(response1, response2);
+		Page<InquiryListResponse> expectedPage = new PageImpl<>(expectedList, pageable, expectedList.size());
 
-		when(inquiryService.readInquiryListByUser(userSeq, pageable)).thenReturn(expectedList);
+		when(inquiryService.readInquiryListByUser(userSeq, pageable)).thenReturn(expectedPage);
 
 		// When
-		List<InquiryListResponse> result = inquiryService.readInquiryListByUser(userSeq, pageable);
+		Page<InquiryListResponse> result = inquiryService.readInquiryListByUser(userSeq, pageable);
 
 		// Then
 		for (int i = 0; i < expectedList.size(); i++) {
 			InquiryListResponse expect = expectedList.get(i);
-			InquiryListResponse actual = result.get(i);
+			InquiryListResponse actual = result.getContent().get(i);
 
 			assertEquals(expect.getTitle(), actual.getTitle());
 			assertEquals(expect.getContent(), actual.getContent());

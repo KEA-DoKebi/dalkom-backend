@@ -1,7 +1,6 @@
 package com.dokebi.dalkom.domain.inquiry.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +39,7 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public List<InquiryListResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
+	public Page<InquiryListResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
 		return inquiryRepository.findInquiryListByUser(userSeq, pageable);
 	}
 
