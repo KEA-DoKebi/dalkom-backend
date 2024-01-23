@@ -3,6 +3,9 @@ package com.dokebi.dalkom.domain.admin.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +25,8 @@ public class AdminService {
 	private final AdminRepository adminRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	public List<AdminDto> readAdminList() {
+	public Page<AdminDto> readAdminList(Pageable pageable) {
+
 		List<Admin> adminList = adminRepository.findAll();
 		List<AdminDto> adminDtoList = new ArrayList<>();
 		for (Admin admin : adminList) {
@@ -30,7 +34,7 @@ public class AdminService {
 			adminDtoList.add(adminDto);
 		}
 
-		return adminDtoList;
+		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
 	}
 
 	public Response createAdmin(CreateAdminRequest req) {
