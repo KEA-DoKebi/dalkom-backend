@@ -53,4 +53,8 @@ public class ProductStock extends EntityDate {
 		this.productOption = productOption;
 		this.amount = amount;
 	}
+
+	public static ProductStock createProductStock() {
+		return new ProductStock();
+	}
 }
