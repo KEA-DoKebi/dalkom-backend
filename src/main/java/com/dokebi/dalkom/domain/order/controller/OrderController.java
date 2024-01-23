@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.order.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +31,8 @@ public class OrderController {
 	// ORDER-001 (사용자별 주문 조회)
 	@GetMapping("/api/order/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrdersByUserSeq(@LoginUser Long userSeq) {
-		return Response.success(orderService.readOrderByUserSeq(userSeq));
+	public Response readOrdersByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
+		return Response.success(orderService.readOrderByUserSeq(userSeq, pageable));
 	}
 
 	// ORDER-002 (주문 하기)
@@ -51,8 +52,8 @@ public class OrderController {
 	// ORDER-004 (전체 주문 조회)
 	@GetMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrders() {
-		return Response.success(orderService.readOrderByAll());
+	public Response readOrders(Pageable pageable) {
+		return Response.success(orderService.readOrderByAll(pageable));
 	}
 
 	// ORDER-005 (결제 하기)

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -117,18 +120,22 @@ public class OrderService {
 	}
 
 	// 사용자별 상품 조회
-	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
-		List<Order> orders = orderRepository.findOrderListByUserSeq(userSeq);
+	public Page<OrderDto> readOrderByUserSeq(Long userSeq, Pageable pageable) {
+		Page<Order> orders = orderRepository.findOrderListByUserSeq(userSeq, pageable);
 
-		return orders.stream()
-			.map(order ->
-				new OrderDto(order.getOrdrSeq(),
-					order.getReceiverName(),
-					order.getReceiverAddress(),
-					order.getReceiverMobileNum(),
-					order.getReceiverMemo(),
-					order.getTotalPrice()))
+		// orders 객체에서 데이터를 추출하고 OrderDto로 변환
+		List<OrderDto> orderDtos = orders.stream()
+			.map(order -> new OrderDto(
+				order.getOrdrSeq(),
+				order.getReceiverName(),
+				order.getReceiverAddress(),
+				order.getReceiverMobileNum(),
+				order.getReceiverMemo(),
+				order.getTotalPrice()))
 			.collect(Collectors.toList());
+
+		// PageImpl을 사용하여 Page<OrderDto> 객체 생성
+		return new PageImpl<>(orderDtos, pageable, orders.getTotalElements());
 	}
 
 	// 주문 별 주문 조회
@@ -144,18 +151,19 @@ public class OrderService {
 	}
 	// 주문 전체 조회
 
-	public List<OrderDto> readOrderByAll() {
-		List<Order> orders = orderRepository.findAll();
+	public Page<OrderDto> readOrderByAll(Pageable pageable) {
+		Page<Order> orders = orderRepository.findAll(pageable);
 
-		return orders.stream()
-			.map(order ->
-				new OrderDto(order.getOrdrSeq(),
-					order.getReceiverName(),
-					order.getReceiverAddress(),
-					order.getReceiverMobileNum(),
-					order.getReceiverMemo(),
-					order.getTotalPrice()))
-			.collect(Collectors.toList());
+		// orders 객체에서 데이터를 추출하고 OrderDto로 변환, 그리고 PageImpl로 래핑
+
+		return orders.map(order ->
+			new OrderDto(
+				order.getOrdrSeq(),
+				order.getReceiverName(),
+				order.getReceiverAddress(),
+				order.getReceiverMobileNum(),
+				order.getReceiverMemo(),
+				order.getTotalPrice()));
 	}
 
 	// 주문 상태 수정

@@ -13,6 +13,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
@@ -81,47 +85,49 @@ public class ReviewServiceTest {
 
 	@Test
 	void readReviewListByProductTest() {
-
 		// Given
 		Long productSeq = 1L;
+		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
+
 		ReviewByProductResponse fakeResponse1 = ReviewByProductResponseFactory.createReviewByProductResponse();
 		ReviewByProductResponse fakeResponse2 = ReviewByProductResponseFactory.createReviewByProductResponse();
 		ReviewByProductResponse fakeResponse3 = ReviewByProductResponseFactory.createReviewByProductResponse();
 
 		List<ReviewByProductResponse> responseList = Arrays.asList(fakeResponse1, fakeResponse2, fakeResponse3);
-		when(reviewService.readReviewListByProduct(productSeq)).thenReturn(responseList);
+		Page<ReviewByProductResponse> responsePage = new PageImpl<>(responseList, pageable, responseList.size());
+
+		when(reviewService.readReviewListByProduct(productSeq, pageable)).thenReturn(responsePage);
 
 		// When
-		List<ReviewByProductResponse> reviewByProductResponseList = reviewService.readReviewListByProduct(productSeq);
+		Page<ReviewByProductResponse> reviewByProductResponsePage = reviewService.readReviewListByProduct(productSeq,
+			pageable);
 
 		// Then
-		for (int i = 0; i < responseList.size(); i++) {
-			ReviewByProductResponse fakeResponse = responseList.get(i);
-			ReviewByProductResponse response = reviewByProductResponseList.get(i);
-			assertEquals(fakeResponse, response);
-		}
+		assertEquals(responseList.size(), reviewByProductResponsePage.getContent().size());
+		assertEquals(responseList, reviewByProductResponsePage.getContent());
 	}
 
 	@Test
 	void readReviewListByUserTest() {
 		// Given
 		Long userSeq = 1L;
+		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
+
 		ReviewByUserResponse fakeResponse1 = ReviewByUserResponseFactory.createReviewByUserResponse();
 		ReviewByUserResponse fakeResponse2 = ReviewByUserResponseFactory.createReviewByUserResponse();
 		ReviewByUserResponse fakeResponse3 = ReviewByUserResponseFactory.createReviewByUserResponse();
 
 		List<ReviewByUserResponse> responseList = Arrays.asList(fakeResponse1, fakeResponse2, fakeResponse3);
-		when(reviewService.readReviewListByUser(userSeq)).thenReturn(responseList);
+		Page<ReviewByUserResponse> responsePage = new PageImpl<>(responseList, pageable, responseList.size());
+
+		when(reviewService.readReviewListByUser(userSeq, pageable)).thenReturn(responsePage);
 
 		// When
-		List<ReviewByUserResponse> reviewByUserResponseList = reviewService.readReviewListByUser(userSeq);
+		Page<ReviewByUserResponse> reviewByUserResponsePage = reviewService.readReviewListByUser(userSeq, pageable);
 
 		// Then
-		for (int i = 0; i < responseList.size(); i++) {
-			ReviewByUserResponse fakeResponse = responseList.get(i);
-			ReviewByUserResponse response = reviewByUserResponseList.get(i);
-			assertEquals(fakeResponse, response);
-		}
+		assertEquals(responseList.size(), reviewByUserResponsePage.getContent().size());
+		assertEquals(responseList, reviewByUserResponsePage.getContent());
 	}
 
 }

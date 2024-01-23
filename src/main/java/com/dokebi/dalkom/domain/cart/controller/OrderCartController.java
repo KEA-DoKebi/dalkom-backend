@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.cart.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +30,8 @@ public class OrderCartController {
 	// CART-001 (특정 유저의 장바구니 리스트 조회)
 	@GetMapping("/api/cart/user/{userSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderCartList(@PathVariable Long userSeq) {
-		return Response.success(orderCartService.readOrderCartList(userSeq));
+	public Response readOrderCartList(@PathVariable Long userSeq, Pageable pageable) {
+		return Response.success(orderCartService.readOrderCartList(userSeq, pageable));
 	}
 
 	// CART-002 (특정 유저의 장바구니에 상품 담기)
