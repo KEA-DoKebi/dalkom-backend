@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -46,20 +47,25 @@ public class InquiryControllerTest {
 	}
 
 	@BeforeEach
-	void beforeEach() {
-		mockMvc = MockMvcBuilders.standaloneSetup(inquiryController)
-			.setCustomArgumentResolvers(new HandlerMethodArgumentResolver() {
-				@Override
-				public boolean supportsParameter(MethodParameter parameter) {
-					return parameter.hasParameterAnnotation(LoginUser.class);
-				}
+	void setUp() {
+		this.mockMvc = MockMvcBuilders
+			.standaloneSetup(inquiryController)
+			.setCustomArgumentResolvers(
+				new PageableHandlerMethodArgumentResolver(),
+				new HandlerMethodArgumentResolver() {
+					@Override
+					public boolean supportsParameter(MethodParameter parameter) {
+						return parameter.getParameterType().equals(Long.class) &&
+							parameter.hasParameterAnnotation(LoginUser.class);
+					}
 
-				@Override
-				public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-					NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-					return 1L; // 여기서는 userSeq를 1L로 가정하고 직접 제공
+					@Override
+					public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+						NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+						return 1L; // 여기서는 userSeq를 1L로 가정하고 직접 제공
+					}
 				}
-			})
+			)
 			.build();
 	}
 
@@ -81,15 +87,17 @@ public class InquiryControllerTest {
 	@Test
 	@DisplayName("특정 유저의 문의 조회")
 	void readInquiryByUserTest() throws Exception {
-		// Given
-		int page = 0; // 페이지 번호
-		int size = 10; // 페이지 크기
+
+		//Given
+		Long userSeq = 1L;
 
 		// When, Then
-		mockMvc.perform(get("/api/inquiry/user", page, size))
+		mockMvc.perform(get("/api/inquiry/user")
+				.param("page", "0")
+				.param("size", "10"))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).readInquiryListByUser(1L, any(Pageable.class));
+		verify(inquiryService).readInquiryListByUser(eq(userSeq), any(Pageable.class));
 	}
 
 	@Test
@@ -97,14 +105,14 @@ public class InquiryControllerTest {
 	void readInquiryByCategoryTest() throws Exception {
 		// Given
 		Long categorySeq = 1L;
-		int page = 0; // 페이지 번호
-		int size = 10; // 페이지 크기
 
 		// When, Then
-		mockMvc.perform(get("/api/inquiry/category/{categorySeq}", categorySeq, page, size))
+		mockMvc.perform(get("/api/inquiry/category/{categorySeq}", categorySeq)
+				.param("page", "0")
+				.param("size", "10"))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).readInquiryListByCategory(categorySeq, any(Pageable.class));
+		verify(inquiryService).readInquiryListByCategory(eq(categorySeq), any(Pageable.class));
 	}
 
 	@Test

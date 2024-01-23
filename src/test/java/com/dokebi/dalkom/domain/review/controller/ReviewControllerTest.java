@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.review.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -9,8 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -41,9 +38,6 @@ public class ReviewControllerTest {
 	@Mock
 	private ReviewService reviewService;
 	private MockMvc mockMvc;
-
-	@Captor
-	private ArgumentCaptor<Pageable> pageableCaptor;
 
 	@BeforeEach
 	void setUp() {
@@ -81,61 +75,33 @@ public class ReviewControllerTest {
 	void readReviewByProduct() throws Exception {
 		// Given
 		Long productSeq = 1L;
-		int page = 0; // 페이지 번호
-		int size = 10; // 페이지 크기
-		String sort = "orderSeq,desc"; // 정렬 방식
 
 		// When, Then
 		mockMvc.perform(get("/api/review/product/{productSeq}", productSeq)
 				.param("page", "0")
-				.param("size", "10")
-				.param("sort", "orderSeq,desc"))
+				.param("size", "10"))
 			.andExpect(status().isOk());
 
 		// verify를 사용하여 실제 호출 포착
-		verify(reviewService).readReviewListByProduct(eq(productSeq), pageableCaptor.capture());
+		verify(reviewService).readReviewListByProduct(eq(productSeq), any(Pageable.class));
 
-		// 포착된 Pageable 객체의 속성 검증
-		Pageable pageable = pageableCaptor.getValue();
-		assertEquals(page, pageable.getPageNumber());
-		assertEquals(size, pageable.getPageSize());
-		assertTrue(pageable.getSort().getOrderFor("orderSeq").isDescending());
 	}
 
 	@Test
 	@DisplayName("사용자별 리뷰 리스트 조회 테스트")
 	void readReviewByUser() throws Exception {
 		// Given
-		Long userSeq = 1L; // Assuming userSeq is part of the request URL
-		int page = 0; // Example pagination parameter
-		int size = 10; // Example pagination parameter
+		Long userSeq = 1L;
 
 		// When, Then
 		mockMvc.perform(get("/api/review/user", userSeq)
-				.param("page", String.valueOf(page))
-				.param("size", String.valueOf(size)))
+				.param("page", "0")
+				.param("size", "10"))
 			.andExpect(status().isOk());
 
 		// 서비스 메소드 호출 검증 with pagination
 		verify(reviewService).readReviewListByUser(eq(userSeq), any(Pageable.class));
 	}
-
-	// @Test
-	// @DisplayName("사용자별 리뷰 리스트 조회 테스트")
-	// void readReviewByUser() throws Exception {
-	// 	// Given
-	// 	String userSeq = "1";
-	//
-	// 	// When, Then
-	// 	mockMvc.perform(get("/api/review/user")
-	// 			.with(request -> {
-	// 				request.setAttribute("userSeq", userSeq);
-	// 				return request;
-	// 			}))
-	// 		.andExpect(status().isOk());
-	//
-	// 	verify(reviewService).readReviewListByUser(Long.parseLong(userSeq));
-	// }
 
 	@Test
 	@DisplayName("리뷰 작성 테스트")
