@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -80,11 +81,15 @@ public class InquiryControllerTest {
 	@Test
 	@DisplayName("특정 유저의 문의 조회")
 	void readInquiryByUserTest() throws Exception {
+		// Given
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
+
 		// When, Then
-		mockMvc.perform(get("/api/inquiry/user"))
+		mockMvc.perform(get("/api/inquiry/user", page, size))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).readInquiryListByUser(1L);
+		verify(inquiryService).readInquiryListByUser(1L, any(Pageable.class));
 	}
 
 	@Test
@@ -92,16 +97,18 @@ public class InquiryControllerTest {
 	void readInquiryByCategoryTest() throws Exception {
 		// Given
 		Long categorySeq = 1L;
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
 
 		// When, Then
-		mockMvc.perform(get("/api/inquiry/category/{categorySeq}", categorySeq))
+		mockMvc.perform(get("/api/inquiry/category/{categorySeq}", categorySeq, page, size))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).readInquiryListByCategory(categorySeq);
+		verify(inquiryService).readInquiryListByCategory(categorySeq, any(Pageable.class));
 	}
 
 	@Test
-	@DisplayName("특정 문의 조회")
+	@DisplayName("특정 문의 조회 테스트")
 	void readInquiryOneTest() throws Exception {
 		// Given
 		Long inquirySeq = 1L;

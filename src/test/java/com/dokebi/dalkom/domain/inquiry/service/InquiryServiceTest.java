@@ -14,6 +14,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
@@ -78,16 +82,17 @@ public class InquiryServiceTest {
 	void readInquiryListByUserTest() {
 		// Given
 		Long userSeq = 1L;
+		Pageable pageable = PageRequest.of(0, 3);
 
 		InquiryListResponse response1 = InquiryListResponseFactory.createInquiryListResponse();
 		InquiryListResponse response2 = InquiryListResponseFactory.createInquiryListResponse();
 
 		List<InquiryListResponse> expectedList = Arrays.asList(response1, response2);
 
-		when(inquiryService.readInquiryListByUser(userSeq)).thenReturn(expectedList);
+		when(inquiryService.readInquiryListByUser(userSeq, pageable)).thenReturn(expectedList);
 
 		// When
-		List<InquiryListResponse> result = inquiryService.readInquiryListByUser(userSeq);
+		List<InquiryListResponse> result = inquiryService.readInquiryListByUser(userSeq, pageable);
 
 		// Then
 		for (int i = 0; i < expectedList.size(); i++) {
@@ -106,21 +111,23 @@ public class InquiryServiceTest {
 	void readInquiryListByCategoryTest() {
 		// Given
 		Long categorySeq = 1L;
+		Pageable pageable = PageRequest.of(0, 3);
 
 		InquiryListResponse response1 = InquiryListResponseFactory.createInquiryListResponse();
 		InquiryListResponse response2 = InquiryListResponseFactory.createInquiryListResponse();
 
 		List<InquiryListResponse> expectedList = Arrays.asList(response1, response2);
+		Page<InquiryListResponse> expectedPage = new PageImpl<>(expectedList, pageable, expectedList.size());
 
-		when(inquiryService.readInquiryListByCategory(categorySeq)).thenReturn(expectedList);
+		when(inquiryService.readInquiryListByCategory(categorySeq, pageable)).thenReturn(expectedPage);
 
 		// When
-		List<InquiryListResponse> result = inquiryService.readInquiryListByCategory(categorySeq);
+		Page<InquiryListResponse> result = inquiryService.readInquiryListByCategory(categorySeq, pageable);
 
 		// Then
-		for (int i = 0; i < result.size(); i++) {
+		for (int i = 0; i < result.getContent().size(); i++) {
 			InquiryListResponse expect = expectedList.get(i);
-			InquiryListResponse actual = result.get(i);
+			InquiryListResponse actual = result.getContent().get(i);
 
 			assertEquals(expect.getTitle(), actual.getTitle());
 			assertEquals(expect.getContent(), actual.getContent());
