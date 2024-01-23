@@ -6,7 +6,6 @@ import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
 
 public class OrderReadResponseFactory {
-
 	private Long ordrSeq;
 	private String receiverName;
 	private String receiverAddress;
@@ -24,6 +23,4 @@ public class OrderReadResponseFactory {
 			100000
 		);
 	}
-
-
 }
