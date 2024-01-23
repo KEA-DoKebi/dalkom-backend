@@ -6,6 +6,7 @@ import java.util.List;
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
+import com.dokebi.dalkom.domain.order.entity.Order;
 
 public class OrderFactory {
 
@@ -51,5 +52,17 @@ public class OrderFactory {
 			"Some memo memo",
 			100
 		);
+	}
+
+	public static List<Order> createOrderList() {
+		List<Order> orderList = new ArrayList<>();
+		orderList.add(new Order(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100));
+		orderList.add(new Order(2L, "suha Doe", "123 aaa St", "335-1234", "Some memo memo", 100));
+
+		return orderList;
+	}
+
+	public static Order createOrder() {
+		return new Order(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100);
 	}
 }

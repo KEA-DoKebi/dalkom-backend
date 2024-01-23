@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -68,27 +69,36 @@ public class ReviewControllerTest {
 	void readReviewByProduct() throws Exception {
 		// Given
 		Long productSeq = 1L;
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
+		String sort = "orderSeq,desc"; // 정렬 방식
 
 		// When, Then
-		mockMvc.perform(get("/api/review/product/{productSeq}", productSeq))
+		mockMvc.perform(get("/api/review/product/{productSeq}", productSeq)
+				.param("page", String.valueOf(page))
+				.param("size", String.valueOf(size))
+				.param("sort", sort))
 			.andExpect(status().isOk());
 
-		verify(reviewService).readReviewListByProduct(productSeq);
+		verify(reviewService).readReviewListByProduct(productSeq, any(Pageable.class));
 	}
 
 	@Test
 	@DisplayName("사용자별 리뷰 리스트 조회 테스트")
 	void readReviewByUser() throws Exception {
 		// Given
-		// String userSeq = "1";
-		// userSeq를 위에서 가져오기 때문에 선언할 필요 없음
+		Long userSeq = 1L; // Assuming userSeq is part of the request URL
+		int page = 0; // Example pagination parameter
+		int size = 10; // Example pagination parameter
 
 		// When, Then
-		mockMvc.perform(get("/api/review/user"))
+		mockMvc.perform(get("/api/review/user/{userSeq}", userSeq)
+				.param("page", String.valueOf(page))
+				.param("size", String.valueOf(size)))
 			.andExpect(status().isOk());
 
-		// 서비스 메소드 호출 검증
-		verify(reviewService).readReviewListByUser(1L); // 여기서는 userSeq를 1L로 가정
+		// 서비스 메소드 호출 검증 with pagination
+		verify(reviewService).readReviewListByUser(eq(userSeq), any(Pageable.class));
 	}
 
 	// @Test
