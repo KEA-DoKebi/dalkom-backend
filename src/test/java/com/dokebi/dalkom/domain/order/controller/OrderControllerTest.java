@@ -11,14 +11,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Pageable;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory;
 import com.dokebi.dalkom.domain.order.service.OrderService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,34 +39,42 @@ public class OrderControllerTest {
 
 	@BeforeEach
 	void beforeEach() {
-		mockMvc = MockMvcBuilders.standaloneSetup(orderController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(orderController)
+			.setCustomArgumentResolvers(new HandlerMethodArgumentResolver() {
+				@Override
+				public boolean supportsParameter(MethodParameter parameter) {
+					return parameter.hasParameterAnnotation(LoginUser.class);
+				}
+
+				@Override
+				public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+					NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+					return 1L; // 여기서는 userSeq를 1L로 가정
+				}
+			})
+			.build();
 	}
 
+	// ORDER-001(사용자별 주문 조회) 테스트
 	@Test
 	@DisplayName("사용자별 주문 조회 테스트")
 	void readOrdersByUserSeqTest() throws Exception {
-		// given(준비)
+		// Given (준비)
 		Long userSeq = 1L;
-		int page = 0; // 페이지 번호
-		int size = 10; // 페이지 크기
-		String sort = "orderSeq,desc"; // 정렬 방식
-
-		// when(실행)
-		mockMvc.perform(
-				get("/api/order/user/{userSeq}", userSeq)
-					.param("page", String.valueOf(page))
-					.param("size", String.valueOf(size))
-					.param("sort", sort))
+		// When (실행)
+		mockMvc.perform(get("/api/order/user"))
 			.andExpect(status().isOk());
 
-		//검증
-		verify(orderService).readOrderByUserSeq(userSeq, any(Pageable.class));
+		// then(검증)
+		verify(orderService).readOrderByUserSeq(userSeq);
+
 	}
 
 	// ORDER-003(특정 주문 조회) 테스트
 	@Test
 	@DisplayName("특정 주문 조회 테스트")
 	void readOrderByOrderSeqTest() throws Exception {
+		// given
 		Long orderSeq = 1L;
 
 		// when(실행)
@@ -69,10 +82,11 @@ public class OrderControllerTest {
 				get("/api/order/{orderSeq}", orderSeq))
 			.andExpect(status().isOk());
 
-		//검증
+		// then(검증)
 		verify(orderService).readOrderByOrderSeq(orderSeq);
 	}
 
+	// ORDER-004(전체 주문 조회) 테스트
 	@Test
 	@DisplayName("전체 주문 조회 테스트")
 	void readOrdersTest() throws Exception {
@@ -81,6 +95,7 @@ public class OrderControllerTest {
 			.andExpect(status().isOk());
 	}
 
+	// ORDER-005(결제 하기) 테스트
 	@Test
 	@DisplayName("결제 하기 테스트")
 	void createOrderTest() throws Exception {
