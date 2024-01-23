@@ -49,6 +49,7 @@ public class NoticeService {
 		noticeRepository.save(notice);
 	}
 
+	@Transactional
 	public void updateNotice(Long noticeSeq, NoticeUpdateRequest request) {
 
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);

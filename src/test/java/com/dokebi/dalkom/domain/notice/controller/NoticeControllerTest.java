@@ -1,5 +1,6 @@
-package com.dokebi.dalkom.domain.review.controller;
+package com.dokebi.dalkom.domain.notice.controller;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,27 +25,29 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.dokebi.dalkom.domain.review.dto.ReviewCreateRequest;
-import com.dokebi.dalkom.domain.review.dto.ReviewUpdateRequest;
-import com.dokebi.dalkom.domain.review.factory.ReviewCreateRequestFactory;
-import com.dokebi.dalkom.domain.review.factory.ReviewUpdateRequestFactory;
-import com.dokebi.dalkom.domain.review.service.ReviewService;
+import com.dokebi.dalkom.domain.notice.dto.NoticeCreateRequest;
+import com.dokebi.dalkom.domain.notice.dto.NoticeUpdateRequest;
+import com.dokebi.dalkom.domain.notice.factory.NoticeCreateRequestFactory;
+import com.dokebi.dalkom.domain.notice.factory.NoticeUpdateRequestFactory;
+import com.dokebi.dalkom.domain.notice.service.NoticeService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
-public class ReviewControllerTest {
+public class NoticeControllerTest {
 
 	@InjectMocks
-	private ReviewController reviewController;
+	private NoticeController noticeController;
 	@Mock
-	private ReviewService reviewService;
+	private NoticeService noticeService;
 	private MockMvc mockMvc;
+	@Captor
+	private ArgumentCaptor<Pageable> pageableCaptor;
 
 	@BeforeEach
-	void beforeEach() {
+	void setUp() {
 		this.mockMvc = MockMvcBuilders
-			.standaloneSetup(reviewController)
+			.standaloneSetup(noticeController)
 			.setCustomArgumentResolvers(
 				new PageableHandlerMethodArgumentResolver(),
 				new HandlerMethodArgumentResolver() {
@@ -71,87 +76,83 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	@DisplayName("상품별 리뷰 리스트 조회 테스트")
-	void readReviewByProduct() throws Exception {
+	@DisplayName("특정 공지 조회 테스트")
+	void readNotice() throws Exception {
 		// Given
-		Long productSeq = 1L;
+		Long noticeSeq = 1L;
 
 		// When, Then
-		mockMvc.perform(get("/api/review/product/{productSeq}", productSeq)
+		mockMvc.perform(get("/api/notice/{noticeSeq}", noticeSeq))
+			.andExpect(status().isOk());
+
+		verify(noticeService).readNotice(noticeSeq);
+	}
+
+	@Test
+	@DisplayName("공지 리스트 조회 테스트")
+	void readNoticeList() throws Exception {
+		// Given
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
+
+		// When, Then
+		mockMvc.perform(get("/api/notice")
 				.param("page", "0")
 				.param("size", "10"))
 			.andExpect(status().isOk());
 
-		// verify를 사용하여 실제 호출 포착
-		verify(reviewService).readReviewListByProduct(eq(productSeq), any(Pageable.class));
+		verify(noticeService).readNoticeList(pageableCaptor.capture());
 
+		Pageable pageable = pageableCaptor.getValue();
+		assertEquals(page, pageable.getPageNumber());
+		assertEquals(size, pageable.getPageSize());
 	}
 
 	@Test
-	@DisplayName("사용자별 리뷰 리스트 조회 테스트")
-	void readReviewByUser() throws Exception {
+	@DisplayName("공지 작성 테스트")
+	void createNotice() throws Exception {
 		// Given
-		Long userSeq = 1L;
+		NoticeCreateRequest request = NoticeCreateRequestFactory.createNoticeCreateRequest();
 
 		// When, Then
-		mockMvc.perform(get("/api/review/user", userSeq)
-				.param("page", "0")
-				.param("size", "10"))
-			.andExpect(status().isOk());
-
-		// 서비스 메소드 호출 검증 with pagination
-		verify(reviewService).readReviewListByUser(eq(userSeq), any(Pageable.class));
-	}
-
-	@Test
-	@DisplayName("리뷰 작성 테스트")
-	void createReview() throws Exception {
-		// Given
-		// Long userSeq = 1L;
-		ReviewCreateRequest request = ReviewCreateRequestFactory.createReviewCreateRequest();
-
-		// When, Then
-		mockMvc.perform(post("/api/review/user")
+		mockMvc.perform(post("/api/notice")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
-		// reviewService가 createReview를 1번 호출하여 createReview를 수행하는지 확인
-		// verify(reviewService, times(1)).createReview(userSeq, request);
-
 		// 서비스 메소드 호출 검증
-		verify(reviewService).createReview(any(Long.class), any(ReviewCreateRequest.class));
+		verify(noticeService).createNotice(any(Long.class), any(NoticeCreateRequest.class));
 	}
 
 	@Test
-	@DisplayName("리뷰 수정 테스트")
-	void updateReview() throws Exception {
+	@DisplayName("공지 수정 테스트")
+	void updateNotice() throws Exception {
 		// Given
-		Long reviewSeq = 1L;
-		ReviewUpdateRequest updateRequest = ReviewUpdateRequestFactory.createReviewUpdateRequest();
+		Long noticeSeq = 1L;
+		NoticeUpdateRequest updateRequest = NoticeUpdateRequestFactory.createNoticeUpdateRequest();
 
 		// When, Then
-		mockMvc.perform(put("/api/review/{reviewSeq}", reviewSeq)
+		mockMvc.perform(put("/api/notice/{noticeSeq}", noticeSeq)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(updateRequest)))
 			.andExpect(status().isOk());
 
-		verify(reviewService).updateReview(reviewSeq, updateRequest);
+		verify(noticeService).updateNotice(noticeSeq, updateRequest);
 	}
 
 	@Test
-	@DisplayName("리뷰 삭제 테스트")
-	void deleteReview() throws Exception {
+	@DisplayName("공지 삭제 테스트")
+	void deleteNotice() throws Exception {
 		// Given
-		Long reviewSeq = 1L;
+		Long noticeSeq = 1L;
 
 		// When
-		doNothing().when(reviewService).deleteReview(reviewSeq);
+		doNothing().when(noticeService).deleteNotice(noticeSeq);
 
 		// Then
-		mockMvc.perform(delete("/api/review/{reviewSeq}", reviewSeq))
+		mockMvc.perform(delete("/api/notice/{noticeSeq}", noticeSeq))
 			.andExpect(status().isOk());
 
-		verify(reviewService).deleteReview(reviewSeq);
+		verify(noticeService).deleteNotice(noticeSeq);
 	}
 }

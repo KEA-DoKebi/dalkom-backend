@@ -6,8 +6,8 @@ public class ReviewUpdateRequestFactory {
 
 	public static ReviewUpdateRequest createReviewUpdateRequest() {
 		return new ReviewUpdateRequest(
-			"굿굿",
-			5
+			"updatedContent",
+			3
 		);
 	}
 
