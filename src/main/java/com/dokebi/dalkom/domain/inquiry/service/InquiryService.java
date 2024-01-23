@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.inqury.service;
+package com.dokebi.dalkom.domain.inquiry.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
-import com.dokebi.dalkom.domain.inqury.dto.InquiryAnswerRequest;
-import com.dokebi.dalkom.domain.inqury.dto.InquiryCreateRequest;
-import com.dokebi.dalkom.domain.inqury.dto.InquiryListResponse;
-import com.dokebi.dalkom.domain.inqury.dto.InquiryOneResponse;
-import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
-import com.dokebi.dalkom.domain.inqury.repository.InquiryRepository;
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryAnswerRequest;
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryCreateRequest;
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse;
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
+import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
+import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 

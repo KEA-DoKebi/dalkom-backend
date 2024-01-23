@@ -92,7 +92,7 @@ public class ProductStockServiceTest {
 		Long productSeq = 1L;
 		Long prdtOptionSeq = 1L;
 		Integer amountChanged = 15;
-		ProductStock productStock = new ProductStock(null, null, null);
+		ProductStock productStock = ProductStock.createProductStock();
 		productStock.setAmount(10);
 		given(stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq,
 			prdtOptionSeq)).willReturn(
@@ -108,7 +108,7 @@ public class ProductStockServiceTest {
 	@DisplayName("재고 생성 - 정상 작동")
 	void createStockTest() {
 		// given
-		ProductStock stock = new ProductStock(null, null, null);
+		ProductStock stock = ProductStock.createProductStock();
 
 		// when
 		productStockService.createStock(stock);
@@ -124,7 +124,7 @@ public class ProductStockServiceTest {
 		Long productSeq = 1L;
 		Long prdtOptionSeq = 1L;
 		Integer amountChanged = 5;
-		ProductStock productStock = new ProductStock(null, null, null);
+		ProductStock productStock = ProductStock.createProductStock();
 		productStock.setAmount(10);
 		given(stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq,
 			prdtOptionSeq)).willReturn(
@@ -144,7 +144,7 @@ public class ProductStockServiceTest {
 		Long productSeq = 1L;
 		Long prdtOptionSeq = 1L;
 		Integer amountChanged = 15;
-		ProductStock productStock = new ProductStock(null, null, null);
+		ProductStock productStock = ProductStock.createProductStock();
 		productStock.setAmount(10);
 		given(stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq,
 			prdtOptionSeq)).willReturn(
