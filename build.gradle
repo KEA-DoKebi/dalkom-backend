@@ -46,6 +46,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
     implementation 'io.jsonwebtoken:jjwt:0.9.1' // jwt
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+
 }
 
 tasks.named('test') {
