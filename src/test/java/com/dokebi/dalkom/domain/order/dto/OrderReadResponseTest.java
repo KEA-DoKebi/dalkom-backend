@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class OrderReadResponseTest {
 
-	@Test 
+	@Test
 	void createOrderDto() {
 		// Given
 		Long expectedOrdrSeq = 1L;
