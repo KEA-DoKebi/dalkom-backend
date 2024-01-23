@@ -22,17 +22,17 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminController {
 	private final AdminService adminService;
 
+	// ADMIN-005 (관리자 생성)
+	@PostMapping("/api/admin")
+	@ResponseStatus(HttpStatus.OK)
+	public Response createAdmin(@Valid @RequestBody CreateAdminRequest request) {
+		return adminService.createAdmin(request);
+	}
+
 	// ADMIN-006 (관리자 목록 조회)
 	@GetMapping("/api/admin")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readAdminList() {
 		return Response.success(adminService.readAdminList());
-	}
-
-	// ADMIN-005 (관리자 생성)
-	@PostMapping("/api/admin")
-	@ResponseStatus(HttpStatus.OK)
-	public Response createAdmin(@Valid @RequestBody CreateAdminRequest req) {
-		return adminService.createAdmin(req);
 	}
 }

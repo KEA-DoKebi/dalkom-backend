@@ -29,6 +29,7 @@ public class AdminService {
 			AdminDto adminDto = AdminDto.toDto(admin);
 			adminDtoList.add(adminDto);
 		}
+
 		return adminDtoList;
 	}
 
@@ -43,6 +44,7 @@ public class AdminService {
 		} catch (UserNicknameAlreadyExistsException e) {
 			return Response.failure(0, e.getMessage());
 		}
+
 		return Response.success();
 	}
 

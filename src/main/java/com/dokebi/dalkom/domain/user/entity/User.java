@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
-import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
+import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.order.entity.Order;
