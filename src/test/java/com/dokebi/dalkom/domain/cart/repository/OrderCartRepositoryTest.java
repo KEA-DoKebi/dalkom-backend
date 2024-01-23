@@ -44,6 +44,5 @@ public class OrderCartRepositoryTest {
 
 		// Then
 		assertEquals(responsePage, orderCartReadResponsePage);
-
 	}
 }
