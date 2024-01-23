@@ -14,8 +14,10 @@ import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
+import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
@@ -154,6 +156,17 @@ public class OrderService {
 					order.getReceiverMemo(),
 					order.getTotalPrice()))
 			.collect(Collectors.toList());
+	}
+
+	// 주문 상태 수정
+	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
+		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
+
+		// 상태 변경
+		order.setOrderState(request.getOrderState());
+
+		// db 저장
+		orderRepository.save(order);
 	}
 
 	private Integer calculateProductPrice(OrderCreateRequest request, int i) {

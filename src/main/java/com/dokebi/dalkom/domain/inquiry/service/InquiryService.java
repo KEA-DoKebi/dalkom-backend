@@ -1,7 +1,6 @@
 package com.dokebi.dalkom.domain.inquiry.service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,32 +26,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class InquiryService {
-
 	private final InquiryRepository inquiryRepository;
 	private final CategoryService categoryService;
 	private final UserService userService;
 
 	@Transactional
-	public List<InquiryListResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
-
-		return inquiryRepository.findInquiryListByUser(userSeq, pageable);
-	}
-
-	@Transactional
-	public Page<InquiryListResponse> readInquiryListByCategory(Long categorySeq, Pageable pageable) {
-
-		return inquiryRepository.findInquiryListByCategory(categorySeq, pageable);
-	}
-
-	@Transactional
-	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-
-		return inquiryRepository.findInquiryOne(inquirySeq);
-	}
-
-	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
-
 		User user = userService.readUserByUserSeq(userSeq);
 		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), "N");
@@ -60,12 +39,25 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public void answerInquiry(Long inquirySeq, InquiryAnswerRequest request) {
+	public Page<InquiryListResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
+		return inquiryRepository.findInquiryListByUser(userSeq, pageable);
+	}
 
+	@Transactional
+	public Page<InquiryListResponse> readInquiryListByCategory(Long categorySeq, Pageable pageable) {
+		return inquiryRepository.findInquiryListByCategory(categorySeq, pageable);
+	}
+
+	@Transactional
+	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
+		return inquiryRepository.findInquiryOne(inquirySeq);
+	}
+
+	@Transactional
+	public void answerInquiry(Long inquirySeq, InquiryAnswerRequest request) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq);
 		inquiry.setAnswerContent(request.getAnswerContent());
-		inquiry.setAnswerState(request.getAnswerState());
+		inquiry.setAnswerState("Y");
 		inquiry.setAnsweredAt(LocalDateTime.now());
-		inquiryRepository.save(inquiry);
 	}
 }

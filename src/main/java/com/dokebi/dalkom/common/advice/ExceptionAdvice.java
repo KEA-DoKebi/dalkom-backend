@@ -2,6 +2,7 @@ package com.dokebi.dalkom.common.advice;
 
 import javax.management.InvalidApplicationException;
 
+import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +19,6 @@ import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.notice.exception.NoticeNotFoundException;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
-import com.dokebi.dalkom.domain.order.exception.OrderStockLackException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
@@ -117,11 +117,11 @@ public class ExceptionAdvice {
 	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
 	// 	return Response.failure(-1009,e.getHeaderName()+"요청 헤더가 누락되었습니다.");
 
-	@ExceptionHandler(OrderStockLackException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	public Response orderStockLackException() {
+	@ExceptionHandler( OrderNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response orderNotFoundException() {
 
-		return Response.failure(-1300, "재고가 부족합니다.");
+		return Response.failure(-1300, "주문을 찾을수 없습니다.");
 	}
 
 	// 상품
