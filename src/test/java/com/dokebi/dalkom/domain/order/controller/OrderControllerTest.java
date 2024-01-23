@@ -1,31 +1,28 @@
 package com.dokebi.dalkom.domain.order.controller;
 
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
-import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory;
-import com.dokebi.dalkom.domain.order.factory.OrderPageDetailDtoFactory;
 import com.dokebi.dalkom.domain.order.service.OrderService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,37 +33,43 @@ public class OrderControllerTest {
 	OrderService orderService;
 
 	MockMvc mockMvc;
-	@Mock
-	private ObjectMapper objectMapper;
-
 
 	@BeforeEach
 	void beforeEach() {
-		mockMvc = MockMvcBuilders.standaloneSetup(orderController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(orderController)
+			.setCustomArgumentResolvers(new HandlerMethodArgumentResolver() {
+				@Override
+				public boolean supportsParameter(MethodParameter parameter) {
+					return parameter.hasParameterAnnotation(LoginUser.class);
+				}
+
+				@Override
+				public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+					NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+					return 1L; // 여기서는 userSeq를 1L로 가정
+				}
+			})
+			.build();
 	}
 
 	// ORDER-001(사용자별 주문 조회) 테스트
 	@Test
 	void readOrdersByUserSeqTest() throws Exception {
-		// given(준비)
-		Long userSeq = 1L;
+		// Given (준비)
 
-		// when(실행)
-		mockMvc.perform(
-				get("/api/order/user/{userSeq}", userSeq))
+		// When (실행)
+		mockMvc.perform(get("/api/order/user"))
 			.andExpect(status().isOk());
 
-		//검증
-		verify(orderService).readOrderByUserSeq(userSeq);
+		// 검증
+		verify(orderService).readOrderByUserSeq(1L); // 여기서는 userSeq를 1L로 가정
 
 	}
-
-
 
 	// ORDER-003(특정 주문 조회) 테스트
 	@Test
 	void readOrderByOrderSeqTest() throws Exception {
-		Long orderSeq = 1L ;
+		Long orderSeq = 1L;
 
 		// when(실행)
 		mockMvc.perform(
@@ -83,8 +86,8 @@ public class OrderControllerTest {
 	void readOrdersTest() throws Exception {
 
 		mockMvc.perform(
-			get("/api/order"))
-				.andExpect(status().isOk());
+				get("/api/order"))
+			.andExpect(status().isOk());
 	}
 
 	// // ORDER-005(결제 하기) 테스트
