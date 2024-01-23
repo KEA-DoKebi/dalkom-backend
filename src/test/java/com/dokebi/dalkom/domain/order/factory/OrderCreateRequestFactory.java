@@ -13,9 +13,9 @@ public class OrderCreateRequestFactory {
 			"123 Main St",
 			"555-1234",
 			"Some memo",
-			Collections.singletonList(1L),
-			Collections.singletonList(2L),
-			Collections.singletonList(3)
+			Collections.singletonList(1L), // productSeqList
+			Collections.singletonList(2L), // prdtOptionSeqList
+			Collections.singletonList(3)  // amountList
 		);
 	}
 
