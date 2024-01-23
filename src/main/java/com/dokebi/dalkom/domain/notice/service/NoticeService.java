@@ -1,8 +1,9 @@
 package com.dokebi.dalkom.domain.notice.service;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,9 +36,9 @@ public class NoticeService {
 	}
 
 	@Transactional
-	public List<NoticeListResponse> readNoticeList() {
+	public Page<NoticeListResponse> readNoticeList(Pageable pageable) {
 
-		return noticeRepository.findNoticeList();
+		return noticeRepository.findNoticeList(pageable);
 	}
 
 	@Transactional

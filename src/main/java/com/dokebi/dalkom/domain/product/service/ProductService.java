@@ -1,8 +1,9 @@
 package com.dokebi.dalkom.domain.product.service;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,9 +62,20 @@ public class ProductService {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
-	public List<ProductByCategoryResponse> readProductListByCategory(Long categorySeq) {
+	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
 
-		List<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq);
+		Page<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq, pageable);
+		if (productList == null || productList.isEmpty()) {
+			throw new ProductNotFoundException();
+		}
+
+		return productList;
+	}
+
+	public Page<ProductByCategoryResponse> readProductListByCategoryDetail(Long categorySeq, Pageable pageable) {
+
+		Page<ProductByCategoryResponse> productList = productRepository.findProductsByCategoryDetail(categorySeq,
+			pageable);
 		if (productList == null || productList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
@@ -89,9 +101,9 @@ public class ProductService {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
-	public List<ReadProductResponse> readProductList() {
+	public Page<ReadProductResponse> readProductList(Pageable pageable) {
 
-		return productRepository.findProductList();
+		return productRepository.findProductList(pageable);
 	}
 
 }

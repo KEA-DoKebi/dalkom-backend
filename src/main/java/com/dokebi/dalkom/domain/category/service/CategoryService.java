@@ -30,12 +30,7 @@ public class CategoryService {
 		return categoryRepository.findSubCategoryList(categorySeq);
 	}
 
-	public Category readCategoryByCategorySeq(Long categorySeq) {
-		return readCategoryBySeq(categorySeq);
-	}
-
-	@Transactional
 	public Category readCategoryBySeq(Long categorySeq) {
-		return categoryRepository.findById(categorySeq).orElseThrow(CategoryNotFoundException::new);
+		return categoryRepository.findByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
 	}
 }

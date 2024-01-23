@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.notice.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,8 +65,8 @@ public class NoticeController {
 	// NOTICE-005 (공지 전체 조회)
 	@GetMapping("/api/notice")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readNoticeList() {
+	public Response readNoticeList(Pageable pageable) {
 
-		return Response.success(noticeService.readNoticeList());
+		return Response.success(noticeService.readNoticeList(pageable));
 	}
 }

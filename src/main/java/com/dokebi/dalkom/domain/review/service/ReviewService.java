@@ -1,8 +1,9 @@
 package com.dokebi.dalkom.domain.review.service;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,15 +33,15 @@ public class ReviewService {
 	private final OrderDetailService orderDetailService;
 
 	@Transactional
-	public List<ReviewByProductResponse> readReviewListByProduct(Long productSeq) {
+	public Page<ReviewByProductResponse> readReviewListByProduct(Long productSeq, Pageable pageable) {
 
-		return reviewRepository.findReviewListByProduct(productSeq);
+		return reviewRepository.findReviewListByProduct(productSeq, pageable);
 	}
 
 	@Transactional
-	public List<ReviewByUserResponse> readReviewListByUser(Long userSeq) {
+	public Page<ReviewByUserResponse> readReviewListByUser(Long userSeq, Pageable pageable) {
 
-		return reviewRepository.findReviewListByUser(userSeq);
+		return reviewRepository.findReviewListByUser(userSeq, pageable);
 	}
 
 	@Transactional

@@ -3,6 +3,8 @@ package com.dokebi.dalkom.domain.inquiry.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,19 +34,19 @@ public class InquiryService {
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
-		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
+		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), "N");
 		inquiryRepository.save(inquiry);
 	}
 
 	@Transactional
-	public List<InquiryListResponse> readInquiryListByUser(Long userSeq) {
-		return inquiryRepository.findInquiryListByUser(userSeq);
+	public List<InquiryListResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
+		return inquiryRepository.findInquiryListByUser(userSeq, pageable);
 	}
 
 	@Transactional
-	public List<InquiryListResponse> readInquiryListByCategory(Long categorySeq) {
-		return inquiryRepository.findInquiryListByCategory(categorySeq);
+	public Page<InquiryListResponse> readInquiryListByCategory(Long categorySeq, Pageable pageable) {
+		return inquiryRepository.findInquiryListByCategory(categorySeq, pageable);
 	}
 
 	@Transactional

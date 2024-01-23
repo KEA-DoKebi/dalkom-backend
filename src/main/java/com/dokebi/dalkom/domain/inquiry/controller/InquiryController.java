@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.inquiry.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,15 +36,15 @@ public class InquiryController {
 	// INQUIRY-002 (유저별 문의 조회)
 	@GetMapping("/api/inquiry/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readInquiryByUser(@LoginUser Long userSeq) {
-		return Response.success(inquiryService.readInquiryListByUser(userSeq));
+	public Response readInquiryByUser(@LoginUser Long userSeq, Pageable pageable) {
+		return Response.success(inquiryService.readInquiryListByUser(userSeq, pageable));
 	}
 
-	// INQUIRY-003 (카테고리 별 문의 조회)
+	// INQUIRY-003 (문의 카테고리 별 문의 조회)
 	@GetMapping("/api/inquiry/category/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readInquiryByCategory(@PathVariable Long categorySeq) {
-		return Response.success(inquiryService.readInquiryListByCategory(categorySeq));
+	public Response readInquiryByCategory(@PathVariable Long categorySeq, Pageable pageable) {
+		return Response.success(inquiryService.readInquiryListByCategory(categorySeq, pageable));
 	}
 
 	// INQUIRY-005 (특정 문의 조회)
