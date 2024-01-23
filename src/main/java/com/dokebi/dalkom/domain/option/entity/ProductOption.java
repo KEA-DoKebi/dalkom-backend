@@ -48,4 +48,8 @@ public class ProductOption extends EntityDate {
 		this.name = name;
 		this.detail = detail;
 	}
+
+	public static ProductOption createProductOption() {
+		return new ProductOption();
+	}
 }
