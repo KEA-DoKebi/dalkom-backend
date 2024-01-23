@@ -5,7 +5,9 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -27,10 +29,13 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.review.dto.ReviewByProductResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewCreateRequest;
+import com.dokebi.dalkom.domain.review.dto.ReviewUpdateRequest;
 import com.dokebi.dalkom.domain.review.entity.Review;
+import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.review.factory.ReviewByProductResponseFactory;
 import com.dokebi.dalkom.domain.review.factory.ReviewByUserResponseFactory;
 import com.dokebi.dalkom.domain.review.factory.ReviewCreateRequestFactory;
+import com.dokebi.dalkom.domain.review.factory.ReviewUpdateRequestFactory;
 import com.dokebi.dalkom.domain.review.repository.ReviewRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -48,12 +53,9 @@ public class ReviewServiceTest {
 	private OrderDetailService orderDetailService;
 	@Captor
 	private ArgumentCaptor<Review> reviewArgumentCaptor;
-	@Captor
-	private ArgumentCaptor<Long> reviewSeqCaptor;
 
 	@Test
 	void createReviewTest() {
-
 		// Given
 		Long userSeq = 1L;
 		ReviewCreateRequest request = ReviewCreateRequestFactory.createReviewCreateRequest();
@@ -130,4 +132,57 @@ public class ReviewServiceTest {
 		assertEquals(responseList, reviewByUserResponsePage.getContent());
 	}
 
+	@Test
+	void updateReviewTest() {
+		// Given
+		User user = new User("empId", "pwd", "name", "email", "address", "joinedAt", "nickname", 1000);
+		OrderDetail orderDetail = new OrderDetail();
+		Review review = new Review(user, orderDetail, "content", 5);
+
+		ReviewUpdateRequest request = ReviewUpdateRequestFactory.createReviewUpdateRequest();
+
+		Long reviewSeq = 1L;
+		when(reviewRepository.findByReviewSeq(reviewSeq)).thenReturn(review);
+
+		// When
+		reviewService.updateReview(reviewSeq, request);
+
+		// Then
+		verify(reviewRepository).findByReviewSeq(reviewSeq);
+		verify(reviewRepository).save(any(Review.class));
+		assertEquals("updatedContent", review.getContent());
+		assertEquals(3, review.getRating());
+	}
+
+	@Test
+	@DisplayName("리뷰 삭제 - 성공")
+	void deleteReviewSuccessTest() {
+		// Given
+		Long reviewSeq = 1L;
+		User user = new User("empId", "pwd", "name", "email", "address", "joinedAt", "nickname", 1000);
+		OrderDetail orderDetail = new OrderDetail();
+		Review review = new Review(user, orderDetail, "content", 5);
+
+		when(reviewRepository.findById(reviewSeq)).thenReturn(Optional.of(review));
+
+		// When
+		reviewService.deleteReview(reviewSeq);
+
+		// Then
+		verify(reviewRepository).deleteById(reviewSeq);
+	}
+
+	@Test
+	@DisplayName("리뷰 삭제 - 실패 (리뷰를 찾을 수 없음)")
+	void deleteReviewFailTest() {
+		// Given
+		Long reviewSeq = 1L;
+		when(reviewRepository.findById(reviewSeq)).thenReturn(Optional.empty());
+
+		// When
+		assertThrows(ReviewNotFoundException.class, () -> reviewService.deleteReview(reviewSeq));
+
+		// Then
+		verify(reviewRepository, never()).deleteById(anyLong());
+	}
 }
