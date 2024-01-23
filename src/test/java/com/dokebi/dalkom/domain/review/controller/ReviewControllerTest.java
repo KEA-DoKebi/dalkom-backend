@@ -38,7 +38,7 @@ public class ReviewControllerTest {
 	private MockMvc mockMvc;
 
 	@BeforeEach
-	void setUp() {
+	void beforeEach() {
 		mockMvc = MockMvcBuilders.standaloneSetup(reviewController)
 			.setCustomArgumentResolvers(new HandlerMethodArgumentResolver() {
 				@Override
