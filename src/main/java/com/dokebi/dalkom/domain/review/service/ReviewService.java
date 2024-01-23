@@ -58,7 +58,7 @@ public class ReviewService {
 
 		Review review = reviewRepository.findByReviewSeq(reviewSeq);
 		review.setContent(request.getContent());
-		review.setRating(review.getRating());
+		review.setRating(request.getRating());
 		reviewRepository.save(review);
 	}
 
