@@ -1,10 +1,5 @@
 package com.dokebi.dalkom.domain.order.service;
 
-import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
-import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +17,12 @@ import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
-@ExtendWith(MockitoExtension.class)
+import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
+import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class OrderServiceTest {
 	@InjectMocks
 	private OrderService orderService;
@@ -117,5 +116,4 @@ public class OrderServiceTest {
 	void readOrderByUserSeq() {
 
 	}
-
 }
