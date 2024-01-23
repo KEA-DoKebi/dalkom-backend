@@ -25,32 +25,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class InquiryService {
-
 	private final InquiryRepository inquiryRepository;
 	private final CategoryService categoryService;
 	private final UserService userService;
 
 	@Transactional
-	public List<InquiryListResponse> readInquiryListByUser(Long userSeq) {
-
-		return inquiryRepository.findInquiryListByUser(userSeq);
-	}
-
-	@Transactional
-	public List<InquiryListResponse> readInquiryListByCategory(Long categorySeq) {
-
-		return inquiryRepository.findInquiryListByCategory(categorySeq);
-	}
-
-	@Transactional
-	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-
-		return inquiryRepository.findInquiryOne(inquirySeq);
-	}
-
-	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
-
 		User user = userService.readUserByUserSeq(userSeq);
 		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), "N");
@@ -58,12 +38,25 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public void answerInquiry(Long inquirySeq, InquiryAnswerRequest request) {
+	public List<InquiryListResponse> readInquiryListByUser(Long userSeq) {
+		return inquiryRepository.findInquiryListByUser(userSeq);
+	}
 
+	@Transactional
+	public List<InquiryListResponse> readInquiryListByCategory(Long categorySeq) {
+		return inquiryRepository.findInquiryListByCategory(categorySeq);
+	}
+
+	@Transactional
+	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
+		return inquiryRepository.findInquiryOne(inquirySeq);
+	}
+
+	@Transactional
+	public void answerInquiry(Long inquirySeq, InquiryAnswerRequest request) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq);
 		inquiry.setAnswerContent(request.getAnswerContent());
-		inquiry.setAnswerState(request.getAnswerState());
+		inquiry.setAnswerState("Y");
 		inquiry.setAnsweredAt(LocalDateTime.now());
-		inquiryRepository.save(inquiry);
 	}
 }

@@ -25,15 +25,15 @@ public class InquiryController {
 	private final InquiryService inquiryService;
 
 	// INQUIRY-001 (문의 등록)
-	@PostMapping("api/inquiry/user")
+	@PostMapping("/api/inquiry/user")
 	public Response createInquiry(@LoginUser Long userSeq,
 		@Valid @RequestBody InquiryCreateRequest request) {
 		inquiryService.createInquiry(userSeq, request);
 		return Response.success();
 	}
 
-	// INQUIRY-002 (특정 유저의 문의 조회)
-	@GetMapping("api/inquiry/user")
+	// INQUIRY-002 (유저별 문의 조회)
+	@GetMapping("/api/inquiry/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readInquiryByUser(@LoginUser Long userSeq) {
 		return Response.success(inquiryService.readInquiryListByUser(userSeq));

@@ -2,12 +2,15 @@ package com.dokebi.dalkom.domain.inquiry.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class InquiryCreateRequest {
@@ -21,5 +24,6 @@ public class InquiryCreateRequest {
 	private String content;
 
 	@NotNull(message = "InquiryCreateRequest categorySeq NotNull 에러")
+	@PositiveOrZero(message = "InquiryCreateRequest categorySeq PositiveOrZero 에러")
 	private Long categorySeq;
 }
