@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.review.controller;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -8,11 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -38,21 +42,29 @@ public class ReviewControllerTest {
 	private ReviewService reviewService;
 	private MockMvc mockMvc;
 
-	@BeforeEach
-	void beforeEach() {
-		mockMvc = MockMvcBuilders.standaloneSetup(reviewController)
-			.setCustomArgumentResolvers(new HandlerMethodArgumentResolver() {
-				@Override
-				public boolean supportsParameter(MethodParameter parameter) {
-					return parameter.hasParameterAnnotation(LoginUser.class);
-				}
+	@Captor
+	private ArgumentCaptor<Pageable> pageableCaptor;
 
-				@Override
-				public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-					NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-					return 1L; // 여기서는 userSeq를 1L로 가정하고 직접 제공
+	@BeforeEach
+	void setUp() {
+		this.mockMvc = MockMvcBuilders
+			.standaloneSetup(reviewController)
+			.setCustomArgumentResolvers(
+				new PageableHandlerMethodArgumentResolver(),
+				new HandlerMethodArgumentResolver() {
+					@Override
+					public boolean supportsParameter(MethodParameter parameter) {
+						return parameter.getParameterType().equals(Long.class) &&
+							parameter.hasParameterAnnotation(LoginUser.class);
+					}
+
+					@Override
+					public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+						NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+						return 1L; // 여기서는 userSeq를 1L로 가정하고 직접 제공
+					}
 				}
-			})
+			)
 			.build();
 	}
 
@@ -75,12 +87,19 @@ public class ReviewControllerTest {
 
 		// When, Then
 		mockMvc.perform(get("/api/review/product/{productSeq}", productSeq)
-				.param("page", String.valueOf(page))
-				.param("size", String.valueOf(size))
-				.param("sort", sort))
+				.param("page", "0")
+				.param("size", "10")
+				.param("sort", "orderSeq,desc"))
 			.andExpect(status().isOk());
 
-		verify(reviewService).readReviewListByProduct(productSeq, any(Pageable.class));
+		// verify를 사용하여 실제 호출 포착
+		verify(reviewService).readReviewListByProduct(eq(productSeq), pageableCaptor.capture());
+
+		// 포착된 Pageable 객체의 속성 검증
+		Pageable pageable = pageableCaptor.getValue();
+		assertEquals(page, pageable.getPageNumber());
+		assertEquals(size, pageable.getPageSize());
+		assertTrue(pageable.getSort().getOrderFor("orderSeq").isDescending());
 	}
 
 	@Test
@@ -92,7 +111,7 @@ public class ReviewControllerTest {
 		int size = 10; // Example pagination parameter
 
 		// When, Then
-		mockMvc.perform(get("/api/review/user/{userSeq}", userSeq)
+		mockMvc.perform(get("/api/review/user", userSeq)
 				.param("page", String.valueOf(page))
 				.param("size", String.valueOf(size)))
 			.andExpect(status().isOk());
@@ -170,3 +189,4 @@ public class ReviewControllerTest {
 		verify(reviewService).deleteReview(reviewSeq);
 	}
 }
+
