@@ -46,7 +46,7 @@ public class ReviewControllerTest {
 	private ArgumentCaptor<Pageable> pageableCaptor;
 
 	@BeforeEach
-	void setUp() {
+	void beforeEach() {
 		this.mockMvc = MockMvcBuilders
 			.standaloneSetup(reviewController)
 			.setCustomArgumentResolvers(
@@ -89,7 +89,7 @@ public class ReviewControllerTest {
 		mockMvc.perform(get("/api/review/product/{productSeq}", productSeq)
 				.param("page", "0")
 				.param("size", "10")
-				.param("sort", "orderSeq,desc"))
+				.param("sort", "orderSeq, desc"))
 			.andExpect(status().isOk());
 
 		// verify를 사용하여 실제 호출 포착
