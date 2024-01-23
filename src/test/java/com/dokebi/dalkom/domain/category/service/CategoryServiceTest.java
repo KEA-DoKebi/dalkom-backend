@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.dto.SubCategoryResponse;
-import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
 
@@ -29,10 +28,10 @@ public class CategoryServiceTest {
 	private CategoryRepository categoryRepository;
 
 	@Test
-	void readCategoryListTest(){
+	void readCategoryListTest() {
 		List<CategoryResponse> fakeCategories = Arrays.asList(
-			createCategoryResponse(1L, "의류","image.url"),
-			createCategoryResponse(2L, "음식","image.url")
+			createCategoryResponse(1L, "의류", "image.url"),
+			createCategoryResponse(2L, "음식", "image.url")
 		);
 
 		// Mock 객체에 대한 행동 정의
@@ -49,17 +48,16 @@ public class CategoryServiceTest {
 	void readSubCategoryListTest() {
 		Long categorySeq = 1L;
 		List<SubCategoryResponse> subFakeCategories = Arrays.asList(
-			createSubCategoryResponse(categorySeq,"여성 의류"),
-			createSubCategoryResponse(categorySeq,"남성 의류")
+			createSubCategoryResponse(categorySeq, "여성 의류"),
+			createSubCategoryResponse(categorySeq, "남성 의류")
 		);
 		when(categoryService.readSubCategoryList(categorySeq)).thenReturn(subFakeCategories);
 
 		List<SubCategoryResponse> subCategoryResponses = categoryService.readSubCategoryList(categorySeq);
 
-		assertEquals(subFakeCategories.size(),subCategoryResponses.size());
+		assertEquals(subFakeCategories.size(), subCategoryResponses.size());
 
 	}
-
 
 	@Test
 	void readCategoryBySeqNotFoundTest() {

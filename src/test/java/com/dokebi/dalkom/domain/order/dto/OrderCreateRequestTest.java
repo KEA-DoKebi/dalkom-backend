@@ -15,8 +15,6 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.dokebi.dalkom.domain.cart.factory.OrderCartCreateRequestFactory;
-
 public class OrderCreateRequestTest {
 	private Validator validator;
 

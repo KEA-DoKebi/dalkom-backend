@@ -67,4 +67,15 @@ public class Order extends EntityDate {
 		this.totalPrice = totalPrice;
 		this.orderState = "배송준비중";
 	}
+
+	public Order(Long ordrSeq, String receiverName, String receiverAddress, String receiverMobileNum,
+		String receiverMemo,
+		Integer totalPrice) {
+		this.ordrSeq = ordrSeq;
+		this.receiverName = receiverName;
+		this.receiverAddress = receiverAddress;
+		this.receiverMobileNum = receiverMobileNum;
+		this.receiverMemo = receiverMemo;
+		this.totalPrice = totalPrice;
+	}
 }
