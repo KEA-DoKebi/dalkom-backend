@@ -159,7 +159,7 @@ public class OrderService {
 	}
 
 	// 주문 상태 수정
-	public void updateOrderState(Long orderSeq,OrderStateUpdateRequest request){
+	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
 		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
 
 		// 상태 변경
@@ -167,8 +167,6 @@ public class OrderService {
 
 		// db 저장
 		orderRepository.save(order);
-
-
 	}
 
 	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
