@@ -1,9 +1,9 @@
 package com.dokebi.dalkom.domain.cart.service;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dokebi.dalkom.domain.cart.dto.OrderCartCreateRequest;
@@ -36,8 +36,8 @@ public class OrderCartService {
 		orderCartRepository.save(orderCart);
 	}
 
-	public List<OrderCartReadResponse> readOrderCartList(Long userSeq) {
-		return orderCartRepository.findOrderCartList(userSeq);
+	public Page<OrderCartReadResponse> readOrderCartList(Long userSeq, Pageable pageable) {
+		return orderCartRepository.findOrderCartList(userSeq, pageable);
 	}
 
 	@Transactional

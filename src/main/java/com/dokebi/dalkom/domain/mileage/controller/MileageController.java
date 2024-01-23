@@ -27,7 +27,7 @@ public class MileageController {
 	}
 
 	// MILEAGE-002 (특정 유저 마일리지 내역 조회)
-	@GetMapping("/api/mileage/history/user/{userSeq}")
+	@GetMapping("/api/mileage/history/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageHistoryByUserSeq(@LoginUser Long userSeq) {
 
