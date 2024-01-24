@@ -53,7 +53,7 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	@DisplayName("상위 카테고리 별 상품 목록 조회 (PRODUCTS-001)")
+	@DisplayName("상위 카테고리 별 상품 목록 조회 (PRODUCT-001)")
 	public void readProductListByCategoryTest() throws Exception {
 		// Given
 		Long categorySeq = 1L;
@@ -70,7 +70,7 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	@DisplayName("상품 상세 정보 조회 (PRODUCTS-002)")
+	@DisplayName("상품 상세 정보 조회 (PRODUCT-002)")
 	public void readProductTest() throws Exception {
 		// Given
 		Long productSeq = 1L;
@@ -82,7 +82,7 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	@DisplayName("상품 정보 추가 (PRODUCTS-003)")
+	@DisplayName("상품 정보 추가 (PRODUCT-003)")
 	public void createProductTest() throws Exception {
 		// Given
 		ProductCreateRequest productCreateRequest = createProductCreateRequest();
@@ -110,7 +110,7 @@ public class ProductControllerTest {
 	}
 
 	@Test
-	@DisplayName("하위 카테고리 별 상품 목록 조회 (PRODUCTS-005)")
+	@DisplayName("하위 카테고리 별 상품 목록 조회 (PRODUCT-005)")
 	public void readProductListByCategoryDetailTest() throws Exception {
 		// Given
 		Long categorySeq = 1L;
