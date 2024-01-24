@@ -69,7 +69,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response memberNotFoundException() {
-
 		return Response.failure(-1001, "요청한 회원을 찾을 수 없습니다.");
 	}
 
@@ -90,19 +89,19 @@ public class ExceptionAdvice {
 	@ExceptionHandler(LoginFailureException.class)
 	@ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
 	public Response loginFailureException() {
-		return Response.failure(-1004, "로그인에 실패하였습니다.");
+		return Response.failure(-1100, "로그인에 실패하였습니다.");
 	}
 
 	@ExceptionHandler(UserEmailAlreadyExistsException.class)
 	@ResponseStatus(HttpStatus.CONFLICT) // 409
 	public Response userEmailAlreadyExistsException(UserEmailAlreadyExistsException e) { // 4
-		return Response.failure(-1005, e.getMessage() + "은 중복된 이메일 입니다.");
+		return Response.failure(-1101, e.getMessage() + "은 중복된 이메일 입니다.");
 	}
 
 	@ExceptionHandler(UserNicknameAlreadyExistsException.class)
 	@ResponseStatus(HttpStatus.CONFLICT) // 409
 	public Response userNicknameAlreadyExistsException(UserNicknameAlreadyExistsException e) {
-		return Response.failure(-1006, e.getMessage() + "은 중복된 닉네임 입니다.");
+		return Response.failure(-1102, e.getMessage() + "은 중복된 닉네임 입니다.");
 	}
 	//
 	// @ExceptionHandler (UserNotFoundException.class)
@@ -122,6 +121,20 @@ public class ExceptionAdvice {
 	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
 	// 	return Response.failure(-1009,e.getHeaderName()+"요청 헤더가 누락되었습니다.");
 
+	// 상품
+	@ExceptionHandler(ProductNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response productNotFoundException() {
+		return Response.failure(-1200, "요청한 상품을 찾을 수 없습니다.");
+	}
+
+	@ExceptionHandler(InvalidProductInputException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response invalidProductInputException() {
+		return Response.failure(-1201, "입력값이 잘못되었습니다.");
+	}
+
+	// 주문
 	@ExceptionHandler(OrderNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderNotFoundException() {
@@ -129,28 +142,10 @@ public class ExceptionAdvice {
 		return Response.failure(-1300, "주문을 찾을수 없습니다.");
 	}
 
-	// 상품
-	@ExceptionHandler(ProductNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response productNotFoundException() {
-
-		return Response.failure(-1200, "요청한 상품을 찾을 수 없습니다.");
-	}
-
-	@ExceptionHandler(InvalidProductInputException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	public Response invalidProductInputException() {
-
-		return Response.failure(-1201, "입력값이 잘못되었습니다.");
-	}
-
-	// 주문
-
 	// 마일리지 (1400)
 	@ExceptionHandler(MileageLackException.class)
 	@ResponseStatus(HttpStatus.PAYMENT_REQUIRED) // 402
 	public Response mileageLackException() {
-
 		return Response.failure(-1400, "마일리지가 부족합니다.");
 	}
 
@@ -172,7 +167,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderCartEmptyResultDataAccessException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderCartEmptyResultDataAccessException() {
-
 		return Response.failure(-1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
 	}
 
@@ -180,14 +174,12 @@ public class ExceptionAdvice {
 	@ExceptionHandler(InvalidApplicationException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
 	public Response invalidAmountException() {
-
 		return Response.failure(-1600, "잘못된 입력값입니다.");
 	}
 
 	@ExceptionHandler(NotEnoughStockException.class)
 	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
 	public Response notEnoughStockException() {
-
 		return Response.failure(-1601, "재고가 부족합니다.");
 	}
 
@@ -201,7 +193,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(ProductOptionNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response productOptionNotFoundException() {
-
 		return Response.failure(-1700, "옵션을 찾을 수 없습니다.");
 	}
 
@@ -224,7 +215,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(CategoryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response CategoryNotFoundException() {
-
 		return Response.failure(-1900, "카테고리를 찾을 수 없습니다.");
 	}
 
