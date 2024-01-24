@@ -1,8 +1,11 @@
 package com.dokebi.dalkom.domain.stock.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.entity.ProductStockHistory;
 import com.dokebi.dalkom.domain.stock.exception.InvalidAmountException;
@@ -67,5 +70,9 @@ public class ProductStockService {
 		if (stock.getAmount() - amountChanged < 0) {
 			throw new NotEnoughStockException();
 		}
+	}
+
+	public List<StockListDto> readStockListDtoByProductSeq(Long productSeq) {
+		return stockRepository.findStockListDtoByProductSeq(productSeq);
 	}
 }

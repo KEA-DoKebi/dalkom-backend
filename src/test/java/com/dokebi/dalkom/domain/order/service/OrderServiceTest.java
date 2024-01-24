@@ -79,7 +79,7 @@ class OrderServiceTest {
 
 		given(mockProduct.getPrice()).willReturn(10000);
 		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
-		given(productService.readByProductSeq(anyLong())).willReturn(mockProduct);
+		given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
 		doNothing().when(mileageService).createMileageHistoryAndUpdateUser(any(), anyInt(), anyString());
 		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
 			new ProductOption(2L, "OP1", "의류 사이즈", "M"));
@@ -102,7 +102,7 @@ class OrderServiceTest {
 
 		given(mockProduct.getPrice()).willReturn(10000);
 		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
-		given(productService.readByProductSeq(anyLong())).willReturn(mockProduct);
+		given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
 
 		// when, then
 		assertThrows(MileageLackException.class, () -> orderService.createOrder(request));

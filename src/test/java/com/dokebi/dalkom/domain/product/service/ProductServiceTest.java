@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
@@ -20,45 +22,42 @@ import org.springframework.data.domain.PageRequest;
 
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
+import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
-import com.dokebi.dalkom.domain.option.dto.OptionListDto;
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
-import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 
 public class ProductServiceTest {
-
+	@InjectMocks
+	private ProductService productService;
 	@Mock
 	private ProductRepository productRepository;
-
 	@Mock
 	private ProductStockService productStockService;
-
 	@Mock
 	private CategoryService categoryService;
-
 	@Mock
 	private ProductOptionService productOptionService;
 
-	private ProductService productService;
-
 	@BeforeEach
-	public void setup() {
+	public void beforeEach() {
 		MockitoAnnotations.openMocks(this);
 		productService = new ProductService(productRepository, productStockService, categoryService,
 			productOptionService);
 	}
 
-	// 상품 정보 추가
 	@Test
+	@DisplayName("상품 정보 추가")
 	public void createProductTest() {
 		// Given: 주어진 상품 생성 요청 데이터
 		ProductCreateRequest request = createProductCreateRequest();
@@ -76,8 +75,8 @@ public class ProductServiceTest {
 		then(productRepository).should().save(any(Product.class));
 	}
 
-	// 상품 상세 정보 조회
 	@Test
+	@DisplayName("상품 상세 정보 조회")
 	public void readProductByProductSeqTest() {
 		// Given: 주어진 상품 ID
 		Long productSeq = 1L;
@@ -93,8 +92,8 @@ public class ProductServiceTest {
 		assertNotNull(result);
 	}
 
-	// 특정 상품 조회 - 예외 발생
 	@Test
+	@DisplayName("상품 상세 정보 조회 - 예외 발생")
 	public void readProductByProductSeqNotFoundExceptionTest() {
 		// Given: 존재하지 않는 상품 ID
 		Long productSeq = 1L;
@@ -104,8 +103,8 @@ public class ProductServiceTest {
 		assertThrows(ProductNotFoundException.class, () -> productService.readProductByProductSeq(productSeq));
 	}
 
-	// 카테고리 별 상품 목록 조회
 	@Test
+	@DisplayName("카테고리 별 상품 목록 조회")
 	public void readProductListByCategoryTest() {
 		// Given: 카테고리 ID와 페이지 정보
 		Long categorySeq = 1L;
@@ -123,12 +122,13 @@ public class ProductServiceTest {
 		assertThat(result).isNotNull();
 	}
 
-	// 카테고리 별 상품 목록 조회 - 예외 발생
 	@Test
+	@DisplayName("카테고리 별 상품 목록 조회 - 예외 발생")
 	public void readProductListByCategoryNotFoundExceptionTest() {
 		// Given: 존재하지 않는 카테고리 ID
 		Long categorySeq = 1L;
 		PageRequest pageable = PageRequest.of(0, 8);
+
 		given(productRepository.findProductListByCategory(categorySeq, pageable)).willReturn(null);
 
 		// When & Then: 예외가 발생하는지 확인
@@ -136,10 +136,8 @@ public class ProductServiceTest {
 			() -> productService.readProductListByCategory(categorySeq, pageable));
 	}
 
-	// TODO 테스트 수정 필요
-
-	// 카테고리 세부 별 상품 목록 조회
 	@Test
+	@DisplayName("세부 카테고리 별 상품 목록 조회")
 	public void readProductListByCategoryDetailTest() {
 		// Given: 카테고리 세부 ID와 페이지 정보
 		Long categorySeq = 1L;
@@ -147,25 +145,41 @@ public class ProductServiceTest {
 		List<ProductByCategoryDetailResponse> productByCategoryResponseList
 			= createProductByCategoryDetailResponseList();
 
-		given(productRepository.findProductListByCategoryDetail(categorySeq, pageable)).willReturn(
+		given(productRepository.findProductListByDetailCategory(categorySeq, pageable)).willReturn(
 			new PageImpl<>(productByCategoryResponseList, pageable, productByCategoryResponseList.size()));
 
 		// When: 카테고리 세부 별 상품 목록 조회 메서드 실행
 		Page<ProductByCategoryDetailResponse> result
-			= productService.readProductListByCategoryDetail(categorySeq, pageable);
+			= productService.readProductListByDetailCategory(categorySeq, pageable);
 
 		// Then: 반환된 상품 목록 확인
 		assertThat(result).isNotNull();
 	}
 
-	// 상품 상세 정보 조회
 	@Test
+	@DisplayName("세부 카테고리 별 상품 목록 조회 - 예외 발생")
+	public void readProductListByCategoryDetailNotFoundExceptionTest() {
+		// Given: 카테고리 세부 ID와 페이지 정보
+		Long categorySeq = 1L;
+		PageRequest pageable = PageRequest.of(0, 8);
+		List<ProductByCategoryDetailResponse> productByCategoryResponseList
+			= createProductByCategoryDetailResponseList();
+
+		given(productRepository.findProductListByDetailCategory(categorySeq, pageable)).willReturn(null);
+
+		// When & Then: 예외가 발생하는지 확인
+		assertThrows(ProductNotFoundException.class,
+			() -> productService.readProductListByDetailCategory(categorySeq, pageable));
+	}
+
+	@Test
+	@DisplayName("관리자용 상품 리스트 조회")
 	public void readProductTest() {
 		// Given: 상품 ID
 		Long productSeq = 1L;
 		given(productRepository.findProductDetailBySeq(productSeq)).willReturn(new ReadProductDetailDTO());
-		given(productRepository.findStockListBySeq(productSeq)).willReturn(List.of(new StockListDto()));
-		given(productRepository.findOptionListBySeq(productSeq)).willReturn(List.of(new OptionListDto()));
+		given(productStockService.readStockListDtoByProductSeq(productSeq)).willReturn(List.of(new StockListDto()));
+		given(productOptionService.readOptionListDtoByProductSeq(productSeq)).willReturn(List.of(new OptionListDto()));
 		given(productRepository.findProductImageBySeq(productSeq)).willReturn(List.of("imageURL"));
 
 		// When: 상품 상세 정보 조회 메서드 실행
@@ -175,15 +189,30 @@ public class ProductServiceTest {
 		assertThat(result).isNotNull();
 	}
 
+	@Test
+	@DisplayName("관리자용 상품 리스트 조회 - 예외 발생")
+	public void readProductNotFoundExceptionTest() {
+		// Given: 상품 ID
+		Long productSeq = 1L;
+
+		given(productStockService.readStockListDtoByProductSeq(anyLong())).willReturn(null);
+		given(productOptionService.readOptionListDtoByProductSeq(anyLong())).willReturn(null);
+		given(productRepository.findProductImageBySeq(anyLong())).willReturn(null);
+
+		// When & Then: 예외가 발생하는지 확인
+		assertThrows(ProductNotFoundException.class,
+			() -> productService.readProduct(productSeq));
+	}
+
 	// 전체 상품 목록 조회
 	@Test
 	public void readProductListTest() {
 		// Given: 페이지 정보
 		PageRequest pageable = PageRequest.of(0, 8);
-		given(productRepository.findAdminPageProductList(pageable)).willReturn(Page.empty());
+		given(productRepository.findAdminProductList(pageable)).willReturn(Page.empty());
 
 		// When: 전체 상품 목록 조회 메서드 실행
-		Page<ReadProductResponse> result = productService.readAdminPageProductList(pageable);
+		Page<ReadProductResponse> result = productService.readAdminProductList(pageable);
 
 		// Then: 반환된 상품 목록 확인
 		assertThat(result).isNotNull();
