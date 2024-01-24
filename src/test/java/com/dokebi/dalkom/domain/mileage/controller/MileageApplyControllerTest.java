@@ -28,7 +28,7 @@ import com.dokebi.dalkom.domain.mileage.service.MileageApplyService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MileageApplyControllerTest {
+class MileageApplyControllerTest {
 	@InjectMocks
 	MileageApplyController mileageApplyController;
 	@Mock

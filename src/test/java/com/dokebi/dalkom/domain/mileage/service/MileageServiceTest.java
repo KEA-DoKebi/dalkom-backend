@@ -26,7 +26,7 @@ import com.dokebi.dalkom.domain.mileage.repository.MileageHistoryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
-public class MileageServiceTest {
+class MileageServiceTest {
 
 	@InjectMocks
 	private MileageService mileageService;

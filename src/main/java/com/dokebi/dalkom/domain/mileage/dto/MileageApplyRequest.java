@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.mileage.dto;
+
 import javax.validation.constraints.Positive;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

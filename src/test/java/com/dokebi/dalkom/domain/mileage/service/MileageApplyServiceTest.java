@@ -33,8 +33,7 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
-
-public class MileageApplyServiceTest {
+class MileageApplyServiceTest {
 	@InjectMocks
 	private MileageApplyService mileageApplyService;
 

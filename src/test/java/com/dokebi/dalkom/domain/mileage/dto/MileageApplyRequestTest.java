@@ -13,7 +13,7 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MileageApplyRequestTest {
+class MileageApplyRequestTest {
 	private Validator validator;
 
 	@BeforeEach
