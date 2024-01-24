@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.product.service;
 
+import static com.dokebi.dalkom.domain.product.factory.ProductByCategoryDetailResponseFactory.*;
 import static com.dokebi.dalkom.domain.product.factory.ProductByCategoryResponseFactory.*;
 import static com.dokebi.dalkom.domain.product.factory.ProductCreateRequestFactory.*;
 import static org.assertj.core.api.Assertions.*;
@@ -57,7 +58,7 @@ public class ProductServiceTest {
 			productOptionService);
 	}
 
-	// PRODUCTS-001 (상품 생성) 테스트
+	// 상품 정보 추가
 	@Test
 	public void createProductTest() {
 		// Given: 주어진 상품 생성 요청 데이터
@@ -76,7 +77,7 @@ public class ProductServiceTest {
 		then(productRepository).should().save(any(Product.class));
 	}
 
-	// PRODUCTS-002 (특정 상품 조회) 테스트
+	// 상품 상세 정보 조회
 	@Test
 	public void readProductByProductSeqTest() {
 		// Given: 주어진 상품 ID
@@ -93,7 +94,7 @@ public class ProductServiceTest {
 		assertNotNull(result);
 	}
 
-	// PRODUCTS-003 (특정 상품 조회 - 예외 발생) 테스트
+	// 특정 상품 조회 - 예외 발생
 	@Test
 	public void readProductByProductSeqNotFoundExceptionTest() {
 		// Given: 존재하지 않는 상품 ID
@@ -104,7 +105,7 @@ public class ProductServiceTest {
 		assertThrows(ProductNotFoundException.class, () -> productService.readProductByProductSeq(productSeq));
 	}
 
-	// PRODUCTS-004 (카테고리 별 상품 목록 조회) 테스트
+	// 카테고리 별 상품 목록 조회
 	@Test
 	public void readProductListByCategoryTest() {
 		// Given: 카테고리 ID와 페이지 정보
@@ -123,7 +124,7 @@ public class ProductServiceTest {
 		assertThat(result).isNotNull();
 	}
 
-	// PRODUCTS-005 (카테고리 별 상품 목록 조회 - 예외 발생) 테스트
+	// 카테고리 별 상품 목록 조회 - 예외 발생
 	@Test
 	public void readProductListByCategoryNotFoundExceptionTest() {
 		// Given: 존재하지 않는 카테고리 ID
@@ -138,27 +139,27 @@ public class ProductServiceTest {
 
 	// TODO 테스트 수정 필요
 
-	// PRODUCTS-006 (카테고리 세부 별 상품 목록 조회)
-	// @Test
-	// public void readProductListByCategoryTest() {
-	// 	// Given: 카테고리 세부 ID와 페이지 정보
-	// 	Long categorySeq = 1L;
-	// 	PageRequest pageable = PageRequest.of(0, 8);
-	// 	List<ProductByCategoryResponse> productByCategoryResponseList
-	// 		= createProductByCategoryResponseList();
-	//
-	// 	given(productRepository.findProductListByCategory(categorySeq, pageable)).willReturn(
-	// 		new PageImpl<>(productByCategoryResponseList, pageable, productByCategoryResponseList.size()));
-	//
-	// 	// When: 카테고리 세부 별 상품 목록 조회 메서드 실행
-	// 	Page<ProductByCategoryDetailResponse> result
-	// 		= productService.readProductListByCategoryDetail(categorySeq, pageable);
-	//
-	// 	// Then: 반환된 상품 목록 확인
-	// 	assertThat(result).isNotNull();
-	// }
+	// 카테고리 세부 별 상품 목록 조회
+	@Test
+	public void readProductListByCategoryDetailTest() {
+		// Given: 카테고리 세부 ID와 페이지 정보
+		Long categorySeq = 1L;
+		PageRequest pageable = PageRequest.of(0, 8);
+		List<ProductByCategoryDetailResponse> productByCategoryResponseList
+			= createProductByCategoryDetailResponseList();
 
-	// PRODUCTS-007 (상품 상세 정보 조회) 테스트
+		given(productRepository.findProductListByCategoryDetail(categorySeq, pageable)).willReturn(
+			new PageImpl<>(productByCategoryResponseList, pageable, productByCategoryResponseList.size()));
+
+		// When: 카테고리 세부 별 상품 목록 조회 메서드 실행
+		Page<ProductByCategoryDetailResponse> result
+			= productService.readProductListByCategoryDetail(categorySeq, pageable);
+
+		// Then: 반환된 상품 목록 확인
+		assertThat(result).isNotNull();
+	}
+
+	// 상품 상세 정보 조회
 	@Test
 	public void readProductTest() {
 		// Given: 상품 ID
@@ -175,7 +176,7 @@ public class ProductServiceTest {
 		assertThat(result).isNotNull();
 	}
 
-	// PRODUCTS-008 (전체 상품 목록 조회) 테스트
+	// 전체 상품 목록 조회
 	@Test
 	public void readProductListTest() {
 		// Given: 페이지 정보
