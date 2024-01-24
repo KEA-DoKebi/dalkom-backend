@@ -3,9 +3,11 @@ package com.dokebi.dalkom.domain.mileage.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryDto;
+import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.repository.MileageHistoryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -33,17 +35,9 @@ public class MileageService {
 	}
 
 	// 유저별 마일리지 내역 조회 서비스
-	public List<MileageHistoryDto> readMileageHistoryByUserSeq(Long userSeq) {
+	public Page<MileageHistoryResponse> readMileageHistoryByUserSeq(Long userSeq, Pageable pageable) {
 
-		List<MileageHistory> mileageHistories = mileageHistoryRepository.findMileageHistoryListByUserSeq(userSeq);
-
-		return mileageHistories.stream()
-			.map(history -> new MileageHistoryDto(
-				history.getType(),
-				history.getCreatedAt(),
-				history.getBalance(),
-				history.getAmount()))
-			.collect(Collectors.toList());
+		return mileageHistoryRepository.findMileageHistoryListByUserSeq(userSeq, pageable);
 	}
 
 	// 관리자가 충전을 승인하는 경우 마일리지 내역을 추가하는 서비스

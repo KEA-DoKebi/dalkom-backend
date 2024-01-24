@@ -15,8 +15,9 @@ import lombok.ToString;
 @ToString
 public class MileageAskResponse {
 	private Long userSeq;
-	private LocalDateTime createdAt;
 	private Integer balance;
 	private Integer amount;
 	private String approvedState;
+	private LocalDateTime createdAt;
+
 }

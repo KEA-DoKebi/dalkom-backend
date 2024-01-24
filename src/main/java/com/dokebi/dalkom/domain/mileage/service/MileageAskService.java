@@ -3,6 +3,8 @@ package com.dokebi.dalkom.domain.mileage.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +28,8 @@ public class MileageAskService {
 	private final UserService userService;
 	private final MileageService mileageService;
 
-	public List<MileageAskResponse> readMileageAsk() {
-
-		List<MileageApply> mileageApply = mileageAskRepository.findAll();
-
-		return mileageApply.stream()
-			.map(ask -> new MileageAskResponse(
-				ask.getUser().getUserSeq(),
-				ask.getCreatedAt(),
-				ask.getUser().getMileage(),
-				ask.getAmount(),
-				ask.getApprovedState()))
-			.collect(Collectors.toList());
+	public Page<MileageAskResponse> readMileageAsk(Pageable pageable) {
+		return mileageAskRepository.findAllMileageAsk(pageable);
 	}
 
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
@@ -61,9 +53,7 @@ public class MileageAskService {
 
 	@Transactional
 	public void createMileageAsk(Long userSeq, MileageAskRequest request) {
-
 		User user = userService.readUserByUserSeq(userSeq);
-
 		MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
 		mileageAskRepository.save(mileageApply);
 	}

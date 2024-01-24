@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.mileage.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,9 +39,9 @@ public class MileageAskController {
 	// MILEAGE-004 (마일리지 신청 조회 (관리자))
 	@GetMapping("/api/mileage/ask")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readMileageAsk() {
+	public Response readMileageAsk(Pageable pageable) {
 
-		return Response.success(mileageAskService.readMileageAsk());
+		return Response.success(mileageAskService.readMileageAsk(pageable));
 	}
 
 	// MILEAGE-005 (마일리지 충전 신청)

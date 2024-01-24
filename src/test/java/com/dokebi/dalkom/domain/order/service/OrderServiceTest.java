@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +32,6 @@ import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequestTest;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
@@ -42,7 +40,6 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.factory.UserFactory;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
@@ -84,7 +81,7 @@ class OrderServiceTest {
 		given(mockProduct.getPrice()).willReturn(10000);
 		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
 		given(productService.readByProductSeq(anyLong())).willReturn(mockProduct);
-		doNothing().when(mileageService).createMileageHistoryAndUpdateUser(any(),anyInt(),anyString());
+		doNothing().when(mileageService).createMileageHistoryAndUpdateUser(any(), anyInt(), anyString());
 		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
 			new ProductOption(2L, "OP1", "의류 사이즈", "M"));
 		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
@@ -154,7 +151,6 @@ class OrderServiceTest {
 		assertNotNull(result);
 		assertEquals(orderList.size(), result.toList().size());
 
-
 	}
 
 	@Test
@@ -180,7 +176,7 @@ class OrderServiceTest {
 
 		// given
 		Page<OrderReadResponse> orderReadResponseList = createOrderList(); // OrderFactory를 사용
-		given(orderRepository.findAllOrders( pageable)).willReturn(orderReadResponseList);
+		given(orderRepository.findAllOrders(pageable)).willReturn(orderReadResponseList);
 
 		// when
 		Page<OrderReadResponse> result = orderService.readOrderByAll(pageable);
@@ -192,12 +188,12 @@ class OrderServiceTest {
 
 	@Test
 	@DisplayName("주문 상태 수정 서비스 테스트")
-	void updateOrderStateTest(){
+	void updateOrderStateTest() {
 		Long orderSeq = 1L;
-		OrderStateUpdateRequest orderStateUpdateRequest =new OrderStateUpdateRequest();
+		OrderStateUpdateRequest orderStateUpdateRequest = new OrderStateUpdateRequest();
 		orderStateUpdateRequest.setOrderState("11");
 
-		Order order= createOrder();
+		Order order = createOrder();
 		order.setOrderState("12");
 
 		when(orderRepository.findById(orderSeq)).thenReturn(java.util.Optional.of(order));
@@ -207,11 +203,6 @@ class OrderServiceTest {
 		verify(orderRepository, times(1)).findById(orderSeq);
 		verify(orderRepository, times(1)).save(order);
 
-
-
 	}
-
-
-
 
 }
