@@ -1,7 +1,5 @@
 package com.dokebi.dalkom.domain.mileage.service;
 
-import static com.dokebi.dalkom.domain.mileage.factory.MileageAskResponseFactory.*;
-import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyResponseFactory.*;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageHistoryResponseFactory.*;
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse;
+import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.repository.MileageHistoryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -43,10 +42,9 @@ public class MileageServiceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-
 	@Test
 	@DisplayName("유저 별 보유 마일리지 조회 서비스 ")
-	void readMileageByUserSeqTest(){
+	void readMileageByUserSeqTest() {
 		// Mock 데이터 설정
 		Long userSeq = 1L;
 		when(mileageHistoryRepository.findMileageByUserSeq(userSeq))
@@ -58,6 +56,7 @@ public class MileageServiceTest {
 		// 결과 확인
 		assertEquals(100, result); // 가장 최근 마일리지인 100이 반환되어야 함
 	}
+
 	@Test
 	@DisplayName("유저 별 마일리지 히스토리 조회 서비스")
 	void readMileageHistoryByUserSeqTest() {
@@ -70,7 +69,8 @@ public class MileageServiceTest {
 		mileageHistoryList.add(createMileageHistoryResponse(user));
 		mileageHistoryList.add(createMileageHistoryResponse(user));
 
-		Page<MileageHistoryResponse> mileageHistoryPage = new PageImpl<>(mileageHistoryList, pageable, mileageHistoryList.size());
+		Page<MileageHistoryResponse> mileageHistoryPage = new PageImpl<>(mileageHistoryList, pageable,
+			mileageHistoryList.size());
 
 		// Mock repository의 메서드가 null을 반환하지 않도록 설정
 		when(mileageService.readMileageHistoryByUserSeq(eq(userSeq), eq(pageable))).thenReturn(mileageHistoryPage);
@@ -84,8 +84,30 @@ public class MileageServiceTest {
 
 	@Test
 	@DisplayName("관리자가 충전 승인하는경우 마일리지 히스토리 내역에 추가 ")
-	void createMileageHistoryAndUpdateUserTest(){
+	void createMileageHistoryAndUpdateUserTest() {
+		Long userSeq = 1L;
+		Integer amount = 1000;
+		String type = "2";
 
+		User user = createMockUser(); // 적절한 값으로 초기화
+		user.setMileage(500); // 적절한 초기 마일리지 값으로 설정
+
+		MileageHistory savedMileageHistory = new MileageHistory(amount, user.getMileage() + amount, type, user);
+
+		// Mocking
+		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
+		when(mileageHistoryRepository.save(any(MileageHistory.class))).thenReturn(savedMileageHistory);
+
+		// When
+		mileageService.createMileageHistoryAndUpdateUser(userSeq, amount, type);
+
+		// Then
+		verify(userService).readUserByUserSeq(userSeq);
+		verify(mileageHistoryRepository).save(any(MileageHistory.class));
+		verify(userService).updateUser(user); // updateUser 메서드가 호출되었는지 확인
+
+		// 추가적으로 다른 상호작용이 없도록 확인
+		verifyNoMoreInteractions(userService, mileageHistoryRepository);
 	}
 
 }

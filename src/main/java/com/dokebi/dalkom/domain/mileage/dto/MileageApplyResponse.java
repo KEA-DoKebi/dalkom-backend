@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MileageAskResponse {
+public class MileageApplyResponse {
 	private Long userSeq;
 	private Integer balance;
 	private Integer amount;

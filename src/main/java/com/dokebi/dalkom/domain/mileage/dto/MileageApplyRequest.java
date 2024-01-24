@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.mileage.dto;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class MileageAskRequest {
+public class MileageApplyRequest {
 
 	@Positive(message = "MileageAskRequest amount Positive 에러")
 	private Integer amount;

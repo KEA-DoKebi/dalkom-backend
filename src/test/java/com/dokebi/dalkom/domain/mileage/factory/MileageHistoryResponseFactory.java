@@ -10,7 +10,7 @@ public class MileageHistoryResponseFactory {
 
 	public static MileageHistoryResponse createMileageHistoryResponse(User user) {
 		return new MileageHistoryResponse(
-			"1",LocalDateTime.of(2024, 1, 24, 0, 0),5000,10000);
+			"1", LocalDateTime.of(2024, 1, 24, 0, 0), 5000, 10000);
 
 	}
 }

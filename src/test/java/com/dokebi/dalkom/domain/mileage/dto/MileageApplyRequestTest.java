@@ -13,20 +13,20 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MileageAskRequestTest {
+public class MileageApplyRequestTest {
 	private Validator validator;
 
 	@BeforeEach
-	void beforeEach(){
+	void beforeEach() {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 	}
 
 	@Test
-	void mileageAskRequest_amount_Positive(){
-		MileageAskRequest request = createMileageAskRequestFactory(-5000);
+	void mileageAskRequest_amount_Positive() {
+		MileageApplyRequest request = createMileageAskRequestFactory(-5000);
 
-		Set<ConstraintViolation<MileageAskRequest>> violations = validator.validate(request);
+		Set<ConstraintViolation<MileageApplyRequest>> violations = validator.validate(request);
 
 		assertThat(violations)
 			.hasSize(1)

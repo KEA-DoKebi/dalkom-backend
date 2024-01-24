@@ -121,6 +121,6 @@ public class OrderControllerTest {
 				.content(new ObjectMapper().writeValueAsString(orderStateUpdateRequest)))
 			.andExpect(status().isOk());
 
-		verify(orderService).updateOrderState(anyLong(),any());
- 	}
+		verify(orderService).updateOrderState(anyLong(), any());
+	}
 }

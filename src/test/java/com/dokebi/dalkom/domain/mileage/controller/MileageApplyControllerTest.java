@@ -23,16 +23,16 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
-import com.dokebi.dalkom.domain.mileage.service.MileageAskService;
+import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
+import com.dokebi.dalkom.domain.mileage.service.MileageApplyService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MileageAskControllerTest {
+public class MileageApplyControllerTest {
 	@InjectMocks
-	MileageAskController mileageAskController;
+	MileageApplyController mileageApplyController;
 	@Mock
-	MileageAskService mileageAskService;
+	MileageApplyService mileageApplyService;
 
 	MockMvc mockMvc;
 
@@ -40,7 +40,7 @@ public class MileageAskControllerTest {
 	void beforeEach() {
 		MockitoAnnotations.initMocks(this); // 이 부분이 누락되었는지 확인
 
-		this.mockMvc = MockMvcBuilders.standaloneSetup(mileageAskController)
+		this.mockMvc = MockMvcBuilders.standaloneSetup(mileageApplyController)
 			.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(),
 				new HandlerMethodArgumentResolver() {
 					@Override
@@ -65,20 +65,18 @@ public class MileageAskControllerTest {
 		mockMvc.perform(put("/api/milage/ask/{milgApplySeq}", milgApplySeq))
 			.andExpect(status().isOk());
 
-		verify(mileageAskService).updateMileageAskState(eq(milgApplySeq));
+		verify(mileageApplyService).updateMileageAskState(eq(milgApplySeq));
 	}
 
 	@Test
 	@DisplayName("마일리지 신청 조회(관리자)")
 	void readMileageAskTest() throws Exception {
 		mockMvc.perform(get("/api/mileage/ask")
-			.param("page", "0")
-			.param("size", "5"))
+				.param("page", "0")
+				.param("size", "5"))
 			.andExpect(status().isOk());
 
-
-
-		verify(mileageAskService).readMileageAsk( any(Pageable.class));
+		verify(mileageApplyService).readMileageAsk(any(Pageable.class));
 	}
 
 	@Test
@@ -86,13 +84,13 @@ public class MileageAskControllerTest {
 	void createMileageAsk() throws Exception {
 		int amount = 5000;
 		Long userSeq = 1L;
-		MileageAskRequest request = createMileageAskRequestFactory(amount);
+		MileageApplyRequest request = createMileageAskRequestFactory(amount);
 		mockMvc.perform(post("/api/mileage/ask/user")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(request)))
 			.andExpect(status().isOk());
 
-		verify(mileageAskService).createMileageAsk(eq(userSeq), eq(request));
+		verify(mileageApplyService).createMileageAsk(eq(userSeq), eq(request));
 	}
 
 }
