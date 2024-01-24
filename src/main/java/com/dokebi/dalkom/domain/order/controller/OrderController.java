@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.order.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.service.OrderService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +29,11 @@ public class OrderController {
 	private final OrderService orderService;
 
 	// ORDER-001 (사용자별 주문 조회)
-	// TODO 임시동결
-	// @GetMapping("/api/order/user")
-	// @ResponseStatus(HttpStatus.OK)
-	// public Response readOrdersByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
-	// 	return Response.success(orderService.readOrderByUserSeq(userSeq, pageable));
-	// }
+	@GetMapping("/api/order/user")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrdersByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
+		return Response.success(orderService.readOrderByUserSeq(userSeq, pageable));
+	}
 
 	// ORDER-002 (주문 하기)
 	@GetMapping("/api/order/orderListPage")
@@ -49,12 +50,11 @@ public class OrderController {
 	}
 
 	// ORDER-004 (전체 주문 조회)
-	// TODO 임시동결
-	// @GetMapping("/api/order")
-	// @ResponseStatus(HttpStatus.OK)
-	// public Response readOrders(Pageable pageable) {
-	// 	return Response.success(orderService.readOrderByAll(pageable));
-	// }
+	@GetMapping("/api/order")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrders(Pageable pageable) {
+		return Response.success(orderService.readOrderByAll(pageable));
+	}
 
 	// ORDER-005 (결제 하기)
 	@PostMapping("/api/order")
