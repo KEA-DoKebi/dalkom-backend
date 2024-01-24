@@ -109,7 +109,7 @@ public class ProductServiceTest {
 		PageRequest pageable = PageRequest.of(0, 8);
 		List<ProductByCategoryResponse> productByCategoryResponseList = createProductByCategoryResponseList();
 
-		given(productRepository.findProductsByCategory(eq(categorySeq), eq(pageable))).willReturn(
+		given(productRepository.findProductsByCategory(categorySeq, pageable)).willReturn(
 			new PageImpl<>(productByCategoryResponseList, pageable, productByCategoryResponseList.size()));
 
 		// When: 카테고리 별 상품 목록 조회 메서드 실행
@@ -125,7 +125,7 @@ public class ProductServiceTest {
 		// Given: 존재하지 않는 카테고리 ID
 		Long categorySeq = 1L;
 		PageRequest pageable = PageRequest.of(0, 8);
-		given(productRepository.findProductsByCategory(eq(categorySeq), eq(pageable))).willReturn(null);
+		given(productRepository.findProductsByCategory(categorySeq, pageable)).willReturn(null);
 
 		// When & Then: 예외가 발생하는지 확인
 		assertThrows(ProductNotFoundException.class,
@@ -140,7 +140,7 @@ public class ProductServiceTest {
 		PageRequest pageable = PageRequest.of(0, 8);
 		List<ProductByCategoryResponse> productByCategoryResponseList = createProductByCategoryResponseList();
 
-		given(productRepository.findProductsByCategoryDetail(eq(categorySeq), eq(pageable))).willReturn(
+		given(productRepository.findProductsByCategoryDetail(categorySeq, pageable)).willReturn(
 			new PageImpl<>(productByCategoryResponseList, pageable, productByCategoryResponseList.size()));
 
 		// When: 카테고리 세부 별 상품 목록 조회 메서드 실행
