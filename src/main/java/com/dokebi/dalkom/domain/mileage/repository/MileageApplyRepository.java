@@ -12,7 +12,7 @@ import com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 
 public interface MileageApplyRepository extends JpaRepository<MileageApply, Long> {
-	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageAskResponse("
+	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse("
 		+ " m.user.userSeq, m.amount,m.user.mileage, m.approvedState, m.approvedAt) FROM MileageApply m")
 	Page<MileageApplyResponse> findAllMileageAsk(Pageable pageable);
 
