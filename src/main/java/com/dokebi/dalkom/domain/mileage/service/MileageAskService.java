@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageAskResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
+import com.dokebi.dalkom.domain.mileage.exception.MileageAlreadyApplyException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.repository.MileageAskRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -64,7 +65,18 @@ public class MileageAskService {
 
 		User user = userService.readUserByUserSeq(userSeq);
 
-		MileageApply mileageApply = new MileageApply(user, request.getAmount(), "N", null);
-		mileageAskRepository.save(mileageApply);
+		if (readMileageAskYn(userSeq)) {
+			MileageApply mileageApply = new MileageApply(user, request.getAmount(), null);
+			mileageAskRepository.save(mileageApply);
+		} else {
+			throw new MileageAlreadyApplyException();
+		}
+
+	}
+
+	// 마일리지 신청 내역 테이블에 approvedState가 Null인 데이터는 사용자 당 1개만 존재해야 함.
+	public boolean readMileageAskYn(Long userSeq) {
+		Long mileageAskCount = mileageAskRepository.countByUserSeqAndApprovedStateIsNull(userSeq);
+		return mileageAskCount < 1;
 	}
 }
