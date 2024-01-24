@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.product.factory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 
 public class ProductByCategoryResponseFactory {
@@ -16,7 +17,8 @@ public class ProductByCategoryResponseFactory {
 			"Y", // state;
 			"RandomImageUrl", // imageUrl;
 			"Limbus Company", // company;
-			500 // stock;
+			4.5,
+			5L
 		));
 
 		productByCategoryResponseList.add(new ProductByCategoryResponse(
@@ -26,7 +28,8 @@ public class ProductByCategoryResponseFactory {
 			"Y", // state;
 			"AnotherRandomImageUrl", // imageUrl;
 			"K Corp.", // company;
-			50 // stock;
+			4.5,
+			10L
 		));
 
 		return productByCategoryResponseList;

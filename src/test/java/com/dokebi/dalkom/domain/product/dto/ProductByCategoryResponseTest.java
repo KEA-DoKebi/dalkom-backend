@@ -15,12 +15,13 @@ public class ProductByCategoryResponseTest {
 		String expectedState = "판매중";
 		String expectedImageUrl = "image/url";
 		String expectedCompany = "회사명";
-		Integer expectedStock = 50;
+		Double expectedRating = 4.5;
+		Long expectedReviewAmount = 20L;
 
 		// When: ProductByCategoryResponse 객체 생성 및 초기화
 		ProductByCategoryResponse dto = new ProductByCategoryResponse(
 			expectedProductSeq, expectedName, expectedPrice,
-			expectedState, expectedImageUrl, expectedCompany, expectedStock);
+			expectedState, expectedImageUrl, expectedCompany, expectedRating, expectedReviewAmount);
 
 		// Then: 객체 필드 값 검증
 		assertEquals(expectedProductSeq, dto.getProductSeq());
@@ -29,6 +30,7 @@ public class ProductByCategoryResponseTest {
 		assertEquals(expectedState, dto.getState());
 		assertEquals(expectedImageUrl, dto.getImageUrl());
 		assertEquals(expectedCompany, dto.getCompany());
-		assertEquals(expectedStock, dto.getStock());
+		assertEquals(expectedRating, dto.getRating());
+		assertEquals(expectedReviewAmount, dto.getReviewAmount());
 	}
 }
