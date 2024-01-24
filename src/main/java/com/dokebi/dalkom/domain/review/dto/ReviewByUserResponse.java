@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ReviewByUserResponse {
 
+	private Long reviewSeq;
 	private String content;
 	private Integer rating;
 	private LocalDateTime createdAt;

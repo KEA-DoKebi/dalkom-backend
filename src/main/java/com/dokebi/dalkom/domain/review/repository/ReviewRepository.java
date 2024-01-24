@@ -24,7 +24,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 	Page<ReviewByProductResponse> findReviewListByProduct(@Param("productSeq") Long productSeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse("
-		+ "r.content, r.rating, r.createdAt, r.modifiedAt, p.name, p.imageUrl, o.detail) "
+		+ "r.reviewSeq, r.content, r.rating, r.createdAt, r.modifiedAt, p.name, p.imageUrl, o.detail) "
 		+ "FROM Review r "
 		+ "LEFT JOIN OrderDetail od ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
 		+ "JOIN ProductOption o ON od.productOption.prdtOptionSeq = o.prdtOptionSeq "
