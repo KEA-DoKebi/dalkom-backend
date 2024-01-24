@@ -7,12 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+// 상품 상세 responseBody
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
-// 상품 상세 responseBody
 public class ReadProductDetailResponse {
 	private Long categorySeq;
 	private String name;
@@ -24,9 +23,11 @@ public class ReadProductDetailResponse {
 	private List<StockListDTO> stockList;
 	private List<String> productImageUrlList;
 
-	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO, List<OptionListDTO> optionList,
+	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO,
+		List<OptionListDTO> optionList,
 		List<StockListDTO> stockList,
 		List<String> productImageUrlList) {
+
 		this.categorySeq = productDetailDTO.getCategorySeq();
 		this.name = productDetailDTO.getName();
 		this.price = productDetailDTO.getPrice();
@@ -36,5 +37,10 @@ public class ReadProductDetailResponse {
 		this.optionList = optionList;
 		this.stockList = stockList;
 		this.productImageUrlList = productImageUrlList;
+	}
+
+	public ReadProductDetailResponse(String name, Integer price) {
+		this.name = name;
+		this.price = price;
 	}
 }

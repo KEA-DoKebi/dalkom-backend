@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryService {
@@ -30,12 +30,7 @@ public class CategoryService {
 		return categoryRepository.findSubCategoryList(categorySeq);
 	}
 
-	public Category readCategoryByCategorySeq(Long categorySeq) {
-		return categoryRepository.findByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
-	}
-
-	@Transactional
 	public Category readCategoryBySeq(Long categorySeq) {
-		return categoryRepository.findById(categorySeq).orElseThrow(CategoryNotFoundException::new);
+		return categoryRepository.findByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
 	}
 }

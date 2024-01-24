@@ -1,6 +1,6 @@
 package com.dokebi.dalkom.domain.mileage.dto;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MileageAskRequest {
-	@NotBlank(message = "MileageAskRequest amount NotBlank 에러")
+
+	@NotNull(message = "MileageAskRequest amount NotBlank 에러")
 	@Positive(message = "MileageAskRequest amount Positive 에러")
 	private Integer amount;
 }
