@@ -98,8 +98,7 @@ public class MileageApplyServiceTest {
 		MileageApply mileageApply = new MileageApply(
 			user,
 			120000,
-			"N",
-			LocalDateTime.of(2011, 11, 11, 0, 0)
+			"N"
 		);
 
 		Long milgApplySeq = 1L;

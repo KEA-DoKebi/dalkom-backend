@@ -18,7 +18,11 @@ public interface MileageHistoryRepository extends JpaRepository<MileageHistory, 
 	List<Integer> findMileageByUserSeq(@Param("userSeq") Long userSeq);
 
 	//유저 내역 조회
-	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse("
-		+ "m.type,m.createdAt,m.balance,m.amount)from MileageHistory m WHERE m.user.userSeq = :userSeq")
-	Page<MileageHistoryResponse> findMileageHistoryListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
+	@Query(value = "SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse("
+		+ "m.type, m.createdAt, m.balance, m.amount) "
+		+ "FROM MileageHistory m WHERE m.user.userSeq = :userSeq",
+		countQuery = "SELECT COUNT(m) FROM MileageHistory m WHERE m.user.userSeq = :userSeq")
+	Page<MileageHistoryResponse> findMileageHistoryListByUserSeq(
+		@Param("userSeq") Long userSeq, Pageable pageable);
+
 }
