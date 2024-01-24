@@ -28,8 +28,7 @@ public class OrderStateUpdateRequestTest {
 	@DisplayName("유효한 값")
 	void orderStateUpdateRequestValidPattern() {
 		String validOrderState = "10";
-		OrderStateUpdateRequest request = new OrderStateUpdateRequest();
-		request.setOrderState(validOrderState);
+		OrderStateUpdateRequest request = new OrderStateUpdateRequest(validOrderState);
 
 		Set<ConstraintViolation<OrderStateUpdateRequest>> violations = validator.validate(request);
 		assertTrue(violations.isEmpty());
@@ -39,8 +38,7 @@ public class OrderStateUpdateRequestTest {
 	@DisplayName("유효하지 않은 값")
 	void orderStateUpdateRequestInvalidPattern() {
 		String invalidOrderState = "0";
-		OrderStateUpdateRequest request = new OrderStateUpdateRequest();
-		request.setOrderState(invalidOrderState);
+		OrderStateUpdateRequest request = new OrderStateUpdateRequest(invalidOrderState);
 
 		Set<ConstraintViolation<OrderStateUpdateRequest>> violations = validator.validate(request);
 		assertThrows(ConstraintViolationException.class, () -> {
