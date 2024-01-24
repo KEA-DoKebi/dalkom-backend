@@ -19,15 +19,18 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryAnswerRequest;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryCreateRequest;
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryAnswerRequestFactory;
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryCreateRequestFactory;
+import com.dokebi.dalkom.domain.inquiry.factory.InquiryListByUserResponseFactory;
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryListResponseFactory;
 import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -41,6 +44,8 @@ public class InquiryServiceTest {
 	private InquiryRepository inquiryRepository;
 	@Mock
 	private UserService userService;
+	@Mock
+	private AdminService adminService; // answerInquiry에서 쓰임
 	@Mock
 	private CategoryService categoryService; // 안쓰는 것처럼 보이지만
 	@Captor
@@ -84,27 +89,27 @@ public class InquiryServiceTest {
 		Long userSeq = 1L;
 		Pageable pageable = PageRequest.of(0, 3);
 
-		InquiryListResponse response1 = InquiryListResponseFactory.createInquiryListResponse();
-		InquiryListResponse response2 = InquiryListResponseFactory.createInquiryListResponse();
+		InquiryListByUserResponse response1 = InquiryListByUserResponseFactory.createInquiryListByUserResponse();
+		InquiryListByUserResponse response2 = InquiryListByUserResponseFactory.createInquiryListByUserResponse();
 
-		List<InquiryListResponse> expectedList = Arrays.asList(response1, response2);
-		Page<InquiryListResponse> expectedPage = new PageImpl<>(expectedList, pageable, expectedList.size());
+		List<InquiryListByUserResponse> expectedList = Arrays.asList(response1, response2);
+		Page<InquiryListByUserResponse> expectedPage = new PageImpl<>(expectedList, pageable, expectedList.size());
 
 		when(inquiryService.readInquiryListByUser(userSeq, pageable)).thenReturn(expectedPage);
 
 		// When
-		Page<InquiryListResponse> result = inquiryService.readInquiryListByUser(userSeq, pageable);
+		Page<InquiryListByUserResponse> result = inquiryService.readInquiryListByUser(userSeq, pageable);
 
 		// Then
 		for (int i = 0; i < expectedList.size(); i++) {
-			InquiryListResponse expect = expectedList.get(i);
-			InquiryListResponse actual = result.getContent().get(i);
+			InquiryListByUserResponse expect = expectedList.get(i);
+			InquiryListByUserResponse actual = result.getContent().get(i);
 
+			assertEquals(expect.getInquirySeq(), actual.getInquirySeq());
+			assertEquals(expect.getCategory(), actual.getCategory());
 			assertEquals(expect.getTitle(), actual.getTitle());
-			assertEquals(expect.getContent(), actual.getContent());
 			assertEquals(expect.getCreatedAt(), actual.getCreatedAt());
-			assertEquals(expect.getAnsweredAt(), actual.getAnsweredAt());
-			assertEquals(expect.getAnswerContent(), actual.getAnswerContent());
+			assertEquals(expect.getAnswerState(), actual.getAnswerState());
 		}
 	}
 
@@ -169,6 +174,7 @@ public class InquiryServiceTest {
 	void answerInquiryTest() {
 		// Given
 		Long inquirySeq = 1L;
+		Long adminSeq = 1L;
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory.createInquiryAnswerRequest();
 
 		Category category = new Category("name", 1L, "imageUrl");
@@ -187,7 +193,7 @@ public class InquiryServiceTest {
 		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(inquiry);
 
 		// When
-		inquiryService.answerInquiry(inquirySeq, request);
+		inquiryService.answerInquiry(inquirySeq, adminSeq, request);
 
 		// Then
 		assertEquals(request.getAnswerContent(), inquiry.getAnswerContent());

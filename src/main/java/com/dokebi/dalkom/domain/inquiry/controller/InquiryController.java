@@ -58,8 +58,8 @@ public class InquiryController {
 	@PutMapping("/api/inquiry/{inquirySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response answerInquiry(@PathVariable Long inquirySeq,
-		@Valid @RequestBody InquiryAnswerRequest request) {
-		inquiryService.answerInquiry(inquirySeq, request);
+		@LoginUser Long adminSeq, @Valid @RequestBody InquiryAnswerRequest request) {
+		inquiryService.answerInquiry(inquirySeq, adminSeq, request);
 		return Response.success();
 	}
 }
