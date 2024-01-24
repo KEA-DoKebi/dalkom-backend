@@ -11,15 +11,15 @@ import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
-import com.dokebi.dalkom.domain.product.dto.OptionAmountDTO;
-import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
+import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
+import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
-import com.dokebi.dalkom.domain.product.dto.StockListDTO;
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
@@ -32,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class ProductService {
-
 	private final ProductRepository productRepository;
 	private final ProductStockService productStockService;
 	private final CategoryService categoryService;
@@ -48,7 +47,7 @@ public class ProductService {
 		productRepository.save(newProduct);
 
 		// 초기 재고 등록
-		for (OptionAmountDTO optionAmountDTO : request.getPrdtOptionList()) {
+		for (OptionAmountDto optionAmountDTO : request.getPrdtOptionList()) {
 			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(
 				optionAmountDTO.getPrdtOptionSeq());
 
@@ -64,11 +63,6 @@ public class ProductService {
 
 	// Product 001에서 사용하는 depth 0의 카테고리 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
-		// Category category = categoryService.readCategoryBySeq(categorySeq);
-		// if (category.getParentSeq() != 0) {
-		// 	throw new RuntimeException(); // depth가 0인 category를 조회하는게 아니면 Exception 발생시킴
-		// }
-
 		Page<ProductByCategoryResponse> productList = productRepository.findProductListByCategory(categorySeq,
 			pageable);
 
@@ -93,8 +87,8 @@ public class ProductService {
 	public ReadProductDetailResponse readProduct(Long productSeq) {
 		ReadProductDetailDTO productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
 
-		List<StockListDTO> stockList = productRepository.findStockListBySeq(productSeq);
-		List<OptionListDTO> optionList = productRepository.findOptionListBySeq(productSeq);
+		List<StockListDto> stockList = productRepository.findStockListBySeq(productSeq);
+		List<OptionListDto> optionList = productRepository.findOptionListBySeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
 
 		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
@@ -109,7 +103,7 @@ public class ProductService {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
-	public Page<ReadProductResponse> readProductList(Pageable pageable) {
-		return productRepository.findProductList(pageable);
+	public Page<ReadProductResponse> readAdminPageProductList(Pageable pageable) {
+		return productRepository.findAdminPageProductList(pageable);
 	}
 }

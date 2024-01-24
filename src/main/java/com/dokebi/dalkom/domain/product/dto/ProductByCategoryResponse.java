@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductByCategoryResponse {
+
 	private Long productSeq;
 	private String name;
 	private Integer price;

@@ -9,12 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
+import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
-import com.dokebi.dalkom.domain.product.dto.StockListDTO;
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -39,7 +39,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE c.parentSeq = :categorySeq "
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryResponse> findProductListByCategory(@Param("categorySeq") Long categorySeq, Pageable pageable);
+	Page<ProductByCategoryResponse> findProductListByCategory(@Param("categorySeq") Long categorySeq,
+		Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) "
@@ -50,7 +51,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.StockListDTO(ps.prdtStockSeq, ps.amount) "
 		+ "FROM ProductStock ps "
 		+ "WHERE ps.product.productSeq = :productSeq ")
-	List<StockListDTO> findStockListBySeq(@Param("productSeq") Long productSeq);
+	List<StockListDto> findStockListBySeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.OptionListDTO( "
 		+ "po.prdtOptionSeq, po.detail) "
@@ -58,7 +59,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "INNER JOIN ProductStock ps "
 		+ "ON po.prdtOptionSeq = ps.productOption.prdtOptionSeq "
 		+ "AND ps.product.productSeq = :productSeq ")
-	List<OptionListDTO> findOptionListBySeq(@Param("productSeq") Long productSeq);
+	List<OptionListDto> findOptionListBySeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT pi.imageUrl "
 		+ "FROM ProductImage pi "
@@ -72,5 +73,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ON p.productSeq = ps.product.productSeq "
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
-	Page<ReadProductResponse> findProductList(Pageable pageable);
+	Page<ReadProductResponse> findAdminPageProductList(Pageable pageable);
 }

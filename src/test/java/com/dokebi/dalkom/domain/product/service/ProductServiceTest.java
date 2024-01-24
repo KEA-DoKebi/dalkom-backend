@@ -21,14 +21,13 @@ import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
-import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
-import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
+import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
-import com.dokebi.dalkom.domain.product.dto.StockListDTO;
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
@@ -164,8 +163,8 @@ public class ProductServiceTest {
 		// Given: 상품 ID
 		Long productSeq = 1L;
 		given(productRepository.findProductDetailBySeq(productSeq)).willReturn(new ReadProductDetailDTO());
-		given(productRepository.findStockListBySeq(productSeq)).willReturn(List.of(new StockListDTO()));
-		given(productRepository.findOptionListBySeq(productSeq)).willReturn(List.of(new OptionListDTO()));
+		given(productRepository.findStockListBySeq(productSeq)).willReturn(List.of(new StockListDto()));
+		given(productRepository.findOptionListBySeq(productSeq)).willReturn(List.of(new OptionListDto()));
 		given(productRepository.findProductImageBySeq(productSeq)).willReturn(List.of("imageURL"));
 
 		// When: 상품 상세 정보 조회 메서드 실행
@@ -180,10 +179,10 @@ public class ProductServiceTest {
 	public void readProductListTest() {
 		// Given: 페이지 정보
 		PageRequest pageable = PageRequest.of(0, 8);
-		given(productRepository.findProductList(pageable)).willReturn(Page.empty());
+		given(productRepository.findAdminPageProductList(pageable)).willReturn(Page.empty());
 
 		// When: 전체 상품 목록 조회 메서드 실행
-		Page<ReadProductResponse> result = productService.readProductList(pageable);
+		Page<ReadProductResponse> result = productService.readAdminPageProductList(pageable);
 
 		// Then: 반환된 상품 목록 확인
 		assertThat(result).isNotNull();

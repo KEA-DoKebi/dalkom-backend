@@ -100,7 +100,7 @@ public class ProductControllerTest {
 		List<ReadProductResponse> readProductDetailResponseList = createReadProductResponseList();
 
 		// 상품 목록 조회 결과를 Mock 객체로 생성
-		given(productService.readProductList(pageable)).willReturn(
+		given(productService.readAdminPageProductList(pageable)).willReturn(
 			new PageImpl<>(readProductDetailResponseList, pageable, readProductDetailResponseList.size()));
 
 		// When & Then

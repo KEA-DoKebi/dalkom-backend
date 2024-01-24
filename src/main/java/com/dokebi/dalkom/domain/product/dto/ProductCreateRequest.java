@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
+import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,5 +48,5 @@ public class ProductCreateRequest {
 	private String company;
 
 	@NotEmpty(message = "ProductCreateRequest prdtOptionList NotEmpty 에러")
-	private List<OptionAmountDTO> prdtOptionList;
+	private List<OptionAmountDto> prdtOptionList;
 }

@@ -3,7 +3,6 @@ package com.dokebi.dalkom.domain.product.controller;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 	private final ProductService productService;
 
-	// PRODUCTS-001 (카테고리 별 상품 목록 조회 - 메인 화면에서 )
+	// PRODUCTS-001 (카테고리 별 상품 목록 조회 - 사용자 메인 화면에서, 사용자가 Depth가 0인 카테고리 상품을 조회 할 때 )
 	@GetMapping("/api/products/category/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductListByCategory(@PathVariable Long categorySeq, Pageable pageable) {
@@ -47,14 +46,14 @@ public class ProductController {
 		return Response.success();
 	}
 
-	// PRODUCT-004 (상품 리스트 조회)
+	// PRODUCT-004 (상품 리스트 조회 - 관리자 화면에서 전체 상품을 보여주는 것)
 	@GetMapping("/api/product")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductList(@PageableDefault(size = 10) Pageable pageable) {
-		return Response.success(productService.readProductList(pageable));
+	public Response readAdminPageProductList(Pageable pageable) {
+		return Response.success(productService.readAdminPageProductList(pageable));
 	}
 
-	// PRODUCTS-005 (서브 카테고리 별 상품 목록 조회)
+	// PRODUCTS-005 (서브 카테고리 별 상품 목록 조회 - Depth가 1인 카테고리에 속한 상품들을 조회 할 때)
 	@GetMapping("/api/products/category/detail/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductListByCategoryDetail(@PathVariable Long categorySeq, Pageable pageable) {
