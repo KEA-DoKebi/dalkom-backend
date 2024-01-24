@@ -13,13 +13,12 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class InquiryListResponse {
+public class InquiryListByUserResponse {
 
-	// 카테고리별 문의 조회 response (관리자용)
+	// 사용자별 문의 조회 response (사용자용)
+	private Long inquirySeq;
+	private String category;
 	private String title;
-	private String content;
 	private LocalDateTime createdAt;
 	private String answerState;
-	private LocalDateTime answeredAt;
-	private String answerContent;
 }

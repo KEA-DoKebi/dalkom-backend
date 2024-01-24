@@ -7,10 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.admin.entity.Admin;
+import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryAnswerRequest;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryCreateRequest;
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
@@ -29,6 +32,7 @@ public class InquiryService {
 	private final InquiryRepository inquiryRepository;
 	private final CategoryService categoryService;
 	private final UserService userService;
+	private final AdminService adminService;
 
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
@@ -39,7 +43,7 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public Page<InquiryListResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
+	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
 		return inquiryRepository.findInquiryListByUser(userSeq, pageable);
 	}
 
@@ -54,9 +58,11 @@ public class InquiryService {
 	}
 
 	@Transactional
-	public void answerInquiry(Long inquirySeq, InquiryAnswerRequest request) {
+	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq);
+		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		inquiry.setAnswerContent(request.getAnswerContent());
+		inquiry.setAdmin(admin);
 		inquiry.setAnswerState("Y");
 		inquiry.setAnsweredAt(LocalDateTime.now());
 	}
