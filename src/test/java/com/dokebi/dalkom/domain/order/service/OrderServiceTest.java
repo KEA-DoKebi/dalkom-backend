@@ -103,7 +103,7 @@
 // 	@Test
 // 	void readProductDetailTest() {
 // 		// given
-// 		List<OrderPageDetailDto> orderList = Collections.singletonList(
+// 		List<OrderPageDetailDto> orderList = List.of(
 // 			createOrderPageDetailDto(3L, 3L, 100, "집업 자켓 아이보리", 97300));
 // 		ReadProductDetailResponse productDetailResponse = new ReadProductDetailResponse("집업 자켓 아이보리",
 // 			97300);
