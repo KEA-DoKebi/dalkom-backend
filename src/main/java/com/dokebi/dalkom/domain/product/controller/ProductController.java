@@ -28,9 +28,8 @@ public class ProductController {
 	// PRODUCTS-001 (카테고리 별 상품 목록 조회)
 	@GetMapping("/api/products/category/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductListByCategory(@PageableDefault(size = 8) @PathVariable Long categorySeq,
-		Pageable pageable) {
-
+	public Response readProductListByCategory(@PathVariable Long categorySeq,
+		@PageableDefault(size = 8) Pageable pageable) {
 		return Response.success(productService.readProductListByCategory(categorySeq, pageable));
 	}
 
@@ -38,7 +37,6 @@ public class ProductController {
 	@GetMapping("/api/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProduct(@PathVariable Long productSeq) {
-
 		return Response.success(productService.readProduct(productSeq));
 	}
 
@@ -46,7 +44,6 @@ public class ProductController {
 	@PostMapping("/api/product")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createProduct(@Valid @RequestBody ProductCreateRequest productCreateRequest) {
-
 		productService.createProduct(productCreateRequest);
 		return Response.success();
 	}
@@ -55,16 +52,14 @@ public class ProductController {
 	@GetMapping("/api/product")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductList(@PageableDefault(size = 10) Pageable pageable) {
-
 		return Response.success(productService.readProductList(pageable));
 	}
 
 	// PRODUCTS-005 (서브 카테고리 별 상품 목록 조회)
 	@GetMapping("/api/products/category/detail/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductListByCategoryDetail(@PageableDefault(size = 8) @PathVariable Long categorySeq,
-		Pageable pageable) {
-
+	public Response readProductListByCategoryDetail(@PathVariable Long categorySeq,
+		@PageableDefault(size = 8) Pageable pageable) {
 		return Response.success(productService.readProductListByCategoryDetail(categorySeq, pageable));
 	}
 }

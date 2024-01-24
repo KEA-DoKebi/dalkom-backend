@@ -31,7 +31,6 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class ProductService {
-
 	private final ProductRepository productRepository;
 	private final ProductStockService productStockService;
 	private final CategoryService categoryService;
@@ -39,7 +38,6 @@ public class ProductService {
 
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
-
 		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
 
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
@@ -58,12 +56,10 @@ public class ProductService {
 	}
 
 	public Product readProductByProductSeq(Long productSeq) {
-
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
-
 		Page<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq, pageable);
 		if (productList == null || productList.isEmpty()) {
 			throw new ProductNotFoundException();
@@ -73,7 +69,6 @@ public class ProductService {
 	}
 
 	public Page<ProductByCategoryResponse> readProductListByCategoryDetail(Long categorySeq, Pageable pageable) {
-
 		Page<ProductByCategoryResponse> productList = productRepository.findProductsByCategoryDetail(categorySeq,
 			pageable);
 		if (productList == null || productList.isEmpty()) {
@@ -102,8 +97,6 @@ public class ProductService {
 	}
 
 	public Page<ReadProductResponse> readProductList(Pageable pageable) {
-
 		return productRepository.findProductList(pageable);
 	}
-
 }
