@@ -144,7 +144,7 @@ public class OrderService {
 	}
 
 	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
-		Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
+		Product product = productService.readProductByProductSeq(request.getProductSeqList().get(i));
 
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 		Integer amount = request.getAmountList().get(i);
@@ -160,7 +160,7 @@ public class OrderService {
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 		Integer amount = request.getAmountList().get(i);
 
-		Product product = productService.readByProductSeq(productSeq);
+		Product product = productService.readProductByProductSeq(productSeq);
 		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
 		Integer price = product.getPrice();
 

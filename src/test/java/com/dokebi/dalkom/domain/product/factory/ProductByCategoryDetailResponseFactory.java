@@ -16,9 +16,8 @@ public class ProductByCategoryDetailResponseFactory {
 			"Y", // state
 			"RandomImageUrl", // imageUrl
 			"Limbus Company", // company
-			// 4.5, // rating
-			// 5L // review amount
-			5
+			4.5, // rating
+			5L // review amount
 		));
 
 		productByCategoryDetailResponseList.add(new ProductByCategoryDetailResponse(
@@ -28,9 +27,8 @@ public class ProductByCategoryDetailResponseFactory {
 			"Y", // state
 			"AnotherRandomImageUrl", // imageUrl
 			"K Corp.", // company
-			// 4.5, // rating
-			// 10L // review amount
-			5
+			4.5, // rating
+			10L // review amount
 		));
 
 		return productByCategoryDetailResponseList;
