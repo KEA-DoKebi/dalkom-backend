@@ -1,12 +1,15 @@
 package com.dokebi.dalkom.domain.product.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
@@ -16,6 +19,7 @@ import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
+import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
@@ -112,4 +116,20 @@ public class ProductService {
 	public Page<ReadProductResponse> readProductList(Pageable pageable) {
 		return productRepository.findProductList(pageable);
 	}
+
+	public Map<String, List<ProductMainResponse>> readProductListByCategoryAll(Pageable pageable) {
+
+		Map<String, List<ProductMainResponse>> categoryMap = new HashMap<>();
+		List<CategoryResponse> categoryList = categoryService.readCategoryList();
+
+		// 상위 카테고리 각각에 대한 상품 담기
+		for (CategoryResponse categoryResponse : categoryList) {
+			Page<ProductMainResponse> page = productRepository.findProductListByCategoryAll(
+				categoryResponse.getCategorySeq(), pageable);
+			// Page 객체에서 List 추출 후 Map에 추가
+			categoryMap.put(categoryResponse.getName(), page.getContent());
+		}
+		return categoryMap;
+	}
+
 }

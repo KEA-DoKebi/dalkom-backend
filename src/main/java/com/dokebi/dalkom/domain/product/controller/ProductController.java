@@ -1,10 +1,14 @@
 package com.dokebi.dalkom.domain.product.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
+import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -59,5 +64,13 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductListByCategoryDetail(@PathVariable Long categorySeq, Pageable pageable) {
 		return Response.success(productService.readProductListByCategoryDetail(categorySeq, pageable));
+	}
+
+	@GetMapping("/api/products/category/main")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Map<String, List<ProductMainResponse>>> readProductListByCategoryAll(
+		@PageableDefault(size = 8) Pageable pageable) {
+		Map<String, List<ProductMainResponse>> categoryProducts = productService.readProductListByCategoryAll(pageable);
+		return ResponseEntity.ok(categoryProducts);
 	}
 }
