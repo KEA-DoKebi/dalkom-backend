@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
@@ -26,18 +27,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		"INNER JOIN ProductStock ps " +
 		"ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq " +
 		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryResponse> findProductsByCategoryDetail(@Param("categorySeq") Long categorySeq,
+	Page<ProductByCategoryDetailResponse> findProductsByCategoryDetail(@Param("categorySeq") Long categorySeq,
 		Pageable pageable);
 
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse" +
-		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, CAST(SUM(ps.amount) AS int)) " +
-		"FROM Product p " +
-		"JOIN p.productStockList ps " +
-		"JOIN p.category c " +
-		"WHERE c.parentSeq = :categorySeq " +
-		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryResponse> findProductsByCategory(@Param("categorySeq") Long categorySeq,
-		Pageable pageable);
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse("
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, "
+		+ "AVG(r.rating), COUNT(r.reviewSeq)) "
+		+ "FROM Product p "
+		+ "JOIN p.category c "
+		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "WHERE c.parentSeq = :categorySeq "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+	Page<ProductByCategoryResponse> findProductsByCategory(@Param("categorySeq") Long categorySeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) FROM Product p "

@@ -17,5 +17,6 @@ public class ProductByCategoryResponse {
 	private String state;
 	private String imageUrl;
 	private String company;
-	private Integer stock;
+	private Double rating; // 리뷰 테이블에서 입력 받은 productSeq와 같은 데이터의 평점의 평균
+	private Long reviewAmount; // 리뷰 테이블에서 입력받은 productSeq와 같은 데이터의 개수
 }
