@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class ProductService {
+
 	private final ProductRepository productRepository;
 	private final ProductStockService productStockService;
 	private final CategoryService categoryService;
@@ -63,10 +64,10 @@ public class ProductService {
 
 	// Product 001에서 사용하는 depth 0의 카테고리 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
-		Category category = categoryService.readCategoryBySeq(categorySeq);
-		if (category.getParentSeq() != 0) {
-			throw new RuntimeException(); // depth가 0인 category를 조회하는게 아니면 Exception 발생시킴
-		}
+		// Category category = categoryService.readCategoryBySeq(categorySeq);
+		// if (category.getParentSeq() != 0) {
+		// 	throw new RuntimeException(); // depth가 0인 category를 조회하는게 아니면 Exception 발생시킴
+		// }
 
 		Page<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq, pageable);
 
