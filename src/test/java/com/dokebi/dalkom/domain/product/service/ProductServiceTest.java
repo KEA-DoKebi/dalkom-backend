@@ -37,8 +37,6 @@ import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 
 public class ProductServiceTest {
-	//TODO 누락된 메서드의 테스트코드 추가하기
-
 	@Mock
 	private ProductRepository productRepository;
 
@@ -140,7 +138,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
-	@DisplayName("카테고리 세부 별 상품 목록 조회")
+	@DisplayName("세부 카테고리 별 상품 목록 조회")
 	public void readProductListByCategoryDetailTest() {
 		// Given: 카테고리 세부 ID와 페이지 정보
 		Long categorySeq = 1L;
@@ -160,6 +158,22 @@ public class ProductServiceTest {
 	}
 
 	@Test
+	@DisplayName("세부 카테고리 별 상품 목록 조회 - 예외 발생")
+	public void readProductListByCategoryDetailNotFoundExceptionTest() {
+		// Given: 카테고리 세부 ID와 페이지 정보
+		Long categorySeq = 1L;
+		PageRequest pageable = PageRequest.of(0, 8);
+		List<ProductByCategoryDetailResponse> productByCategoryResponseList
+			= createProductByCategoryDetailResponseList();
+
+		given(productRepository.findProductListByCategoryDetail(categorySeq, pageable)).willReturn(null);
+
+		// When & Then: 예외가 발생하는지 확인
+		assertThrows(ProductNotFoundException.class,
+			() -> productService.readProductListByCategoryDetail(categorySeq, pageable));
+	}
+
+	@Test
 	@DisplayName("관리자용 상품 리스트 조회")
 	public void readProductTest() {
 		// Given: 상품 ID
@@ -174,6 +188,21 @@ public class ProductServiceTest {
 
 		// Then: 반환된 상품 상세 정보 확인
 		assertThat(result).isNotNull();
+	}
+
+	@Test
+	@DisplayName("관리자용 상품 리스트 조회 - 예외 발생")
+	public void readProductNotFoundExceptionTest() {
+		// Given: 상품 ID
+		Long productSeq = 1L;
+
+		given(productRepository.findStockListBySeq(anyLong())).willReturn(null);
+		given(productRepository.findOptionListBySeq(anyLong())).willReturn(null);
+		given(productRepository.findProductImageBySeq(anyLong())).willReturn(null);
+
+		// When & Then: 예외가 발생하는지 확인
+		assertThrows(ProductNotFoundException.class,
+			() -> productService.readProduct(productSeq));
 	}
 
 	// 전체 상품 목록 조회
