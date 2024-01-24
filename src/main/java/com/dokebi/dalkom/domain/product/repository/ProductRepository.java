@@ -22,24 +22,25 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Optional<Product> findByProductSeq(Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse" +
-		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, CAST(SUM(ps.amount) AS int)) " +
+		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r) ) " +
 		"FROM Product p " +
-		"INNER JOIN ProductStock ps " +
-		"ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq " +
+		"INNER JOIN Review r " +
+		"ON p.productSeq = r.orderDetail.product.productSeq AND p.category.categorySeq = :categorySeq " +
 		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
 	Page<ProductByCategoryDetailResponse> findProductListByCategoryDetail(@Param("categorySeq") Long categorySeq,
 		Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse("
 		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, "
-		+ "AVG(r.rating), COUNT(r.reviewSeq)) "
+		+ "AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
 		+ "JOIN p.category c "
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE c.parentSeq = :categorySeq "
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryResponse> findProductListByCategory(@Param("categorySeq") Long categorySeq, Pageable pageable);
+	Page<ProductByCategoryResponse> findProductListByCategory(@Param("categorySeq") Long categorySeq,
+		Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) "
