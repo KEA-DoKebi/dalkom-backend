@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-
 // ReadProductDetailResponse에 이하의 정보를 넣기 위한 DTO
 public class ReadProductDetailDTO {
 
