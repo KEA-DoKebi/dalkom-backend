@@ -30,21 +30,21 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 	private final ProductService productService;
 
-	// PRODUCTS-001 (카테고리 별 상품 목록 조회 - 메인 화면에서 )
-	@GetMapping("/api/products/category/{categorySeq}")
+	// PRODUCT-001 (상위 카테고리 별 상품 목록 조회)
+	@GetMapping("/api/product/category/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductListByCategory(@PathVariable Long categorySeq, Pageable pageable) {
 		return Response.success(productService.readProductListByCategory(categorySeq, pageable));
 	}
 
-	// PRODUCTS-002 (상품 상세 정보 조회)
+	// PRODUCT-002 (상품 상세 정보 조회)
 	@GetMapping("/api/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProduct(@PathVariable Long productSeq) {
 		return Response.success(productService.readProduct(productSeq));
 	}
 
-	// PRODUCTS-003 (상품 정보 추가)
+	// PRODUCT-003 (상품 정보 추가)
 	@PostMapping("/api/product")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createProduct(@Valid @RequestBody ProductCreateRequest productCreateRequest) {
@@ -59,14 +59,15 @@ public class ProductController {
 		return Response.success(productService.readProductList(pageable));
 	}
 
-	// PRODUCTS-005 (서브 카테고리 별 상품 목록 조회)
-	@GetMapping("/api/products/category/detail/{categorySeq}")
+	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)
+	@GetMapping("/api/product/category/detail/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductListByCategoryDetail(@PathVariable Long categorySeq, Pageable pageable) {
 		return Response.success(productService.readProductListByCategoryDetail(categorySeq, pageable));
 	}
 
-	@GetMapping("/api/products/category/main")
+	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
+	@GetMapping("/api/product/category/main")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Map<String, List<ProductMainResponse>>> readProductListByCategoryAll(
 		@PageableDefault(size = 8) Pageable pageable) {
