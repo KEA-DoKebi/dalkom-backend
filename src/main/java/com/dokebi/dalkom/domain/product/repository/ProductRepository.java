@@ -27,7 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		"INNER JOIN ProductStock ps " +
 		"ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq " +
 		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryDetailResponse> findProductsByCategoryDetail(@Param("categorySeq") Long categorySeq,
+	Page<ProductByCategoryDetailResponse> findProductListByCategoryDetail(@Param("categorySeq") Long categorySeq,
 		Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse("
@@ -39,7 +39,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE c.parentSeq = :categorySeq "
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryResponse> findProductsByCategory(@Param("categorySeq") Long categorySeq, Pageable pageable);
+	Page<ProductByCategoryResponse> findProductListByCategory(@Param("categorySeq") Long categorySeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) "

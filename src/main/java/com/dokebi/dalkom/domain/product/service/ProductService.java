@@ -69,7 +69,8 @@ public class ProductService {
 		// 	throw new RuntimeException(); // depth가 0인 category를 조회하는게 아니면 Exception 발생시킴
 		// }
 
-		Page<ProductByCategoryResponse> productList = productRepository.findProductsByCategory(categorySeq, pageable);
+		Page<ProductByCategoryResponse> productList = productRepository.findProductListByCategory(categorySeq,
+			pageable);
 
 		if (productList == null || productList.isEmpty()) {
 			throw new ProductNotFoundException();
@@ -79,7 +80,7 @@ public class ProductService {
 	}
 
 	public Page<ProductByCategoryDetailResponse> readProductListByCategoryDetail(Long categorySeq, Pageable pageable) {
-		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductsByCategoryDetail(
+		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByCategoryDetail(
 			categorySeq, pageable);
 
 		if (productList == null || productList.isEmpty()) {
