@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,8 +28,8 @@ import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
@@ -114,10 +113,8 @@ class OrderServiceTest {
 	@DisplayName("주문 상품 상세 서비스 테스트")
 	void readProductDetailTest() {
 		// given
-		List<OrderPageDetailDto> orderList = Collections.singletonList(
-			createOrderPageDetailDto(3L, 3L, 100, "집업 자켓 아이보리", 97300));
-		ReadProductDetailResponse productDetailResponse = new ReadProductDetailResponse("집업 자켓 아이보리",
-			97300);
+		List<OrderPageDetailDto> orderList = List.of(createOrderPageDetailDto(3L, 3L, 100, "집업 자켓 아이보리", 97300));
+		ReadProductDetailResponse productDetailResponse = new ReadProductDetailResponse("집업 자켓 아이보리", 97300);
 		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
 		given(productService.readProduct(anyLong())).willReturn(productDetailResponse);
 

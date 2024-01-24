@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.review.dto;
+package com.dokebi.dalkom.domain.inquiry.dto;
 
 import java.time.LocalDateTime;
 
@@ -13,14 +13,12 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewByUserResponse {
+public class InquiryListByUserResponse {
 
-	private Long reviewSeq;
-	private String content;
-	private Integer rating;
+	// 사용자별 문의 조회 response (사용자용)
+	private Long inquirySeq;
+	private String category;
+	private String title;
 	private LocalDateTime createdAt;
-	private LocalDateTime modifiedAt;
-	private String name;
-	private String imageUrl;
-	private String detail;
+	private String answerState;
 }

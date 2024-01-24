@@ -25,11 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductController {
 	private final ProductService productService;
 
-	// PRODUCTS-001 (카테고리 별 상품 목록 조회)
+	// PRODUCTS-001 (카테고리 별 상품 목록 조회 - 메인 화면에서 )
 	@GetMapping("/api/products/category/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductListByCategory(@PathVariable Long categorySeq,
-		@PageableDefault(size = 8) Pageable pageable) {
+	public Response readProductListByCategory(@PathVariable Long categorySeq, Pageable pageable) {
 		return Response.success(productService.readProductListByCategory(categorySeq, pageable));
 	}
 
@@ -58,8 +57,7 @@ public class ProductController {
 	// PRODUCTS-005 (서브 카테고리 별 상품 목록 조회)
 	@GetMapping("/api/products/category/detail/{categorySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductListByCategoryDetail(@PathVariable Long categorySeq,
-		@PageableDefault(size = 8) Pageable pageable) {
+	public Response readProductListByCategoryDetail(@PathVariable Long categorySeq, Pageable pageable) {
 		return Response.success(productService.readProductListByCategoryDetail(categorySeq, pageable));
 	}
 }
