@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
+public class OrderReadResponse {
 
 	private Long ordrSeq;
 	private String receiverName;
