@@ -109,10 +109,6 @@ public class ProductService {
 		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
 	}
 
-	public Product readByProductSeq(Long productSeq) {
-		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
-	}
-
 	public Page<ReadProductResponse> readProductList(Pageable pageable) {
 		return productRepository.findProductList(pageable);
 	}
