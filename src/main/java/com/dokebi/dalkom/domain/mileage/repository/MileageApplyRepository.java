@@ -17,4 +17,7 @@ public interface MileageApplyRepository extends JpaRepository<MileageApply, Long
 	Page<MileageApplyResponse> findAllMileageAsk(Pageable pageable);
 
 	Optional<MileageApply> findByMilgApplySeq(@Param("milgApplySeq") Long milgApplySeq);
+
+	@Query("SELECT COUNT(m) FROM MileageApply m WHERE m.user.userSeq = :userSeq AND m.approvedState IS NULL")
+	Long countByUserSeqAndApprovedStateIsNull(@Param("userSeq") Long userSeq);
 }
