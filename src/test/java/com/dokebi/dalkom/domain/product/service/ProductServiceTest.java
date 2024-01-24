@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,6 +37,7 @@ import com.dokebi.dalkom.domain.product.repository.ProductRepository;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 
 public class ProductServiceTest {
+	//TODO 누락된 메서드의 테스트코드 추가하기
 
 	@Mock
 	private ProductRepository productRepository;
@@ -58,8 +60,8 @@ public class ProductServiceTest {
 			productOptionService);
 	}
 
-	// 상품 정보 추가
 	@Test
+	@DisplayName("상품 정보 추가")
 	public void createProductTest() {
 		// Given: 주어진 상품 생성 요청 데이터
 		ProductCreateRequest request = createProductCreateRequest();
@@ -77,8 +79,8 @@ public class ProductServiceTest {
 		then(productRepository).should().save(any(Product.class));
 	}
 
-	// 상품 상세 정보 조회
 	@Test
+	@DisplayName("상품 상세 정보 조회")
 	public void readProductByProductSeqTest() {
 		// Given: 주어진 상품 ID
 		Long productSeq = 1L;
@@ -94,8 +96,8 @@ public class ProductServiceTest {
 		assertNotNull(result);
 	}
 
-	// 특정 상품 조회 - 예외 발생
 	@Test
+	@DisplayName("상품 상세 정보 조회 - 예외 발생")
 	public void readProductByProductSeqNotFoundExceptionTest() {
 		// Given: 존재하지 않는 상품 ID
 		Long productSeq = 1L;
@@ -105,8 +107,8 @@ public class ProductServiceTest {
 		assertThrows(ProductNotFoundException.class, () -> productService.readProductByProductSeq(productSeq));
 	}
 
-	// 카테고리 별 상품 목록 조회
 	@Test
+	@DisplayName("카테고리 별 상품 목록 조회")
 	public void readProductListByCategoryTest() {
 		// Given: 카테고리 ID와 페이지 정보
 		Long categorySeq = 1L;
@@ -124,8 +126,8 @@ public class ProductServiceTest {
 		assertThat(result).isNotNull();
 	}
 
-	// 카테고리 별 상품 목록 조회 - 예외 발생
 	@Test
+	@DisplayName("카테고리 별 상품 목록 조회 - 예외 발생")
 	public void readProductListByCategoryNotFoundExceptionTest() {
 		// Given: 존재하지 않는 카테고리 ID
 		Long categorySeq = 1L;
@@ -137,10 +139,8 @@ public class ProductServiceTest {
 			() -> productService.readProductListByCategory(categorySeq, pageable));
 	}
 
-	// TODO 테스트 수정 필요
-
-	// 카테고리 세부 별 상품 목록 조회
 	@Test
+	@DisplayName("카테고리 세부 별 상품 목록 조회")
 	public void readProductListByCategoryDetailTest() {
 		// Given: 카테고리 세부 ID와 페이지 정보
 		Long categorySeq = 1L;
@@ -159,8 +159,8 @@ public class ProductServiceTest {
 		assertThat(result).isNotNull();
 	}
 
-	// 상품 상세 정보 조회
 	@Test
+	@DisplayName("관리자용 상품 리스트 조회")
 	public void readProductTest() {
 		// Given: 상품 ID
 		Long productSeq = 1L;
