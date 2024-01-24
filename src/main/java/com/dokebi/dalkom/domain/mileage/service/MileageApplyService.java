@@ -55,7 +55,7 @@ public class MileageApplyService {
 
 		if (readMileageAskYn(userSeq)) {
 			MileageApply mileageApply = new MileageApply(user, request.getAmount(), null);
-			mileageAskRepository.save(mileageApply);
+			mileageApplyRepository.save(mileageApply);
 		} else {
 			throw new MileageAlreadyApplyException();
 		}
