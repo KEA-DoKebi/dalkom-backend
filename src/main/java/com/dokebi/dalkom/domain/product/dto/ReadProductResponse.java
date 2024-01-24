@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReadProductResponse {
-
 	private Long productSeq;
 	private String name;
 	private Integer price;
@@ -19,4 +18,9 @@ public class ReadProductResponse {
 	private String company;
 	private String optionDetail;
 	private Integer amount;
+
+	public ReadProductResponse(String name, Integer price) {
+		this.name = name;
+		this.price = price;
+	}
 }

@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.order.factory;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
@@ -13,9 +12,9 @@ public class OrderCreateRequestFactory {
 			"123 Main St",
 			"555-1234",
 			"Some memo",
-			Collections.singletonList(1L), // productSeqList
-			Collections.singletonList(2L), // prdtOptionSeqList
-			Collections.singletonList(3)  // amountList
+			List.of(1L), // productSeqList
+			List.of(2L), // prdtOptionSeqList
+			List.of(3)  // amountList
 		);
 	}
 

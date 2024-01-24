@@ -41,7 +41,10 @@ public class TokenService {
 	}
 
 	public AuthResponse decryptAccessToken(String accessToken) {
+		System.out.println("@@@");
 		Jws<Claims> claims = validateToken(accessKey, accessToken);
+		System.out.println(claims.toString());
+
 		String subject = jwtHandler.extractToken(claims);
 
 		String role = "User";
@@ -55,6 +58,9 @@ public class TokenService {
 
 	public Jws<Claims> validateToken(String key, String token) {
 		try {
+			System.out.println("@@@@");
+			System.out.println(key);
+			System.out.println(token);
 			Jws<Claims> claims = jwtHandler.parse(key, token);
 			System.out.println(claims.toString());
 			if (claims == null) {

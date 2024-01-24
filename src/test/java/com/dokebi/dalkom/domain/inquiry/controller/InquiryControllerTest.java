@@ -133,6 +133,7 @@ public class InquiryControllerTest {
 	void answerInquiryTest() throws Exception {
 		// Given
 		Long inquirySeq = 1L;
+		Long adminSeq = 1L;
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory.createInquiryAnswerRequest();
 
 		// When, Then
@@ -141,6 +142,6 @@ public class InquiryControllerTest {
 				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).answerInquiry(inquirySeq, request);
+		verify(inquiryService).answerInquiry(inquirySeq, adminSeq, request);
 	}
 }
