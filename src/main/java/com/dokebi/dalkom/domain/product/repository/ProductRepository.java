@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
@@ -74,4 +75,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findProductList(Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductMainResponse("
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, "
+		+ "AVG(r.rating), COUNT(r.reviewSeq)) "
+		+ "FROM Product p "
+		+ "JOIN p.category c "
+		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "WHERE c.parentSeq = :categorySeq "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+	Page<ProductMainResponse> findProductListByCategoryAll(@Param("categorySeq") Long categorySeq, Pageable pageable);
 }
