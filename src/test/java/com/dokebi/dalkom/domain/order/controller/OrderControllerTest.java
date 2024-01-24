@@ -83,7 +83,6 @@ public class OrderControllerTest {
 		Long orderSeq = 1L;
 
 		// when(실행)
-		mockMvc.perform(get("/api/order/{orderSeq}", orderSeq)).andExpect(status().isOk());
 		mockMvc.perform(get("/api/order/{orderSeq}", orderSeq))
 			.andExpect(status().isOk());
 		// then(검증)
@@ -121,5 +120,5 @@ public class OrderControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(orderStateUpdateRequest)))
 			.andExpect(status().isOk());
-	}
+ 	}
 }

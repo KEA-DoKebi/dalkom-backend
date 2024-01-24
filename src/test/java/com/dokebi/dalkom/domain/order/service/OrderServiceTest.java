@@ -4,6 +4,7 @@ package com.dokebi.dalkom.domain.order.service;
 import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderReadResponseFactory.*;
+import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
+import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
@@ -40,6 +42,7 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.factory.UserFactory;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,6 +60,8 @@ class OrderServiceTest {
 	private ProductStockService productStockService;
 	@Mock
 	private ProductOptionService productOptionService;
+	@Mock
+	private MileageService mileageService;
 	@Mock
 	private UserService userService;
 
@@ -79,6 +84,7 @@ class OrderServiceTest {
 		given(mockProduct.getPrice()).willReturn(10000);
 		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
 		given(productService.readByProductSeq(anyLong())).willReturn(mockProduct);
+		doNothing().when(mileageService).createMileageHistoryAndUpdateUser(any(),anyInt(),anyString());
 		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
 			new ProductOption(2L, "OP1", "의류 사이즈", "M"));
 		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
@@ -205,28 +211,7 @@ class OrderServiceTest {
 
 	}
 
-	/** factory **/
-	private User createMockUser() {
-		return new User("empId001", // empId
-			"password", // password
-			"김철수", // name
-			"chulsu@example.com", // email
-			"서울시 강남구", // address
-			"2023-01-01", // joinedAt
-			"chulsu", // nickname
-			30000 // mileage
-		);
-	}
 
-	private User createMockUserWithInsufficientMileage() {
-		return new User("empId002", // empId
-			"password", // password
-			"이영희", // name
-			"younghi@example.com", // email
-			"서울시 마포구", // address
-			"2023-02-01", // joinedAt
-			"younghi", // nickname
-			500 // mileage
-		);
-	}
+
+
 }
