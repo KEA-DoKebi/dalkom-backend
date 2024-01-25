@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag dokebi-was:latest
+      run: docker build . --file Dockerfile.linux --tag dokebi-was:latest
 
     - name: Tag the Docker image
       run: docker tag dokebi-was:latest dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/dokebi-was:latest
