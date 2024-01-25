@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Optional<Product> findByProductSeq(Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse" +
-		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r) ) " +
+		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) " +
 		"FROM Product p " +
 		"LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq " +
 		"LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq " +
@@ -79,7 +79,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductMainResponse("
 		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, "
-		+ "AVG(r.rating), COUNT(r.reviewSeq)) "
+		+ "AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
 		+ "JOIN p.category c "
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
