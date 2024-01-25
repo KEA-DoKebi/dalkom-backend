@@ -1,5 +1,8 @@
 package com.dokebi.dalkom.domain.notice.controller;
 
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.notice.dto.NoticeCreateRequest;
-import com.dokebi.dalkom.domain.notice.dto.NoticeModifyRequest;
+import com.dokebi.dalkom.domain.notice.dto.NoticeUpdateRequest;
 import com.dokebi.dalkom.domain.notice.service.NoticeService;
+import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +32,12 @@ public class NoticeController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readNotice(@PathVariable Long noticeSeq) {
 
-		return Response.success(noticeService.getNotice(noticeSeq));
+		return Response.success(noticeService.readNotice(noticeSeq));
 	}
 
 	// NOTICE-002 (특정 공지 삭제)
 	@DeleteMapping("/api/notice/{noticeSeq}")
+	@ResponseStatus(HttpStatus.OK)
 	public Response deleteNotice(@PathVariable Long noticeSeq) {
 
 		noticeService.deleteNotice(noticeSeq);
@@ -41,25 +46,27 @@ public class NoticeController {
 
 	// NOTICE-003 (특정 공지 수정)
 	@PutMapping("/api/notice/{noticeSeq}")
-	public Response modifyNotice(@PathVariable Long noticeSeq, @RequestBody NoticeModifyRequest request) {
+	@ResponseStatus(HttpStatus.OK)
+	public Response updateNotice(@PathVariable Long noticeSeq, @Valid @RequestBody NoticeUpdateRequest request) {
 
-		noticeService.modifyNotice(noticeSeq, request);
+		noticeService.updateNotice(noticeSeq, request);
 		return Response.success();
 	}
 
 	// NOTICE-004 (공지 작성)
 	@PostMapping("/api/notice")
-	public Response createNotice(@RequestBody NoticeCreateRequest request) {
+	@ResponseStatus(HttpStatus.OK)
+	public Response createNotice(@LoginUser Long adminSeq, @Valid @RequestBody NoticeCreateRequest request) {
 
-		noticeService.createNotice(request);
+		noticeService.createNotice(adminSeq, request);
 		return Response.success();
 	}
 
 	// NOTICE-005 (공지 전체 조회)
 	@GetMapping("/api/notice")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readNoticeList() {
+	public Response readNoticeList(Pageable pageable) {
 
-		return Response.success(noticeService.getNoticeList());
+		return Response.success(noticeService.readNoticeList(pageable));
 	}
 }

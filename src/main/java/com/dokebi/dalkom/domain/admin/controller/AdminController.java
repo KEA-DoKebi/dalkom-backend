@@ -1,5 +1,8 @@
 package com.dokebi.dalkom.domain.admin.controller;
 
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,15 +23,17 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminController {
 	private final AdminService adminService;
 
-	@GetMapping("/api/admin")
+	// ADMIN-005 (관리자 생성)
+	@PostMapping("/api/admin")
 	@ResponseStatus(HttpStatus.OK)
-	public Response findAdmin() {
-		return Response.success(adminService.readAll());
+	public Response createAdmin(@Valid @RequestBody CreateAdminRequest request) {
+		return adminService.createAdmin(request);
 	}
 
-	@PostMapping("/api/admin")
-	@ResponseStatus(HttpStatus.CREATED)
-	public Response createAdmin(@RequestBody CreateAdminRequest req) {
-		return adminService.createAdmin(req);
+	// ADMIN-006 (관리자 목록 조회)
+	@GetMapping("/api/admin")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readAdminList(Pageable pageable) {
+		return Response.success(adminService.readAdminList(pageable));
 	}
 }

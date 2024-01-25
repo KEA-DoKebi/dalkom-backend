@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.stock.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,9 +26,8 @@ public class ProductStockController {
 	@PutMapping("api/stock/{stockSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readStockListByCategory(@PathVariable Long stockSeq,
-		@RequestBody ProductStockEditRequest request) {
+		@Valid @RequestBody ProductStockEditRequest request) {
 		productStockService.updateStock(stockSeq, request.getAmount());
 		return Response.success();
 	}
-
 }

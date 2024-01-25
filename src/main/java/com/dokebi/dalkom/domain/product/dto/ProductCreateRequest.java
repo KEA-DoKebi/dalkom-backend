@@ -17,7 +17,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 // 상품 생성 requestBody
 // TODO 상품 상세 이미지 추가(후순위)
 public class ProductCreateRequest {
@@ -36,7 +35,7 @@ public class ProductCreateRequest {
 	@NotBlank(message = "ProductCreateRequest info NotBlank 에러")
 	private String info;
 
-	@NotNull(message = "ProductCreateRequest state NotNull 에러")
+	@NotNull(message = "ProductCreateRequest categorySeq NotNull 에러")
 	@Pattern(regexp = "^([YN])$", message = "ProductCreateRequest state Pattern 에러")
 	private String state;
 

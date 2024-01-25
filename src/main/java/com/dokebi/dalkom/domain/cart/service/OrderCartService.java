@@ -1,9 +1,9 @@
 package com.dokebi.dalkom.domain.cart.service;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.dokebi.dalkom.domain.cart.dto.OrderCartCreateRequest;
@@ -22,15 +22,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class OrderCartService {
-
 	private final OrderCartRepository orderCartRepository;
 	private final UserService userService;
 	private final ProductService productService;
-
-	@Transactional
-	public List<OrderCartReadResponse> readOrderCartList(Long userSeq) {
-		return orderCartRepository.findOrderCartList(userSeq);
-	}
 
 	@Transactional
 	public void createOrderCart(Long userSeq, OrderCartCreateRequest request) {
@@ -39,6 +33,10 @@ public class OrderCartService {
 
 		OrderCart orderCart = new OrderCart(user, product, request.getPrdtOptionSeq(), request.getAmount());
 		orderCartRepository.save(orderCart);
+	}
+
+	public Page<OrderCartReadResponse> readOrderCartList(Long userSeq, Pageable pageable) {
+		return orderCartRepository.findOrderCartList(userSeq, pageable);
 	}
 
 	@Transactional

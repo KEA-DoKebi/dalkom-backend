@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.inqury.entity;
+package com.dokebi.dalkom.domain.inquiry.entity;
 
 import java.time.LocalDateTime;
 

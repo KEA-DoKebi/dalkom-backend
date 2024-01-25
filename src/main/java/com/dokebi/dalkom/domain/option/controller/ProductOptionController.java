@@ -18,18 +18,19 @@ import lombok.extern.slf4j.Slf4j;
 public class ProductOptionController {
 	private final ProductOptionService productOptionService;
 
-	// OPTION-001(옵션 목록 조회)
-	@GetMapping("api/option")
+	// OPTION-001 (옵션 목록 조회)
+	@GetMapping("/api/option")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOptionListByCategory() {
-		return Response.success(productOptionService.getOptionList());
+
+		return Response.success(productOptionService.readOptionList());
 	}
 
-	// OPTION-002(옵션 상세 조회)
-	@GetMapping("api/option/{optionCode}")
+	// OPTION-002 (옵션 상세 조회)
+	@GetMapping("/api/option/{optionCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOptionListByCategory(@PathVariable String optionCode) {
-		return Response.success(productOptionService.getOptionDetailList(optionCode));
-	}
 
+		return Response.success(productOptionService.readOptionDetailList(optionCode));
+	}
 }
