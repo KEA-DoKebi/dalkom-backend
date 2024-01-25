@@ -33,6 +33,12 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew test jacocoTestReport
 
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifacts
+        path: build/
+
   Sonarqube_Scanning :
     needs: Gradle_Build
     runs-on: ubuntu-latest
@@ -52,6 +58,13 @@ jobs:
         curl -Lo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
         unzip sonar-scanner-cli.zip
         echo "PATH=$(pwd)/sonar-scanner-4.6.2.2472-linux/bin:$PATH" >> $GITHUB_ENV
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: build-artifacts
+        path: build/
+
 
     - name: Run SonarQube Scan
       env:
