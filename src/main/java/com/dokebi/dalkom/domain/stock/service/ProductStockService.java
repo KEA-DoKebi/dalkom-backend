@@ -94,7 +94,7 @@ public class ProductStockService {
 
 	}
 
-	private Boolean checkProductStock(Long stockSeq) {
+	private boolean checkProductStock(Long stockSeq) {
 		List<ProductStock> productStockList = stockRepository.findProductStockListByStockSeq(stockSeq);
 
 		//해당 상품의 재고를 전부 조회한 뒤, 재고가 전부 0이면 true를 반환
