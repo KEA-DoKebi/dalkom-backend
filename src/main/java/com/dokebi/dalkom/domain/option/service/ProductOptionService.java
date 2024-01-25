@@ -6,22 +6,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.option.dto.OptionCodeResponse;
+import com.dokebi.dalkom.domain.option.entity.ProductOption;
+import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductOptionService {
 	private final ProductOptionRepository productOptionRepository;
 
-	@Transactional
-	public List<OptionCodeResponse> getOptionList() {
+	public List<OptionCodeResponse> readOptionList() {
+
 		return productOptionRepository.findAllOptionCode();
 	}
 
-	@Transactional
-	public List<String> getOptionDetailList(String optionCode) {
+	public List<String> readOptionDetailList(String optionCode) {
+
 		return productOptionRepository.findDetailByOptionCode(optionCode);
+	}
+
+	public ProductOption readProductOptionByPrdtOptionSeq(Long prdtOptionSeq) {
+
+		return productOptionRepository.findProductOptionByPrdtOptionSeq(prdtOptionSeq)
+			.orElseThrow(ProductOptionNotFoundException::new);
 	}
 }
