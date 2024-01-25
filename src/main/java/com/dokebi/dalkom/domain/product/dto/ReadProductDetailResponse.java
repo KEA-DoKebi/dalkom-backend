@@ -16,7 +16,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ReadProductDetailResponse {
-
 	private Long categorySeq;
 	private String name;
 	private Integer price;
@@ -27,7 +26,7 @@ public class ReadProductDetailResponse {
 	private List<StockListDto> stockList;
 	private List<String> productImageUrlList;
 
-	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO,
+	public ReadProductDetailResponse(ReadProductDetailDto productDetailDTO,
 		List<OptionListDto> optionList,
 		List<StockListDto> stockList,
 		List<String> productImageUrlList) {

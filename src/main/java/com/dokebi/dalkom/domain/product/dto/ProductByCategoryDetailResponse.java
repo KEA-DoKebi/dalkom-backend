@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductByCategoryDetailResponse {
-	
 	private Long productSeq;
 	private String name;
 	private Integer price;

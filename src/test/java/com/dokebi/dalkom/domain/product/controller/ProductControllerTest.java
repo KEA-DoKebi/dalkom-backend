@@ -40,7 +40,7 @@ public class ProductControllerTest {
 	private ObjectMapper objectMapper;
 
 	@BeforeEach
-	public void setup() {
+	public void beforeEach() {
 		productService = Mockito.mock(ProductService.class);
 		objectMapper = new ObjectMapper();
 
@@ -65,7 +65,8 @@ public class ProductControllerTest {
 			new PageImpl<>(productByCategoryResponseList, pageable, productByCategoryResponseList.size()));
 
 		// When & Then
-		mockMvc.perform(get("/api/products/category/" + categorySeq).param("page", "0").param("size", "8"))
+		mockMvc.perform(get("/api/product/category/" + categorySeq)
+				.param("page", "0").param("size", "8"))
 			.andExpect(status().isOk());
 	}
 
@@ -75,10 +76,12 @@ public class ProductControllerTest {
 		// Given
 		Long productSeq = 1L;
 		// 상품 상세 정보 조회 결과를 Mock 객체로 생성
-		given(productService.readProduct(productSeq)).willReturn(new ReadProductDetailResponse("테스트 이름", 50000));
+		given(productService.readProduct(productSeq)).willReturn(
+			new ReadProductDetailResponse("테스트 이름", 50000));
 
 		// When & Then
-		mockMvc.perform(get("/api/product/" + productSeq)).andExpect(status().isOk());
+		mockMvc.perform(get("/api/product/" + productSeq))
+			.andExpect(status().isOk());
 	}
 
 	@Test
@@ -90,23 +93,28 @@ public class ProductControllerTest {
 		String jsonRequest = objectMapper.writeValueAsString(productCreateRequest);
 
 		// When & Then
-		mockMvc.perform(post("/api/product").contentType(APPLICATION_JSON).content(jsonRequest))
+		mockMvc.perform(post("/api/product")
+				.contentType(APPLICATION_JSON)
+				.content(jsonRequest))
 			.andExpect(status().isOk());
 	}
 
 	@Test
-	@DisplayName("상품 목록 조회 (PRODUCT-004)")
-	public void readProductListTest() throws Exception {
+	@DisplayName("상품 리스트 조회 - 관리자 화면 (PRODUCT-004)")
+	public void readAdminPageProductListTest() throws Exception {
 		// Given
 		PageRequest pageable = PageRequest.of(0, 10);
 		List<ReadProductResponse> readProductDetailResponseList = createReadProductResponseList();
 
 		// 상품 목록 조회 결과를 Mock 객체로 생성
-		given(productService.readAdminProductList(pageable)).willReturn(
+		given(productService.readAdminPageProductList(pageable)).willReturn(
 			new PageImpl<>(readProductDetailResponseList, pageable, readProductDetailResponseList.size()));
 
 		// When & Then
-		mockMvc.perform(get("/api/product").param("page", "0").param("size", "10")).andExpect(status().isOk());
+		mockMvc.perform(get("/api/product")
+				.param("page", "0")
+				.param("size", "10"))
+			.andExpect(status().isOk());
 	}
 
 	@Test
@@ -122,7 +130,9 @@ public class ProductControllerTest {
 			new PageImpl<>(productByCategoryDetailResponseList, pageable, productByCategoryDetailResponseList.size()));
 
 		// When & Then
-		mockMvc.perform(get("/api/products/category/detail/" + categorySeq).param("page", "0").param("size", "8"))
+		mockMvc.perform(get("/api/product/category/detail/" + categorySeq)
+				.param("page", "0")
+				.param("size", "8"))
 			.andExpect(status().isOk());
 	}
 }

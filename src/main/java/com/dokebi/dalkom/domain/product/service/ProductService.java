@@ -20,7 +20,7 @@ import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
-import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
@@ -41,6 +41,35 @@ public class ProductService {
 	private final CategoryService categoryService;
 	private final ProductOptionService productOptionService;
 
+	// Product 001 - 상위 카테고리로 상품 리스트 조회
+	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
+		Page<ProductByCategoryResponse> productList = productRepository.findProductListByCategory(categorySeq,
+			pageable);
+
+		if (productList == null || productList.isEmpty()) {
+			throw new ProductNotFoundException();
+		}
+
+		return productList;
+	}
+
+	// PRODUCT-002 (상품 상세 정보 조회)
+	public ReadProductDetailResponse readProduct(Long productSeq) {
+		ReadProductDetailDto productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
+
+		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
+		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
+		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
+
+		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
+			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
+			throw new ProductNotFoundException();
+		}
+
+		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
+	}
+
+	// PRODUCT-003 (상품 정보 추가)
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
 		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
@@ -61,23 +90,7 @@ public class ProductService {
 		}
 	}
 
-	public Product readProductByProductSeq(Long productSeq) {
-		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
-	}
-
-	// Product 001 - 상위 카테고리로 상품 리스트 조회
-	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
-		Page<ProductByCategoryResponse> productList = productRepository.findProductListByCategory(categorySeq,
-			pageable);
-
-		if (productList == null || productList.isEmpty()) {
-			throw new ProductNotFoundException();
-		}
-
-		return productList;
-	}
-
-	// Product 004 - 하위 카테고리로 상품 리스트 조회
+	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)
 	public Page<ProductByCategoryDetailResponse> readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
 		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByDetailCategory(
 			categorySeq, pageable);
@@ -89,23 +102,8 @@ public class ProductService {
 		return productList;
 	}
 
-	public ReadProductDetailResponse readProduct(Long productSeq) {
-		ReadProductDetailDTO productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
-
-		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
-		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
-		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
-
-		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
-			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
-			throw new ProductNotFoundException();
-		}
-
-		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
-	}
-
-	public Page<ReadProductResponse> readAdminProductList(Pageable pageable) {
-		return productRepository.findAdminProductList(pageable);
+	public Page<ReadProductResponse> readAdminPageProductList(Pageable pageable) {
+		return productRepository.findAdminPageProductList(pageable);
 	}
 
 	public Map<String, List<ProductMainResponse>> readProductListByCategoryAll(Pageable pageable) {
@@ -121,5 +119,10 @@ public class ProductService {
 			categoryMap.put(categoryResponse.getName(), page.getContent());
 		}
 		return categoryMap;
+	}
+
+	// 다른 Domain Service에서 사용하도록 하는 메소드
+	public Product readProductByProductSeq(Long productSeq) {
+		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 }

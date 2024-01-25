@@ -56,7 +56,7 @@ public class ProductController {
 	@GetMapping("/api/product")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readAdminPageProductList(Pageable pageable) {
-		return Response.success(productService.readAdminProductList(pageable));
+		return Response.success(productService.readAdminPageProductList(pageable));
 	}
 
 	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)

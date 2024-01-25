@@ -26,7 +26,7 @@ public class ReadProductDetailResponseTest {
 		List<StockListDto> stockList = List.of(new StockListDto(1L, 100));
 		List<String> productImageUrlList = Arrays.asList("http://testimageurl1.com", "http://testimageurl2.com");
 
-		ReadProductDetailDTO productDetailDTO = new ReadProductDetailDTO(categorySeq, name, price, info, imageUrl,
+		ReadProductDetailDto productDetailDTO = new ReadProductDetailDto(categorySeq, name, price, info, imageUrl,
 			company);
 
 		// When
@@ -72,7 +72,7 @@ public class ReadProductDetailResponseTest {
 		String company = "Another Test Company";
 
 		// When
-		ReadProductDetailDTO dto = new ReadProductDetailDTO(categorySeq, name, price, info, imageUrl, company);
+		ReadProductDetailDto dto = new ReadProductDetailDto(categorySeq, name, price, info, imageUrl, company);
 
 		// Then
 		assertNotNull(dto);
