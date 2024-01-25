@@ -13,7 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MileageHistoryDto {
+public class MileageHistoryResponse {
 
 	private String type;
 	private LocalDateTime createdAt;
