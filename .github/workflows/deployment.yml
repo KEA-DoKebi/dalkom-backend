@@ -19,7 +19,7 @@ jobs:
       run: docker build . --file Dockerfile --tag dokebi-was:latest
 
     - name: Tag the Docker image
-      run: docker tag my-image:latest dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/dokebi-was:latest
+      run: docker tag dokebi-was:latest dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/dokebi-was:latest
 
     - name: Login to Docker Registry
       run: docker login dokebi-shop.kr-gov-central-1.kcr.dev --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
