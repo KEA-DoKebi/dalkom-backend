@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class InquiryController {
+
 	private final InquiryService inquiryService;
 
 	// INQUIRY-001 (문의 등록)

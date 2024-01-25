@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.magicNumber.InquiryAnswerState;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.category.entity.Category;
@@ -22,12 +23,10 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class InquiryService {
 	private final InquiryRepository inquiryRepository;
 	private final CategoryService categoryService;
@@ -37,30 +36,34 @@ public class InquiryService {
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
-		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
-		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), "N");
+		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
+		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), InquiryAnswerState.NO);
 		inquiryRepository.save(inquiry);
 	}
 
 	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
-		return inquiryRepository.findInquiryListByUser(userSeq, pageable);
+		return inquiryRepository.findInquiryListByUserSeq(userSeq, pageable);
 	}
 
 	public Page<InquiryListResponse> readInquiryListByCategory(Long categorySeq, Pageable pageable) {
-		return inquiryRepository.findInquiryListByCategory(categorySeq, pageable);
+		return inquiryRepository.findInquiryListByCategorySeq(categorySeq, pageable);
 	}
 
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-		return inquiryRepository.findInquiryOne(inquirySeq);
+		return inquiryRepository.findInquiryByInquirySeq(inquirySeq);
 	}
 
 	@Transactional
 	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq);
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
+		makeInquiryAnswer(request, inquiry, admin);
+	}
+
+	private void makeInquiryAnswer(InquiryAnswerRequest request, Inquiry inquiry, Admin admin) {
 		inquiry.setAnswerContent(request.getAnswerContent());
 		inquiry.setAdmin(admin);
-		inquiry.setAnswerState("Y");
+		inquiry.setAnswerState(InquiryAnswerState.YES);
 		inquiry.setAnsweredAt(LocalDateTime.now());
 	}
 

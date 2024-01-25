@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
+import com.dokebi.dalkom.common.magicNumber.UserState;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
@@ -60,7 +61,7 @@ public class User extends EntityDate {
 	private Integer mileage;
 
 	@Column(name = "state", nullable = false)
-	private String deleteState;
+	private String state;
 
 	@Column(name = "deletedAt")
 	private LocalDateTime deletedAt;
@@ -93,7 +94,7 @@ public class User extends EntityDate {
 		this.joinedAt = joinedAt;
 		this.nickname = nickname;
 		this.mileage = mileage;
-		this.deleteState = "N";
+		this.state = UserState.ACTIVE;
 	}
 }
 

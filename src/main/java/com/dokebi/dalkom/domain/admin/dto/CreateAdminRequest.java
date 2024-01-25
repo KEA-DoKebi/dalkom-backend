@@ -40,4 +40,5 @@ public class CreateAdminRequest {
 	public static Admin toEntity(CreateAdminRequest req) {
 		return new Admin(req.getAdminId(), req.getPassword(), req.getNickname(), req.getName(), req.getDepart());
 	}
+
 }

@@ -16,11 +16,9 @@ import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class AdminController {
 	private final AdminService adminService;
 
@@ -28,7 +26,8 @@ public class AdminController {
 	@PostMapping("/api/admin")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createAdmin(@Valid @RequestBody CreateAdminRequest request) {
-		return adminService.createAdmin(request);
+		adminService.createAdmin(request);
+		return Response.success();
 	}
 
 	// ADMIN-006 (관리자 목록 조회)
