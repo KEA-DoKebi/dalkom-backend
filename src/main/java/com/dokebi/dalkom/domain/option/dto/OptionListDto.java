@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.product.dto;
+package com.dokebi.dalkom.domain.option.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 // ReadProductDetailResponse의 List용 DTO
-public class StockListDTO {
+public class OptionListDto {
 
-	private Long productStockSeq;
-	private Integer amount;
+	private Long productOptionSeq;
+	private String detail;
 }

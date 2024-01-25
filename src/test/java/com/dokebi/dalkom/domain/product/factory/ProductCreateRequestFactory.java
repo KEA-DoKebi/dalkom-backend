@@ -2,14 +2,22 @@ package com.dokebi.dalkom.domain.product.factory;
 
 import java.util.List;
 
-import com.dokebi.dalkom.domain.product.dto.OptionAmountDTO;
+import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 
 public class ProductCreateRequestFactory {
 	public static ProductCreateRequest createProductCreateRequest() {
-		List<OptionAmountDTO> optionList = List.of(new OptionAmountDTO(1L, 5000));
+		List<OptionAmountDto> optionList =
+			List.of(new OptionAmountDto(1L, 5000));
 
-		return new ProductCreateRequest(3L, "name", 5000, "info", "Y", "imageUrl",
-			"Limbus Company", optionList);
+		return new ProductCreateRequest(
+			3L,
+			"name",
+			5000,
+			"info",
+			"Y",
+			"imageUrl",
+			"Limbus Company",
+			optionList);
 	}
 }
