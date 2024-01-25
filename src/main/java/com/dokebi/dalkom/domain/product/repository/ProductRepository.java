@@ -17,11 +17,7 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
-	Optional<Product> findByProductSeq(Long productSeq);
-
-	// Product 001 - 상위 카테고리 상품 리스트 조회를 위한 JPQL 문
-	// 부모 카테고리가 무엇인지 확인하기 위해 OrderDetail 테이블과 조인을 한번 더 한다.
+	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse( "
 		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
@@ -29,42 +25,23 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE p.category.parentSeq = :categorySeq "
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
-	Page<ProductByCategoryResponse> findProductListByCategory(@Param("categorySeq") Long categorySeq,
-		Pageable pageable);
+	Page<ProductByCategoryResponse> findProductListByCategory(
+		@Param("categorySeq") Long categorySeq, Pageable pageable);
 
-	// Product 004 - 하위 카테고리 상품 리스트 조회를 위한 JPQL문
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse( "
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
-		+ "FROM Product p "
-		+ "LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq "
-		+ "LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
-		+ "WHERE p.category.categorySeq = :categorySeq "
-		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company" )
-	Page<ProductByCategoryDetailResponse> findProductListByDetailCategory(@Param("categorySeq") Long categorySeq,
-		Pageable pageable);
-
-	// Product 005 메인 페이지 카테고리별 상품 리스트 조회
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductMainResponse( "
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
-		+ "FROM Product p "
-		+ "JOIN p.category c "
-		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
-		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
-		+ "WHERE c.parentSeq = :categorySeq "
-		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
-	Page<ProductMainResponse> findProductListByCategoryAll(@Param("categorySeq") Long categorySeq, Pageable pageable);
-
+	// PRODUCT-002 - 상품 상세 정보 조회
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto(p.category.categorySeq, "
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) "
 		+ "FROM Product p "
 		+ "WHERE p.productSeq = :productSeq ")
 	ReadProductDetailDto findProductDetailBySeq(@Param("productSeq") Long productSeq);
 
+	// PRODUCT-002 - 상품 상세 정보 조회
 	@Query("SELECT pi.imageUrl "
 		+ "FROM ProductImage pi "
 		+ "WHERE pi.product.productSeq = :productSeq ")
 	List<String> findProductImageBySeq(@Param("productSeq") Long productSeq);
 
+	// PRODUCT-004 상품 리스트 조회 - 관리자 화면
 	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse( "
 		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.productOption.detail, ps.amount)"
 		+ "FROM Product p "
@@ -73,4 +50,30 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findAdminPageProductList(Pageable pageable);
+
+	// PRODUCT-005 - 하위 카테고리 별 상품 목록 조회
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "FROM Product p "
+		+ "LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
+		+ "WHERE p.category.categorySeq = :categorySeq "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+	Page<ProductByCategoryDetailResponse> findProductListByDetailCategory(
+		@Param("categorySeq") Long categorySeq, Pageable pageable);
+
+	// PRODUCT-006 - 전체 카테고리 별 상품 목록 조회 - 메인 화면
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductMainResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "FROM Product p "
+		+ "JOIN p.category c "
+		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "WHERE c.parentSeq = :categorySeq "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
+	Page<ProductMainResponse> findProductListByCategoryAll(
+		@Param("categorySeq") Long categorySeq, Pageable pageable);
+
+	// 다른 Domain Service에서 사용하도록 하는 메소드
+	Optional<Product> findByProductSeq(Long productSeq);
 }

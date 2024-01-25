@@ -71,7 +71,8 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Map<String, List<ProductMainResponse>>> readProductListByCategoryAll(
 		@PageableDefault(size = 8) Pageable pageable) {
-		Map<String, List<ProductMainResponse>> categoryProducts = productService.readProductListByCategoryAll(pageable);
+		Map<String, List<ProductMainResponse>> categoryProducts
+			= productService.readProductListByCategoryAll(pageable);
 		return ResponseEntity.ok(categoryProducts);
 	}
 }

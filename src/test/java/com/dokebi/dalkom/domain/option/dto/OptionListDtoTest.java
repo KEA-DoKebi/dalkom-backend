@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.product.dto;
+package com.dokebi.dalkom.domain.option.dto;
 
 import static org.junit.jupiter.api.Assertions.*;
 

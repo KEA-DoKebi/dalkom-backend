@@ -33,7 +33,7 @@ import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductService {
 	private final ProductRepository productRepository;
@@ -41,7 +41,7 @@ public class ProductService {
 	private final CategoryService categoryService;
 	private final ProductOptionService productOptionService;
 
-	// Product 001 - 상위 카테고리로 상품 리스트 조회
+	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
 		Page<ProductByCategoryResponse> productList = productRepository.findProductListByCategory(categorySeq,
 			pageable);
@@ -56,7 +56,6 @@ public class ProductService {
 	// PRODUCT-002 (상품 상세 정보 조회)
 	public ReadProductDetailResponse readProduct(Long productSeq) {
 		ReadProductDetailDto productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
-
 		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
 		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
@@ -90,6 +89,11 @@ public class ProductService {
 		}
 	}
 
+	// PRODUCT-004 (상품 리스트 조회 - 관리자 화면)
+	public Page<ReadProductResponse> readAdminPageProductList(Pageable pageable) {
+		return productRepository.findAdminPageProductList(pageable);
+	}
+
 	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)
 	public Page<ProductByCategoryDetailResponse> readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
 		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByDetailCategory(
@@ -102,12 +106,8 @@ public class ProductService {
 		return productList;
 	}
 
-	public Page<ReadProductResponse> readAdminPageProductList(Pageable pageable) {
-		return productRepository.findAdminPageProductList(pageable);
-	}
-
+	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
 	public Map<String, List<ProductMainResponse>> readProductListByCategoryAll(Pageable pageable) {
-
 		Map<String, List<ProductMainResponse>> categoryMap = new HashMap<>();
 		List<CategoryResponse> categoryList = categoryService.readCategoryList();
 

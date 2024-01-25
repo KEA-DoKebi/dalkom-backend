@@ -7,9 +7,17 @@ import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 
 public class ProductCreateRequestFactory {
 	public static ProductCreateRequest createProductCreateRequest() {
-		List<OptionAmountDto> optionList = List.of(new OptionAmountDto(1L, 5000));
+		List<OptionAmountDto> optionList =
+			List.of(new OptionAmountDto(1L, 5000));
 
-		return new ProductCreateRequest(3L, "name", 5000, "info", "Y", "imageUrl",
-			"Limbus Company", optionList);
+		return new ProductCreateRequest(
+			3L,
+			"name",
+			5000,
+			"info",
+			"Y",
+			"imageUrl",
+			"Limbus Company",
+			optionList);
 	}
 }
