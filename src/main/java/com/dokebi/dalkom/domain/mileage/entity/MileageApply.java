@@ -24,6 +24,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "milgApply")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class MileageApply extends EntityDate {
 
 	@Id
