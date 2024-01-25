@@ -17,7 +17,7 @@ import com.dokebi.dalkom.domain.stock.repository.ProductStockHistoryRepository;
 import com.dokebi.dalkom.domain.stock.repository.ProductStockRepository;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 // @RequiredArgsConstructor
 public class ProductStockService {
 	private final ProductStockRepository stockRepository;
@@ -33,6 +33,7 @@ public class ProductStockService {
 		this.productService = productService;
 	}
 
+	@Transactional
 	public void updateStock(Long stockSeq, Integer amount) {
 		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
 
@@ -51,6 +52,7 @@ public class ProductStockService {
 		}
 	}
 
+	@Transactional
 	public void updateStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
@@ -70,6 +72,7 @@ public class ProductStockService {
 		}
 	}
 
+	@Transactional
 	public void createStock(ProductStock stock) {
 		stockRepository.save(stock);
 	}
