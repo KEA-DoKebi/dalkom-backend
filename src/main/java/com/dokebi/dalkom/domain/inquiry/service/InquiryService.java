@@ -25,9 +25,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class InquiryService {
 	private final InquiryRepository inquiryRepository;
 	private final CategoryService categoryService;
@@ -42,17 +42,14 @@ public class InquiryService {
 		inquiryRepository.save(inquiry);
 	}
 
-	@Transactional
 	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
 		return inquiryRepository.findInquiryListByUser(userSeq, pageable);
 	}
 
-	@Transactional
 	public Page<InquiryListResponse> readInquiryListByCategory(Long categorySeq, Pageable pageable) {
 		return inquiryRepository.findInquiryListByCategory(categorySeq, pageable);
 	}
 
-	@Transactional
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
 		return inquiryRepository.findInquiryOne(inquirySeq);
 	}
@@ -65,5 +62,9 @@ public class InquiryService {
 		inquiry.setAdmin(admin);
 		inquiry.setAnswerState("Y");
 		inquiry.setAnsweredAt(LocalDateTime.now());
+	}
+
+	public Page<InquiryListResponse> readInquiryListByCategorySearch(Long categorySeq,String title, Pageable pageable) {
+		return inquiryRepository.findInquiryListByCategorySearch(categorySeq,title,pageable);
 	}
 }

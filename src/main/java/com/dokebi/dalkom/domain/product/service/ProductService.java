@@ -128,4 +128,8 @@ public class ProductService {
 		return categoryMap;
 	}
 
+	public Page<ReadProductResponse> readProductListSearch(String name ,String company,Pageable pageable) {
+		return productRepository.findProductListSearch(name,company,pageable);
+	}
+
 }

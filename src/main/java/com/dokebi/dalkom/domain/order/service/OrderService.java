@@ -176,6 +176,11 @@ public class OrderService {
 
 		return orderDetail;
 	}
+
+	// 주문 검색 조회 서비스
+	public Page<OrderReadResponse> readOrderListBySearch(String receiverName,Pageable pageable) {
+		return orderRepository.findAllOrderListByReceiverName(receiverName,pageable);
+	}
 }
 
 

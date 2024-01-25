@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,5 +53,13 @@ public class MileageApplyController {
 
 		mileageApplyService.createMileageAsk(userSeq, request);
 		return Response.success();
+	}
+
+	// MILEAGE-006 (마일리지 신청 조회 검색 (관리자))
+	@GetMapping("/api/mileage/ask/search")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readMileageAskSearch(@RequestParam String email,@RequestParam String nickname,@RequestParam String name, Pageable pageable) {
+
+		return Response.success(mileageApplyService.readMileageAskSearch(email,nickname,name,pageable));
 	}
 }

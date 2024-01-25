@@ -64,4 +64,15 @@ public class AdminService {
 	public Admin readAdminByAdminId(String adminId) {
 		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
 	}
+
+	public Page<AdminDto> readAdminListSearch(String adminId,String name,String nickname,Pageable pageable) {
+		Page<Admin> adminList = adminRepository.findAdminListBySearch(adminId,name,nickname,pageable);
+		List<AdminDto> adminDtoList = new ArrayList<>();
+		for (Admin admin : adminList) {
+			AdminDto adminDto = AdminDto.toDto(admin);
+			adminDtoList.add(adminDto);
+		}
+
+		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
+	}
 }

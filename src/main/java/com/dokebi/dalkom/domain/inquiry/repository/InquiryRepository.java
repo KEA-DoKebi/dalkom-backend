@@ -33,4 +33,13 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 		+ "FROM Inquiry i "
 		+ "WHERE i.inquirySeq = :inquirySeq")
 	InquiryOneResponse findInquiryOne(@Param("inquirySeq") Long inquirySeq);
+
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
+		+ "i.title, i.content, i.createdAt, i.answerState, i.answeredAt, i.answerContent) "
+		+ "FROM Inquiry i "
+		+ "WHERE i.category.categorySeq = :categorySeq "
+		+ "AND i.title LIKE CONCAT('%', :title, '%')")
+	Page<InquiryListResponse> findInquiryListByCategorySearch(@Param("categorySeq") Long categorySeq,@Param("title") String title, Pageable pageable);
+
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,5 +62,12 @@ public class InquiryController {
 		@LoginUser Long adminSeq, @Valid @RequestBody InquiryAnswerRequest request) {
 		inquiryService.answerInquiry(inquirySeq, adminSeq, request);
 		return Response.success();
+	}
+
+	// INQUIRY-007 (문의 카테고리 별 문의 검색)
+	@GetMapping("/api/inquiry/category/{categorySeq}/search")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readInquiryByCategorySearch(@PathVariable Long categorySeq,@RequestParam String title, Pageable pageable) {
+		return Response.success(inquiryService.readInquiryListByCategorySearch(categorySeq ,title, pageable));
 	}
 }
