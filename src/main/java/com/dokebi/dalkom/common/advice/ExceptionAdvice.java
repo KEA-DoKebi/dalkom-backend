@@ -125,7 +125,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response productNotFoundException() {
-		return Response.failure(-1200, "요청한 상품을 찾을 수 없습니다.");
+		return Response.failure(-1200, "해당 상품을 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(InvalidProductInputException.class)

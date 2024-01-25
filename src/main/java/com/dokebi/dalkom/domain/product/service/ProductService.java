@@ -152,4 +152,17 @@ public class ProductService {
 		}
 	}
 
+	public void deactiveProductBySeq(Long productSeq) {
+		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+
+		product.setState("N");
+	}
+
+	// public void deleteProduct(Long productSeq) {
+	// 	try {
+	// 		productRepository.deleteById(productSeq);
+	// 	} catch (EmptyResultDataAccessException e) {
+	// 		throw new ProductNotFoundException();
+	// 	}
+	// }
 }

@@ -1,8 +1,11 @@
 package com.dokebi.dalkom.domain.stock.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.entity.ProductStockHistory;
 import com.dokebi.dalkom.domain.stock.exception.InvalidAmountException;
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductStockService {
 	private final ProductStockRepository stockRepository;
 	private final ProductStockHistoryRepository stockHistoryRepository;
+	private final ProductService productService;
 
 	public void updateStock(Long stockSeq, Integer amount) {
 		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
@@ -33,22 +37,28 @@ public class ProductStockService {
 		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, amountChanged);
 
 		stockHistoryRepository.save(stockHistory);
+		if (checkProductStock(stockSeq)) {
+			productService.deactiveProductBySeq(stock.getProduct().getProductSeq());
+		}
 	}
 
 	public void updateStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(
-				productSeq, prdtOptionSeq)
+		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
 		Integer amount = stock.getAmount() - amountChanged;
 		if (amount < 0) {
 			throw new NotEnoughStockException();
 		}
+
 		stock.setAmount(amount);
 
 		ProductStockHistory stockHistory = new ProductStockHistory(stock, amount, amountChanged);
 
 		stockHistoryRepository.save(stockHistory);
+		if (checkProductStock(stock.getPrdtStockSeq())) {
+			productService.deactiveProductBySeq(productSeq);
+		}
 	}
 
 	public void createStock(ProductStock stock) {
@@ -56,9 +66,7 @@ public class ProductStockService {
 	}
 
 	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
-		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(
-				productSeq,
-				prdtOptionSeq)
+		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
 		if (stock.getAmount() - amountChanged < 0) {
@@ -71,5 +79,12 @@ public class ProductStockService {
 		return stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq, optionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
+	}
+
+	private Boolean checkProductStock(Long stockSeq) {
+		List<ProductStock> productStockList = stockRepository.findProductStockListByStockSeq(stockSeq);
+
+		//해당 상품의 재고를 전부 조회한 뒤, 재고가 전부 0이면 true를 반환
+		return productStockList.stream().allMatch(stock -> stock.getAmount() == 0);
 	}
 }
