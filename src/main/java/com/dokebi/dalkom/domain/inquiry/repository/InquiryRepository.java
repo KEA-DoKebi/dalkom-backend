@@ -20,17 +20,17 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 		+ "FROM Inquiry i "
 		+ "JOIN Category c ON i.category.categorySeq = c.categorySeq "
 		+ "WHERE i.user.userSeq = :userSeq")
-	Page<InquiryListByUserResponse> findInquiryListByUser(@Param("userSeq") Long userSeq, Pageable pageable);
+	Page<InquiryListByUserResponse> findInquiryListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
 		+ "i.title, i.content, i.createdAt, i.answerState, i.answeredAt, i.answerContent) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.category.categorySeq = :categorySeq")
-	Page<InquiryListResponse> findInquiryListByCategory(@Param("categorySeq") Long categorySeq, Pageable pageable);
+	Page<InquiryListResponse> findInquiryListByCategorySeq(@Param("categorySeq") Long categorySeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse("
 		+ "i.title, i.content, i.createdAt, i.answerContent, i.answeredAt, i.admin.nickname) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.inquirySeq = :inquirySeq")
-	InquiryOneResponse findInquiryOne(@Param("inquirySeq") Long inquirySeq);
+	InquiryOneResponse findInquiryByInquirySeq(@Param("inquirySeq") Long inquirySeq);
 }

@@ -12,4 +12,5 @@ public class CategoryResponse {
 	private Long categorySeq;
 	private String name;
 	private String imageUrl;
+
 }

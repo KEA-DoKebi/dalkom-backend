@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.magicNumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
@@ -48,18 +49,18 @@ public class OrderService {
 	@Transactional
 	public void createOrder(OrderCreateRequest request) {
 
-		int totalPrice = 0;
+		Integer orderTotalPrice = 0;
 
-		// totalPrice를 먼저 계산해준다.
+		// orderTotalPrice를 먼저 계산해준다.
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
-			totalPrice += calculateProductPrice(request, i);
+			orderTotalPrice += calculateProductPrice(request, i);
 		}
 
 		// 어떤 사용자인지 조회
 		User user = userService.readUserByUserSeq(request.getUserSeq());
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
-		if (totalPrice <= user.getMileage()) {
+		if (orderTotalPrice <= user.getMileage()) {
 
 			// 주문을 위한 entity 생성 후 저장
 			Order order = new Order(
@@ -68,7 +69,7 @@ public class OrderService {
 				request.getReceiverAddress(),
 				request.getReceiverMobileNum(),
 				request.getReceiverMemo(),
-				totalPrice
+				orderTotalPrice
 			);
 			orderRepository.save(order);
 
@@ -83,9 +84,12 @@ public class OrderService {
 			}
 
 			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
-			Integer amount = (user.getMileage() - totalPrice);
+			Integer totalMileage = (user.getMileage() - orderTotalPrice);
 
-			mileageService.createMileageHistoryAndUpdateUser(user.getUserSeq(), amount, "2");
+			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
+
+			//// 사용자의 마일리지 업데이트
+			user.setMileage(totalMileage);
 		} else {
 			throw new MileageLackException();
 		}

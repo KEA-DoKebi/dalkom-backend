@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
-import com.dokebi.dalkom.domain.cart.exception.OrderCartEmptyResultDataAccessException;
+import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageAlreadyApplyException;
@@ -138,7 +138,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderNotFoundException() {
-
 		return Response.failure(-1300, "주문을 찾을수 없습니다.");
 	}
 
@@ -152,19 +151,17 @@ public class ExceptionAdvice {
 	@ExceptionHandler(MileageApplyNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public Response mileageApplyNotFoundException() {
-
 		return Response.failure(-1401, "찾고자 하는 마일리지 신청 정보를 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(MileageAlreadyApplyException.class)
 	@ResponseStatus(HttpStatus.CONFLICT)
 	public Response mileageAlreadyApplyException() {
-
 		return Response.failure(-1402, "이미 진행중인 마일리지 신청 내역이 존재합니다.");
 	}
 
 	// 카트
-	@ExceptionHandler(OrderCartEmptyResultDataAccessException.class)
+	@ExceptionHandler(OrderCartNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderCartEmptyResultDataAccessException() {
 		return Response.failure(-1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
@@ -200,14 +197,12 @@ public class ExceptionAdvice {
 	@ExceptionHandler(ReviewNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response reviewNotFoundException() {
-
 		return Response.failure(-1800, "요청하신 리뷰를 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(OrderDetailNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderDetailNotFoundException() {
-
 		return Response.failure(-1801, "요청하신 주문상세를 찾을 수 없습니다.");
 	}
 
@@ -222,7 +217,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(AdminNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response adminNotFoundException() {
-
 		return Response.failure(-2000, "해당 관리자를 찾을 수 없습니다.");
 	}
 
@@ -230,7 +224,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(InquiryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response inquiryNotFoundException() {
-
 		return Response.failure(-2100, "해당 문의를 찾을 수 없습니다.");
 	}
 
@@ -238,7 +231,6 @@ public class ExceptionAdvice {
 	@ExceptionHandler(NoticeNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response noticeNotFoundException() {
-
 		return Response.failure(-2200, "해당 공지를 찾을 수 없습니다.");
 	}
 }
