@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-// ProductCreateRequest의 List용 DTO
+// 옵션과 재고를 List로 다루기 위한 DTO
 public class OptionAmountDTO {
 
 	private Long prdtOptionSeq;

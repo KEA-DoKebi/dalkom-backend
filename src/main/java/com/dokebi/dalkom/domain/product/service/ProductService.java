@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.product.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
@@ -126,6 +128,28 @@ public class ProductService {
 			categoryMap.put(categoryResponse.getName(), page.getContent());
 		}
 		return categoryMap;
+	}
+
+	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
+		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+
+		product.setCategory(categoryService.readCategoryBySeq(request.getCategorySeq()));
+		product.setName(request.getName());
+		product.setPrice(request.getPrice());
+		product.setInfo(request.getInfo());
+		product.setImageUrl(request.getImageUrl());
+		product.setCompany(request.getCompany());
+		product.setState(request.getState());
+
+		for (OptionAmountDTO optionAmountDTO : request.getOpitonAmountList()) {
+			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
+				optionAmountDTO.getPrdtOptionSeq());
+
+			// updateStock은 History를 남기는 메서드이므로, 재고가 다를 경우에만 실행하기
+			if (!Objects.equals(stock.getAmount(), optionAmountDTO.getAmount())) {
+				productStockService.updateStock(stock.getPrdtStockSeq(), optionAmountDTO.getAmount());
+			}
+		}
 	}
 
 }

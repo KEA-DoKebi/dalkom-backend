@@ -14,12 +14,12 @@ import com.dokebi.dalkom.domain.stock.repository.ProductStockRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ProductStockService {
 	private final ProductStockRepository stockRepository;
 	private final ProductStockHistoryRepository stockHistoryRepository;
 
-	@Transactional
 	public void updateStock(Long stockSeq, Integer amount) {
 		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
 
@@ -35,7 +35,6 @@ public class ProductStockService {
 		stockHistoryRepository.save(stockHistory);
 	}
 
-	@Transactional
 	public void updateStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(
 				productSeq, prdtOptionSeq)
@@ -52,12 +51,10 @@ public class ProductStockService {
 		stockHistoryRepository.save(stockHistory);
 	}
 
-	@Transactional
 	public void createStock(ProductStock stock) {
 		stockRepository.save(stock);
 	}
 
-	@Transactional
 	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(
 				productSeq,
@@ -67,5 +64,12 @@ public class ProductStockService {
 		if (stock.getAmount() - amountChanged < 0) {
 			throw new NotEnoughStockException();
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public ProductStock readStockByProductAndOptionSeq(Long productSeq, Long optionSeq) {
+		return stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq, optionSeq)
+			.orElseThrow(ProductStockNotFoundException::new);
+
 	}
 }
