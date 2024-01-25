@@ -58,7 +58,7 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
             ./build
-          key: ${{ needs.Build_with_Test.outputs.cache-key }}
+          key: gradle-packages-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}}
 
       - name: Run SonarQube analysis
         env:
