@@ -7,18 +7,15 @@ import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -110,11 +107,10 @@ class MileageApplyServiceTest {
 		Integer expectedAmount = mileageApply.getAmount();
 
 		// 메서드 호출 및 검증
-		mileageApplyService.updateMileageAskState(milgApplySeq);
+		mileageApplyService.updateMileageApply(milgApplySeq);
 
 		// 모킹한 메서드 호출 검증
-		verify(mileageService).createMileageHistoryAndUpdateUser(eq(expectedUserSeq),
-			eq(expectedAmount), any());
+		verify(mileageService).createMileageHistory(any(), any(), any(), any());
 
 		verify(mileageApplyRepository, times(1)).save(mileageApply);
 	}
@@ -133,7 +129,7 @@ class MileageApplyServiceTest {
 		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
 
 		// 테스트 메서드 실행
-		mileageApplyService.createMileageAsk(userSeq, mileageApplyRequest);
+		mileageApplyService.createMileageApply(userSeq, mileageApplyRequest);
 
 		// Mock 객체가 특정 메서드들을 호출했는지 확인
 		verify(userService, times(1)).readUserByUserSeq(userSeq);

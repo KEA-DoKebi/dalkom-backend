@@ -130,7 +130,7 @@ public class ProductServiceTest {
 		ProductCreateRequest request = createProductCreateRequest();
 
 		// Mock 설정
-		given(categoryService.readCategoryBySeq(anyLong())).willReturn(
+		given(categoryService.readCategoryByCategorySeq(anyLong())).willReturn(
 			new Category("메이크업", 1L, "Url"));
 		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong()))
 			.willReturn(ProductOption.createProductOption());

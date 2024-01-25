@@ -17,7 +17,6 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -65,7 +64,7 @@ class MileageApplyControllerTest {
 		mockMvc.perform(put("/api/milage/ask/{milgApplySeq}", milgApplySeq))
 			.andExpect(status().isOk());
 
-		verify(mileageApplyService).updateMileageAskState(eq(milgApplySeq));
+		verify(mileageApplyService).updateMileageApply(eq(milgApplySeq));
 	}
 
 	@Test
@@ -90,7 +89,7 @@ class MileageApplyControllerTest {
 				.content(new ObjectMapper().writeValueAsString(request)))
 			.andExpect(status().isOk());
 
-		verify(mileageApplyService).createMileageAsk(eq(userSeq), eq(request));
+		verify(mileageApplyService).createMileageApply(eq(userSeq), eq(request));
 	}
 
 }
