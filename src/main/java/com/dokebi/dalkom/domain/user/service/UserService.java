@@ -74,4 +74,14 @@ public class UserService {
 	public User readUserByUserSeq(Long userSeq) {
 		return userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 	}
+
+	public Page<UserListResponse> readUserListSearch(String email,String nickname, Pageable pageable ) {
+		Page<User> usersPage = userRepository.findUsersBySearch(email,nickname,pageable);
+
+		List<UserListResponse> dtoList = usersPage.getContent().stream()
+			.map(UserListResponse::toDto)
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(dtoList, pageable, usersPage.getTotalElements());
+	}
 }
