@@ -9,37 +9,54 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
-import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Optional<Product> findByProductSeq(Long productSeq);
 
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse" +
-		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, CAST(SUM(ps.amount) AS int)) " +
-		"FROM Product p " +
-		"INNER JOIN ProductStock ps " +
-		"ON p.productSeq = ps.product.productSeq AND p.category.categorySeq = :categorySeq " +
-		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryDetailResponse> findProductListByCategoryDetail(@Param("categorySeq") Long categorySeq,
-		Pageable pageable);
-
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse("
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, "
-		+ "AVG(r.rating), COUNT(r.reviewSeq)) "
+	// Product 001 - 상위 카테고리 상품 리스트 조회를 위한 JPQL문
+	// 부모 카테고리가 무엇인지 확인하기 위해 OrderDetail 테이블과 조인을 한번 더 한다.
+	// @Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse("
+	// 	+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+	// 	+ "FROM Product p "
+	// 	+ "LEFT JOIN p.category c "
+	// 	+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+	// 	+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+	// 	+ "WHERE c.parentSeq = :categorySeq "
+	// 	+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
-		+ "JOIN p.category c "
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "LEFT JOIN Category c ON p.category.categorySeq = c.categorySeq "
 		+ "WHERE c.parentSeq = :categorySeq "
-		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
 	Page<ProductByCategoryResponse> findProductListByCategory(@Param("categorySeq") Long categorySeq,
+		Pageable pageable);
+
+	// Product 004 - 하위 카테고리 상품 리스트 조회를 위한 JPQL문
+	// @Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse( "
+	// 	+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+	// 	+ "FROM Product p "
+	// 	+ "LEFT JOIN Review r ON p.productSeq = r.orderDetail.product.productSeq "
+	// 	+ "WHERE p.category.categorySeq = :categorySeq "
+	// 	+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "FROM Product p "
+		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "WHERE p.category.categorySeq = :categorySeq "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
+	Page<ProductByCategoryDetailResponse> findProductListByDetailCategory(@Param("categorySeq") Long categorySeq,
 		Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
@@ -47,19 +64,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "FROM Product p "
 		+ "WHERE p.productSeq = :productSeq ")
 	ReadProductDetailDTO findProductDetailBySeq(@Param("productSeq") Long productSeq);
-
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.StockListDTO(ps.prdtStockSeq, ps.amount) "
-		+ "FROM ProductStock ps "
-		+ "WHERE ps.product.productSeq = :productSeq ")
-	List<StockListDto> findStockListBySeq(@Param("productSeq") Long productSeq);
-
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.OptionListDTO( "
-		+ "po.prdtOptionSeq, po.detail) "
-		+ "FROM ProductOption po "
-		+ "INNER JOIN ProductStock ps "
-		+ "ON po.prdtOptionSeq = ps.productOption.prdtOptionSeq "
-		+ "AND ps.product.productSeq = :productSeq ")
-	List<OptionListDto> findOptionListBySeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT pi.imageUrl "
 		+ "FROM ProductImage pi "
@@ -73,5 +77,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ON p.productSeq = ps.product.productSeq "
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
-	Page<ReadProductResponse> findAdminPageProductList(Pageable pageable);
+	Page<ReadProductResponse> findAdminProductList(Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductMainResponse("
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, "
+		+ "AVG(r.rating), COUNT(r.reviewSeq)) "
+		+ "FROM Product p "
+		+ "JOIN p.category c "
+		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "WHERE c.parentSeq = :categorySeq "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+	Page<ProductMainResponse> findProductListByCategoryAll(@Param("categorySeq") Long categorySeq, Pageable pageable);
 }
