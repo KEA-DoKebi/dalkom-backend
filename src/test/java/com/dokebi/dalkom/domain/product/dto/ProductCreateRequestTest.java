@@ -13,6 +13,8 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
+
 public class ProductCreateRequestTest {
 
 	private static Validator validator;
@@ -26,7 +28,7 @@ public class ProductCreateRequestTest {
 	private ProductCreateRequest createValidDto() {
 		return new ProductCreateRequest(
 			1L, "상품명", 10000, "상품 정보", "Y", "image/url", "회사명",
-			Collections.singletonList(new OptionAmountDTO(1L, 10))
+			Collections.singletonList(new OptionAmountDto(1L, 10))
 		);
 	}
 
