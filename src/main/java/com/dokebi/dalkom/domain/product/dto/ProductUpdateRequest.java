@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
+import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -39,5 +41,5 @@ public class ProductUpdateRequest {
 	private String state;
 
 	@NotEmpty(message = "ProductUpdateRequest stockByOptionList NotEmpty 에러")
-	private List<OptionAmountDTO> opitonAmountList;
+	private List<OptionAmountDto> opitonAmountList;
 }

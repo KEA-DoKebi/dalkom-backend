@@ -13,68 +13,38 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
+import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
+import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
-import com.dokebi.dalkom.domain.product.dto.OptionAmountDTO;
-import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
-import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
-import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductService {
-
 	private final ProductRepository productRepository;
 	private final ProductStockService productStockService;
 	private final CategoryService categoryService;
 	private final ProductOptionService productOptionService;
 
-	@Transactional
-	public void createProduct(ProductCreateRequest request) {
-		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
-
-		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
-			request.getImageUrl(), request.getCompany(), request.getState());
-
-		productRepository.save(newProduct);
-
-		// 초기 재고 등록
-		for (OptionAmountDTO optionAmountDTO : request.getPrdtOptionList()) {
-			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(
-				optionAmountDTO.getPrdtOptionSeq());
-
-			ProductStock initialStock = new ProductStock(newProduct, option, optionAmountDTO.getAmount());
-
-			productStockService.createStock(initialStock);
-		}
-	}
-
-	public Product readProductByProductSeq(Long productSeq) {
-		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
-	}
-
-	// Product 001에서 사용하는 depth 0의 카테고리 리스트 조회
+	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
-		// Category category = categoryService.readCategoryBySeq(categorySeq);
-		// if (category.getParentSeq() != 0) {
-		// 	throw new RuntimeException(); // depth가 0인 category를 조회하는게 아니면 Exception 발생시킴
-		// }
-
 		Page<ProductByCategoryResponse> productList = productRepository.findProductListByCategory(categorySeq,
 			pageable);
 
@@ -85,8 +55,50 @@ public class ProductService {
 		return productList;
 	}
 
-	public Page<ProductByCategoryDetailResponse> readProductListByCategoryDetail(Long categorySeq, Pageable pageable) {
-		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByCategoryDetail(
+	// PRODUCT-002 (상품 상세 정보 조회)
+	public ReadProductDetailResponse readProduct(Long productSeq) {
+		ReadProductDetailDto productDetailDto = productRepository.findProductDetailBySeq(productSeq);
+		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
+		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
+		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
+
+		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
+			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
+			throw new ProductNotFoundException();
+		}
+
+		return new ReadProductDetailResponse(productDetailDto, optionList, stockList, productImageUrlList);
+	}
+
+	// PRODUCT-003 (상품 정보 추가)
+	@Transactional
+	public void createProduct(ProductCreateRequest request) {
+		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
+
+		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
+			request.getImageUrl(), request.getCompany(), request.getState());
+
+		productRepository.save(newProduct);
+
+		// 초기 재고 등록
+		for (OptionAmountDto optionAmountDto : request.getPrdtOptionList()) {
+			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(
+				optionAmountDto.getPrdtOptionSeq());
+
+			ProductStock initialStock = new ProductStock(newProduct, option, optionAmountDto.getAmount());
+
+			productStockService.createStock(initialStock);
+		}
+	}
+
+	// PRODUCT-004 (상품 리스트 조회 - 관리자 화면)
+	public Page<ReadProductResponse> readAdminPageProductList(Pageable pageable) {
+		return productRepository.findAdminPageProductList(pageable);
+	}
+
+	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)
+	public Page<ProductByCategoryDetailResponse> readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
+		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByDetailCategory(
 			categorySeq, pageable);
 
 		if (productList == null || productList.isEmpty()) {
@@ -96,27 +108,8 @@ public class ProductService {
 		return productList;
 	}
 
-	public ReadProductDetailResponse readProduct(Long productSeq) {
-		ReadProductDetailDTO productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
-
-		List<StockListDTO> stockList = productRepository.findStockListBySeq(productSeq);
-		List<OptionListDTO> optionList = productRepository.findOptionListBySeq(productSeq);
-		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
-
-		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
-			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
-			throw new ProductNotFoundException();
-		}
-
-		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
-	}
-
-	public Page<ReadProductResponse> readProductList(Pageable pageable) {
-		return productRepository.findProductList(pageable);
-	}
-
+	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
 	public Map<String, List<ProductMainResponse>> readProductListByCategoryAll(Pageable pageable) {
-
 		Map<String, List<ProductMainResponse>> categoryMap = new HashMap<>();
 		List<CategoryResponse> categoryList = categoryService.readCategoryList();
 
@@ -130,6 +123,11 @@ public class ProductService {
 		return categoryMap;
 	}
 
+	// 다른 Domain Service에서 사용하도록 하는 메소드
+	public Product readProductByProductSeq(Long productSeq) {
+		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+	}
+
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
 		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 
@@ -141,13 +139,13 @@ public class ProductService {
 		product.setCompany(request.getCompany());
 		product.setState(request.getState());
 
-		for (OptionAmountDTO optionAmountDTO : request.getOpitonAmountList()) {
+		for (OptionAmountDto optionAmountDto : request.getOpitonAmountList()) {
 			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
-				optionAmountDTO.getPrdtOptionSeq());
+				optionAmountDto.getPrdtOptionSeq());
 
 			// updateStock은 History를 남기는 메서드이므로, 재고가 다를 경우에만 실행하기
-			if (!Objects.equals(stock.getAmount(), optionAmountDTO.getAmount())) {
-				productStockService.updateStock(stock.getPrdtStockSeq(), optionAmountDTO.getAmount());
+			if (!Objects.equals(stock.getAmount(), optionAmountDto.getAmount())) {
+				productStockService.updateStock(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
 			}
 		}
 	}

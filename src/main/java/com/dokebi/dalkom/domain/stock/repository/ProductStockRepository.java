@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 
 public interface ProductStockRepository extends JpaRepository<ProductStock, Long> {
@@ -17,9 +18,10 @@ public interface ProductStockRepository extends JpaRepository<ProductStock, Long
 	Optional<ProductStock> findPrdtStockByPrdtSeqAndPrdtOptionSeq(@Param("productSeq") Long productSeq,
 		@Param("prdtOptionSeq") Long prdtOptionSeq);
 
-	// @Query("SELECT ps.product FROM ProductStock ps "
-	// 	+ "WHERE ps.prdtStockSeq = :stockSeq")
-	// Optional<Product> findProductStockListByStockSeq(@Param("stockSeq") Long stockSeq);
+	@Query("SELECT NEW com.dokebi.dalkom.domain.stock.dto.StockListDto(ps.prdtStockSeq, ps.amount) "
+		+ "FROM ProductStock ps "
+		+ "WHERE ps.product.productSeq = :productSeq ")
+	List<StockListDto> findStockListDtoByProductSeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT ps FROM ProductStock ps "
 		+ "WHERE ps.product.productSeq "
@@ -27,4 +29,7 @@ public interface ProductStockRepository extends JpaRepository<ProductStock, Long
 		+ "WHERE ps.prdtStockSeq = :productStockSeq)")
 	List<ProductStock> findProductStockListByStockSeq(@Param("productStockSeq") Long productStockSeq);
 
+	// @Query("SELECT ps.product FROM ProductStock ps "
+	// 	+ "WHERE ps.prdtStockSeq = :stockSeq")
+	// Optional<Product> findProductStockListByStockSeq(@Param("stockSeq") Long stockSeq);
 }
