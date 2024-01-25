@@ -2,7 +2,9 @@ package com.dokebi.dalkom.domain.user.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,5 +30,11 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateUser(@LoginUser Long userSeq, @Valid @RequestBody UserUpdateRequest req) {
 		return userService.updateUser(userSeq, req);
+	}
+
+	@GetMapping("/api/user")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readUserList(Pageable pageable) {
+		return Response.success(userService.readUserList(pageable));
 	}
 }
