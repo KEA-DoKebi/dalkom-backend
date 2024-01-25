@@ -131,7 +131,7 @@ public class ProductService {
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
 		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 
-		product.setCategory(categoryService.readCategoryBySeq(request.getCategorySeq()));
+		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
 		product.setName(request.getName());
 		product.setPrice(request.getPrice());
 		product.setInfo(request.getInfo());
