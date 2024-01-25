@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderDetailService orderDetailService;
@@ -149,7 +149,6 @@ public class OrderService {
 
 	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
 		Product product = productService.readProductByProductSeq(request.getProductSeqList().get(i));
-
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 		Integer amount = request.getAmountList().get(i);
 		Integer price = product.getPrice();
@@ -158,7 +157,7 @@ public class OrderService {
 
 		return amount * price;
 	}
-
+	// 주문 상세 만들기
 	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
 		Long productSeq = request.getProductSeqList().get(i);
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
@@ -175,8 +174,8 @@ public class OrderService {
 			amount,
 			price
 		);
-		ProductStock productStock = new ProductStock(product, productOption, amount);
-		productStockService.createStock(productStock);
+		//상품 재고 변경
+		productStockService.updateStock(productSeq,prdtOptionSeq,amount);
 
 		return orderDetail;
 	}

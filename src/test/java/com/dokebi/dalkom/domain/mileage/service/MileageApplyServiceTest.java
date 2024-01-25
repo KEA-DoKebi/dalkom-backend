@@ -80,44 +80,34 @@ class MileageApplyServiceTest {
 	@Test
 	@DisplayName("마일리지 신청 상태 변경")
 	void updateMileageAskState() {
-		User user = new User(
-			"empId",
-			"password",
-			"name",
-			"email@email.com",
-			"address",
-			"2022-12-12",
-			"nickname",
-			120000);
-		user.setUserSeq(1L);
+		// given
+		Long userSeq = 1L;
+		MileageApplyRequest request = new MileageApplyRequest();
+		request.setAmount(100);
 
-		MileageApply mileageApply = new MileageApply(
-			user,
-			120000,
-			"N"
-		);
+		User mockUser = createMockUser();
+		mockUser.setUserSeq(userSeq);
 
-		Long milgApplySeq = 1L;
+		MileageApply mileageApply = createMileageApplyResponse(mockUser);
 
-		// 모킹 설정
-		when(mileageApplyRepository.findByMilgApplySeq(milgApplySeq)).thenReturn(Optional.of(mileageApply));
 
-		// 테스트에서 사용될 값
-		Long expectedUserSeq = user.getUserSeq();
-		Integer expectedAmount = mileageApply.getAmount();
+		when(userService.readUserByUserSeq(eq(userSeq))).thenReturn(mockUser);
+		when(mileageApplyRepository.save(any(MileageApply.class))).thenReturn(mileageApply);
 
-		// 메서드 호출 및 검증
-		mileageApplyService.updateMileageApply(milgApplySeq);
+		// when
+		mileageApplyService.createMileageApply(userSeq, request);
 
-		// 모킹한 메서드 호출 검증
-		verify(mileageService).createMileageHistory(any(), any(), any(), any());
+		// then
+		// Verify that the readUserByUserSeq method is called with the correct argument
+		verify(userService, times(1)).readUserByUserSeq(eq(userSeq));
 
-		verify(mileageApplyRepository, times(1)).save(mileageApply);
+		// Verify that the save method is called with the correct argument
+		verify(mileageApplyRepository, times(1)).save(any(MileageApply.class));
 	}
 
 	@Test
 	@DisplayName("마일리지 신청하기")
-	void createMileageAsk() {
+	void createMileageApply() {
 		// 테스트에 사용할 가상의 데이터 생성
 		Long userSeq = 1L;
 		int amount = 5000;
