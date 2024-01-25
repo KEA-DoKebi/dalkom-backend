@@ -23,7 +23,6 @@ public class MileageController {
 	@GetMapping("/api/mileage/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageByUserSeq(@LoginUser Long userSeq) {
-
 		return Response.success(mileageService.readMileageByUserSeq(userSeq));
 	}
 
@@ -31,7 +30,6 @@ public class MileageController {
 	@GetMapping("/api/mileage/history/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageHistoryByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
-
-		return Response.success(mileageService.readMileageHistoryByUserSeq(userSeq,pageable));
+		return Response.success(mileageService.readMileageHistoryByUserSeq(userSeq, pageable));
 	}
 }

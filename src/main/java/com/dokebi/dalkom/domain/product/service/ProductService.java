@@ -71,7 +71,7 @@ public class ProductService {
 	// PRODUCT-003 (상품 정보 추가)
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
-		Category category = categoryService.readCategoryBySeq(request.getCategorySeq());
+		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
 
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
 			request.getImageUrl(), request.getCompany(), request.getState());

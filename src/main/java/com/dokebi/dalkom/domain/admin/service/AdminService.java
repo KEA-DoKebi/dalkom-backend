@@ -8,8 +8,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.dto.AdminDto;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AdminService {
 	private final AdminRepository adminRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -36,25 +37,15 @@ public class AdminService {
 		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
 	}
 
-	public Response createAdmin(CreateAdminRequest req) {
-		try {
-			validateNickname(req.getNickname());
+	@Transactional
+	public void createAdmin(CreateAdminRequest req) {
+		validateNickname(req.getNickname());
 
-			// 비밀번호 암호화
-			String password = passwordEncoder.encode(req.getPassword());
-			req.setPassword(password);
-			adminRepository.save(CreateAdminRequest.toEntity(req));
-		} catch (UserNicknameAlreadyExistsException e) {
-			return Response.failure(0, e.getMessage());
-		}
+		// 비밀번호 암호화
+		String password = passwordEncoder.encode(req.getPassword());
+		req.setPassword(password);
+		adminRepository.save(CreateAdminRequest.toEntity(req));
 
-		return Response.success();
-	}
-
-	private void validateNickname(String nickname) {
-		if (adminRepository.existsByNickname(nickname)) {
-			throw new UserNicknameAlreadyExistsException(nickname + "은 이미 사용중입니다.");
-		}
 	}
 
 	public Admin readAdminByAdminSeq(Long adminSeq) {
@@ -63,5 +54,11 @@ public class AdminService {
 
 	public Admin readAdminByAdminId(String adminId) {
 		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
+	}
+
+	private void validateNickname(String nickname) {
+		if (adminRepository.existsByNickname(nickname)) {
+			throw new UserNicknameAlreadyExistsException(nickname + "은 이미 사용중입니다.");
+		}
 	}
 }

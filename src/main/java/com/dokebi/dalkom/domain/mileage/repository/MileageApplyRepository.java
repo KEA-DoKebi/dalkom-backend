@@ -20,4 +20,5 @@ public interface MileageApplyRepository extends JpaRepository<MileageApply, Long
 
 	@Query("SELECT COUNT(m) FROM MileageApply m WHERE m.user.userSeq = :userSeq AND m.approvedState IS NULL")
 	Long countByUserSeqAndApprovedStateIsNull(@Param("userSeq") Long userSeq);
+
 }

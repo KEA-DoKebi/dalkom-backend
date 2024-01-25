@@ -18,11 +18,9 @@ import com.dokebi.dalkom.domain.mileage.service.MileageApplyService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class MileageApplyController {
 
 	private final MileageApplyService mileageApplyService;
@@ -30,9 +28,8 @@ public class MileageApplyController {
 	// MILEAGE-003 (마일리지 승인 여부 변경 (관리자))
 	@PutMapping("/api/milage/ask/{milgApplySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response updateMileageAskState(@PathVariable("milgApplySeq") Long milgApplySeq) {
-
-		mileageApplyService.updateMileageAskState(milgApplySeq);
+	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq) {
+		mileageApplyService.updateMileageApply(milgApplySeq);
 		return Response.success();
 	}
 
@@ -40,7 +37,6 @@ public class MileageApplyController {
 	@GetMapping("/api/mileage/ask")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageAsk(Pageable pageable) {
-
 		return Response.success(mileageApplyService.readMileageAsk(pageable));
 	}
 
@@ -49,8 +45,7 @@ public class MileageApplyController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response createMileageAsk(@LoginUser Long userSeq,
 		@Valid @RequestBody MileageApplyRequest request) {
-
-		mileageApplyService.createMileageAsk(userSeq, request);
+		mileageApplyService.createMileageApply(userSeq, request);
 		return Response.success();
 	}
 }

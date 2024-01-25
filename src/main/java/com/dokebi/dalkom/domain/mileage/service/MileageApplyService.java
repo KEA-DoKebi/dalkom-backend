@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.magicNumber.MileageApplyState;
+import com.dokebi.dalkom.common.magicNumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
@@ -36,25 +38,32 @@ public class MileageApplyService {
 	}
 
 	@Transactional
-	public void updateMileageAskState(Long milgApplySeq) {
+	public void updateMileageApply(Long milgApplySeq) {
 
 		MileageApply mileageApply = readByMilgApplySeq(milgApplySeq);
-		String approvedState = mileageApply.getApprovedState();
-		Long userSeq = mileageApply.getUser().getUserSeq();
+		User user = mileageApply.getUser();
 
-		if ("N".equals(approvedState)) {
-			mileageApply.setApprovedState("Y");
-			mileageService.createMileageHistoryAndUpdateUser(userSeq, mileageApply.getAmount(), "1");
-			mileageApplyRepository.save(mileageApply);
+		String approvedState = mileageApply.getApprovedState();
+		Integer amount = mileageApply.getAmount();
+		Integer totalMileage = user.getMileage() + amount;
+
+		if (approvedState.equals(MileageApplyState.WAIT)) {
+			mileageApply.setApprovedState(MileageApplyState.YES);
+
+			mileageService.createMileageHistory(user, amount, totalMileage,
+				MileageHistoryState.CHARGED);
+
+			user.setMileage(totalMileage);
 		}
+
 	}
 
 	@Transactional
-	public void createMileageAsk(Long userSeq, MileageApplyRequest request) {
+	public void createMileageApply(Long userSeq, MileageApplyRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 
-		if (readMileageAskYn(userSeq)) {
-			MileageApply mileageApply = new MileageApply(user, request.getAmount(), null);
+		if (isMileageApplied(userSeq)) {
+			MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
 			mileageApplyRepository.save(mileageApply);
 		} else {
 			throw new MileageAlreadyApplyException();
@@ -63,11 +72,9 @@ public class MileageApplyService {
 	}
 
 	// 마일리지 신청 내역 테이블에 approvedState가 Null인 데이터는 사용자 당 1개만 존재해야 함.
-	public boolean readMileageAskYn(Long userSeq) {
+	private boolean isMileageApplied(Long userSeq) {
 		Long mileageAskCount = mileageApplyRepository.countByUserSeqAndApprovedStateIsNull(userSeq);
 		return mileageAskCount < 1;
 	}
-
-
 
 }
