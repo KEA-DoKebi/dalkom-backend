@@ -68,7 +68,7 @@ public class CategoryServiceTest {
 
 		// 예외가 발생하는지 검증
 		assertThrows(CategoryNotFoundException.class, () -> {
-			categoryService.readCategoryBySeq(categorySeq);
+			categoryService.readCategoryByCategorySeq(categorySeq);
 		});
 
 		// Mock repository 메서드가 호출되었는지 검증
