@@ -1,0 +1,28 @@
+name: Continuous Deployment
+
+on:
+  pull_request:
+    branches:
+      - release
+    types: [closed]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image:latest
+
+    - name: Tag the Docker image
+      run: docker tag my-image:latest dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/my-image:latest
+
+    - name: Login to Docker Registry
+      run: docker login dokebi-shop.kr-gov-central-1.kcr.dev --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+    - name: Push the Docker image
+      run: docker push dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/my-image:latest
