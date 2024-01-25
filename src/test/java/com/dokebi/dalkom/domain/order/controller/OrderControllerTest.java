@@ -114,11 +114,13 @@ public class OrderControllerTest {
 	void updateOrderStateTest() throws Exception {
 		String orderState = "51";
 		Long orderSeq = 13L;
-		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequest(orderState);
+		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequestFactory(orderState);
 
 		mockMvc.perform(put("/api/order/{orderSeq}/state", orderSeq)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(orderStateUpdateRequest)))
 			.andExpect(status().isOk());
- 	}
+
+		verify(orderService).updateOrderState(anyLong(), any());
+	}
 }

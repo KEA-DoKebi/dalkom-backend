@@ -1,17 +1,16 @@
-package com.dokebi.dalkom.domain.product.dto;
+package com.dokebi.dalkom.domain.option.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-
 // ProductCreateRequest의 List용 DTO
-public class OptionAmountDTO {
+public class OptionAmountDto {
 
 	private Long prdtOptionSeq;
 	private Integer amount;

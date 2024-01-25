@@ -4,7 +4,7 @@ import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -41,9 +41,9 @@ public class OrderCreateRequestTest {
 			"123 Main St",
 			"555-1234",
 			"Some memo",
-			Collections.singletonList(1L),
-			Collections.singletonList(2L),
-			Collections.singletonList(3));
+			List.of(1L),
+			List.of(2L),
+			List.of(3));
 		Set<ConstraintViolation<OrderCreateRequest>> violations = validator.validate(request);
 
 		assertThat(violations)
@@ -60,9 +60,9 @@ public class OrderCreateRequestTest {
 			"123 Main St",
 			"555-1234",
 			"Some memo",
-			Collections.singletonList(1L),
-			Collections.singletonList(2L),
-			Collections.singletonList(3));
+			List.of(1L),
+			List.of(2L),
+			List.of(3));
 		Set<ConstraintViolation<OrderCreateRequest>> violations = validator.validate(request);
 
 		assertThat(violations)
@@ -79,9 +79,9 @@ public class OrderCreateRequestTest {
 			"123 Main St",
 			"555-1234",
 			"Some memo",
-			Collections.singletonList(1L),
-			Collections.singletonList(2L),
-			Collections.singletonList(3));
+			List.of(1L),
+			List.of(2L),
+			List.of(3));
 		Set<ConstraintViolation<OrderCreateRequest>> violations = validator.validate(request);
 
 		assertThat(violations)
@@ -99,9 +99,9 @@ public class OrderCreateRequestTest {
 			"123 Main St",
 			"555-1234",
 			"Some memo",
-			Collections.singletonList(1L),
-			Collections.singletonList(2L),
-			Collections.singletonList(3));
+			List.of(1L),
+			List.of(2L),
+			List.of(3));
 		Set<ConstraintViolation<OrderCreateRequest>> violations = validator.validate(request);
 
 		assertThat(violations)
@@ -118,9 +118,9 @@ public class OrderCreateRequestTest {
 			"123 Main St",
 			"555-1234",
 			"Some memo",
-			Collections.singletonList(1L),
-			Collections.singletonList(2L),
-			Collections.singletonList(3));
+			List.of(1L),
+			List.of(2L),
+			List.of(3));
 		Set<ConstraintViolation<OrderCreateRequest>> violations = validator.validate(request);
 
 		assertThat(violations)

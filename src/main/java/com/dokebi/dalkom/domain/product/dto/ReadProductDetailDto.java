@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 // ReadProductDetailResponse에 이하의 정보를 넣기 위한 DTO
-public class ReadProductDetailDTO {
-
+public class ReadProductDetailDto {
 	private Long categorySeq;
 	private String name;
 	private Integer price;

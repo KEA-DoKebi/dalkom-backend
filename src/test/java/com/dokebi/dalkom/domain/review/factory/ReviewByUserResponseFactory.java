@@ -8,6 +8,7 @@ public class ReviewByUserResponseFactory {
 
 	public static ReviewByUserResponse createReviewByUserResponse() {
 		return new ReviewByUserResponse(
+			1L,
 			"content",
 			5,
 			LocalDateTime.of(2024, 1, 15, 0, 22, 32),
@@ -19,8 +20,9 @@ public class ReviewByUserResponseFactory {
 	}
 
 	public static ReviewByUserResponse createReviewByUserResponse(
-		String content, Integer rating, LocalDateTime createdAt, LocalDateTime modifiedAt, String name, String imageUrl,
+		Long reviewSeq, String content, Integer rating, LocalDateTime createdAt, LocalDateTime modifiedAt, String name,
+		String imageUrl,
 		String detail) {
-		return new ReviewByUserResponse(content, rating, createdAt, modifiedAt, name, imageUrl, detail);
+		return new ReviewByUserResponse(reviewSeq, content, rating, createdAt, modifiedAt, name, imageUrl, detail);
 	}
 }

@@ -2,6 +2,9 @@ package com.dokebi.dalkom.domain.product.dto;
 
 import java.util.List;
 
+import com.dokebi.dalkom.domain.option.dto.OptionListDto;
+import com.dokebi.dalkom.domain.stock.dto.StockListDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,13 +22,13 @@ public class ReadProductDetailResponse {
 	private String info;
 	private String imageUrl;
 	private String company;
-	private List<OptionListDTO> optionList;
-	private List<StockListDTO> stockList;
+	private List<OptionListDto> optionList;
+	private List<StockListDto> stockList;
 	private List<String> productImageUrlList;
 
-	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO,
-		List<OptionListDTO> optionList,
-		List<StockListDTO> stockList,
+	public ReadProductDetailResponse(ReadProductDetailDto productDetailDTO,
+		List<OptionListDto> optionList,
+		List<StockListDto> stockList,
 		List<String> productImageUrlList) {
 
 		this.categorySeq = productDetailDTO.getCategorySeq();

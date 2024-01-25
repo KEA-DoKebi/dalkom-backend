@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
@@ -14,11 +15,12 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 
 	Inquiry findByInquirySeq(Long inquirySeq);
 
-	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
-		+ "i.title, i.content, i.createdAt, i.answerState, i.answeredAt, i.answerContent) "
+	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse("
+		+ "i.inquirySeq, c.name, i.title, i.createdAt, i.answerState) "
 		+ "FROM Inquiry i "
+		+ "JOIN Category c ON i.category.categorySeq = c.categorySeq "
 		+ "WHERE i.user.userSeq = :userSeq")
-	Page<InquiryListResponse> findInquiryListByUser(@Param("userSeq") Long userSeq, Pageable pageable);
+	Page<InquiryListByUserResponse> findInquiryListByUser(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
 		+ "i.title, i.content, i.createdAt, i.answerState, i.answeredAt, i.answerContent) "

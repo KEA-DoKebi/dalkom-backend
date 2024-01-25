@@ -2,7 +2,6 @@ package com.dokebi.dalkom.domain.order.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +13,8 @@ import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
@@ -145,7 +144,7 @@ public class OrderService {
 	}
 
 	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
-		Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
+		Product product = productService.readProductByProductSeq(request.getProductSeqList().get(i));
 
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 		Integer amount = request.getAmountList().get(i);
@@ -161,7 +160,7 @@ public class OrderService {
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 		Integer amount = request.getAmountList().get(i);
 
-		Product product = productService.readByProductSeq(productSeq);
+		Product product = productService.readProductByProductSeq(productSeq);
 		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
 		Integer price = product.getPrice();
 
