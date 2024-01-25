@@ -25,8 +25,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse" +
 		"(p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r) ) " +
 		"FROM Product p " +
-		"INNER JOIN Review r " +
-		"ON p.productSeq = r.orderDetail.product.productSeq AND p.category.categorySeq = :categorySeq " +
+		"LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq " +
+		"LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq " +
+		"WHERE p.category.categorySeq = :categorySeq " +
 		"GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
 	Page<ProductByCategoryDetailResponse> findProductListByCategoryDetail(@Param("categorySeq") Long categorySeq,
 		Pageable pageable);
