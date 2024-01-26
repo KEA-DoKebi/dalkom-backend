@@ -63,6 +63,7 @@ public class MileageApplyService {
 		User user = userService.readUserByUserSeq(userSeq);
 
 		if (isMileageApplied(userSeq)) {
+			// 마일리지 신청 내역 테이블에 대기중인 내역이 없음.
 			MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
 			mileageApplyRepository.save(mileageApply);
 		} else {
@@ -71,9 +72,9 @@ public class MileageApplyService {
 
 	}
 
-	// 마일리지 신청 내역 테이블에 approvedState가 Null인 데이터는 사용자 당 1개만 존재해야 함.
+	// 마일리지 신청 내역 테이블에 approvedState가 W(Wait)인 데이터가 존재하지 않으면 True.
 	private boolean isMileageApplied(Long userSeq) {
-		return mileageApplyRepository.checkByUserSeqAndApprovedStateIsWait(userSeq);
+		return mileageApplyRepository.isApprovedStateIsWaitByUserSeq(userSeq);
 	}
 
 	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
