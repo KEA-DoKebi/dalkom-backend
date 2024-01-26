@@ -35,7 +35,7 @@ public class ProductStockService {
 
 	/** amount = DB에 저장할 값, amountChanged = 변화량 **/
 	@Transactional
-	public void updateStockByStockSeq(Long stockSeq, Integer amount) { //
+	public void updateStockByStockSeq(Long stockSeq, Integer amount) {
 		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
 
 		if (amount < 0) {
@@ -49,7 +49,7 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 
-		//재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
+		// 재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
 		if (checkProductStock(stockSeq)) {
 			productService.inactiveProductByProductSeq(stock.getProduct().getProductSeq());
 		}
@@ -72,7 +72,7 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 
-		//재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
+		// 재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
 		if (checkProductStock(stock.getPrdtStockSeq())) {
 			productService.inactiveProductByProductSeq(productSeq);
 		}
@@ -83,7 +83,7 @@ public class ProductStockService {
 		stockRepository.save(stock);
 	}
 
-	//주문 전 재고가 부족하진 않은지 확인하는 메서드
+	// 주문 전 재고가 부족하진 않은지 확인하는 메서드
 	public void checkStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
@@ -107,7 +107,7 @@ public class ProductStockService {
 	private boolean checkProductStock(Long stockSeq) {
 		List<ProductStock> productStockList = stockRepository.findProductStockListByStockSeq(stockSeq);
 
-		//해당 상품의 재고를 전부 조회한 뒤, 재고가 전부 0이면 true를 반환
+		// 해당 상품의 재고를 전부 조회한 뒤, 재고가 전부 0이면 true를 반환
 		return productStockList.stream().allMatch(stock -> stock.getAmount() == 0);
 	}
 }
