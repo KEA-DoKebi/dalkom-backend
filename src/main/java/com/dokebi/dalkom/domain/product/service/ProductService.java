@@ -63,8 +63,8 @@ public class ProductService {
 		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
 
-		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
-			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
+		// 조회 결과 검사
+		if (stockList == null || optionList == null || stockList.isEmpty() || optionList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
