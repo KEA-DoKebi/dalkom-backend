@@ -51,8 +51,8 @@ public class SignUpRequest {
 
 	private Integer mileage;
 
-	public static User toEntity(SignUpRequest req) {
-		return new User(req.empId, req.password, req.name, req.email, req.address, req.joinedAt, req.nickname,
-			req.mileage);
+	public static User toEntity(SignUpRequest request) {
+		return new User(request.empId, request.password, request.name, request.email, request.address, request.joinedAt,
+			request.nickname, request.mileage);
 	}
 }
