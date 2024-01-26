@@ -50,7 +50,7 @@ public class InquiryService {
 	}
 
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-		return inquiryRepository.findInquiryByInquirySeq(inquirySeq);
+		return inquiryRepository.findInquiryOne(inquirySeq);
 	}
 
 	@Transactional

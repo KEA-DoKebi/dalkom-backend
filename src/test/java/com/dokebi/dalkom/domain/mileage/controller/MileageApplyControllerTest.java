@@ -75,7 +75,7 @@ class MileageApplyControllerTest {
 				.param("size", "5"))
 			.andExpect(status().isOk());
 
-		verify(mileageApplyService).readMileageAsk(any(Pageable.class));
+		verify(mileageApplyService).readMileageApply(any(Pageable.class));
 	}
 
 	@Test
