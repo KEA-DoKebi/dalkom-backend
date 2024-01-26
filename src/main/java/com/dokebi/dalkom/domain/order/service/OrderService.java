@@ -2,8 +2,10 @@ package com.dokebi.dalkom.domain.order.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,7 +120,18 @@ public class OrderService {
 
 	// 사용자별 주문 전체 조회
 	public Page<OrderUserReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
-		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
+
+		Page<OrderUserReadResponse> orderPage = orderRepository.findOrderListByUserSeq(userSeq, pageable);
+
+		List<OrderUserReadResponse> modifiedList = orderPage.getContent().stream()
+			.map(orderResponse -> {
+				orderResponse.makeOrderTitle(orderResponse.getOrderTitle(), orderResponse.getProductCnt());
+				return orderResponse;
+			})
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(modifiedList, pageable, orderPage.getTotalElements());
+
 	}
 
 	// 주문별 상세 조회
