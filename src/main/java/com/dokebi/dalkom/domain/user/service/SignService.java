@@ -1,8 +1,5 @@
 package com.dokebi.dalkom.domain.user.service;
 
-import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
-import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
-import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,13 +7,17 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.user.dto.LogInAdminRequest;
+import com.dokebi.dalkom.domain.user.dto.LogInAdminResponse;
 import com.dokebi.dalkom.domain.user.dto.LogInRequest;
-import com.dokebi.dalkom.domain.user.dto.LogInResponse;
+import com.dokebi.dalkom.domain.user.dto.LogInUserResponse;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
 import com.dokebi.dalkom.domain.user.entity.User;
+import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
+import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
+import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
@@ -34,27 +35,32 @@ public class SignService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
-	public LogInResponse signIn(LogInRequest req) {
+	public LogInUserResponse signIn(LogInRequest req) {
 		User user = userRepository.findByEmail(req.getEmail());
 		validatePassword(req, user);
 		String subject = createSubject(user);
 		String accessToken = tokenService.createAccessToken(subject);
 		String refreshToken = tokenService.createRefreshToken(subject);
+		// redis에 accessToken : refreshToken 형태로 저장된다.
 		redisService.createValues(accessToken, refreshToken);
-		return new LogInResponse(accessToken, refreshToken);
+		// 로그인 시 refreshToken는 반환되지 않는다.
+		return new LogInUserResponse(accessToken);
 	}
 
 	@Transactional(readOnly = true)
-	public LogInResponse signInAdmin(LogInAdminRequest req) {
+	public LogInAdminResponse signInAdmin(LogInAdminRequest req) {
 		Admin admin = adminService.readAdminByAdminId(req.getAdminId());
 		if (admin == null)
 			throw new LoginFailureException();
 		validatePassword(req, admin);
+		String role = admin.getRole();
 		String subject = createSubject(admin);
 		String accessToken = tokenService.createAccessToken(subject);
 		String refreshToken = tokenService.createRefreshToken(subject);
+		// redis에 accessToken : refreshToken 형태로 저장된다.
 		redisService.createValues(accessToken, refreshToken);
-		return new LogInResponse(accessToken, refreshToken);
+		// 로그인 시 refreshToken는 반환되지 않는다.
+		return new LogInAdminResponse(accessToken, role);
 	}
 
 	private String createSubject(User user) {
@@ -106,13 +112,13 @@ public class SignService {
 	}
 
 	//임직원 데이터 조회, 일치여부 확인
-	public boolean checkEmployee(SignUpRequest req) {
+	private boolean checkEmployee(SignUpRequest req) {
 
 		Employee employee = employeeRepository.findAllByEmpId(req.getEmpId());
 		if (employee != null &&
-				employee.getName().equals(req.getName()) &&
-				employee.getEmail().equals(req.getEmail()) &&
-				employee.getJoinedAt().equals(req.getJoinedAt())) {
+			employee.getName().equals(req.getName()) &&
+			employee.getEmail().equals(req.getEmail()) &&
+			employee.getJoinedAt().equals(req.getJoinedAt())) {
 			return true;
 		} else {
 			throw new EmployeeNotFoundException();
