@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 
 import lombok.RequiredArgsConstructor;
@@ -75,4 +77,21 @@ public class ProductController {
 			= productService.readProductListByCategoryAll(pageable);
 		return ResponseEntity.ok(categoryProducts);
 	}
+
+	// PRODUCT-007 (특정 상품 정보 수정)
+	@PutMapping("/api/product/{productSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response updateProduct(@PathVariable Long productSeq, @Valid @RequestBody ProductUpdateRequest request) {
+		productService.updateProduct(productSeq, request);
+		return Response.success();
+	}
+
+	// // PRODUCT-008 (특정 상품 정보 삭제)
+	// @DeleteMapping("/api/product/{productSeq}")
+	// @ResponseStatus(HttpStatus.OK)
+	// public Response deleteProduct(@PathVariable Long productSeq) {
+	// 	productService.deleteProduct(productSeq);
+	// 	return Response.success();
+	// }
+
 }
