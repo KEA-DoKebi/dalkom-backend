@@ -69,7 +69,7 @@ public class SignService {
 	}
 
 	private String createSubject(Admin admin) {
-		return String.valueOf(admin.getAdminSeq()) + ",Admin";
+		return admin.getAdminSeq() + ",Admin";
 	}
 
 	private void validatePassword(LogInRequest req, User user) {
