@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.order.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +14,7 @@ import lombok.Setter;
 public class OrderReadResponse {
 
 	private Long ordrSeq;
-	private String receiverName;
-	private String receiverAddress;
-	private String receiverMobileNum;
-	private String receiverMemo;
 	private Integer totalPrice;
+	private String ordrState;
+	private LocalDateTime ordrDate;
 }

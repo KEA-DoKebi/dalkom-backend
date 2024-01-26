@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.order.factory;
 
+import java.time.LocalDateTime;
+
 import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 
 public class OrderReadResponseFactory {
@@ -13,11 +15,10 @@ public class OrderReadResponseFactory {
 	public static OrderReadResponse createOrderReadResponse() {
 		return new OrderReadResponse(
 			1L,
-			"receiverName",
-			"receiverAddress",
-			"receiverMobileNum",
-			"receiverMemo",
-			100000
+			100,
+			"Shipped",
+			LocalDateTime.now()
+
 		);
 	}
 }

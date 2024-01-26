@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.order.dto;
 
+import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderReadResponseFactory.*;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -16,9 +18,7 @@ class OrderReadResponseTest {
 		Integer expectedTotalPrice = 10000;
 
 		// When
-		OrderReadResponse orderReadResponse = new OrderReadResponse(expectedOrdrSeq, expectedReceiverName,
-			expectedReceiverAddress,
-			expectedReceiverMobileNum, expectedReceiverMemo, expectedTotalPrice);
+		OrderReadResponse orderReadResponse = createOrderReadResponse();
 
 		// Then
 		assertThat(orderReadResponse.getOrdrSeq()).isEqualTo(expectedOrdrSeq);

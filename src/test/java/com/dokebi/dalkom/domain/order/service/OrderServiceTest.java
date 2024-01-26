@@ -29,6 +29,7 @@ import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
@@ -158,15 +159,23 @@ class OrderServiceTest {
 	void readOrderByOrderSeqTest() {
 		// given
 		Long orderSeq = 1L;
-		OrderReadResponse orderReadResponse = createOrderReadResponse(); // OrderFactory를 사용
-		given(orderRepository.findByOrdrSeq(anyLong())).willReturn(orderReadResponse);
+		Pageable pageable = PageRequest.of(0, 3);
+		List<OrderDetailReadResponse> orderList = new ArrayList<>();
+		orderList.add(createOrderDetailReadResponse());
+		orderList.add(createOrderDetailReadResponse());
+
+		Page<OrderDetailReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
+		when(orderService.readOrderByOrderSeq(orderSeq, pageable)).thenReturn(responsePage);
+
+
 
 		// when
-		OrderReadResponse result = orderService.readOrderByOrderSeq(orderSeq);
+		Page<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq,pageable);
 
 		// then
+		// then
 		assertNotNull(result);
-		assertEquals(orderReadResponse.getOrdrSeq(), result.getOrdrSeq());
+		assertEquals(orderList.size(), result.toList().size());
 	}
 
 	@Test

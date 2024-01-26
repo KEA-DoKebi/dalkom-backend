@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.order.factory;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
@@ -36,23 +38,38 @@ public class OrderFactory {
 	}
 
 	public static OrderReadResponse createOrderDtoOne() {
-		return new OrderReadResponse(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100);
+		return new OrderReadResponse(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100,"1",LocalDateTime.parse("2024-01-21T00:00:00"));
 	}
 
 	public static OrderReadResponse createOrderDtoTwo() {
-		return new OrderReadResponse(2L, "suha Doe", "123 aaa St", "335-1234", "Some memo memo", 100);
+		return new OrderReadResponse(2L, "suha Doe", "123 aaa St", "335-1234", "Some memo memo", 100,"1", LocalDateTime.parse("2024-01-20T00:00:00"));
 	}
 
 	public static Page<OrderReadResponse> createOrderList() {
 		List<OrderReadResponse> orderReadResponseList = new ArrayList<>();
-		orderReadResponseList.add(new OrderReadResponse(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100));
+		orderReadResponseList.add( new OrderReadResponse(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100,"1",LocalDateTime.parse("2024-01-21T00:00:00")));
 		orderReadResponseList.add(
-			new OrderReadResponse(2L, "Suha Doe", "123 AAA St", "335-1234", "Some memo memo", 100));
+			 new OrderReadResponse(2L, "suha Doe", "123 aaa St", "335-1234", "Some memo memo", 100,"1", LocalDateTime.parse("2024-01-20T00:00:00")));
 
 		return new PageImpl<>(orderReadResponseList, PageRequest.of(0, 10), orderReadResponseList.size());
 	}
 
 	public static Order createOrder() {
 		return new Order(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100);
+	}
+
+	public static OrderDetailReadResponse createOrderDetailReadResponse(){
+		return new OrderDetailReadResponse(
+			"Product Name",
+			LocalDateTime.now(),
+			1L,
+			3,
+			150,
+			"Shipped",
+			"John Doe",
+			"555-1234",
+			"123 Main St",
+			"Special instructions for delivery"
+		);
 	}
 }

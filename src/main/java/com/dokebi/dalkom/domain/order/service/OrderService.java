@@ -14,6 +14,7 @@ import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
@@ -24,7 +25,6 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -121,14 +121,14 @@ public class OrderService {
 		return result;
 	}
 
-	// 유저별 주문 조회
+	// 사용자별 주문 조회
 	public Page<OrderReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
 		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
 	}
 
-	// 주문별 주문 조회
-	public OrderReadResponse readOrderByOrderSeq(Long orderSeq) {
-		return orderRepository.findByOrdrSeq(orderSeq);
+	// 주문별 상세 조회
+	public Page<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq,Pageable pageable) {
+		return orderRepository.findByOrdrSeq(orderSeq,pageable);
 	}
 
 	// 주문 전체 조회
