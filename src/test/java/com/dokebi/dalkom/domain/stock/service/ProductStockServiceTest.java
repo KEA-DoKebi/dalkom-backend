@@ -42,7 +42,7 @@ public class ProductStockServiceTest {
 		given(stockRepository.findById(stockSeq)).willReturn(Optional.of(productStock));
 
 		// when
-		productStockService.updateStock(stockSeq, amount);
+		productStockService.updateStockByStockSeq(stockSeq, amount);
 
 		// then
 		verify(stockHistoryRepository).save(any());
@@ -61,7 +61,7 @@ public class ProductStockServiceTest {
 		given(stockRepository.findById(stockSeq)).willReturn(Optional.of(productStock));
 
 		// when & then
-		assertThatThrownBy(() -> productStockService.updateStock(stockSeq, amount)).isInstanceOf(
+		assertThatThrownBy(() -> productStockService.updateStockByStockSeq(stockSeq, amount)).isInstanceOf(
 			InvalidAmountException.class);
 	}
 
@@ -79,7 +79,7 @@ public class ProductStockServiceTest {
 			Optional.of(productStock));
 
 		// when
-		productStockService.updateStock(productSeq, prdtOptionSeq, amountChanged);
+		productStockService.updateStockByProductSeqAndOptionSeq(productSeq, prdtOptionSeq, amountChanged);
 
 		// then
 		verify(stockHistoryRepository).save(any());
@@ -100,7 +100,8 @@ public class ProductStockServiceTest {
 
 		// when & then
 		assertThatThrownBy(
-			() -> productStockService.updateStock(productSeq, prdtOptionSeq, amountChanged)).isInstanceOf(
+			() -> productStockService.updateStockByProductSeqAndOptionSeq(productSeq, prdtOptionSeq,
+				amountChanged)).isInstanceOf(
 			NotEnoughStockException.class);
 	}
 
