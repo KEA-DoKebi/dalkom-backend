@@ -23,7 +23,10 @@ jobs:
       run: ./gradlew test
 
     - name: Install Python dependencies
-      run: pip install pandas
+      run: >
+        pip install pandas
+        pip install tabulate
+
 
     - name: Parse test results and generate markdown
       run: python .github/parse_tests.py > test_list.md
