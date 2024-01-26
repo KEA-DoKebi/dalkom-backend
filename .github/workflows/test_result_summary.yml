@@ -36,5 +36,5 @@ jobs:
       uses: peter-evans/create-issue-from-file@v5
       with:
         title: Test Issue
-        token : ${{ secrets.GITHUB_TOKEN }}
+        token : ${{ secrets.MY_PAT }}
         content-filepath: ./test_list.md
