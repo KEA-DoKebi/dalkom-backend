@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.common.magicNumber;
+package com.dokebi.dalkom.common.magicnumber;
 
 public class MileageApplyState {
 	public static final String YES = "Y";

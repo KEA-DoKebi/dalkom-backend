@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.magicNumber.MileageApplyState;
-import com.dokebi.dalkom.common.magicNumber.MileageHistoryState;
+import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
+import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
@@ -77,10 +77,9 @@ public class MileageApplyService {
 		return mileageAskCount < 1;
 	}
 
-	public Page<MileageApplyResponse> readMileageAskSearch(String email,String nickname,String name,Pageable pageable) {
-		return mileageApplyRepository.findAllMileageAskSearch(email ,nickname,name,pageable);
+	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
+		Pageable pageable) {
+		return mileageApplyRepository.findAllMileageAskSearch(email, nickname, name, pageable);
 	}
-
-
 
 }

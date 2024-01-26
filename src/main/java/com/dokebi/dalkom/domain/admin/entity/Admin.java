@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.common.magicNumber.AdminRole;
+import com.dokebi.dalkom.common.magicnumber.AdminRole;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.notice.entity.Notice;
 
