@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.user.dto.ReadUserSelfDetailResponse;
 import com.dokebi.dalkom.domain.user.dto.UserListResponse;
 import com.dokebi.dalkom.domain.user.dto.UserUpdateRequest;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -64,7 +65,8 @@ public class UserService {
 	public Page<UserListResponse> readUserList(Pageable pageable) {
 		Page<User> usersPage = userRepository.findAll(pageable);
 
-		List<UserListResponse> dtoList = usersPage.getContent().stream()
+		List<UserListResponse> dtoList = usersPage.getContent()
+			.stream()
 			.map(UserListResponse::toDto)
 			.collect(Collectors.toList());
 
@@ -75,13 +77,20 @@ public class UserService {
 		return userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 	}
 
-	public Page<UserListResponse> readUserListSearch(String email,String nickname, Pageable pageable ) {
-		Page<User> usersPage = userRepository.findUsersBySearch(email,nickname,pageable);
+	public Page<UserListResponse> readUserListSearch(String email, String nickname, Pageable pageable) {
+		Page<User> usersPage = userRepository.findUsersBySearch(email, nickname, pageable);
 
-		List<UserListResponse> dtoList = usersPage.getContent().stream()
+		List<UserListResponse> dtoList = usersPage.getContent()
+			.stream()
 			.map(UserListResponse::toDto)
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(dtoList, pageable, usersPage.getTotalElements());
+	}
+
+	public ReadUserSelfDetailResponse readUserSelfDetail(Long userSeq) {
+		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
+
+		return new ReadUserSelfDetailResponse(user.getEmail(), user.getName(), user.getNickname(), user.getAddress());
 	}
 }
