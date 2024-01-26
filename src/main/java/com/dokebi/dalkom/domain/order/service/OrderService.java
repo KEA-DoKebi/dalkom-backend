@@ -121,8 +121,8 @@ public class OrderService {
 	}
 
 	// 주문별 상세 조회
-	public Page<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq,Pageable pageable) {
-		return orderRepository.findByOrdrSeq(orderSeq,pageable);
+	public Page<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq, Pageable pageable) {
+		return orderRepository.findByOrdrSeq(orderSeq, pageable);
 	}
 
 	// 주문 전체 조회
