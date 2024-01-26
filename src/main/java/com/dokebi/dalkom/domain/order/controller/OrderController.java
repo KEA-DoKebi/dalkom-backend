@@ -47,7 +47,7 @@ public class OrderController {
 	@GetMapping("/api/order/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq,Pageable pageable) {
-		return Response.success(orderService.readOrderByOrderSeq(orderSeq,pageable));
+		return Response.success(orderService.readOrderByOrderSeq(orderSeq, pageable));
 	}
 
 	// ORDER-004 (전체 주문 조회)
@@ -76,8 +76,8 @@ public class OrderController {
 	// ORDER-007 (주문 검색)
 	@GetMapping("/api/order/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderListBySearch(@RequestParam String receiverName,Pageable pageable) {
-		return Response.success(orderService.readOrderListBySearch(receiverName,pageable));
+	public Response readOrderListBySearch(@RequestParam String receiverName, Pageable pageable) {
+		return Response.success(orderService.readOrderListBySearch(receiverName, pageable));
 	}
 
 }
