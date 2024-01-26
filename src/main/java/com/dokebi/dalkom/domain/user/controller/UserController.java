@@ -32,6 +32,7 @@ public class UserController {
 	public Response updateUser(@LoginUser Long userSeq, @Valid @RequestBody UserUpdateRequest req) {
 		return userService.updateUser(userSeq, req);
 	}
+
 	// USER-004 (사용자 정보 조회)
 	@GetMapping("/api/user")
 	@ResponseStatus(HttpStatus.OK)
@@ -42,9 +43,14 @@ public class UserController {
 	// USER-005 (사용자 정보 조회 검색)
 	@GetMapping("/api/user/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readUserListSearch(@RequestParam String email ,@RequestParam String nickname, Pageable pageable) {
-		return Response.success(userService.readUserListSearch(email , nickname,pageable));
+	public Response readUserListSearch(@RequestParam String email, @RequestParam String nickname, Pageable pageable) {
+		return Response.success(userService.readUserListSearch(email, nickname, pageable));
 	}
 
-
+	// USER-006 (사용자 정보 조회(자신))
+	@GetMapping("/api/user/self")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readUserSelfDetail(@LoginUser Long userSeq) {
+		return Response.success(userService.readUserSelfDetail(userSeq));
+	}
 }
