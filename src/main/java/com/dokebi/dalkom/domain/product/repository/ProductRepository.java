@@ -82,7 +82,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "OR (p.company LIKE CONCAT('%', :company, '%')) "
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
-	Page<ReadProductResponse> findProductListSearch(@Param("name")String name,@Param("company")String company,Pageable pageable);
+	Page<ReadProductResponse> findProductListSearch(@Param("name") String name, @Param("company") String company,
+		Pageable pageable);
 
 	// 다른 Domain Service에서 사용하도록 하는 메소드
 	Optional<Product> findProductByProductSeq(Long productSeq);
