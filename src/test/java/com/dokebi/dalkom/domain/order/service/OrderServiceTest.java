@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
@@ -63,6 +64,8 @@ class OrderServiceTest {
 
 	@Mock
 	private Product mockProduct;
+	@Mock
+	private MileageHistory mileageHistory;
 
 	// Setup your mock data and mock behaviors here
 	@BeforeEach
@@ -80,7 +83,7 @@ class OrderServiceTest {
 		given(mockProduct.getPrice()).willReturn(10000);
 		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
 		given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
-		doNothing().when(mileageService).createMileageHistory(any(), any(), anyInt(), anyString());
+		given(mileageService.createMileageHistory(any(),any(),any(),any())).willReturn(mileageHistory);
 		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
 			new ProductOption(2L, "OP1", "의류 사이즈", "M"));
 		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());

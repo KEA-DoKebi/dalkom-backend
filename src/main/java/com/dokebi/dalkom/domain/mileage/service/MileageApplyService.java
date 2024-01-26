@@ -77,4 +77,10 @@ public class MileageApplyService {
 		return mileageAskCount < 1;
 	}
 
+	public Page<MileageApplyResponse> readMileageAskSearch(String email,String nickname,String name,Pageable pageable) {
+		return mileageApplyRepository.findAllMileageAskSearch(email ,nickname,name,pageable);
+	}
+
+
+
 }

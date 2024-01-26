@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -78,12 +79,20 @@ public class ProductController {
 		return ResponseEntity.ok(categoryProducts);
 	}
 
+	
 	// PRODUCT-007 (특정 상품 정보 수정)
 	@PutMapping("/api/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateProduct(@PathVariable Long productSeq, @Valid @RequestBody ProductUpdateRequest request) {
 		productService.updateProduct(productSeq, request);
 		return Response.success();
+	}
+
+	// PRODUCT-008 (상품 리스트 검색)
+	@GetMapping("/api/product/search")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductList(@RequestParam(required = false) String name,@RequestParam(required = false) String company, Pageable pageable) {
+		return Response.success(productService.readProductListSearch(name,company,pageable));
 	}
 
 	// // PRODUCT-008 (특정 상품 정보 삭제)

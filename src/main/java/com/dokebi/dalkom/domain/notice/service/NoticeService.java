@@ -71,4 +71,10 @@ public class NoticeService {
 			throw new NoticeNotFoundException();
 		}
 	}
+
+	@Transactional
+	public Page<NoticeListResponse> readNoticeListBySearch(String nickName,String title ,Pageable pageable) {
+
+		return noticeRepository.findNoticeListByNickNameOrTitle(nickName,title,pageable);
+	}
 }

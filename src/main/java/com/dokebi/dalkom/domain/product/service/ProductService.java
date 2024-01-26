@@ -63,7 +63,7 @@ public class ProductService {
 		List<String> productImageUrlList = productRepository.findProductImageByProductSeq(productSeq);
 
 		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
-			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
+			|| optionList.isEmpty()  ) {
 			throw new ProductNotFoundException();
 		}
 
@@ -121,6 +121,10 @@ public class ProductService {
 			categoryMap.put(categoryResponse.getName(), page.getContent());
 		}
 		return categoryMap;
+	}
+
+	public Page<ReadProductResponse> readProductListSearch(String name ,String company,Pageable pageable) {
+		return productRepository.findProductListSearch(name,company,pageable);
 	}
 
 	// 다른 Domain Service에서 사용하도록 하는 메소드
