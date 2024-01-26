@@ -31,13 +31,13 @@ jobs:
     - name: Parse test results and generate markdown
       run: python .github/parse_tests.py > test_list.md
 
-    - name: Commit changes
-      run: |
-        git config --global user.name 'Kim Donghyeon'
-        git config --global user.email 'eastlighting1@gachon.ac.kr'
-        git add .
-        git commit -am "test"
-        git push origin ${{ github.ref }}
+    - name: Create Issue From File
+      id: ciff
+      uses: peter-evans/create-issue-from-file@v5
+      with:
+        title: Test Issue
+        content-filepath: test_list.md
+
 
     - name: Push changes
       run: |
