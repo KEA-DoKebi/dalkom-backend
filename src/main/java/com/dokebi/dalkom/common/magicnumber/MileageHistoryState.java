@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.common.magicNumber;
+package com.dokebi.dalkom.common.magicnumber;
 
 public class MileageHistoryState {
 	public static final String ISSUED = "0";
