@@ -36,9 +36,5 @@ jobs:
       uses: peter-evans/create-issue-from-file@v5
       with:
         title: Test Issue
+        token : ${{ secrets.GITHUB_TOKEN }}
         content-filepath: ./test_list.md
-
-
-    - name: Push changes
-      run: |
-        git push
