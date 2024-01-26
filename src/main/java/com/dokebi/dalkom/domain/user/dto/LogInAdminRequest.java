@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LogInAdminRequest {
 
-	@NotNull(message = "LogInAdminRequest email notnull 에러")
-	@NotBlank(message = "LogInAdminRequest email notblank 에러")
+	@NotNull(message = "LogInAdminRequest email(adminId) notnull 에러")
+	@NotBlank(message = "LogInAdminRequest email(adminId) notblank 에러")
 	private String email;
 
 	@NotNull(message = "LogInAdminRequest password notnull 에러")
