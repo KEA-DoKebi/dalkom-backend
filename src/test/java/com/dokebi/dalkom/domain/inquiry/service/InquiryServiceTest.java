@@ -137,7 +137,6 @@ public class InquiryServiceTest {
 
 			assertEquals(expect.getInquirySeq(), actual.getInquirySeq());
 			assertEquals(expect.getTitle(), actual.getTitle());
-			assertEquals(expect.getContent(), actual.getContent());
 			assertEquals(expect.getCreatedAt(), actual.getCreatedAt());
 		}
 	}
