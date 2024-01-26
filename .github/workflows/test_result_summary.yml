@@ -36,7 +36,7 @@ jobs:
       uses: peter-evans/create-issue-from-file@v5
       with:
         title: Test Issue
-        content-filepath: test_list.md
+        content-filepath: ./test_list.md
 
 
     - name: Push changes
