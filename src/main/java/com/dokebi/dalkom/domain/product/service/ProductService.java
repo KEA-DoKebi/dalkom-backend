@@ -167,6 +167,13 @@ public class ProductService {
 		}
 	}
 
+	public String checkProductActiveState(Long productSeq) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
+
+		return product.getState();
+	}
+
 	public void soldoutProductByProductSeq(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
