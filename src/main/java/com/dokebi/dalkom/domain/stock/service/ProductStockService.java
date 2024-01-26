@@ -49,9 +49,11 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 
-		// 재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
+		// 재고 변화 결과에 따라 해당 상품의 판매 상태 변경
 		if (checkProductStock(stockSeq)) {
-			productService.checkSoldOutProductByProductSeq(stock.getProduct().getProductSeq());
+			productService.soldoutProductByProductSeq(stock.getProduct().getProductSeq());
+		} else {
+			productService.activeProductByProductSeq(stock.getProduct().getProductSeq());
 		}
 	}
 
@@ -72,9 +74,11 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 
-		// 재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
+		// 재고 변화 결과에 따라 해당 상품의 판매 상태 변경
 		if (checkProductStock(stock.getPrdtStockSeq())) {
-			productService.checkSoldOutProductByProductSeq(productSeq);
+			productService.soldoutProductByProductSeq(productSeq);
+		} else {
+			productService.activeProductByProductSeq(productSeq);
 		}
 	}
 
