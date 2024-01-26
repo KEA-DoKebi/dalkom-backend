@@ -33,10 +33,11 @@ jobs:
 
     - name: Commit changes
       run: |
-        git config --global user.name 'Kim Donghyeon' # 유저명
-        git config --global user.email 'eastlighting1@gachon.ac.kr' # 유저 이메일
+        git config --global user.name 'Kim Donghyeon'
+        git config --global user.email 'eastlighting1@gachon.ac.kr'
         git add -A
-        git commit -am "test" # 커밋 메시지
+        git commit -am "test"
+
     - name: Push changes
       run: |
         git push
