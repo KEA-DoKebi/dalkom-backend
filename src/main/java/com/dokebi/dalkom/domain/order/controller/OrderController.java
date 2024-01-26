@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderController {
 	private final OrderService orderService;
 
-	// ORDER-001 (사용자별 주문 조회)
+	// ORDER-001 (사용자별 전체 주문 조회)
 	@GetMapping("/api/order/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrdersByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
@@ -50,7 +50,7 @@ public class OrderController {
 		return Response.success(orderService.readOrderByOrderSeq(orderSeq, pageable));
 	}
 
-	// ORDER-004 (전체 주문 조회)
+	// ORDER-004 (관리자 전체 주문 조회)
 	@GetMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrders(Pageable pageable) {
@@ -73,6 +73,7 @@ public class OrderController {
 		orderService.updateOrderState(orderSeq, request);
 		return Response.success();
 	}
+
 	// ORDER-007 (주문 검색)
 	@GetMapping("/api/order/search")
 	@ResponseStatus(HttpStatus.OK)

@@ -2,7 +2,7 @@ package com.dokebi.dalkom.domain.order.factory;
 
 import java.time.LocalDateTime;
 
-import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
+import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 
 public class OrderReadResponseFactory {
 	private Long ordrSeq;
@@ -12,8 +12,8 @@ public class OrderReadResponseFactory {
 	private String receiverMemo;
 	private Integer totalPrice;
 
-	public static OrderReadResponse createOrderReadResponse() {
-		return new OrderReadResponse(
+	public static OrderUserReadResponse createOrderReadResponse() {
+		return new OrderUserReadResponse(
 			1L,
 			100,
 			"Shipped",

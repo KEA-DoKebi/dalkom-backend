@@ -8,10 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
-import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
+import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
 
 public class OrderFactory {
@@ -37,28 +38,29 @@ public class OrderFactory {
 		return orderPageDetailDto;
 	}
 
-	public static OrderReadResponse createOrderDtoOne() {
-		return new OrderReadResponse(1L,  100,"1",LocalDateTime.parse("2024-01-21T00:00:00"));
+	public static OrderUserReadResponse createOrderDtoOne() {
+		return new OrderUserReadResponse(1L, 100, "1", LocalDateTime.parse("2024-01-21T00:00:00"));
 	}
 
-	public static OrderReadResponse createOrderDtoTwo() {
-		return new OrderReadResponse(2L,  100,"1", LocalDateTime.parse("2024-01-20T00:00:00"));
+	public static OrderUserReadResponse createOrderDtoTwo() {
+		return new OrderUserReadResponse(2L, 100, "1", LocalDateTime.parse("2024-01-20T00:00:00"));
 	}
 
-	public static Page<OrderReadResponse> createOrderList() {
-		List<OrderReadResponse> orderReadResponseList = new ArrayList<>();
-		orderReadResponseList.add( new OrderReadResponse(1L,   100,"1",LocalDateTime.parse("2024-01-21T00:00:00")));
-		orderReadResponseList.add(
-			 new OrderReadResponse(2L,  100,"1", LocalDateTime.parse("2024-01-20T00:00:00")));
+	public static Page<OrderAdminReadResponse> createOrderList() {
+		List<OrderAdminReadResponse> orderUserReadResponseList = new ArrayList<>();
+		orderUserReadResponseList.add(
+			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), "suha", "suha", 1000, "1"));
+		orderUserReadResponseList.add(
+			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), "hauha", "hahha", 3000, "1"));
 
-		return new PageImpl<>(orderReadResponseList, PageRequest.of(0, 10), orderReadResponseList.size());
+		return new PageImpl<>(orderUserReadResponseList, PageRequest.of(0, 10), orderUserReadResponseList.size());
 	}
 
 	public static Order createOrder() {
 		return new Order(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100);
 	}
 
-	public static OrderDetailReadResponse createOrderDetailReadResponse(){
+	public static OrderDetailReadResponse createOrderDetailReadResponse() {
 		return new OrderDetailReadResponse(
 			"Product Name",
 			LocalDateTime.now(),

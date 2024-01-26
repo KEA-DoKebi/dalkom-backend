@@ -11,8 +11,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderReadResponse {
+public class OrderUserReadResponse {
 
+	//상품의 값과 개수 외
 	private Long ordrSeq;
 	private Integer totalPrice;
 	private String ordrState;
