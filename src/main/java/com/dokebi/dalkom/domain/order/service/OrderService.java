@@ -8,15 +8,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.magicNumber.MileageHistoryState;
+import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
-import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
@@ -24,7 +26,6 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -35,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderDetailService orderDetailService;
@@ -63,14 +64,8 @@ public class OrderService {
 		if (orderTotalPrice <= user.getMileage()) {
 
 			// 주문을 위한 entity 생성 후 저장
-			Order order = new Order(
-				user,
-				request.getReceiverName(),
-				request.getReceiverAddress(),
-				request.getReceiverMobileNum(),
-				request.getReceiverMemo(),
-				orderTotalPrice
-			);
+			Order order = new Order(user, request.getReceiverName(), request.getReceiverAddress(),
+				request.getReceiverMobileNum(), request.getReceiverMemo(), orderTotalPrice);
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
@@ -121,19 +116,19 @@ public class OrderService {
 		return result;
 	}
 
-	// 유저별 주문 조회
-	public Page<OrderReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
+	// 사용자별 주문 전체 조회
+	public Page<OrderUserReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
 		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
 	}
 
-	// 주문별 주문 조회
-	public OrderReadResponse readOrderByOrderSeq(Long orderSeq) {
-		return orderRepository.findByOrdrSeq(orderSeq);
+	// 주문별 상세 조회
+	public Page<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq, Pageable pageable) {
+		return orderRepository.findByOrdrSeq(orderSeq, pageable);
 	}
 
 	// 주문 전체 조회
-	public Page<OrderReadResponse> readOrderByAll(Pageable pageable) {
-		return orderRepository.findAllOrders(pageable);
+	public Page<OrderAdminReadResponse> readOrderByAll(Pageable pageable) {
+		return orderRepository.findAllOrderList(pageable);
 	}
 
 	// 주문 상태 수정
@@ -149,7 +144,6 @@ public class OrderService {
 
 	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
 		Product product = productService.readProductByProductSeq(request.getProductSeqList().get(i));
-
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
 		Integer amount = request.getAmountList().get(i);
 		Integer price = product.getPrice();
@@ -159,6 +153,7 @@ public class OrderService {
 		return amount * price;
 	}
 
+	// 주문 상세 만들기
 	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
 		Long productSeq = request.getProductSeqList().get(i);
 		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
@@ -168,17 +163,16 @@ public class OrderService {
 		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
 		Integer price = product.getPrice();
 
-		OrderDetail orderDetail = new OrderDetail(
-			order,
-			product,
-			productOption,
-			amount,
-			price
-		);
-		ProductStock productStock = new ProductStock(product, productOption, amount);
-		productStockService.createStock(productStock);
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount, price);
+		//상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(productSeq, prdtOptionSeq, amount);
 
 		return orderDetail;
+	}
+
+	// 주문 검색 조회 서비스
+	public Page<OrderUserReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
+		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
 	}
 }
 

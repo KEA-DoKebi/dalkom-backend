@@ -1,6 +1,6 @@
 package com.dokebi.dalkom.domain.mileage.controller;
 
-import static com.dokebi.dalkom.domain.mileage.factory.mileageAskRequestFactory.*;
+import static com.dokebi.dalkom.domain.mileage.factory.mileageApplyRequestFactory.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -75,7 +75,7 @@ class MileageApplyControllerTest {
 				.param("size", "5"))
 			.andExpect(status().isOk());
 
-		verify(mileageApplyService).readMileageAsk(any(Pageable.class));
+		verify(mileageApplyService).readMileageApply(any(Pageable.class));
 	}
 
 	@Test

@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.magicNumber.MileageApplyState;
-import com.dokebi.dalkom.common.magicNumber.MileageHistoryState;
+import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
+import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
@@ -28,8 +28,12 @@ public class MileageApplyService {
 	private final UserService userService;
 	private final MileageService mileageService;
 
-	public Page<MileageApplyResponse> readMileageAsk(Pageable pageable) {
-		return mileageApplyRepository.findAllMileageAsk(pageable);
+	public Page<MileageApplyResponse> readMileageApply(Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApply(pageable);
+	}
+
+	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq,Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq,pageable);
 	}
 
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
@@ -61,20 +65,22 @@ public class MileageApplyService {
 	@Transactional
 	public void createMileageApply(Long userSeq, MileageApplyRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
-
-		if (isMileageApplied(userSeq)) {
-			MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
-			mileageApplyRepository.save(mileageApply);
-		} else {
-			throw new MileageAlreadyApplyException();
-		}
+		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
+		isApprovedStateIsWaitByUserSeq(userSeq);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
+		mileageApplyRepository.save(mileageApply);
 
 	}
 
-	// 마일리지 신청 내역 테이블에 approvedState가 Null인 데이터는 사용자 당 1개만 존재해야 함.
-	private boolean isMileageApplied(Long userSeq) {
-		Long mileageAskCount = mileageApplyRepository.countByUserSeqAndApprovedStateIsNull(userSeq);
-		return mileageAskCount < 1;
+	private void isApprovedStateIsWaitByUserSeq(Long userSeq) {
+		// 마일리지 신청 내역 테이블에 approvedState가 W(Wait)인 데이터가 존재하면 True, MileageAlreadyApplyException 반환
+		if (mileageApplyRepository.isApprovedStateIsWaitByUserSeq(userSeq))
+			throw new MileageAlreadyApplyException();
+	}
+
+	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
+		Pageable pageable) {
+		return mileageApplyRepository.findAllMileageAskSearch(email, nickname, name, pageable);
 	}
 
 }

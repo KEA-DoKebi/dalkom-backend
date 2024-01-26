@@ -23,7 +23,7 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 	Page<InquiryListByUserResponse> findInquiryListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
-		+ "i.title, i.content, i.createdAt, i.answerState, i.answeredAt, i.answerContent) "
+		+ "i.inquirySeq, i.title, i.content, i.createdAt, i.answerState) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.category.categorySeq = :categorySeq")
 	Page<InquiryListResponse> findInquiryListByCategorySeq(@Param("categorySeq") Long categorySeq, Pageable pageable);
@@ -32,5 +32,13 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 		+ "i.title, i.content, i.createdAt, i.answerContent, i.answeredAt, i.admin.nickname) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.inquirySeq = :inquirySeq")
-	InquiryOneResponse findInquiryByInquirySeq(@Param("inquirySeq") Long inquirySeq);
+	InquiryOneResponse findInquiryOne(@Param("inquirySeq") Long inquirySeq);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
+		+ "i.inquirySeq, i.title, i.content, i.createdAt, i.answerState) "
+		+ "FROM Inquiry i "
+		+ "WHERE i.category.categorySeq = :categorySeq "
+		+ "AND i.title LIKE CONCAT('%', :title, '%')")
+	Page<InquiryListResponse> findInquiryListByCategorySearch(@Param("categorySeq") Long categorySeq,
+		@Param("title") String title, Pageable pageable);
 }

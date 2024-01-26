@@ -33,6 +33,6 @@ public class ProductOptionService {
 	}
 
 	public List<OptionListDto> readOptionListDtoByProductSeq(Long productSeq) {
-		return productOptionRepository.findOptionListDtoBySeq(productSeq);
+		return productOptionRepository.findOptionListDtoByProductSeq(productSeq);
 	}
 }

@@ -18,7 +18,6 @@ public class OrderDetailService {
 
 	@Transactional
 	public void saveOrderDetail(OrderDetail orderDetail) {
-
 		orderDetailRepository.save(orderDetail);
 	}
 

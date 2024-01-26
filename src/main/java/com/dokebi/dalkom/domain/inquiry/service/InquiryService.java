@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.magicNumber.InquiryAnswerState;
+import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.category.entity.Category;
@@ -50,7 +50,7 @@ public class InquiryService {
 	}
 
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-		return inquiryRepository.findInquiryByInquirySeq(inquirySeq);
+		return inquiryRepository.findInquiryOne(inquirySeq);
 	}
 
 	@Transactional
@@ -65,5 +65,10 @@ public class InquiryService {
 		inquiry.setAdmin(admin);
 		inquiry.setAnswerState(InquiryAnswerState.YES);
 		inquiry.setAnsweredAt(LocalDateTime.now());
+	}
+
+	public Page<InquiryListResponse> readInquiryListByCategorySearch(Long categorySeq, String title,
+		Pageable pageable) {
+		return inquiryRepository.findInquiryListByCategorySearch(categorySeq, title, pageable);
 	}
 }

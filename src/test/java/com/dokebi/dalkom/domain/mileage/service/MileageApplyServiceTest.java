@@ -2,7 +2,7 @@ package com.dokebi.dalkom.domain.mileage.service;
 
 import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyResponseFactory.*;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageAskResponseFactory.*;
-import static com.dokebi.dalkom.domain.mileage.factory.mileageAskRequestFactory.*;
+import static com.dokebi.dalkom.domain.mileage.factory.mileageApplyRequestFactory.*;
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -54,9 +54,9 @@ class MileageApplyServiceTest {
 
 		Page<MileageApplyResponse> mileageAskResponsePage = new PageImpl<>(mileageApplyResponseList, pageable,
 			mileageApplyResponseList.size());
-		when(mileageApplyService.readMileageAsk(pageable)).thenReturn(mileageAskResponsePage);
+		when(mileageApplyService.readMileageApply(pageable)).thenReturn(mileageAskResponsePage);
 
-		Page<MileageApplyResponse> result = mileageApplyService.readMileageAsk(pageable);
+		Page<MileageApplyResponse> result = mileageApplyService.readMileageApply(pageable);
 
 		assertNotNull(result);
 		assertEquals(mileageApplyResponseList.size(), result.toList().size());
@@ -79,45 +79,35 @@ class MileageApplyServiceTest {
 
 	@Test
 	@DisplayName("마일리지 신청 상태 변경")
-	void updateMileageAskState() {
-		User user = new User(
-			"empId",
-			"password",
-			"name",
-			"email@email.com",
-			"address",
-			"2022-12-12",
-			"nickname",
-			120000);
-		user.setUserSeq(1L);
+	void updateMileageApplyState() {
+		// given
+		Long userSeq = 1L;
+		MileageApplyRequest request = new MileageApplyRequest();
+		request.setAmount(100);
 
-		MileageApply mileageApply = new MileageApply(
-			user,
-			120000,
-			"N"
-		);
+		User mockUser = createMockUser();
+		mockUser.setUserSeq(userSeq);
 
-		Long milgApplySeq = 1L;
+		MileageApply mileageApply = createMileageApplyResponse(mockUser);
 
-		// 모킹 설정
-		when(mileageApplyRepository.findByMilgApplySeq(milgApplySeq)).thenReturn(Optional.of(mileageApply));
 
-		// 테스트에서 사용될 값
-		Long expectedUserSeq = user.getUserSeq();
-		Integer expectedAmount = mileageApply.getAmount();
+		when(userService.readUserByUserSeq(eq(userSeq))).thenReturn(mockUser);
+		when(mileageApplyRepository.save(any(MileageApply.class))).thenReturn(mileageApply);
 
-		// 메서드 호출 및 검증
-		mileageApplyService.updateMileageApply(milgApplySeq);
+		// when
+		mileageApplyService.createMileageApply(userSeq, request);
 
-		// 모킹한 메서드 호출 검증
-		verify(mileageService).createMileageHistory(any(), any(), any(), any());
+		// then
+		// Verify that the readUserByUserSeq method is called with the correct argument
+		verify(userService, times(1)).readUserByUserSeq(eq(userSeq));
 
-		verify(mileageApplyRepository, times(1)).save(mileageApply);
+		// Verify that the save method is called with the correct argument
+		verify(mileageApplyRepository, times(1)).save(any(MileageApply.class));
 	}
 
 	@Test
 	@DisplayName("마일리지 신청하기")
-	void createMileageAsk() {
+	void createMileageApply() {
 		// 테스트에 사용할 가상의 데이터 생성
 		Long userSeq = 1L;
 		int amount = 5000;

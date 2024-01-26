@@ -38,34 +38,6 @@ public class ExceptionAdvice {
 
 	// 공통 권한
 
-	// @ExceptionHandler(Exception.class)
-	// @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
-	// public Response exception(Exception e) {
-	// 	//구체적인 에러 보여주기
-	// 	log.info("e= {}", e.getMessage());
-	// 	return Response.failure(-1000, "오류가 발생하였습니다.");
-	// }
-
-	//401 에러
-	// @ExceptionHandler(AuthenticationEntryPointException.class)
-	// @ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
-	// public Response authenticationEntryPoint(){
-	//     return Response.failure(-1001,"인증되지 않은 사용자입니다.");
-	// }
-
-	//403 에러
-	// @ExceptionHandler(AccessDeniedException.class)
-	// @ResponseStatus(HttpStatus.FORBIDDEN) // 403
-	// public Response accessDeniedException(){
-	//     return Response.failure(-1002,"접근이 거부되었습니다");
-	// }
-
-	// @ExceptionHandler(BindException.class)
-	// @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	// public Response bindException(BindException e){
-	//     return Response.failure(-1003,e.getBindingResult().getFieldError().getDefaultMessage());
-	// }
-
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response memberNotFoundException() {
@@ -125,7 +97,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response productNotFoundException() {
-		return Response.failure(-1200, "요청한 상품을 찾을 수 없습니다.");
+		return Response.failure(-1200, "해당 상품을 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(InvalidProductInputException.class)

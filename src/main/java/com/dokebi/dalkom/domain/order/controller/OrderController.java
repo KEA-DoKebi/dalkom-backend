@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderController {
 	private final OrderService orderService;
 
-	// ORDER-001 (사용자별 주문 조회)
+	// ORDER-001 (사용자별 전체 주문 조회)
 	@GetMapping("/api/order/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrdersByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
@@ -45,11 +46,11 @@ public class OrderController {
 	// ORDER-003 (특정 주문 조회)
 	@GetMapping("/api/order/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq) {
-		return Response.success(orderService.readOrderByOrderSeq(orderSeq));
+	public Response readOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq, Pageable pageable) {
+		return Response.success(orderService.readOrderByOrderSeq(orderSeq, pageable));
 	}
 
-	// ORDER-004 (전체 주문 조회)
+	// ORDER-004 (관리자 전체 주문 조회)
 	@GetMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrders(Pageable pageable) {
@@ -72,4 +73,12 @@ public class OrderController {
 		orderService.updateOrderState(orderSeq, request);
 		return Response.success();
 	}
+
+	// ORDER-007 (주문 검색)
+	@GetMapping("/api/order/search")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderListBySearch(@RequestParam String receiverName, Pageable pageable) {
+		return Response.success(orderService.readOrderListBySearch(receiverName, pageable));
+	}
+
 }

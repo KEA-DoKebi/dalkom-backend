@@ -38,13 +38,13 @@ public class AdminService {
 	}
 
 	@Transactional
-	public void createAdmin(CreateAdminRequest req) {
-		validateNickname(req.getNickname());
+	public void createAdmin(CreateAdminRequest request) {
+		validateNickname(request.getNickname());
 
 		// 비밀번호 암호화
-		String password = passwordEncoder.encode(req.getPassword());
-		req.setPassword(password);
-		adminRepository.save(CreateAdminRequest.toEntity(req));
+		String password = passwordEncoder.encode(request.getPassword());
+		request.setPassword(password);
+		adminRepository.save(CreateAdminRequest.toEntity(request));
 
 	}
 
@@ -54,6 +54,17 @@ public class AdminService {
 
 	public Admin readAdminByAdminId(String adminId) {
 		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
+	}
+
+	public Page<AdminDto> readAdminListSearch(String adminId, String name, String nickname, Pageable pageable) {
+		Page<Admin> adminList = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
+		List<AdminDto> adminDtoList = new ArrayList<>();
+		for (Admin admin : adminList) {
+			AdminDto adminDto = AdminDto.toDto(admin);
+			adminDtoList.add(adminDto);
+		}
+
+		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
 	}
 
 	private void validateNickname(String nickname) {

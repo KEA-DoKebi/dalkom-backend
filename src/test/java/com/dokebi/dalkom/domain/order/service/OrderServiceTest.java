@@ -23,14 +23,17 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
-import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
@@ -63,6 +66,8 @@ class OrderServiceTest {
 
 	@Mock
 	private Product mockProduct;
+	@Mock
+	private MileageHistory mileageHistory;
 
 	// Setup your mock data and mock behaviors here
 	@BeforeEach
@@ -80,7 +85,7 @@ class OrderServiceTest {
 		given(mockProduct.getPrice()).willReturn(10000);
 		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
 		given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
-		doNothing().when(mileageService).createMileageHistory(any(), any(), anyInt(), anyString());
+		given(mileageService.createMileageHistory(any(), any(), any(), any())).willReturn(mileageHistory);
 		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
 			new ProductOption(2L, "OP1", "의류 사이즈", "M"));
 		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
@@ -133,16 +138,16 @@ class OrderServiceTest {
 		Long userSeq = 1L;
 		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
 
-		List<OrderReadResponse> orderList = new ArrayList<>();
+		List<OrderUserReadResponse> orderList = new ArrayList<>();
 		orderList.add(createOrderReadResponse());
 		orderList.add(createOrderReadResponse());
 
-		Page<OrderReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
+		Page<OrderUserReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
 
 		when(orderService.readOrderByUserSeq(userSeq, pageable)).thenReturn(responsePage);
 
 		// when
-		Page<OrderReadResponse> result = orderService.readOrderByUserSeq(userSeq, pageable);
+		Page<OrderUserReadResponse> result = orderService.readOrderByUserSeq(userSeq, pageable);
 
 		// then
 		assertNotNull(result);
@@ -155,15 +160,21 @@ class OrderServiceTest {
 	void readOrderByOrderSeqTest() {
 		// given
 		Long orderSeq = 1L;
-		OrderReadResponse orderReadResponse = createOrderReadResponse(); // OrderFactory를 사용
-		given(orderRepository.findByOrdrSeq(anyLong())).willReturn(orderReadResponse);
+		Pageable pageable = PageRequest.of(0, 3);
+		List<OrderDetailReadResponse> orderList = new ArrayList<>();
+		orderList.add(createOrderDetailReadResponse());
+		orderList.add(createOrderDetailReadResponse());
+
+		Page<OrderDetailReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
+		when(orderService.readOrderByOrderSeq(orderSeq, pageable)).thenReturn(responsePage);
 
 		// when
-		OrderReadResponse result = orderService.readOrderByOrderSeq(orderSeq);
+		Page<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq, pageable);
 
 		// then
+		// then
 		assertNotNull(result);
-		assertEquals(orderReadResponse.getOrdrSeq(), result.getOrdrSeq());
+		assertEquals(orderList.size(), result.toList().size());
 	}
 
 	@Test
@@ -172,11 +183,11 @@ class OrderServiceTest {
 		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
 
 		// given
-		Page<OrderReadResponse> orderReadResponseList = createOrderList(); // OrderFactory를 사용
-		given(orderRepository.findAllOrders(pageable)).willReturn(orderReadResponseList);
+		Page<OrderAdminReadResponse> orderReadResponseList = createOrderList(); // OrderFactory를 사용
+		given(orderRepository.findAllOrderList(pageable)).willReturn(orderReadResponseList);
 
 		// when
-		Page<OrderReadResponse> result = orderService.readOrderByAll(pageable);
+		Page<OrderAdminReadResponse> result = orderService.readOrderByAll(pageable);
 
 		// then
 		assertNotNull(result);
