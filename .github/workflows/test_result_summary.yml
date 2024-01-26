@@ -1,4 +1,4 @@
-name: Generate Test List
+name: 테스트 요약본 생성
 
 on: [push]
 
@@ -14,6 +14,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
 
     - name: Run tests with Gradle
       run: ./gradlew test
