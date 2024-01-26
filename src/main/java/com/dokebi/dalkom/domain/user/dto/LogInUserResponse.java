@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LogInUserResponse {
 	private String accessToken;
+	private Integer mileage;
 }
