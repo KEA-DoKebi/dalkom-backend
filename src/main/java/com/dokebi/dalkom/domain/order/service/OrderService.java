@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
+import com.dokebi.dalkom.common.magicnumber.OrderState;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
@@ -28,6 +29,8 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
+import com.dokebi.dalkom.domain.review.entity.Review;
+import com.dokebi.dalkom.domain.review.service.ReviewService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -47,6 +50,7 @@ public class OrderService {
 	private final ProductStockService productStockService;
 	private final MileageService mileageService;
 	private final UserService userService;
+	private final ReviewService reviewService;
 
 	// 결제 하기
 	@Transactional
@@ -135,8 +139,8 @@ public class OrderService {
 	}
 
 	// 주문별 상세 조회
-	public Page<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq, Pageable pageable) {
-		return orderRepository.findByOrdrSeq(orderSeq, pageable);
+	public OrderDetailReadResponse readOrderByOrderSeq(Long orderSeq) {
+		return orderRepository.findOrderDetailByOrdrSeq(orderSeq).orElseThrow(OrderNotFoundException::new);
 	}
 
 	// 주문 전체 조회
@@ -186,6 +190,32 @@ public class OrderService {
 	// 주문 검색 조회 서비스
 	public Page<OrderUserReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
 		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
+	}
+
+	// 주문 삭제
+	public void cancelOrderByOrderSeq(Long orderSeq) {
+		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		User user = order.getUser();
+		List<OrderDetail> orderDetailList = orderDetailService.readOrderDetailByOrderSeq(orderSeq);
+		List<Review> reviewList = reviewService.readReviewByOrderDetailList(orderDetailList);
+
+		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
+		for (Review review : reviewList) {
+			reviewService.deleteReview(review.getReviewSeq());
+		}
+
+		// 환불 후 금액
+		Integer amountChanged = user.getMileage() + order.getTotalPrice();
+
+		// 마일리지 복구
+		mileageService.createMileageHistory(
+			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.CANCELLED);
+
+		user.setMileage(amountChanged);
+
+		// 주문 상태 변경
+		order.setOrderState(OrderState.CANCELED);
 	}
 }
 

@@ -89,7 +89,7 @@ public class OrderControllerTest {
 
 			.andExpect(status().isOk());
 		// then(검증)
-		verify(orderService).readOrderByOrderSeq(orderSeq,any(Pageable.class));
+		verify(orderService).readOrderByOrderSeq(orderSeq);
 	}
 
 	@Test

@@ -160,21 +160,15 @@ class OrderServiceTest {
 	void readOrderByOrderSeqTest() {
 		// given
 		Long orderSeq = 1L;
-		Pageable pageable = PageRequest.of(0, 3);
-		List<OrderDetailReadResponse> orderList = new ArrayList<>();
-		orderList.add(createOrderDetailReadResponse());
-		orderList.add(createOrderDetailReadResponse());
+		OrderDetailReadResponse orderDetailReadResponse = createOrderDetailReadResponse();
 
-		Page<OrderDetailReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
-		when(orderService.readOrderByOrderSeq(orderSeq, pageable)).thenReturn(responsePage);
+		when(orderService.readOrderByOrderSeq(orderSeq)).thenReturn(orderDetailReadResponse);
 
 		// when
-		Page<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq, pageable);
+		OrderDetailReadResponse result = orderService.readOrderByOrderSeq(orderSeq);
 
 		// then
-		// then
 		assertNotNull(result);
-		assertEquals(orderList.size(), result.toList().size());
 	}
 
 	@Test
