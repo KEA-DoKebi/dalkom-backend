@@ -27,7 +27,7 @@ public class MileageApplyController {
 	private final MileageApplyService mileageApplyService;
 
 	// MILEAGE-003 (마일리지 승인 여부 변경 (관리자))
-	@PutMapping("/api/milage/ask/{milgApplySeq}")
+	@PutMapping("/api/milage/apply/{milgApplySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq) {
 		mileageApplyService.updateMileageApply(milgApplySeq);
@@ -35,14 +35,14 @@ public class MileageApplyController {
 	}
 
 	// MILEAGE-004 (마일리지 신청 조회 (관리자))
-	@GetMapping("/api/mileage/ask")
+	@GetMapping("/api/mileage/apply")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageAsk(Pageable pageable) {
 		return Response.success(mileageApplyService.readMileageAsk(pageable));
 	}
 
 	// MILEAGE-005 (마일리지 충전 신청)
-	@PostMapping("/api/mileage/ask/user")
+	@PostMapping("/api/mileage/apply/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createMileageAsk(@LoginUser Long userSeq,
 		@Valid @RequestBody MileageApplyRequest request) {
@@ -51,7 +51,7 @@ public class MileageApplyController {
 	}
 
 	// MILEAGE-006 (마일리지 신청 조회 검색 (관리자))
-	@GetMapping("/api/mileage/ask/search")
+	@GetMapping("/api/mileage/apply/search")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageAskSearch(@RequestParam String email,@RequestParam String nickname,@RequestParam String name, Pageable pageable) {
 

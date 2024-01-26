@@ -61,7 +61,7 @@ public class ProductService {
 		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
 
 		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
-			|| optionList.isEmpty() || productImageUrlList.isEmpty()) {
+			|| optionList.isEmpty()  ) {
 			throw new ProductNotFoundException();
 		}
 

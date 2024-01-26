@@ -2,7 +2,7 @@ package com.dokebi.dalkom.domain.mileage.service;
 
 import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyResponseFactory.*;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageAskResponseFactory.*;
-import static com.dokebi.dalkom.domain.mileage.factory.mileageAskRequestFactory.*;
+import static com.dokebi.dalkom.domain.mileage.factory.mileageApplyRequestFactory.*;
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -79,7 +79,7 @@ class MileageApplyServiceTest {
 
 	@Test
 	@DisplayName("마일리지 신청 상태 변경")
-	void updateMileageAskState() {
+	void updateMileageApplyState() {
 		// given
 		Long userSeq = 1L;
 		MileageApplyRequest request = new MileageApplyRequest();
