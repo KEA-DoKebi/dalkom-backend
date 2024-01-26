@@ -147,7 +147,7 @@ public class ProductService {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		//상품 정보 저장
+		// 상품 정보 저장
 		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
 		product.setName(request.getName());
 		product.setPrice(request.getPrice());
