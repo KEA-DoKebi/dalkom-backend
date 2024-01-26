@@ -38,41 +38,38 @@ public class ProductStockControllerTest {
 	@DisplayName("정상 작동 테스트")
 	void readStockListByCategoryTest() throws Exception {
 
-		//given
+		// given
 		Long stockSeq = 1L;
 		Integer changedAmount = 3;
 
 		ProductStockEditRequest req = new ProductStockEditRequest(changedAmount);
 
-		//when then
-		//API 요청을 했을 때 200을 반환하는지 검증
+		// when
 		mockMvc.perform(
 				put("/api/stock/{stockSeq}", stockSeq)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(req)))
-			.andExpect(status().isOk());
+			.andExpect(status().isOk()); // then (API 요청을 했을 때 200을 반환하는지 검증)
 
 		//productStockController에서 productStockService updateStock을 호출했는지 검증
-		verify(productStockService).updateStock(stockSeq, req.getAmount());
-
+		verify(productStockService).updateStockByStockSeq(stockSeq, req.getAmount());
 	}
 
 	@Test
 	@DisplayName("Valid 테스트")
 	void readStockListByCategoryValidTest() throws Exception {
 
-		//given
+		//given (changedAmount 변수 값을 범위에서 벗어나게 설정)
 		Long stockSeq = 1L;
 		Integer changedAmount = -3;
 
 		ProductStockEditRequest req = new ProductStockEditRequest(changedAmount);
 
-		//when then
-		//API 요청을 했을 때 400을 반환하는지 검증
+		// when
 		mockMvc.perform(
 				put("/api/stock/{stockSeq}", stockSeq)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(req)))
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest()); // thenAPI 요청을 했을 때 400을 반환하는지 검증
 	}
 }

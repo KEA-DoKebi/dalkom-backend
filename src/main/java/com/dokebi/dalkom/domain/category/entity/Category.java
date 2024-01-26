@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
+import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
 import lombok.AccessLevel;
@@ -45,4 +45,10 @@ public class Category extends EntityDate {
 
 	@OneToMany(mappedBy = "category")
 	private List<Inquiry> inquiry = new ArrayList<>();
+
+	public Category(String name, Long parentSeq, String imageUrl) {
+		this.name = name;
+		this.parentSeq = parentSeq;
+		this.imageUrl = imageUrl;
+	}
 }

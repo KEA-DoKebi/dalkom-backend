@@ -13,9 +13,9 @@ import com.dokebi.dalkom.domain.category.entity.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-	Optional<Category> findByCategorySeq(Long categorySeq);
+	Optional<Category> findCategoryByCategorySeq(Long categorySeq);
 
-	@Query("SELECT c.categorySeq, c.name, c.imageUrl FROM Category c WHERE c.parentSeq IS NULL")
+	@Query("SELECT NEW com.dokebi.dalkom.domain.category.dto.CategoryResponse(c.categorySeq, c.name, c.imageUrl) FROM Category c WHERE c.parentSeq IS NULL AND c.categorySeq < 33")
 	List<CategoryResponse> findCategoryList();
 
 	@Query("SELECT c.categorySeq, c.name FROM Category c WHERE c.parentSeq = :categorySeq")

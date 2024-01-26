@@ -18,6 +18,7 @@ import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "prdtStock")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ProductStock extends EntityDate {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,10 +54,7 @@ public class ProductStock extends EntityDate {
 		this.amount = amount;
 	}
 
-	public ProductStock(Product product, ProductOption productOption, Integer amount,List<ProductStockHistory> productStockHistoryList) {
-		this.product = product;
-		this.productOption = productOption;
-		this.amount = amount;
-		this.productStockHistoryList = productStockHistoryList;
+	public static ProductStock createProductStock() {
+		return new ProductStock();
 	}
 }

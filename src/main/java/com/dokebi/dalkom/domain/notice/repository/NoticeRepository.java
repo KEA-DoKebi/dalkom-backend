@@ -1,7 +1,7 @@
 package com.dokebi.dalkom.domain.notice.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,5 +23,11 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
 		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
 		"FROM Notice n ")
-	List<NoticeListResponse> findNoticeList();
+	Page<NoticeListResponse> findNoticeList(Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
+		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
+		"FROM Notice n WHERE n.admin.nickname LIKE CONCAT('%', :nickname, '%') " +
+		"OR n.title LIKE CONCAT('%', :title, '%')")
+	Page<NoticeListResponse> findNoticeListByNickNameOrTitle(@Param("nickname") String nickname,@Param("title") String title,Pageable pageable);
 }

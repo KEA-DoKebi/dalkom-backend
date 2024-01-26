@@ -1,8 +1,9 @@
 package com.dokebi.dalkom.domain.notice.service;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,9 +36,9 @@ public class NoticeService {
 	}
 
 	@Transactional
-	public List<NoticeListResponse> readNoticeList() {
+	public Page<NoticeListResponse> readNoticeList(Pageable pageable) {
 
-		return noticeRepository.findNoticeList();
+		return noticeRepository.findNoticeList(pageable);
 	}
 
 	@Transactional
@@ -48,6 +49,7 @@ public class NoticeService {
 		noticeRepository.save(notice);
 	}
 
+	@Transactional
 	public void updateNotice(Long noticeSeq, NoticeUpdateRequest request) {
 
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
@@ -68,5 +70,11 @@ public class NoticeService {
 		} else {
 			throw new NoticeNotFoundException();
 		}
+	}
+
+	@Transactional
+	public Page<NoticeListResponse> readNoticeListBySearch(String nickName,String title ,Pageable pageable) {
+
+		return noticeRepository.findNoticeListByNickNameOrTitle(nickName,title,pageable);
 	}
 }

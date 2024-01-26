@@ -24,6 +24,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "milgApply")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class MileageApply extends EntityDate {
 
 	@Id
@@ -43,10 +44,14 @@ public class MileageApply extends EntityDate {
 	@Column(name = "approvedAt")
 	private LocalDateTime approvedAt;
 
-	public MileageApply(User user, Integer amount, String approvedState, LocalDateTime approvedAt) {
+	public MileageApply(User user, Integer amount, String approvedState) {
 		this.user = user;
 		this.amount = amount;
 		this.approvedState = approvedState;
-		this.approvedAt = approvedAt;
+		this.approvedAt = LocalDateTime.now();
+	}
+
+	public void changeApprovedState(String state) {
+		this.approvedState = state;
 	}
 }
