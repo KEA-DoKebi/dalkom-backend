@@ -61,20 +61,17 @@ public class MileageApplyService {
 	@Transactional
 	public void createMileageApply(Long userSeq, MileageApplyRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
-
-		if (isMileageApplied(userSeq)) {
-			// 마일리지 신청 내역 테이블에 대기중인 내역이 없음.
-			MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
-			mileageApplyRepository.save(mileageApply);
-		} else {
-			throw new MileageAlreadyApplyException();
-		}
+		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
+		isApprovedStateIsWaitByUserSeq(userSeq);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
+		mileageApplyRepository.save(mileageApply);
 
 	}
 
-	// 마일리지 신청 내역 테이블에 approvedState가 W(Wait)인 데이터가 존재하지 않으면 True.
-	private boolean isMileageApplied(Long userSeq) {
-		return mileageApplyRepository.isApprovedStateIsWaitByUserSeq(userSeq);
+	// 마일리지 신청 내역 테이블에 approvedState가 W(Wait)인 데이터가 존재하면 True.
+	private void isApprovedStateIsWaitByUserSeq(Long userSeq) {
+		if (mileageApplyRepository.isApprovedStateIsWaitByUserSeq(userSeq))
+			throw new MileageAlreadyApplyException();
 	}
 
 	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
