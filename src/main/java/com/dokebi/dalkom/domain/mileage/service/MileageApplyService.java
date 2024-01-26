@@ -68,8 +68,8 @@ public class MileageApplyService {
 
 	}
 
-	// 마일리지 신청 내역 테이블에 approvedState가 W(Wait)인 데이터가 존재하면 True.
 	private void isApprovedStateIsWaitByUserSeq(Long userSeq) {
+		// 마일리지 신청 내역 테이블에 approvedState가 W(Wait)인 데이터가 존재하면 True, MileageAlreadyApplyException 반환
 		if (mileageApplyRepository.isApprovedStateIsWaitByUserSeq(userSeq))
 			throw new MileageAlreadyApplyException();
 	}
