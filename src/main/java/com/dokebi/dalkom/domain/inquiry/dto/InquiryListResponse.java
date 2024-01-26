@@ -18,7 +18,6 @@ public class InquiryListResponse {
 	// 카테고리별 문의 조회 response (관리자용)
 	private Long inquirySeq;
 	private String title;
-	private String content;
 	private LocalDateTime createdAt;
 	private String answerState;
 }

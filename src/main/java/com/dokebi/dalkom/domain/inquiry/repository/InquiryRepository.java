@@ -23,7 +23,7 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 	Page<InquiryListByUserResponse> findInquiryListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
-		+ "i.inquirySeq, i.title, i.content, i.createdAt, i.answerState) "
+		+ "i.inquirySeq, i.content, i.createdAt, i.answerState) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.category.categorySeq = :categorySeq")
 	Page<InquiryListResponse> findInquiryListByCategorySeq(@Param("categorySeq") Long categorySeq, Pageable pageable);
@@ -35,7 +35,7 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 	InquiryOneResponse findInquiryOne(@Param("inquirySeq") Long inquirySeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse("
-		+ "i.inquirySeq, i.title, i.content, i.createdAt, i.answerState) "
+		+ "i.inquirySeq, i.content, i.createdAt, i.answerState) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.category.categorySeq = :categorySeq "
 		+ "AND i.title LIKE CONCAT('%', :title, '%')")

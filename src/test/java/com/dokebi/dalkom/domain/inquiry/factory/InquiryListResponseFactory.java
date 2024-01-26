@@ -9,7 +9,6 @@ public class InquiryListResponseFactory {
 		return new InquiryListResponse(
 			1002L,
 			"title",
-			"content",
 			LocalDateTime.of(2024, 1, 15, 0, 0),
 			"N"
 		);
