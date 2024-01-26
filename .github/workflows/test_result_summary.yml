@@ -31,10 +31,11 @@ jobs:
     - name: Parse test results and generate markdown
       run: python .github/parse_tests.py > test_list.md
 
-    - name: Commit and push changes
+    - name: Push changes
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git add test_list.md
         git commit -m "Workflow : Test 결과 요약본 생성" -a || exit 0
-        git push
+        git push https://${{ secrets.MY_PAT }}@github.com/KEA-DoKebi/dalkom-backend.git
+    
