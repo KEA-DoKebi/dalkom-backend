@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.common.magicNumber;
+package com.dokebi.dalkom.common.magicnumber;
 
 public class ProductActiveState {
 	public static final String ACTIVE = "Y";
