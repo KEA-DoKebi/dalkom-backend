@@ -54,9 +54,9 @@ class MileageApplyServiceTest {
 
 		Page<MileageApplyResponse> mileageAskResponsePage = new PageImpl<>(mileageApplyResponseList, pageable,
 			mileageApplyResponseList.size());
-		when(mileageApplyService.readMileageAsk(pageable)).thenReturn(mileageAskResponsePage);
+		when(mileageApplyService.readMileageApply(pageable)).thenReturn(mileageAskResponsePage);
 
-		Page<MileageApplyResponse> result = mileageApplyService.readMileageAsk(pageable);
+		Page<MileageApplyResponse> result = mileageApplyService.readMileageApply(pageable);
 
 		assertNotNull(result);
 		assertEquals(mileageApplyResponseList.size(), result.toList().size());
