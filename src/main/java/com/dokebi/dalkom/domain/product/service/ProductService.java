@@ -157,7 +157,7 @@ public class ProductService {
 
 			// updateStock은 History를 남기는 메서드이므로, 재고가 다를 경우에만 실행하기
 			if (!Objects.equals(stock.getAmount(), optionAmountDto.getAmount())) {
-				productStockService.updateStock(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
+				productStockService.updateStockByStockSeq(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
 			}
 		}
 	}

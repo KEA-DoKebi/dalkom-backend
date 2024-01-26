@@ -34,7 +34,7 @@ public class ProductStockService {
 	}
 
 	@Transactional
-	public void updateStock(Long stockSeq, Integer amount) {
+	public void updateStockByStockSeq(Long stockSeq, Integer amount) { //
 		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
 
 		if (amount < 0) {
@@ -53,7 +53,7 @@ public class ProductStockService {
 	}
 
 	@Transactional
-	public void updateStock(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
+	public void updateStockByProductSeqAndOptionSeq(Long productSeq, Long prdtOptionSeq, Integer amountChanged) {
 		ProductStock stock = stockRepository.findPrdtStockByPrdtSeqAndPrdtOptionSeq(productSeq, prdtOptionSeq)
 			.orElseThrow(ProductStockNotFoundException::new);
 
