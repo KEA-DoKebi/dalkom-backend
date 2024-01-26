@@ -27,7 +27,7 @@ public class ProductStockController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readStockListByCategory(@PathVariable Long stockSeq,
 		@Valid @RequestBody ProductStockEditRequest request) {
-		productStockService.updateStock(stockSeq, request.getAmount());
+		productStockService.updateStockByStockSeq(stockSeq, request.getAmount());
 		return Response.success();
 	}
 }

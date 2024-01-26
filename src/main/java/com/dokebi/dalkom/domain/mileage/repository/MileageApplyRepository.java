@@ -18,7 +18,17 @@ public interface MileageApplyRepository extends JpaRepository<MileageApply, Long
 
 	Optional<MileageApply> findByMilgApplySeq(@Param("milgApplySeq") Long milgApplySeq);
 
-	@Query("SELECT COUNT(m) FROM MileageApply m WHERE m.user.userSeq = :userSeq AND m.approvedState IS NULL")
-	Long countByUserSeqAndApprovedStateIsNull(@Param("userSeq") Long userSeq);
+	@Query("SELECT COUNT(m) > 0 FROM MileageApply m WHERE m.user.userSeq = :userSeq AND m.approvedState = 'W'")
+	Boolean isApprovedStateIsWaitByUserSeq(@Param("userSeq") Long userSeq);
 
+	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse("
+		+ "m.user.userSeq, m.amount,m.user.mileage, m.approvedState, m.approvedAt) "
+		+ "FROM MileageApply m "
+		+ "WHERE (:email IS NULL OR m.user.email LIKE CONCAT('%', :email, '%')) "
+		+ "AND (:nickname IS NULL OR m.user.nickname LIKE CONCAT('%', :nickname, '%')) "
+		+ "AND (:name IS NULL OR m.user.name LIKE CONCAT('%', :name, '%'))")
+	Page<MileageApplyResponse> findAllMileageAskSearch(@Param("email") String email,
+		@Param("nickname") String nickname,
+		@Param("name") String name,
+		Pageable pageable);
 }

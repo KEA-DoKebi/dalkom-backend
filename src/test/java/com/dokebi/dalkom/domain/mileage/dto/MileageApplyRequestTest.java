@@ -1,6 +1,6 @@
 package com.dokebi.dalkom.domain.mileage.dto;
 
-import static com.dokebi.dalkom.domain.mileage.factory.mileageAskRequestFactory.*;
+import static com.dokebi.dalkom.domain.mileage.factory.mileageApplyRequestFactory.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Set;

@@ -33,13 +33,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) "
 		+ "FROM Product p "
 		+ "WHERE p.productSeq = :productSeq ")
-	ReadProductDetailDto findProductDetailBySeq(@Param("productSeq") Long productSeq);
+	ReadProductDetailDto findProductDetailByProductSeq(@Param("productSeq") Long productSeq);
 
 	// PRODUCT-002 - 상품 상세 정보 조회
 	@Query("SELECT pi.imageUrl "
 		+ "FROM ProductImage pi "
 		+ "WHERE pi.product.productSeq = :productSeq ")
-	List<String> findProductImageBySeq(@Param("productSeq") Long productSeq);
+	List<String> findProductImageByProductSeq(@Param("productSeq") Long productSeq);
 
 	// PRODUCT-004 상품 리스트 조회 - 관리자 화면
 	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse( "
@@ -70,10 +70,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE c.parentSeq = :categorySeq "
-		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
-	Page<ProductMainResponse> findProductListByCategoryAll(
-		@Param("categorySeq") Long categorySeq, Pageable pageable);
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+	Page<ProductMainResponse> findProductListByCategoryAll(@Param("categorySeq") Long categorySeq, Pageable pageable);
+
+	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.productOption.detail, ps.amount)"
+		+ "FROM Product p "
+		+ "INNER JOIN ProductStock ps "
+		+ "ON p.productSeq = ps.product.productSeq "
+		+ "WHERE (p.name LIKE CONCAT('%', :name, '%')) "
+		+ "OR (p.company LIKE CONCAT('%', :company, '%')) "
+		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
+		countQuery = "SELECT COUNT(p) FROM Product p ")
+	Page<ReadProductResponse> findProductListSearch(@Param("name") String name, @Param("company") String company,
+		Pageable pageable);
 
 	// 다른 Domain Service에서 사용하도록 하는 메소드
-	Optional<Product> findByProductSeq(Long productSeq);
+	Optional<Product> findProductByProductSeq(Long productSeq);
 }

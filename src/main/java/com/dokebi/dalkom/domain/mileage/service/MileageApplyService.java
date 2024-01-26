@@ -61,20 +61,22 @@ public class MileageApplyService {
 	@Transactional
 	public void createMileageApply(Long userSeq, MileageApplyRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
-
-		if (isMileageApplied(userSeq)) {
-			MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
-			mileageApplyRepository.save(mileageApply);
-		} else {
-			throw new MileageAlreadyApplyException();
-		}
+		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
+		isApprovedStateIsWaitByUserSeq(userSeq);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
+		mileageApplyRepository.save(mileageApply);
 
 	}
 
-	// 마일리지 신청 내역 테이블에 approvedState가 Null인 데이터는 사용자 당 1개만 존재해야 함.
-	private boolean isMileageApplied(Long userSeq) {
-		Long mileageAskCount = mileageApplyRepository.countByUserSeqAndApprovedStateIsNull(userSeq);
-		return mileageAskCount < 1;
+	private void isApprovedStateIsWaitByUserSeq(Long userSeq) {
+		// 마일리지 신청 내역 테이블에 approvedState가 W(Wait)인 데이터가 존재하면 True, MileageAlreadyApplyException 반환
+		if (mileageApplyRepository.isApprovedStateIsWaitByUserSeq(userSeq))
+			throw new MileageAlreadyApplyException();
+	}
+
+	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
+		Pageable pageable) {
+		return mileageApplyRepository.findAllMileageAskSearch(email, nickname, name, pageable);
 	}
 
 }
