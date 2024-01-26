@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserListResponse {
-	public Long UserSeq;
+	public Long userSeq;
 	public String email;
 	public String nickname;
 	public Integer mileage;
