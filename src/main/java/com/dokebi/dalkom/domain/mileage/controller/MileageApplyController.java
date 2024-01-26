@@ -37,14 +37,14 @@ public class MileageApplyController {
 	// MILEAGE-004 (마일리지 신청 조회 (관리자))
 	@GetMapping("/api/mileage/apply")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readMileageAsk(Pageable pageable) {
-		return Response.success(mileageApplyService.readMileageAsk(pageable));
+	public Response readMileageApply(Pageable pageable) {
+		return Response.success(mileageApplyService.readMileageApply(pageable));
 	}
 
 	// MILEAGE-005 (마일리지 충전 신청)
 	@PostMapping("/api/mileage/apply/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createMileageAsk(@LoginUser Long userSeq,
+	public Response createMileageApplyByUserSeq(@LoginUser Long userSeq,
 		@Valid @RequestBody MileageApplyRequest request) {
 		mileageApplyService.createMileageApply(userSeq, request);
 		return Response.success();
@@ -53,8 +53,16 @@ public class MileageApplyController {
 	// MILEAGE-006 (마일리지 신청 조회 검색 (관리자))
 	@GetMapping("/api/mileage/apply/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readMileageAskSearch(@RequestParam String email,@RequestParam String nickname,@RequestParam String name, Pageable pageable) {
-
-		return Response.success(mileageApplyService.readMileageAskSearch(email,nickname,name,pageable));
+	public Response readMileageApplySearch(@RequestParam String email, @RequestParam String nickname,
+		@RequestParam String name, Pageable pageable) {
+		return Response.success(mileageApplyService.readMileageAskSearch(email, nickname, name, pageable));
 	}
+
+	// MILEAGE-007 (마일리지 신청 조회 W인 값들만 조회(유저))
+	@GetMapping("/api/mileage/apply/user")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readMileageApplyByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
+		return Response.success(mileageApplyService.readMileageApplyByUserSeq(userSeq, pageable));
+	}
+
 }

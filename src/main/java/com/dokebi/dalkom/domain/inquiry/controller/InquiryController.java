@@ -68,7 +68,9 @@ public class InquiryController {
 	// INQUIRY-007 (문의 카테고리 별 문의 검색)
 	@GetMapping("/api/inquiry/category/{categorySeq}/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readInquiryByCategorySearch(@PathVariable Long categorySeq,@RequestParam String title, Pageable pageable) {
-		return Response.success(inquiryService.readInquiryListByCategorySearch(categorySeq ,title, pageable));
+	public Response readInquiryByCategorySearch(@PathVariable Long categorySeq, @RequestParam String title,
+		Pageable pageable) {
+		return Response.success(inquiryService.readInquiryListByCategorySearch(categorySeq, title, pageable));
 	}
+
 }

@@ -13,10 +13,12 @@ import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
-import com.dokebi.dalkom.domain.order.dto.OrderReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
@@ -114,19 +116,19 @@ public class OrderService {
 		return result;
 	}
 
-	// 유저별 주문 조회
-	public Page<OrderReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
+	// 사용자별 주문 전체 조회
+	public Page<OrderUserReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
 		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
 	}
 
-	// 주문별 주문 조회
-	public OrderReadResponse readOrderByOrderSeq(Long orderSeq) {
-		return orderRepository.findByOrdrSeq(orderSeq);
+	// 주문별 상세 조회
+	public Page<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq, Pageable pageable) {
+		return orderRepository.findByOrdrSeq(orderSeq, pageable);
 	}
 
 	// 주문 전체 조회
-	public Page<OrderReadResponse> readOrderByAll(Pageable pageable) {
-		return orderRepository.findAllOrders(pageable);
+	public Page<OrderAdminReadResponse> readOrderByAll(Pageable pageable) {
+		return orderRepository.findAllOrderList(pageable);
 	}
 
 	// 주문 상태 수정
@@ -169,7 +171,7 @@ public class OrderService {
 	}
 
 	// 주문 검색 조회 서비스
-	public Page<OrderReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
+	public Page<OrderUserReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
 		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
 	}
 }
