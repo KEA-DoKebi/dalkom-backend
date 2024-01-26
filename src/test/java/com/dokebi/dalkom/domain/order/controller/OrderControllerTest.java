@@ -83,10 +83,13 @@ public class OrderControllerTest {
 		Long orderSeq = 1L;
 
 		// when(실행)
-		mockMvc.perform(get("/api/order/{orderSeq}", orderSeq))
+		mockMvc.perform(get("/api/order/{orderSeq}", orderSeq)
+				.param("page", "0")
+				.param("size", "5"))
+
 			.andExpect(status().isOk());
 		// then(검증)
-		verify(orderService).readOrderByOrderSeq(orderSeq);
+		verify(orderService).readOrderByOrderSeq(orderSeq,any(Pageable.class));
 	}
 
 	@Test

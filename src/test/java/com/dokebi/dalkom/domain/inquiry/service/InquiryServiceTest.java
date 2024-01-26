@@ -135,11 +135,10 @@ public class InquiryServiceTest {
 			InquiryListResponse expect = expectedList.get(i);
 			InquiryListResponse actual = result.getContent().get(i);
 
+			assertEquals(expect.getInquirySeq(), actual.getInquirySeq());
 			assertEquals(expect.getTitle(), actual.getTitle());
 			assertEquals(expect.getContent(), actual.getContent());
 			assertEquals(expect.getCreatedAt(), actual.getCreatedAt());
-			assertEquals(expect.getAnsweredAt(), actual.getAnsweredAt());
-			assertEquals(expect.getAnswerContent(), actual.getAnswerContent());
 		}
 	}
 
@@ -157,7 +156,7 @@ public class InquiryServiceTest {
 			null
 		);
 
-		when(inquiryService.readInquiryOne(inquirySeq)).thenReturn(response);
+		when(inquiryRepository.findInquiryOne(inquirySeq)).thenReturn(response);
 
 		// When
 		InquiryOneResponse result = inquiryService.readInquiryOne(inquirySeq);
