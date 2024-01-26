@@ -23,7 +23,7 @@ jobs:
       run: ./gradlew test
 
     - name: Parse test results and generate markdown
-      run: python parse_tests.py > .github/auto-assign.yml
+      run: python .github/parse_tests.py > test_list.md
 
     - name: Commit and push changes
       run: |
