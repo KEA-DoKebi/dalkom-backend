@@ -31,11 +31,12 @@ jobs:
     - name: Parse test results and generate markdown
       run: python .github/parse_tests.py > test_list.md
 
+    - name: Commit changes
+      run: |
+        git config --global user.name 'Kim Donghyeon' # 유저명
+        git config --global user.email 'eastlighting1@gachon.ac.kr' # 유저 이메일
+        git add -A
+        git commit -am "test" # 커밋 메시지
     - name: Push changes
       run: |
-        git config --local user.email "${{ secrets.GIT_USER_EMAIL }}"
-        git config --local user.name "${{ secrets.GIT_USER_NAME }}"
-        git add test_list.md
-        git commit -m "Workflow : Test 결과 요약본 생성" -a || exit 0
-        git push https://${{ secrets.MY_PAT }}@github.com/KEA-DoKebi/dalkom-backend.git
-    
+        git push
