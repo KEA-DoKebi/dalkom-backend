@@ -35,7 +35,7 @@ jobs:
       run: |
         git config --global user.name 'Kim Donghyeon'
         git config --global user.email 'eastlighting1@gachon.ac.kr'
-        git add -A
+        git add .
         git commit -am "test"
         git push origin ${{ github.ref }}
 
