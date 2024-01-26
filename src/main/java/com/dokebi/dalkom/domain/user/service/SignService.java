@@ -38,13 +38,14 @@ public class SignService {
 	public LogInUserResponse signIn(LogInRequest req) {
 		User user = userRepository.findByEmail(req.getEmail());
 		validatePassword(req, user);
+		Integer mileage = user.getMileage();
 		String subject = createSubject(user);
 		String accessToken = tokenService.createAccessToken(subject);
 		String refreshToken = tokenService.createRefreshToken(subject);
 		// redis에 accessToken : refreshToken 형태로 저장된다.
 		redisService.createValues(accessToken, refreshToken);
 		// 로그인 시 refreshToken는 반환되지 않는다.
-		return new LogInUserResponse(accessToken);
+		return new LogInUserResponse(accessToken, mileage);
 	}
 
 	@Transactional(readOnly = true)
@@ -68,7 +69,7 @@ public class SignService {
 	}
 
 	private String createSubject(Admin admin) {
-		return String.valueOf(admin.getAdminSeq()) + ",Admin";
+		return admin.getAdminSeq() + ",Admin";
 	}
 
 	private void validatePassword(LogInRequest req, User user) {

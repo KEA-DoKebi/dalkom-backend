@@ -167,10 +167,24 @@ public class ProductService {
 		}
 	}
 
-	public void inactiveProductByProductSeq(Long productSeq) {
+	public String checkProductActiveState(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.INACTIVE);
+		return product.getState();
+	}
+
+	public void soldoutProductByProductSeq(Long productSeq) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
+
+		product.setState(ProductActiveState.SOLDOUT);
+	}
+
+	public void activeProductByProductSeq(Long productSeq) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
+
+		product.setState(ProductActiveState.ACTIVE);
 	}
 }
