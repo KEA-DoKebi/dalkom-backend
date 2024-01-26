@@ -57,10 +57,10 @@ public class ProductService {
 
 	// PRODUCT-002 (상품 상세 정보 조회)
 	public ReadProductDetailResponse readProduct(Long productSeq) {
-		ReadProductDetailDto productDetailDto = productRepository.findProductDetailBySeq(productSeq);
+		ReadProductDetailDto productDetailDto = productRepository.findProductDetailByProductSeq(productSeq);
 		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
 		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
-		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
+		List<String> productImageUrlList = productRepository.findProductImageByProductSeq(productSeq);
 
 		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
 			|| optionList.isEmpty()  ) {
@@ -129,11 +129,12 @@ public class ProductService {
 
 	// 다른 Domain Service에서 사용하도록 하는 메소드
 	public Product readProductByProductSeq(Long productSeq) {
-		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
-		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
 
 		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
 		product.setName(request.getName());
@@ -154,8 +155,9 @@ public class ProductService {
 		}
 	}
 
-	public void deactiveProductBySeq(Long productSeq) {
-		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+	public void deactiveProductByProductSeq(Long productSeq) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
 
 		product.setState("N");
 	}

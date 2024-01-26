@@ -93,10 +93,10 @@ public class ProductServiceTest {
 	public void readProductTest() {
 		// Given: 상품 ID
 		Long productSeq = 1L;
-		given(productRepository.findProductDetailBySeq(productSeq)).willReturn(new ReadProductDetailDto());
+		given(productRepository.findProductDetailByProductSeq(productSeq)).willReturn(new ReadProductDetailDto());
 		given(productStockService.readStockListDtoByProductSeq(productSeq)).willReturn(List.of(new StockListDto()));
 		given(productOptionService.readOptionListDtoByProductSeq(productSeq)).willReturn(List.of(new OptionListDto()));
-		given(productRepository.findProductImageBySeq(productSeq)).willReturn(List.of("imageURL"));
+		given(productRepository.findProductImageByProductSeq(productSeq)).willReturn(List.of("imageURL"));
 
 		// When: 상품 상세 정보 조회 메서드 실행
 		ReadProductDetailResponse result = productService.readProduct(productSeq);
@@ -114,7 +114,7 @@ public class ProductServiceTest {
 
 		given(productStockService.readStockListDtoByProductSeq(anyLong())).willReturn(null);
 		given(productOptionService.readOptionListDtoByProductSeq(anyLong())).willReturn(null);
-		given(productRepository.findProductImageBySeq(anyLong())).willReturn(null);
+		given(productRepository.findProductImageByProductSeq(anyLong())).willReturn(null);
 
 		// When & Then: 예외가 발생하는지 확인
 		assertThrows(ProductNotFoundException.class,
@@ -149,7 +149,7 @@ public class ProductServiceTest {
 		// Given: 주어진 상품 ID
 		Long productSeq = 1L;
 		Category testCategory = new Category("메이크업", 1L, "Url");
-		given(productRepository.findByProductSeq(productSeq)).willReturn(
+		given(productRepository.findProductByProductSeq(productSeq)).willReturn(
 			Optional.of(new Product(testCategory, "test", 5000,
 				"info", "Url", "Company", "Y")));
 
@@ -217,7 +217,7 @@ public class ProductServiceTest {
 	public void readProductByProductSeqNotFoundExceptionTest() {
 		// Given: 존재하지 않는 상품 ID
 		Long productSeq = 1L;
-		given(productRepository.findByProductSeq(productSeq)).willReturn(Optional.empty());
+		given(productRepository.findProductByProductSeq(productSeq)).willReturn(Optional.empty());
 
 		// When & Then: 예외가 발생하는지 확인
 		assertThrows(ProductNotFoundException.class, () -> productService.readProductByProductSeq(productSeq));

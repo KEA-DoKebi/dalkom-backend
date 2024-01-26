@@ -33,13 +33,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) "
 		+ "FROM Product p "
 		+ "WHERE p.productSeq = :productSeq ")
-	ReadProductDetailDto findProductDetailBySeq(@Param("productSeq") Long productSeq);
+	ReadProductDetailDto findProductDetailByProductSeq(@Param("productSeq") Long productSeq);
 
 	// PRODUCT-002 - 상품 상세 정보 조회
 	@Query("SELECT pi.imageUrl "
 		+ "FROM ProductImage pi "
 		+ "WHERE pi.product.productSeq = :productSeq ")
-	List<String> findProductImageBySeq(@Param("productSeq") Long productSeq);
+	List<String> findProductImageByProductSeq(@Param("productSeq") Long productSeq);
 
 	// PRODUCT-004 상품 리스트 조회 - 관리자 화면
 	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse( "
@@ -85,5 +85,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<ReadProductResponse> findProductListSearch(@Param("name")String name,@Param("company")String company,Pageable pageable);
 
 	// 다른 Domain Service에서 사용하도록 하는 메소드
-	Optional<Product> findByProductSeq(Long productSeq);
+	Optional<Product> findProductByProductSeq(Long productSeq);
 }
