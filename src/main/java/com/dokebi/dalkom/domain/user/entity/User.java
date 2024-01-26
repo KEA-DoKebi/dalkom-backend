@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.common.magicNumber.UserState;
+import com.dokebi.dalkom.common.magicnumber.UserState;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
