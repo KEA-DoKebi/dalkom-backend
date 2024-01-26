@@ -28,8 +28,4 @@ public interface ProductStockRepository extends JpaRepository<ProductStock, Long
 		+ "= (SELECT ps.product.productSeq FROM ProductStock ps "
 		+ "WHERE ps.prdtStockSeq = :productStockSeq)")
 	List<ProductStock> findProductStockListByStockSeq(@Param("productStockSeq") Long productStockSeq);
-
-	// @Query("SELECT ps.product FROM ProductStock ps "
-	// 	+ "WHERE ps.prdtStockSeq = :stockSeq")
-	// Optional<Product> findProductStockListByStockSeq(@Param("stockSeq") Long stockSeq);
 }
