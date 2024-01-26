@@ -1,11 +1,13 @@
 package com.dokebi.dalkom.domain.stock.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
@@ -37,6 +39,7 @@ public class ProductStockService {
 	@Transactional
 	public void updateStockByStockSeq(Long stockSeq, Integer amount) {
 		ProductStock stock = stockRepository.findById(stockSeq).orElseThrow(ProductStockNotFoundException::new);
+		Long productSeq = stock.getProduct().getProductSeq();
 
 		if (amount < 0) {
 			throw new InvalidAmountException();
@@ -49,9 +52,11 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 
-		// 재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
-		if (checkProductStock(stockSeq)) {
-			productService.inactiveProductByProductSeq(stock.getProduct().getProductSeq());
+		// 재고 변화 결과에 따라 해당 상품의 판매 상태 변경
+		if (checkProductStock(stock.getPrdtStockSeq())) {
+			productService.soldoutProductByProductSeq(productSeq);
+		} else if (Objects.equals(productService.checkProductActiveState(productSeq), ProductActiveState.SOLDOUT)) {
+			productService.activeProductByProductSeq(productSeq);
 		}
 	}
 
@@ -72,9 +77,11 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 
-		// 재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
+		// 재고 변화 결과에 따라 해당 상품의 판매 상태 변경
 		if (checkProductStock(stock.getPrdtStockSeq())) {
-			productService.inactiveProductByProductSeq(productSeq);
+			productService.soldoutProductByProductSeq(productSeq);
+		} else if (Objects.equals(productService.checkProductActiveState(productSeq), ProductActiveState.SOLDOUT)) {
+			productService.activeProductByProductSeq(productSeq);
 		}
 	}
 

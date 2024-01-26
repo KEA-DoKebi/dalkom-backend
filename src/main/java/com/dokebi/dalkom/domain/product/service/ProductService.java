@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.magicNumber.ProductActiveState;
+import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
 import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
@@ -167,10 +167,24 @@ public class ProductService {
 		}
 	}
 
-	public void inactiveProductByProductSeq(Long productSeq) {
+	public String checkProductActiveState(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.INACTIVE);
+		return product.getState();
+	}
+
+	public void soldoutProductByProductSeq(Long productSeq) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
+
+		product.setState(ProductActiveState.SOLDOUT);
+	}
+
+	public void activeProductByProductSeq(Long productSeq) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
+
+		product.setState(ProductActiveState.ACTIVE);
 	}
 }
