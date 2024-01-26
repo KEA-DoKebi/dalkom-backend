@@ -27,4 +27,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderReadResponse("
 		+ "o.ordrSeq, o.receiverName, o.receiverAddress, o.receiverMobileNum, o.receiverMemo, o.totalPrice) FROM Order o")
 	Page<OrderReadResponse> findAllOrders(Pageable pageable);
+
+	//전체 주문조회 검색
+	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderReadResponse("
+		+ "o.ordrSeq, o.receiverName, o.receiverAddress, o.receiverMobileNum, o.receiverMemo, o.totalPrice) "
+		+ "FROM Order o WHERE o.receiverName LIKE CONCAT('%', :receiverName, '%')")
+	Page<OrderReadResponse> findAllOrderListByReceiverName(@Param("receiverName") String receiverName, Pageable pageable);
 }
