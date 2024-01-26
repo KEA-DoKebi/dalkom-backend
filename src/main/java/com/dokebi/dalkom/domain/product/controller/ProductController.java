@@ -85,13 +85,4 @@ public class ProductController {
 		productService.updateProduct(productSeq, request);
 		return Response.success();
 	}
-
-	// // PRODUCT-008 (특정 상품 정보 삭제)
-	// @DeleteMapping("/api/product/{productSeq}")
-	// @ResponseStatus(HttpStatus.OK)
-	// public Response deleteProduct(@PathVariable Long productSeq) {
-	// 	productService.deleteProduct(productSeq);
-	// 	return Response.success();
-	// }
-
 }
