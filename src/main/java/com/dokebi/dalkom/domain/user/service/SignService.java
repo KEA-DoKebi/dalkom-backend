@@ -35,9 +35,9 @@ public class SignService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
-	public LogInUserResponse signIn(LogInRequest req) {
-		User user = userRepository.findByEmail(req.getEmail());
-		validatePassword(req, user);
+	public LogInUserResponse signIn(LogInRequest request) {
+		User user = userRepository.findByEmail(request.getEmail());
+		validatePassword(request, user);
 		Integer mileage = user.getMileage();
 		String subject = createSubject(user);
 		String accessToken = tokenService.createAccessToken(subject);
@@ -49,11 +49,11 @@ public class SignService {
 	}
 
 	@Transactional(readOnly = true)
-	public LogInAdminResponse signInAdmin(LogInAdminRequest req) {
-		Admin admin = adminService.readAdminByAdminId(req.getAdminId());
+	public LogInAdminResponse signInAdmin(LogInAdminRequest request) {
+		Admin admin = adminService.readAdminByAdminId(request.getAdminId());
 		if (admin == null)
 			throw new LoginFailureException();
-		validatePassword(req, admin);
+		validatePassword(request, admin);
 		String role = admin.getRole();
 		String subject = createSubject(admin);
 		String accessToken = tokenService.createAccessToken(subject);
@@ -72,38 +72,38 @@ public class SignService {
 		return admin.getAdminSeq() + ",Admin";
 	}
 
-	private void validatePassword(LogInRequest req, User user) {
-		if (!passwordEncoder.matches(req.getPassword(), user.getPassword())) {
+	private void validatePassword(LogInRequest request, User user) {
+		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			throw new LoginFailureException();
 		}
 	}
 
-	private void validatePassword(LogInAdminRequest req, Admin admin) {
-		if (!passwordEncoder.matches(req.getPassword(), admin.getPassword())) {
+	private void validatePassword(LogInAdminRequest request, Admin admin) {
+		if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
 			throw new LoginFailureException();
 		}
 	}
 
 	@Transactional
-	public SignUpResponse signUp(SignUpRequest req) {
+	public SignUpResponse signUp(SignUpRequest request) {
 		SignUpResponse signUpResponse = new SignUpResponse();
 
 		// 임직원 테이블에 입력한 정보가 있는지 확인
-		if (checkEmployee(req)) {
+		if (checkEmployee(request)) {
 			// 이메일, 닉네임 중복성 검사
-			validateSignUpInfo(req);
+			validateSignUpInfo(request);
 
 			// 임직원의 입사 기준에 따라 마일리지 세팅하는 로직 필요
-			req.setMileage(0);
+			request.setMileage(0);
 
 			// 비밀번호 암호화
-			String password = passwordEncoder.encode(req.getPassword());
-			req.setPassword(password);
+			String password = passwordEncoder.encode(request.getPassword());
+			request.setPassword(password);
 
 			// 회원 정보 저장
-			userRepository.save(SignUpRequest.toEntity(req));
-			signUpResponse.setEmpId(req.getEmpId());
-			signUpResponse.setEmail(req.getEmail());
+			userRepository.save(SignUpRequest.toEntity(request));
+			signUpResponse.setEmpId(request.getEmpId());
+			signUpResponse.setEmail(request.getEmail());
 			signUpResponse.setMessage("회원가입 성공");
 		} else {
 			signUpResponse.setMessage("임직원 데이터가 존재하지 않음");
@@ -113,13 +113,13 @@ public class SignService {
 	}
 
 	//임직원 데이터 조회, 일치여부 확인
-	private boolean checkEmployee(SignUpRequest req) {
+	private boolean checkEmployee(SignUpRequest request) {
 
-		Employee employee = employeeRepository.findAllByEmpId(req.getEmpId());
+		Employee employee = employeeRepository.findAllByEmpId(request.getEmpId());
 		if (employee != null &&
-			employee.getName().equals(req.getName()) &&
-			employee.getEmail().equals(req.getEmail()) &&
-			employee.getJoinedAt().equals(req.getJoinedAt())) {
+			employee.getName().equals(request.getName()) &&
+			employee.getEmail().equals(request.getEmail()) &&
+			employee.getJoinedAt().equals(request.getJoinedAt())) {
 			return true;
 		} else {
 			throw new EmployeeNotFoundException();
@@ -127,12 +127,12 @@ public class SignService {
 	}
 
 	// 이메일, 닉네임 중복성 검사
-	private void validateSignUpInfo(SignUpRequest req) {
-		if (userRepository.existsByEmail(req.getEmail())) {
-			throw new UserEmailAlreadyExistsException(req.getEmail());
+	private void validateSignUpInfo(SignUpRequest request) {
+		if (userRepository.existsByEmail(request.getEmail())) {
+			throw new UserEmailAlreadyExistsException(request.getEmail());
 		}
-		if (userRepository.existsByNickname(req.getNickname())) {
-			throw new UserNicknameAlreadyExistsException(req.getNickname());
+		if (userRepository.existsByNickname(request.getNickname())) {
+			throw new UserNicknameAlreadyExistsException(request.getNickname());
 		}
 	}
 
