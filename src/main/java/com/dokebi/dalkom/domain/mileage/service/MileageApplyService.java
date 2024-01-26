@@ -28,8 +28,12 @@ public class MileageApplyService {
 	private final UserService userService;
 	private final MileageService mileageService;
 
-	public Page<MileageApplyResponse> readMileageAsk(Pageable pageable) {
-		return mileageApplyRepository.findAllMileageAsk(pageable);
+	public Page<MileageApplyResponse> readMileageApply(Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApply(pageable);
+	}
+
+	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq,Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq,pageable);
 	}
 
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
