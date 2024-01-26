@@ -27,7 +27,7 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
 		+ "INNER JOIN ProductStock ps "
 		+ "ON po.prdtOptionSeq = ps.productOption.prdtOptionSeq "
 		+ "AND ps.product.productSeq = :productSeq ")
-	List<OptionListDto> findOptionListDtoBySeq(@Param("productSeq") Long productSeq);
+	List<OptionListDto> findOptionListDtoByProductSeq(@Param("productSeq") Long productSeq);
 
 	Optional<ProductOption> findProductOptionByPrdtOptionSeq(Long prdtOptionSeq);
 }

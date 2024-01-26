@@ -60,11 +60,11 @@ public class CategoryServiceTest {
 	}
 
 	@Test
-	void readCategoryBySeqNotFoundTest() {
+	void readCategoryByCategorySeqNotFoundTest() {
 		Long categorySeq = 1L;
 
 		// Mock repository의 동작 설정 (Optional.empty() 반환)
-		when(categoryRepository.findByCategorySeq(categorySeq)).thenReturn(Optional.empty());
+		when(categoryRepository.findCategoryByCategorySeq(categorySeq)).thenReturn(Optional.empty());
 
 		// 예외가 발생하는지 검증
 		assertThrows(CategoryNotFoundException.class, () -> {
@@ -72,7 +72,7 @@ public class CategoryServiceTest {
 		});
 
 		// Mock repository 메서드가 호출되었는지 검증
-		verify(categoryRepository, times(1)).findByCategorySeq(categorySeq);
+		verify(categoryRepository, times(1)).findCategoryByCategorySeq(categorySeq);
 	}
 
 }

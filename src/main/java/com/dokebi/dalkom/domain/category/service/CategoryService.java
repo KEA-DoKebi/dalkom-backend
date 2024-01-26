@@ -29,6 +29,6 @@ public class CategoryService {
 	}
 
 	public Category readCategoryByCategorySeq(Long categorySeq) {
-		return categoryRepository.findByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
+		return categoryRepository.findCategoryByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
 	}
 }
