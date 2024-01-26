@@ -42,5 +42,5 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 	Page<InquiryListResponse> findInquiryListByCategorySearch(@Param("categorySeq") Long categorySeq,
 		@Param("title") String title, Pageable pageable);
 
-	InquiryOneResponse findInquiryByInquirySeq(@Param("inquirySeq") Long inquirySeq);
+	Inquiry findInquiryByInquirySeq(@Param("inquirySeq") Long inquirySeq);
 }
