@@ -1,0 +1,30 @@
+name: Generate Test List
+
+on: [push]
+
+jobs:
+  test_and_report:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+
+    - name: Run tests with Gradle
+      run: ./gradlew test
+
+    - name: Parse test results and generate markdown
+      run: python parse_tests.py > test_list.md
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add test_list.md
+        git commit -m "Workflow : Test 결과 요약본 생성" -a || exit 0
+        git push
