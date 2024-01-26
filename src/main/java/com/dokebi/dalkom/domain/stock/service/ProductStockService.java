@@ -48,7 +48,7 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 		if (checkProductStock(stockSeq)) {
-			productService.deactiveProductBySeq(stock.getProduct().getProductSeq());
+			productService.inactiveProductBySeq(stock.getProduct().getProductSeq());
 		}
 	}
 
@@ -68,7 +68,7 @@ public class ProductStockService {
 
 		stockHistoryRepository.save(stockHistory);
 		if (checkProductStock(stock.getPrdtStockSeq())) {
-			productService.deactiveProductBySeq(productSeq);
+			productService.inactiveProductBySeq(productSeq);
 		}
 	}
 
