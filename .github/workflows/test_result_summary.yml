@@ -37,7 +37,7 @@ jobs:
         git config --global user.email 'eastlighting1@gachon.ac.kr'
         git add -A
         git commit -am "test"
-        git push https://github.com/KEA-DoKebi/dalkom-backend.git ${{ secrets.GITHUB_TOKEN }}
+        git push origin ${{ github.ref }}
 
     - name: Push changes
       run: |
