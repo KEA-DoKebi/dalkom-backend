@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.product.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
@@ -55,7 +57,7 @@ public class ProductService {
 
 	// PRODUCT-002 (상품 상세 정보 조회)
 	public ReadProductDetailResponse readProduct(Long productSeq) {
-		ReadProductDetailDto productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
+		ReadProductDetailDto productDetailDto = productRepository.findProductDetailBySeq(productSeq);
 		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
 		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
@@ -65,7 +67,7 @@ public class ProductService {
 			throw new ProductNotFoundException();
 		}
 
-		return new ReadProductDetailResponse(productDetailDTO, optionList, stockList, productImageUrlList);
+		return new ReadProductDetailResponse(productDetailDto, optionList, stockList, productImageUrlList);
 	}
 
 	// PRODUCT-003 (상품 정보 추가)
@@ -79,11 +81,11 @@ public class ProductService {
 		productRepository.save(newProduct);
 
 		// 초기 재고 등록
-		for (OptionAmountDto optionAmountDTO : request.getPrdtOptionList()) {
+		for (OptionAmountDto optionAmountDto : request.getPrdtOptionList()) {
 			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(
-				optionAmountDTO.getPrdtOptionSeq());
+				optionAmountDto.getPrdtOptionSeq());
 
-			ProductStock initialStock = new ProductStock(newProduct, option, optionAmountDTO.getAmount());
+			ProductStock initialStock = new ProductStock(newProduct, option, optionAmountDto.getAmount());
 
 			productStockService.createStock(initialStock);
 		}
@@ -125,4 +127,40 @@ public class ProductService {
 	public Product readProductByProductSeq(Long productSeq) {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
+
+	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
+		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+
+		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
+		product.setName(request.getName());
+		product.setPrice(request.getPrice());
+		product.setInfo(request.getInfo());
+		product.setImageUrl(request.getImageUrl());
+		product.setCompany(request.getCompany());
+		product.setState(request.getState());
+
+		for (OptionAmountDto optionAmountDto : request.getOpitonAmountList()) {
+			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
+				optionAmountDto.getPrdtOptionSeq());
+
+			// updateStock은 History를 남기는 메서드이므로, 재고가 다를 경우에만 실행하기
+			if (!Objects.equals(stock.getAmount(), optionAmountDto.getAmount())) {
+				productStockService.updateStock(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
+			}
+		}
+	}
+
+	public void deactiveProductBySeq(Long productSeq) {
+		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+
+		product.setState("N");
+	}
+
+	// public void deleteProduct(Long productSeq) {
+	// 	try {
+	// 		productRepository.deleteById(productSeq);
+	// 	} catch (EmptyResultDataAccessException e) {
+	// 		throw new ProductNotFoundException();
+	// 	}
+	// }
 }
