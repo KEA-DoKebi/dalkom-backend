@@ -52,7 +52,7 @@ public class ProductStockControllerTest {
 			.andExpect(status().isOk()); // then (API 요청을 했을 때 200을 반환하는지 검증)
 
 		//productStockController에서 productStockService updateStock을 호출했는지 검증
-		verify(productStockService).updateStock(stockSeq, req.getAmount());
+		verify(productStockService).updateStockByStockSeq(stockSeq, req.getAmount());
 	}
 
 	@Test

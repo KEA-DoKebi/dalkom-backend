@@ -24,7 +24,6 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -63,14 +62,8 @@ public class OrderService {
 		if (orderTotalPrice <= user.getMileage()) {
 
 			// 주문을 위한 entity 생성 후 저장
-			Order order = new Order(
-				user,
-				request.getReceiverName(),
-				request.getReceiverAddress(),
-				request.getReceiverMobileNum(),
-				request.getReceiverMemo(),
-				orderTotalPrice
-			);
+			Order order = new Order(user, request.getReceiverName(), request.getReceiverAddress(),
+				request.getReceiverMobileNum(), request.getReceiverMemo(), orderTotalPrice);
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
@@ -157,6 +150,7 @@ public class OrderService {
 
 		return amount * price;
 	}
+
 	// 주문 상세 만들기
 	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
 		Long productSeq = request.getProductSeqList().get(i);
@@ -167,22 +161,16 @@ public class OrderService {
 		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
 		Integer price = product.getPrice();
 
-		OrderDetail orderDetail = new OrderDetail(
-			order,
-			product,
-			productOption,
-			amount,
-			price
-		);
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount, price);
 		//상품 재고 변경
-		productStockService.updateStock(productSeq,prdtOptionSeq,amount);
+		productStockService.updateStockByProductSeqAndOptionSeq(productSeq, prdtOptionSeq, amount);
 
 		return orderDetail;
 	}
 
 	// 주문 검색 조회 서비스
-	public Page<OrderReadResponse> readOrderListBySearch(String receiverName,Pageable pageable) {
-		return orderRepository.findAllOrderListByReceiverName(receiverName,pageable);
+	public Page<OrderReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
+		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
 	}
 }
 

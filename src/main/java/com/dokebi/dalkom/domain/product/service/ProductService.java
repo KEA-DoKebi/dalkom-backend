@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.magicNumber.ProductActiveState;
 import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
@@ -45,9 +46,11 @@ public class ProductService {
 
 	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
+		// 카테고리Seq 를 통해 상품 조회
 		Page<ProductByCategoryResponse> productList = productRepository.findProductListByCategory(categorySeq,
 			pageable);
 
+		// 조회 결과 검사
 		if (productList == null || productList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
@@ -57,30 +60,35 @@ public class ProductService {
 
 	// PRODUCT-002 (상품 상세 정보 조회)
 	public ReadProductDetailResponse readProduct(Long productSeq) {
+		// responseBody에 필요한 값들을 탐색
 		ReadProductDetailDto productDetailDto = productRepository.findProductDetailByProductSeq(productSeq);
 		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
 		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageByProductSeq(productSeq);
 
-		if (stockList == null || optionList == null || productImageUrlList == null || stockList.isEmpty()
-			|| optionList.isEmpty()  ) {
+		// 조회 결과 검사
+		if (stockList == null || optionList == null || stockList.isEmpty() || optionList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
+		// response용 DTO에 담아서 return
 		return new ReadProductDetailResponse(productDetailDto, optionList, stockList, productImageUrlList);
 	}
 
 	// PRODUCT-003 (상품 정보 추가)
 	@Transactional
 	public void createProduct(ProductCreateRequest request) {
+		// 외래키에 저장될 엔티티 탐색
 		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
 
+		// 새 Product 생성
 		Product newProduct = new Product(category, request.getName(), request.getPrice(), request.getInfo(),
 			request.getImageUrl(), request.getCompany(), request.getState());
 
+		// 상품 저장
 		productRepository.save(newProduct);
 
-		// 초기 재고 등록
+		// 옵션에 따른 재고 등록
 		for (OptionAmountDto optionAmountDto : request.getPrdtOptionList()) {
 			ProductOption option = productOptionService.readProductOptionByPrdtOptionSeq(
 				optionAmountDto.getPrdtOptionSeq());
@@ -98,13 +106,16 @@ public class ProductService {
 
 	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)
 	public Page<ProductByCategoryDetailResponse> readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
+		// 탐색
 		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByDetailCategory(
 			categorySeq, pageable);
 
+		// 결과 검사
 		if (productList == null || productList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
+		// 결과 전송
 		return productList;
 	}
 
@@ -123,11 +134,11 @@ public class ProductService {
 		return categoryMap;
 	}
 
-	public Page<ReadProductResponse> readProductListSearch(String name ,String company,Pageable pageable) {
-		return productRepository.findProductListSearch(name,company,pageable);
+	public Page<ReadProductResponse> readProductListSearch(String name, String company, Pageable pageable) {
+		return productRepository.findProductListSearch(name, company, pageable);
 	}
 
-	// 다른 Domain Service에서 사용하도록 하는 메소드
+	/** 다른 Domain Service에서 사용할 메소드 **/
 	public Product readProductByProductSeq(Long productSeq) {
 		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
@@ -136,6 +147,7 @@ public class ProductService {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
+		// 상품 정보 저장
 		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
 		product.setName(request.getName());
 		product.setPrice(request.getPrice());
@@ -150,23 +162,15 @@ public class ProductService {
 
 			// updateStock은 History를 남기는 메서드이므로, 재고가 다를 경우에만 실행하기
 			if (!Objects.equals(stock.getAmount(), optionAmountDto.getAmount())) {
-				productStockService.updateStock(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
+				productStockService.updateStockByStockSeq(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
 			}
 		}
 	}
 
-	public void deactiveProductByProductSeq(Long productSeq) {
+	public void inactiveProductByProductSeq(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState("N");
+		product.setState(ProductActiveState.INACTIVE);
 	}
-
-	// public void deleteProduct(Long productSeq) {
-	// 	try {
-	// 		productRepository.deleteById(productSeq);
-	// 	} catch (EmptyResultDataAccessException e) {
-	// 		throw new ProductNotFoundException();
-	// 	}
-	// }
 }

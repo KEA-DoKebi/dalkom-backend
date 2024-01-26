@@ -79,7 +79,6 @@ public class ProductController {
 		return ResponseEntity.ok(categoryProducts);
 	}
 
-	
 	// PRODUCT-007 (특정 상품 정보 수정)
 	@PutMapping("/api/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
@@ -88,19 +87,10 @@ public class ProductController {
 		return Response.success();
 	}
 
-	// PRODUCT-008 (상품 리스트 검색)
+	// PRODUCT-009 (상품 리스트 검색)
 	@GetMapping("/api/product/search")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductList(@RequestParam(required = false) String name,@RequestParam(required = false) String company, Pageable pageable) {
 		return Response.success(productService.readProductListSearch(name,company,pageable));
 	}
-
-	// // PRODUCT-008 (특정 상품 정보 삭제)
-	// @DeleteMapping("/api/product/{productSeq}")
-	// @ResponseStatus(HttpStatus.OK)
-	// public Response deleteProduct(@PathVariable Long productSeq) {
-	// 	productService.deleteProduct(productSeq);
-	// 	return Response.success();
-	// }
-
 }
