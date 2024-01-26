@@ -16,10 +16,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	// 유저별 주문조회
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse("
-		+ "o.ordrSeq, o.totalPrice, o.orderState, o.createdAt) "
+		+ "o.ordrSeq, max(od.product.name), COUNT(*), o.totalPrice, o.orderState, o.createdAt) "
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
-		+ "WHERE o.user.userSeq = :userSeq")
+		+ "WHERE o.user.userSeq = :userSeq "
+		+ "GROUP BY o.ordrSeq")
 	Page<OrderUserReadResponse> findOrderListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	// 특정 주문 상세조회
@@ -30,13 +31,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	// 전체 주문조회
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse("
-		+ "o.ordrSeq, o.createdAt,o.user.name ,o.receiverName,o.totalPrice, o.orderState) FROM Order o")
+		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) FROM Order o "
+		+ "JOIN o.orderDetailList od "
+		+ "GROUP BY o.ordrSeq")
 	Page<OrderAdminReadResponse> findAllOrderList(Pageable pageable);
 
 	//전체 주문조회 검색
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse("
-		+ "o.ordrSeq, o.totalPrice,o.orderState, o.createdAt) "
-		+ "FROM Order o WHERE o.receiverName LIKE CONCAT('%', :receiverName, '%')")
+		+ "o.ordrSeq, od.product.name, COUNT(*), o.totalPrice, o.orderState, o.createdAt) "
+		+ "FROM Order o "
+		+ "JOIN o.orderDetailList od "
+		+ "WHERE o.receiverName LIKE CONCAT('%', :receiverName, '%')"
+		+ "GROUP BY o.ordrSeq, od.product.productSeq")
 	Page<OrderUserReadResponse> findAllOrderListByReceiverName(@Param("receiverName") String receiverName,
 		Pageable pageable);
 }

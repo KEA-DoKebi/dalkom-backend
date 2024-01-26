@@ -36,7 +36,7 @@ public class OrderController {
 		return Response.success(orderService.readOrderByUserSeq(userSeq, pageable));
 	}
 
-	// ORDER-002 (주문 하기)
+	// ORDER-002 (주문 확인하기)
 	@GetMapping("/api/order/orderListPage")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderPageByProductSeq(@Valid @RequestBody OrderPageDto orderPageDto) {
