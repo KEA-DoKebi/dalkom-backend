@@ -46,7 +46,7 @@ public class OrderController {
 	// ORDER-003 (특정 주문 조회)
 	@GetMapping("/api/order/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq,Pageable pageable) {
+	public Response readOrderByOrderSeq(@PathVariable("orderSeq") Long orderSeq, Pageable pageable) {
 		return Response.success(orderService.readOrderByOrderSeq(orderSeq, pageable));
 	}
 
