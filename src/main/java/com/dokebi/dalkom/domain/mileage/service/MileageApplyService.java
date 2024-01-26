@@ -73,14 +73,12 @@ public class MileageApplyService {
 
 	// 마일리지 신청 내역 테이블에 approvedState가 Null인 데이터는 사용자 당 1개만 존재해야 함.
 	private boolean isMileageApplied(Long userSeq) {
-		Long mileageAskCount = mileageApplyRepository.countByUserSeqAndApprovedStateIsNull(userSeq);
-		return mileageAskCount < 1;
+		return mileageApplyRepository.checkByUserSeqAndApprovedStateIsWait(userSeq);
 	}
 
-	public Page<MileageApplyResponse> readMileageAskSearch(String email,String nickname,String name,Pageable pageable) {
-		return mileageApplyRepository.findAllMileageAskSearch(email ,nickname,name,pageable);
+	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
+		Pageable pageable) {
+		return mileageApplyRepository.findAllMileageAskSearch(email, nickname, name, pageable);
 	}
-
-
 
 }
