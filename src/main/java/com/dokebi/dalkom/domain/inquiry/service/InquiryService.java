@@ -50,10 +50,7 @@ public class InquiryService {
 	}
 
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-		Inquiry inquiry = inquiryRepository.findInquiryByInquirySeq(inquirySeq);
-
-		return new InquiryOneResponse(inquiry.getTitle(), inquiry.getContent(), inquiry.getCreatedAt(),
-			inquiry.getAnswerContent(), inquiry.getAnsweredAt(), inquiry.getAdmin().getNickname());
+		return inquiryRepository.findInquiryOne(inquirySeq);
 	}
 
 	@Transactional

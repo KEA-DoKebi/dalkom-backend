@@ -41,6 +41,4 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 		+ "AND i.title LIKE CONCAT('%', :title, '%')")
 	Page<InquiryListResponse> findInquiryListByCategorySearch(@Param("categorySeq") Long categorySeq,
 		@Param("title") String title, Pageable pageable);
-
-	Inquiry findInquiryByInquirySeq(@Param("inquirySeq") Long inquirySeq);
 }
