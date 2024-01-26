@@ -61,10 +61,10 @@ public class ProductService {
 	// PRODUCT-002 (상품 상세 정보 조회)
 	public ReadProductDetailResponse readProduct(Long productSeq) {
 		// responseBody에 필요한 값들을 탐색
-		ReadProductDetailDto productDetailDto = productRepository.findProductDetailBySeq(productSeq);
+		ReadProductDetailDto productDetailDto = productRepository.findProductDetailByProductSeq(productSeq);
 		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
 		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
-		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);
+		List<String> productImageUrlList = productRepository.findProductImageByProductSeq(productSeq);
 
 		// 조회 결과 검사
 		if (stockList == null || optionList == null || stockList.isEmpty() || optionList.isEmpty()) {
@@ -134,17 +134,18 @@ public class ProductService {
 		return categoryMap;
 	}
 
-	public Page<ReadProductResponse> readProductListSearch(String name ,String company,Pageable pageable) {
-		return productRepository.findProductListSearch(name,company,pageable);
+	public Page<ReadProductResponse> readProductListSearch(String name, String company, Pageable pageable) {
+		return productRepository.findProductListSearch(name, company, pageable);
 	}
 
 	/** 다른 Domain Service에서 사용할 메소드 **/
 	public Product readProductByProductSeq(Long productSeq) {
-		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
-		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
 
 		//상품 정보 저장
 		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
@@ -166,8 +167,9 @@ public class ProductService {
 		}
 	}
 
-	public void inactiveProductBySeq(Long productSeq) {
-		Product product = productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+	public void inactiveProductByProductSeq(Long productSeq) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
 
 		product.setState(ProductActiveState.INACTIVE);
 	}

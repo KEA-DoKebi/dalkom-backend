@@ -51,7 +51,7 @@ public class ProductStockService {
 
 		//재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
 		if (checkProductStock(stockSeq)) {
-			productService.inactiveProductBySeq(stock.getProduct().getProductSeq());
+			productService.inactiveProductByProductSeq(stock.getProduct().getProductSeq());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class ProductStockService {
 
 		//재고 변화 결과 해당 상품의 모든 재고가 0이 되면, 상품 판매 상태를 비활성화로 변경
 		if (checkProductStock(stock.getPrdtStockSeq())) {
-			productService.inactiveProductBySeq(productSeq);
+			productService.inactiveProductByProductSeq(productSeq);
 		}
 	}
 
