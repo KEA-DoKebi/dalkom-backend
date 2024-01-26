@@ -134,6 +134,10 @@ public class ProductService {
 		return categoryMap;
 	}
 
+	public Page<ReadProductResponse> readProductListSearch(String name ,String company,Pageable pageable) {
+		return productRepository.findProductListSearch(name,company,pageable);
+	}
+
 	/** 다른 Domain Service에서 사용할 메소드 **/
 	public Product readProductByProductSeq(Long productSeq) {
 		return productRepository.findByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);

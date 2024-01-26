@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,5 +35,14 @@ public class AdminController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readAdminList(Pageable pageable) {
 		return Response.success(adminService.readAdminList(pageable));
+	}
+
+	// ADMIN-007 (관리자 목록 조회 검색)
+	@GetMapping("/api/admin/search")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readAdminListSearch(@RequestParam  String adminId,
+		@RequestParam  String name,
+		@RequestParam String nickname, Pageable pageable) {
+		return Response.success(adminService.readAdminListSearch(adminId,name,nickname,pageable));
 	}
 }

@@ -66,4 +66,8 @@ public class InquiryService {
 		inquiry.setAnswerState(InquiryAnswerState.YES);
 		inquiry.setAnsweredAt(LocalDateTime.now());
 	}
+
+	public Page<InquiryListResponse> readInquiryListByCategorySearch(Long categorySeq,String title, Pageable pageable) {
+		return inquiryRepository.findInquiryListByCategorySearch(categorySeq,title,pageable);
+	}
 }
