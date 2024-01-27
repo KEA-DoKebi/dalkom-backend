@@ -86,15 +86,15 @@ public class OrderController {
 	@DeleteMapping("/api/order/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response cancelOrderByOrderSeq(@PathVariable Long orderSeq) {
-		orderService.cancelOrderByOrderSeq(orderSeq);
+		orderService.deleteOrderByOrderSeq(orderSeq);
 		return Response.success();
 	}
 
-	// // ORDER-009 (환불)
+	// // ORDER-009 (환불 확인)
 	// @DeleteMapping("/api/order/{orderSeq}")
 	// @ResponseStatus(HttpStatus.OK)
 	// public Response refundOrderByOrderSeq(@PathVariable Long orderSeq) {
-	// 	orderService.deleteOrderByOrderSeq(orderSeq);
+	// 	orderService.refundOrderByOrderSeq(orderSeq);
 	// 	return Response.success();
 	// }
 }
