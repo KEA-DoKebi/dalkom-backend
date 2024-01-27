@@ -90,11 +90,11 @@ public class OrderController {
 		return Response.success();
 	}
 
-	// // ORDER-009 (환불 확인)
-	// @DeleteMapping("/api/order/{orderSeq}")
-	// @ResponseStatus(HttpStatus.OK)
-	// public Response refundOrderByOrderSeq(@PathVariable Long orderSeq) {
-	// 	orderService.refundOrderByOrderSeq(orderSeq);
-	// 	return Response.success();
-	// }
+	// ORDER-009 (환불 확인)
+	@DeleteMapping("/api/order/{orderSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response refundOrderByOrderSeq(@PathVariable Long orderSeq) {
+		orderService.confirmRefundByOrderSeq(orderSeq);
+		return Response.success();
+	}
 }

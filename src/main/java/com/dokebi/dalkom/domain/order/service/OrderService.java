@@ -203,11 +203,30 @@ public class OrderService {
 		if (order.getOrderState().equals(OrderState.CONFIRMED) || order.getOrderState().equals(OrderState.PREPARING)) {
 			cancelOrder(reviewList, user, order);
 		} else {
-			refundOrder(reviewList, user, order);
+			refundOrder(reviewList, order);
 		}
 
 	}
 
+	// 환불 확인 (상품 수령 후)
+	public void confirmRefundByOrderSeq(Long orderSeq) {
+		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		User user = order.getUser();
+
+		// 환불 후 금액
+		Integer amountChanged = user.getMileage() + order.getTotalPrice();
+
+		// 마일리지 복구
+		mileageService.createMileageHistory(
+			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
+
+		user.setMileage(amountChanged);
+
+		order.setOrderState(OrderState.REFUNDED);
+	}
+
+	// 주문 취소 - 주문 취소 처리
 	private void cancelOrder(List<Review> reviewList, User user, Order order) {
 
 		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
@@ -228,8 +247,8 @@ public class OrderService {
 		order.setOrderState(OrderState.CANCELED);
 	}
 
-	//환불
-	public void refundOrder(List<Review> reviewList, User user, Order order) {
+	// 주문 취소 - 환불 처리
+	private void refundOrder(List<Review> reviewList, Order order) {
 
 		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
 		// TODO 환불의 경우 일단 상품을 받았으니 리뷰를 남겨둘지 고려
@@ -237,7 +256,7 @@ public class OrderService {
 			reviewService.deleteReview(review.getReviewSeq());
 		}
 
-		/** 환불 신청 하자마자 마일리지가 복구되는 경우
+		/* 환불 신청 하자마자 마일리지가 복구되는 경우
 		 // 환불 후 금액
 		 Integer amountChanged = user.getMileage() + order.getTotalPrice();
 
@@ -245,7 +264,7 @@ public class OrderService {
 		 mileageService.createMileageHistory(
 		 order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
 
-		 user.setMileage(amountChanged); **/
+		 user.setMileage(amountChanged); */
 
 		// 주문 상태 변경
 		order.setOrderState(OrderState.REFUND_CONFIRMED);
