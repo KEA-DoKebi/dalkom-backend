@@ -83,7 +83,7 @@ public class OrderController {
 	}
 
 	// ORDER-008 (주문 취소)
-	@DeleteMapping("/api/order/{orderSeq}")
+	@DeleteMapping("/api/order/cancel/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response cancelOrderByOrderSeq(@PathVariable Long orderSeq) {
 		orderService.deleteOrderByOrderSeq(orderSeq);
@@ -91,7 +91,7 @@ public class OrderController {
 	}
 
 	// ORDER-009 (환불 확인)
-	@DeleteMapping("/api/order/{orderSeq}")
+	@DeleteMapping("/api/order/refund/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response refundOrderByOrderSeq(@PathVariable Long orderSeq) {
 		orderService.confirmRefundByOrderSeq(orderSeq);

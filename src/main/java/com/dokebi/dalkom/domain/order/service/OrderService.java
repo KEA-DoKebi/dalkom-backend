@@ -24,6 +24,7 @@ import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
+import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
 import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
@@ -191,6 +192,7 @@ public class OrderService {
 	}
 
 	// 주문 취소
+	@Transactional
 	public void deleteOrderByOrderSeq(Long orderSeq) {
 		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
 			.orElseThrow(OrderNotFoundException::new);
@@ -198,30 +200,41 @@ public class OrderService {
 		List<OrderDetail> orderDetailList = orderDetailService.readOrderDetailByOrderSeq(orderSeq);
 		List<Review> reviewList = reviewService.readReviewByOrderDetailList(orderDetailList);
 
-		if (order.getOrderState().equals(OrderState.CONFIRMED) || order.getOrderState().equals(OrderState.PREPARING)) {
+		List<String> whenCancel = List.of(OrderState.CONFIRMED, OrderState.PREPARING);
+		List<String> whenRefund = List.of(OrderState.SHIPPED, OrderState.DELIVERED, OrderState.FINALIZED);
+
+		if (whenCancel.contains(order.getOrderState())) {
 			cancelOrder(reviewList, user, order);
-		} else {
+		} else if (whenRefund.contains(order.getOrderState())) {
 			refundOrder(reviewList, order);
+		} else {
+			throw new InvalidOrderStateException();
 		}
 
 	}
 
 	// 환불 확인 (상품 수령 후)
+	@Transactional
 	public void confirmRefundByOrderSeq(Long orderSeq) {
 		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
 			.orElseThrow(OrderNotFoundException::new);
 		User user = order.getUser();
 
-		// 환불 후 금액
-		Integer amountChanged = user.getMileage() + order.getTotalPrice();
+		//반송이 완료되었다면
+		if (order.getOrderState().equals(OrderState.RETURNED)) {
+			// 환불 후 금액
+			Integer amountChanged = user.getMileage() + order.getTotalPrice();
 
-		// 마일리지 복구
-		mileageService.createMileageHistory(
-			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
+			// 마일리지 복구
+			mileageService.createMileageHistory(
+				order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
 
-		user.setMileage(amountChanged);
+			user.setMileage(amountChanged);
 
-		order.setOrderState(OrderState.REFUNDED);
+			order.setOrderState(OrderState.REFUNDED);
+		} else {
+			throw new InvalidOrderStateException();
+		}
 	}
 
 	// 주문 취소 - 주문 취소 처리
@@ -254,15 +267,16 @@ public class OrderService {
 			reviewService.deleteReview(review.getReviewSeq());
 		}
 
-		/* 환불 신청 하자마자 마일리지가 복구되는 경우
-		 // 환불 후 금액
-		 Integer amountChanged = user.getMileage() + order.getTotalPrice();
+		/*
+		// 환불 후 금액
+		Integer amountChanged = user.getMileage() + order.getTotalPrice();
 
-		 // 마일리지 복구
-		 mileageService.createMileageHistory(
-		 order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
+		// 마일리지 복구
+		mileageService.createMileageHistory(
+			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
 
-		 user.setMileage(amountChanged); */
+		user.setMileage(amountChanged);
+		*/
 
 		// 주문 상태 변경
 		order.setOrderState(OrderState.REFUND_CONFIRMED);

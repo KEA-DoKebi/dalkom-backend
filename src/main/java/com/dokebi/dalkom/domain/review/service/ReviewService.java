@@ -77,8 +77,8 @@ public class ReviewService {
 		List<Review> reviewList = new ArrayList<>();
 
 		for (OrderDetail orderDetail : orderDetailList) {
-			reviewList.add(reviewRepository.findReviewListByOrderDetailSeq(orderDetail.getOrdrDetailSeq())
-				.orElseThrow(ReviewNotFoundException::new));
+			reviewRepository.findReviewListByOrderDetailSeq(orderDetail.getOrdrDetailSeq())
+				.ifPresent(reviewList::add);
 		}
 
 		return reviewList;
