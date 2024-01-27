@@ -128,10 +128,8 @@ public class OrderService {
 		Page<OrderUserReadResponse> orderPage = orderRepository.findOrderListByUserSeq(userSeq, pageable);
 
 		List<OrderUserReadResponse> modifiedList = orderPage.getContent().stream()
-			.map(orderResponse -> {
-				orderResponse.makeOrderTitle(orderResponse.getOrderTitle(), orderResponse.getProductCnt());
-				return orderResponse;
-			})
+			.peek(orderResponse -> orderResponse.makeOrderTitle(orderResponse.getOrderTitle(),
+				orderResponse.getProductCnt()))
 			.collect(Collectors.toList());
 
 		return new PageImpl<>(modifiedList, pageable, orderPage.getTotalElements());
