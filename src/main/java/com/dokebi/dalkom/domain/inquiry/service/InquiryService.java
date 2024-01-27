@@ -63,10 +63,16 @@ public class InquiryService {
 	}
 
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-		InquiryOneResponse inquiryOneResponse = inquiryRepository.findInquiryOne(inquirySeq);
+		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
+		InquiryOneResponse inquiryOneResponse;
 
-		if (inquiryOneResponse == null) {
-			throw new InquiryNotFoundException();
+		if (inquiry.getAnswerState().equals(InquiryAnswerState.YES)) {
+			inquiryOneResponse = new InquiryOneResponse(inquiry.getTitle(), inquiry.getContent(),
+				inquiry.getCreatedAt(), inquiry.getAnswerContent(), inquiry.getAnsweredAt(),
+				inquiry.getAdmin().getNickname());
+		} else {
+			inquiryOneResponse = new InquiryOneResponse(inquiry.getTitle(), inquiry.getContent(),
+				inquiry.getCreatedAt());
 		}
 
 		return inquiryOneResponse;
@@ -74,7 +80,7 @@ public class InquiryService {
 
 	@Transactional
 	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) {
-		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq);
+		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		makeInquiryAnswer(request, inquiry, admin);
 	}
