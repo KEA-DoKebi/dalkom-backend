@@ -43,6 +43,5 @@ public class MileageService {
 	public MileageHistory createMileageHistory(User user, Integer amount, Integer totalMileage, String type) {
 		MileageHistory mileageHistory = new MileageHistory(amount, totalMileage, type, user);
 		return mileageHistoryRepository.save(mileageHistory);
-
 	}
 }
