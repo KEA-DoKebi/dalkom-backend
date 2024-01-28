@@ -103,7 +103,7 @@ public class OrderController {
 	@GetMapping("/api/order/authorize")
 	@ResponseStatus(HttpStatus.OK)
 	public Response authorizeOrderByPassword(@LoginUser Long userSeq,
-		@Valid @RequestParam AuthorizeOrderRequest request) {
+		@Valid @RequestBody AuthorizeOrderRequest request) {
 		orderService.authorizeOrderByPassword(userSeq, request);
 		return Response.success();
 	}

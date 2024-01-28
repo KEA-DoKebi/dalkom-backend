@@ -40,11 +40,9 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class OrderService {
 	private final OrderRepository orderRepository;
@@ -244,6 +242,7 @@ public class OrderService {
 	}
 
 	// 결제시 비밀번호 인증
+	@Transactional
 	public void authorizeOrderByPassword(Long userSeq, AuthorizeOrderRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 		Order order = orderRepository.findById(request.getOrderSeq()).orElseThrow(OrderNotFoundException::new);
