@@ -77,7 +77,7 @@ public class OrderService {
 			// 주문을 위한 entity 생성 후 저장
 			Order order = new Order(user, request.getReceiverName(), request.getReceiverAddress(),
 				request.getReceiverMobileNum(), request.getReceiverMemo(), orderTotalPrice);
-			order.setOrderState(OrderState.Before_Authorize);
+			order.setOrderState(OrderState.WATING);
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
@@ -248,7 +248,7 @@ public class OrderService {
 		User user = userService.readUserByUserSeq(userSeq);
 		Order order = orderRepository.findById(request.getOrderSeq()).orElseThrow(OrderNotFoundException::new);
 
-		if (!order.getOrderState().equals(OrderState.Before_Authorize)) {
+		if (!order.getOrderState().equals(OrderState.WATING)) {
 			throw new InvalidOrderStateException();
 		}
 
