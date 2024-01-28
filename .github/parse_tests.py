@@ -43,7 +43,7 @@ def generate_markdown_table(total_tests, passed_tests, success_rate, failure_det
             file.write(markdown_table)
 
 # JUnit 결과 XML 파일 경로. 이 경로는 실제 경로로 대체해야 합니다.
-junit_xml_files_path = './build/test-results/test/TEST-*.xml'
+junit_xml_files_path = './build/test-results/test/binary/TEST-*.xml'
 
 # 테스트 케이스 파싱
 total_tests, passed_tests, success_rate, failure_details = parse_junit_xml(junit_xml_files_path)
