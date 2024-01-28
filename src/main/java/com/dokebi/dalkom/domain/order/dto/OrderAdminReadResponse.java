@@ -12,6 +12,7 @@ import lombok.Setter;
 public class OrderAdminReadResponse {
 	private Long ordrSeq;
 	private LocalDateTime ordrDate;
+	private Long ordrCnt;
 	private String name;
 	private String receiveName;
 	private Integer totalPrice;

@@ -27,12 +27,12 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	@Transactional
-	public Response updateUser(Long userSeq, UserUpdateRequest req) {
+	public Response updateUser(Long userSeq, UserUpdateRequest request) {
 		try {
-			if (req.getPassword() != null)
-				updateUserWithPassword(userSeq, req);
+			if (request.getPassword() != null)
+				updateUserWithPassword(userSeq, request);
 			else
-				updateUserWithoutPassword(userSeq, req);
+				updateUserWithoutPassword(userSeq, request);
 			return Response.success();
 		} catch (UserNicknameAlreadyExistsException e) {
 			// 닉네임 중복 예외 처리
@@ -41,15 +41,16 @@ public class UserService {
 	}
 
 	@Transactional
-	public void updateUserWithPassword(Long userSeq, UserUpdateRequest req) {
-		validateNickname(req.getNickname());
-		userRepository.updateUserWithPassword(userSeq, req.getPassword(), req.getNickname(), req.getAddress());
+	public void updateUserWithPassword(Long userSeq, UserUpdateRequest request) {
+		validateNickname(request.getNickname());
+		userRepository.updateUserWithPassword(userSeq, request.getPassword(), request.getNickname(),
+			request.getAddress());
 	}
 
 	@Transactional
-	public void updateUserWithoutPassword(Long userSeq, UserUpdateRequest req) {
-		validateNickname(req.getNickname());
-		userRepository.updateUserWithoutPassword(userSeq, req.getNickname(), req.getAddress());
+	public void updateUserWithoutPassword(Long userSeq, UserUpdateRequest request) {
+		validateNickname(request.getNickname());
+		userRepository.updateUserWithoutPassword(userSeq, request.getNickname(), request.getAddress());
 	}
 
 	private void validateNickname(String nickname) {

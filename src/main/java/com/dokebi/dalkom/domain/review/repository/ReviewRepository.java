@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.review.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +33,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		+ "JOIN Product p ON od.product.productSeq = p.productSeq "
 		+ "WHERE r.user.userSeq = :userSeq")
 	Page<ReviewByUserResponse> findReviewListByUser(@Param("userSeq") Long userSeq, Pageable pageable);
+
+	@Query("SELECT r FROM Review r "
+		+ "WHERE r.orderDetail.ordrDetailSeq =:orderDetailSeq ")
+	Optional<Review> findReviewListByOrderDetailSeq(@Param("orderDetailSeq") Long orderDetailSeq);
 }
