@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import pandas as pd
+import glob
 
 def parse_junit_xml(file_path):
     tree = ET.parse(file_path)
@@ -43,7 +44,7 @@ def generate_markdown_table(total_tests, passed_tests, success_rate, failure_det
             file.write(markdown_table)
 
 # Write a python code that path of junit test result file
-junit_xml_files_path = "/home/runner/work/dalkom-backend/dalkom-backend/build/test-results/test/TEST-*.xml"
+junit_xml_files_paths = glob.glob('./build/test-results/test/TEST-*.xml')
 
 # 테스트 케이스 파싱
 total_tests, passed_tests, success_rate, failure_details = parse_junit_xml(junit_xml_files_path)
