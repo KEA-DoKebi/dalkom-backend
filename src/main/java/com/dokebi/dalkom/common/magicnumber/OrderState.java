@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.common.magicnumber;
 
 public class OrderState {
+	public static String Before_Authorize = "10"; // 비밀전호 인증 전
 	public static String CONFIRMED = "11"; // 주문확인
 	public static String PREPARING = "12"; // 배송준비
 	public static String SHIPPED = "13"; // 배송시작

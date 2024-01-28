@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
@@ -26,6 +28,7 @@ import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
 import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
+import com.dokebi.dalkom.domain.order.exception.PasswordNotValidException;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
@@ -52,6 +55,7 @@ public class OrderService {
 	private final MileageService mileageService;
 	private final UserService userService;
 	private final ReviewService reviewService;
+	private final PasswordEncoder passwordEncoder;
 
 	// 결제 하기
 	@Transactional
@@ -73,6 +77,7 @@ public class OrderService {
 			// 주문을 위한 entity 생성 후 저장
 			Order order = new Order(user, request.getReceiverName(), request.getReceiverAddress(),
 				request.getReceiverMobileNum(), request.getReceiverMemo(), orderTotalPrice);
+			order.setOrderState(OrderState.Before_Authorize);
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
@@ -84,14 +89,15 @@ public class OrderService {
 				// 각 세부 주문 DB에 저장
 				orderDetailService.saveOrderDetail(orderDetail);
 			}
+			// 마일리지 감소 시점을 비밀번호 인증시로 이동
+			// // 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
+			// Integer totalMileage = (user.getMileage() - orderTotalPrice);
+			//
+			// mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
+			//
+			// // 사용자의 마일리지 업데이트
+			// user.setMileage(totalMileage);
 
-			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
-			Integer totalMileage = (user.getMileage() - orderTotalPrice);
-
-			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
-
-			//// 사용자의 마일리지 업데이트
-			user.setMileage(totalMileage);
 		} else {
 			throw new MileageLackException();
 		}
@@ -235,6 +241,29 @@ public class OrderService {
 		} else {
 			throw new InvalidOrderStateException();
 		}
+	}
+
+	// 결제시 비밀번호 인증
+	public void authorizeOrderByPassword(Long userSeq, AuthorizeOrderRequest request) {
+		User user = userService.readUserByUserSeq(userSeq);
+		Order order = orderRepository.findById(request.getOrderSeq()).orElseThrow(OrderNotFoundException::new);
+
+		if (!order.getOrderState().equals(OrderState.Before_Authorize)) {
+			throw new InvalidOrderStateException();
+		}
+
+		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+			throw new PasswordNotValidException();
+		}
+
+		order.setOrderState(OrderState.CONFIRMED);
+
+		// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
+		Integer totalMileage = (user.getMileage() - order.getTotalPrice());
+		mileageService.createMileageHistory(user, order.getTotalPrice(), totalMileage, MileageHistoryState.USED);
+
+		// 사용자의 마일리지 업데이트
+		user.setMileage(totalMileage);
 	}
 
 	// 주문 취소 - 주문 취소 처리
