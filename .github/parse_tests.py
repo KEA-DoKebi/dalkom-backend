@@ -46,7 +46,7 @@ def generate_markdown_table(total_tests, passed_tests, success_rate, failure_det
 junit_xml_files_path = './build/test-results/test/TEST-*.xml'
 
 # 테스트 케이스 파싱
-total_tests, passed_tests, success_rate, failure_details = parse_junit_xml(junit_xml_file_path)
+total_tests, passed_tests, success_rate, failure_details = parse_junit_xml(junit_xml_files_path)
 
 # Markdown 파일 생성
 generate_markdown_table(total_tests, passed_tests, success_rate, failure_details, 'test_list.md')
