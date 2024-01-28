@@ -59,7 +59,7 @@ public class OrderService {
 	@Transactional
 	public void createOrder(OrderCreateRequest request) {
 
-		Integer orderTotalPrice = 0;
+		int orderTotalPrice = 0;
 
 		// orderTotalPrice를 먼저 계산해준다.
 		for (int i = 0; i < request.getProductSeqList().size(); i++) {
