@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import pandas as pd
+import argparse
 
 def parse_junit_xml(file_path):
     tree = ET.parse(file_path)
@@ -42,8 +43,14 @@ def generate_markdown_table(total_tests, passed_tests, success_rate, failure_det
             markdown_table = df.to_markdown(index=False)
             file.write(markdown_table)
 
-# JUnit 결과 XML 파일 경로. 이 경로는 실제 경로로 대체해야 합니다.
-junit_xml_files_path = './build/test-results/test/binary/TEST-*.xml'
+parser = argparse.ArgumentParser(description='Path Storing')
+parser.add_argument('--path', type=str, required=True)
+args = parser.parse_args()
+
+# Write a python code that path of junit test result file
+junit_xml_files_path = args.path
+
+
 
 # 테스트 케이스 파싱
 total_tests, passed_tests, success_rate, failure_details = parse_junit_xml(junit_xml_files_path)
