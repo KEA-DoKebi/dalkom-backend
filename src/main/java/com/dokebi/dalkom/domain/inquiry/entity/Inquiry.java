@@ -66,4 +66,12 @@ public class Inquiry extends EntityDate {
 		this.content = content;
 		this.answerState = answerState;
 	}
+
+	public Inquiry(Category category, Admin admin, String title, String content, String answerState) {
+		this.category = category;
+		this.admin = admin;
+		this.title = title;
+		this.content = content;
+		this.answerState = answerState;
+	}
 }
