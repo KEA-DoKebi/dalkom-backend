@@ -23,8 +23,8 @@ jobs:
       run: ./gradlew test
 
     - name : find test file
-      run : find / -name '*.apk'
-      
+      run : find / -name 'TEST-*.xml'
+
     - name: Install Python dependencies
       run: >
         pip install pandas
