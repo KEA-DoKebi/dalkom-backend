@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -188,7 +189,7 @@ public class InquiryServiceTest {
 			"N"
 		);
 
-		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(inquiry);
+		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(Optional.of(inquiry));
 
 		// When
 		inquiryService.answerInquiry(inquirySeq, adminSeq, request);

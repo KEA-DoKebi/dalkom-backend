@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.inquiry.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +15,7 @@ import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 
 public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 
-	Inquiry findByInquirySeq(Long inquirySeq);
+	Optional<Inquiry> findByInquirySeq(Long inquirySeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse("
 		+ "i.inquirySeq, c.name, i.title, i.createdAt, i.answerState) "
