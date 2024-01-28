@@ -20,6 +20,7 @@ import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderProductRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
@@ -60,26 +61,29 @@ public class OrderService {
 		Integer orderTotalPrice = 0;
 
 		// orderTotalPrice를 먼저 계산해준다.
-		for (int i = 0; i < request.getProductSeqList().size(); i++) {
-			orderTotalPrice += calculateProductPrice(request, i);
+		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
+			orderTotalPrice += calculateProductPrice(orderProduct);
 		}
 
 		// 어떤 사용자인지 조회
-		User user = userService.readUserByUserSeq(request.getUserSeq());
+		User user = userService.readUserByUserSeq(request.getReceiverInfoRequest().getUserSeq());
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (orderTotalPrice <= user.getMileage()) {
 
 			// 주문을 위한 entity 생성 후 저장
-			Order order = new Order(user, request.getReceiverName(), request.getReceiverAddress(),
-				request.getReceiverMobileNum(), request.getReceiverMemo(), orderTotalPrice);
+			Order order = new Order(user, request.getReceiverInfoRequest().getReceiverName(),
+				request.getReceiverInfoRequest().getReceiverAddress(),
+				request.getReceiverInfoRequest().getReceiverMobileNum(),
+				request.getReceiverInfoRequest().getReceiverMemo(),
+				orderTotalPrice);
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
-			for (int i = 0; i < request.getProductSeqList().size(); i++) {
+			for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
 
 				// 상세 주문 내역 생성
-				OrderDetail orderDetail = createOrderDetail(order, request, i);
+				OrderDetail orderDetail = createOrderDetail(order, orderProduct);
 
 				// 각 세부 주문 DB에 저장
 				orderDetailService.saveOrderDetail(orderDetail);
@@ -158,30 +162,30 @@ public class OrderService {
 		orderRepository.save(order);
 	}
 
-	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
-		Product product = productService.readProductByProductSeq(request.getProductSeqList().get(i));
-		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-		Integer amount = request.getAmountList().get(i);
-		Integer price = product.getPrice();
+	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Integer amount = orderProduct.getProductAmount();
+		log.info("에러 몇번??");
+		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
+		log.info("----------------------------------------");
+		log.info(String.valueOf(orderProduct.getProductSeq()));
+		log.info(String.valueOf(orderProduct.getProductOptionSeq()));
+		log.info(String.valueOf(amount));
 
-		productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
-
-		return amount * price;
+		return amount * orderProduct.getProductPrice();
 	}
 
 	// 주문 상세 만들기
-	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
-		Long productSeq = request.getProductSeqList().get(i);
-		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-		Integer amount = request.getAmountList().get(i);
+	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
+			orderProduct.getProductOptionSeq());
+		Integer amount = orderProduct.getProductAmount();
 
-		Product product = productService.readProductByProductSeq(productSeq);
-		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
-		Integer price = product.getPrice();
-
-		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount, price);
-		//상품 재고 변경
-		productStockService.updateStockByProductSeqAndOptionSeq(productSeq, prdtOptionSeq, amount);
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
+			orderProduct.getProductPrice());
+		// 상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
+			orderProduct.getProductOptionSeq(), amount);
 
 		return orderDetail;
 	}
