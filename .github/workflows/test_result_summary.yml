@@ -29,7 +29,7 @@ jobs:
 
 
     - name: Parse test results and generate markdown
-      run: python .github/parse_tests.py --path '/home/runner/work/dalkom-backend/dalkom-backend/build/test-results/test/TEST-*.xml' > test_list.md
+      run: python .github/parse_tests.py --path /home/runner/work/dalkom-backend/dalkom-backend/build/test-results/test/TEST-*.xml > test_list.md
 
     - name: Create Issue From File
       id: ciff
