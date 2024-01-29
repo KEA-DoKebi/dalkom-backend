@@ -10,10 +10,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class AuthorizeOrderRequest {
-	@NotNull
-	@Positive
+	@NotNull(message = "AuthorizeOrderRequest orderSeq NotNull 에러")
+	@Positive(message = "AuthorizeOrderRequest orderSeq Positive 에러")
 	private Long orderSeq;
 
-	@NotBlank
+	@NotBlank(message = "AuthorizeOrderRequest password NotBlank 에러")
 	private String password;
 }
