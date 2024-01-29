@@ -18,6 +18,7 @@ import com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
+import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
 import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
 import com.dokebi.dalkom.domain.jira.service.JiraService;
@@ -49,20 +50,44 @@ public class InquiryService {
 	}
 
 	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
-		return inquiryRepository.findInquiryListByUserSeq(userSeq, pageable);
+		Page<InquiryListByUserResponse> page = inquiryRepository.findInquiryListByUserSeq(userSeq, pageable);
+
+		if (page.isEmpty()) {
+			throw new InquiryNotFoundException();
+		}
+
+		return page;
 	}
 
 	public Page<InquiryListResponse> readInquiryListByCategory(Long categorySeq, Pageable pageable) {
-		return inquiryRepository.findInquiryListByCategorySeq(categorySeq, pageable);
+		Page<InquiryListResponse> page = inquiryRepository.findInquiryListByCategorySeq(categorySeq, pageable);
+
+		if (page.isEmpty()) {
+			throw new InquiryNotFoundException();
+		}
+
+		return page;
 	}
 
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
-		return inquiryRepository.findInquiryOne(inquirySeq);
+		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
+		InquiryOneResponse inquiryOneResponse;
+
+		if (inquiry.getAnswerState().equals(InquiryAnswerState.YES)) {
+			inquiryOneResponse = new InquiryOneResponse(inquiry.getTitle(), inquiry.getContent(),
+				inquiry.getCreatedAt(), inquiry.getAnswerContent(), inquiry.getAnsweredAt(),
+				inquiry.getAdmin().getNickname());
+		} else {
+			inquiryOneResponse = new InquiryOneResponse(inquiry.getTitle(), inquiry.getContent(),
+				inquiry.getCreatedAt());
+		}
+
+		return inquiryOneResponse;
 	}
 
 	@Transactional
 	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) {
-		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq);
+		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		makeInquiryAnswer(request, inquiry, admin);
 	}
@@ -74,8 +99,15 @@ public class InquiryService {
 		inquiry.setAnsweredAt(LocalDateTime.now());
 	}
 
-	public Page<InquiryListResponse> readInquiryListByCategorySearch(Long categorySeq, String title,
-		Pageable pageable) {
-		return inquiryRepository.findInquiryListByCategorySearch(categorySeq, title, pageable);
+	public Page<InquiryListResponse> readInquiryListByCategorySearch(
+		Long categorySeq, String title, Pageable pageable) {
+		Page<InquiryListResponse> page = inquiryRepository.findInquiryListByCategorySearch(
+			categorySeq, title, pageable);
+
+		if (page.isEmpty()) {
+			throw new InquiryNotFoundException();
+		}
+
+		return page;
 	}
 }

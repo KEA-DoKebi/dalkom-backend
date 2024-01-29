@@ -18,8 +18,10 @@ import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.notice.exception.NoticeNotFoundException;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
+import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
 import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
+import com.dokebi.dalkom.domain.order.exception.PasswordNotValidException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
@@ -118,6 +120,18 @@ public class ExceptionAdvice {
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderNotFoundException() {
 		return Response.failure(-1300, "주문을 찾을수 없습니다.");
+	}
+
+	@ExceptionHandler(InvalidOrderStateException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response invalidOrderStateException() {
+		return Response.failure(-1301, "잘못된 주문입니다.");
+	}
+
+	@ExceptionHandler(PasswordNotValidException.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED) // 401
+	public Response passwordNotValidException() {
+		return Response.failure(-1302, "인증에 실패했습니다.");
 	}
 
 	// 마일리지 (1400)

@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.order.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,7 +29,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse("
 		+ "o.product.name, o.order.createdAt, o.order.ordrSeq, o.amount, o.amount*o.price, o.order.orderState, "
 		+ "o.order.receiverName, o.order.receiverMobileNum, o.order.receiverAddress, o.order.receiverMemo) FROM OrderDetail o WHERE o.order.ordrSeq = :orderSeq")
-	Page<OrderDetailReadResponse> findByOrdrSeq(Long orderSeq, Pageable pageable);
+	Optional<OrderDetailReadResponse> findOrderDetailByOrdrSeq(Long orderSeq);
 
 	// 전체 주문조회
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse("
@@ -45,4 +47,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "GROUP BY o.ordrSeq, od.product.productSeq")
 	Page<OrderUserReadResponse> findAllOrderListByReceiverName(@Param("receiverName") String receiverName,
 		Pageable pageable);
+
+	Optional<Order> findOrderByOrdrSeq(Long orderSeq);
 }

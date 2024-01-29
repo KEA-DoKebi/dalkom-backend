@@ -2,7 +2,6 @@ package com.dokebi.dalkom.domain.product.dto;
 
 import java.util.List;
 
-import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 
 import lombok.AllArgsConstructor;
@@ -22,22 +21,17 @@ public class ReadProductDetailResponse {
 	private String info;
 	private String imageUrl;
 	private String company;
-	private List<OptionListDto> optionList;
 	private List<StockListDto> stockList;
 	private List<String> productImageUrlList;
 
 	public ReadProductDetailResponse(ReadProductDetailDto productDetailDTO,
-		List<OptionListDto> optionList,
-		List<StockListDto> stockList,
-		List<String> productImageUrlList) {
-
+		List<StockListDto> stockList, List<String> productImageUrlList) {
 		this.categorySeq = productDetailDTO.getCategorySeq();
 		this.name = productDetailDTO.getName();
 		this.price = productDetailDTO.getPrice();
 		this.info = productDetailDTO.getInfo();
 		this.imageUrl = productDetailDTO.getImageUrl();
 		this.company = productDetailDTO.getCompany();
-		this.optionList = optionList;
 		this.stockList = stockList;
 		this.productImageUrlList = productImageUrlList;
 	}

@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.order.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,18 @@ public class OrderDetailService {
 		orderDetailRepository.save(orderDetail);
 	}
 
-	public OrderDetail readOrderDetailByOrderDetailSeq(Long orderdetailSeq) {
-		return orderDetailRepository.findByOrdrDetailSeq(orderdetailSeq).orElseThrow(OrderDetailNotFoundException::new);
+	public OrderDetail readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailRepository.findOrderDetailByOrdrDetailSeq(orderDetailSeq)
+			.orElseThrow(OrderDetailNotFoundException::new);
+	}
+
+	public List<OrderDetail> readOrderDetailByOrderSeq(Long orderSeq) {
+		List<OrderDetail> orderDetailList = orderDetailRepository.findOrderDetailListByOrderSeq(orderSeq);
+
+		if (orderDetailList.isEmpty()) {
+			throw new OrderDetailNotFoundException();
+		}
+
+		return orderDetailList;
 	}
 }

@@ -21,4 +21,10 @@ public class InquiryOneResponse {
 	private String answerContent;
 	private LocalDateTime answeredAt;
 	private String nickname; // 관리자 닉네임
+
+	public InquiryOneResponse(String title, String content, LocalDateTime createdAt) {
+		this.title = title;
+		this.content = content;
+		this.createdAt = createdAt;
+	}
 }

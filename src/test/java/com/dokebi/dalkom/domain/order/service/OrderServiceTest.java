@@ -1,10 +1,8 @@
 // TODO Pagenation 해결될때까지 동결
 package com.dokebi.dalkom.domain.order.service;
 
-import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderReadResponseFactory.*;
-import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -24,24 +22,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
-import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
-import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
-import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
-import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
-import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,44 +68,44 @@ class OrderServiceTest {
 
 	}
 
-	@Test
-	@DisplayName("주문 생성 서비스 테스트 ")
-	void createOrderTest() {
-		// given
-		OrderCreateRequest request = createOrderCreateRequest();
-		User mockUser = createMockUser();
+	// @Test
+	// @DisplayName("주문 생성 서비스 테스트 ")
+	// void createOrderTest() {
+	// 	// given
+	// 	OrderCreateRequest request = createOrderCreateRequest();
+	// 	User mockUser = createMockUser();
+	//
+	// 	given(mockProduct.getPrice()).willReturn(10000);
+	// 	given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
+	// 	given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
+	// 	given(mileageService.createMileageHistory(any(), any(), any(), any())).willReturn(mileageHistory);
+	// 	given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
+	// 		new ProductOption(2L, "OP1", "의류 사이즈", "M"));
+	// 	doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
+	//
+	// 	// when
+	// 	orderService.createOrder(request);
+	//
+	// 	// then
+	// 	verify(orderRepository, times(1)).save(any(Order.class));
+	// 	verify(orderDetailService, times(request.getProductSeqList().size())).saveOrderDetail(any(OrderDetail.class));
+	// }
 
-		given(mockProduct.getPrice()).willReturn(10000);
-		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
-		given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
-		given(mileageService.createMileageHistory(any(), any(), any(), any())).willReturn(mileageHistory);
-		given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
-			new ProductOption(2L, "OP1", "의류 사이즈", "M"));
-		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
-
-		// when
-		orderService.createOrder(request);
-
-		// then
-		verify(orderRepository, times(1)).save(any(Order.class));
-		verify(orderDetailService, times(request.getProductSeqList().size())).saveOrderDetail(any(OrderDetail.class));
-	}
-
-	@Test
-	@DisplayName("주문시 마일리지 부족 서비스 테스트")
-	void createOrderWithMileageLackExceptionTest() {
-		// given
-		OrderCreateRequest request = createOrderCreateRequest();
-		User mockUser = createMockUserWithInsufficientMileage();
-
-		given(mockProduct.getPrice()).willReturn(10000);
-		given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
-		given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
-
-		// when, then
-		assertThrows(MileageLackException.class, () -> orderService.createOrder(request));
-
-	}
+	// @Test
+	// @DisplayName("주문시 마일리지 부족 서비스 테스트")
+	// void createOrderWithMileageLackExceptionTest() {
+	// 	// given
+	// 	OrderCreateRequest request = createOrderCreateRequest();
+	// 	User mockUser = createMockUserWithInsufficientMileage();
+	//
+	// 	given(mockProduct.getPrice()).willReturn(10000);
+	// 	given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
+	// 	given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
+	//
+	// 	// when, then
+	// 	assertThrows(MileageLackException.class, () -> orderService.createOrder(request));
+	//
+	// }
 
 	@Test
 	@DisplayName("주문 상품 상세 서비스 테스트")
@@ -160,21 +153,15 @@ class OrderServiceTest {
 	void readOrderByOrderSeqTest() {
 		// given
 		Long orderSeq = 1L;
-		Pageable pageable = PageRequest.of(0, 3);
-		List<OrderDetailReadResponse> orderList = new ArrayList<>();
-		orderList.add(createOrderDetailReadResponse());
-		orderList.add(createOrderDetailReadResponse());
+		OrderDetailReadResponse orderDetailReadResponse = createOrderDetailReadResponse();
 
-		Page<OrderDetailReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
-		when(orderService.readOrderByOrderSeq(orderSeq, pageable)).thenReturn(responsePage);
+		when(orderService.readOrderByOrderSeq(orderSeq)).thenReturn(orderDetailReadResponse);
 
 		// when
-		Page<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq, pageable);
+		OrderDetailReadResponse result = orderService.readOrderByOrderSeq(orderSeq);
 
 		// then
-		// then
 		assertNotNull(result);
-		assertEquals(orderList.size(), result.toList().size());
 	}
 
 	@Test

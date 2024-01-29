@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 
 public class ReadProductDetailResponseTest {
@@ -22,15 +21,14 @@ public class ReadProductDetailResponseTest {
 		String imageUrl = "http://testimageurl.com";
 		String company = "Test Company";
 
-		List<OptionListDto> optionList = List.of(new OptionListDto(1L, "Option 1"));
-		List<StockListDto> stockList = List.of(new StockListDto(1L, 100));
+		List<StockListDto> stockList = List.of(new StockListDto(1L, 1L, "M", 100));
 		List<String> productImageUrlList = Arrays.asList("http://testimageurl1.com", "http://testimageurl2.com");
 
 		ReadProductDetailDto productDetailDTO = new ReadProductDetailDto(categorySeq, name, price, info, imageUrl,
 			company);
 
 		// When
-		ReadProductDetailResponse response = new ReadProductDetailResponse(productDetailDTO, optionList, stockList,
+		ReadProductDetailResponse response = new ReadProductDetailResponse(productDetailDTO, stockList,
 			productImageUrlList);
 
 		// Then
@@ -41,7 +39,6 @@ public class ReadProductDetailResponseTest {
 		assertEquals(info, response.getInfo());
 		assertEquals(imageUrl, response.getImageUrl());
 		assertEquals(company, response.getCompany());
-		assertEquals(optionList, response.getOptionList());
 		assertEquals(stockList, response.getStockList());
 		assertEquals(productImageUrlList, response.getProductImageUrlList());
 	}
@@ -88,10 +85,11 @@ public class ReadProductDetailResponseTest {
 	public void testStockListDTOConstructor() {
 		// Given
 		Long productStockSeq = 1L;
+		Long productOptionSeq = 2L;
 		Integer amount = 150;
 
 		// When
-		StockListDto stockListDTO = new StockListDto(productStockSeq, amount);
+		StockListDto stockListDTO = new StockListDto(productStockSeq, productOptionSeq, "M", amount);
 
 		// Then
 		assertNotNull(stockListDTO);
