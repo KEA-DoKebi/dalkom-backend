@@ -23,8 +23,8 @@ public class OrderDetailService {
 		orderDetailRepository.save(orderDetail);
 	}
 
-	public OrderDetail readOrderDetailByOrderDetailSeq(Long orderdetailSeq) {
-		return orderDetailRepository.findOrderDetailByOrdrDetailSeq(orderdetailSeq)
+	public OrderDetail readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailRepository.findOrderDetailByOrdrDetailSeq(orderDetailSeq)
 			.orElseThrow(OrderDetailNotFoundException::new);
 	}
 
