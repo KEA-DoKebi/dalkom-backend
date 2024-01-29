@@ -145,8 +145,8 @@ public class OrderService {
 	}
 
 	// 주문별 상세 조회
-	public OrderDetailReadResponse readOrderByOrderSeq(Long orderSeq) {
-		return orderRepository.findOrderDetailByOrdrSeq(orderSeq).orElseThrow(OrderNotFoundException::new);
+	public List<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq) {
+		return orderRepository.findOrderDetailByOrdrSeq(orderSeq);
 	}
 
 	// 주문 전체 조회

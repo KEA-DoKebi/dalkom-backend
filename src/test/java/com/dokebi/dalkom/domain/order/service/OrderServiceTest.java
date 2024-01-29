@@ -153,12 +153,13 @@ class OrderServiceTest {
 	void readOrderByOrderSeqTest() {
 		// given
 		Long orderSeq = 1L;
-		OrderDetailReadResponse orderDetailReadResponse = createOrderDetailReadResponse();
+		List<OrderDetailReadResponse> responseList = List.of(createOrderDetailReadResponse(),
+			createOrderDetailReadResponse());
 
-		when(orderService.readOrderByOrderSeq(orderSeq)).thenReturn(orderDetailReadResponse);
+		when(orderService.readOrderByOrderSeq(orderSeq)).thenReturn(responseList);
 
 		// when
-		OrderDetailReadResponse result = orderService.readOrderByOrderSeq(orderSeq);
+		List<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq);
 
 		// then
 		assertNotNull(result);
