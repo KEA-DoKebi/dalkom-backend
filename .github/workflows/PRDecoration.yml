@@ -79,3 +79,10 @@ jobs:
             -Dsonar.pullrequest.branch=${{ github.head_ref }} \
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
             -Dsonar.coverage.jacoco.xmlReportPaths='./build/reports/jacoco/test/jacocoTestReport.xml'
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token : ${{ secrets.MY_PAT }}
+          issue-number: ${{ github.event.issue.number }}
+          body-path : ./test_results_summary.md
