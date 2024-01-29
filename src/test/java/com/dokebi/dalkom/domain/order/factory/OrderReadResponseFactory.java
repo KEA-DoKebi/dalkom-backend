@@ -15,6 +15,8 @@ public class OrderReadResponseFactory {
 	public static OrderUserReadResponse createOrderReadResponse() {
 		return new OrderUserReadResponse(
 			1L,
+			"상품명",
+			3L,
 			100,
 			"Shipped",
 			LocalDateTime.now()
