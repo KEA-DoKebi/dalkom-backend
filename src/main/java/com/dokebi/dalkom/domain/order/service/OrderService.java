@@ -167,13 +167,7 @@ public class OrderService {
 
 	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
 		Integer amount = orderProduct.getProductAmount();
-		log.info("에러 몇번??");
 		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		log.info("----------------------------------------");
-		log.info(String.valueOf(orderProduct.getProductSeq()));
-		log.info(String.valueOf(orderProduct.getProductOptionSeq()));
-		log.info(String.valueOf(amount));
-
 		return amount * orderProduct.getProductPrice();
 	}
 
