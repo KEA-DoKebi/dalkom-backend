@@ -84,6 +84,6 @@ jobs:
         uses: peter-evans/create-or-update-comment@v4
         with:
           token : ${{ secrets.MY_PAT }}
-          issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ github.event.pull_request.number }}
           
           body-path : ./test_results_summary.md
