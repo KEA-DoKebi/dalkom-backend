@@ -37,6 +37,6 @@ jobs:
       id: ciff
       uses: peter-evans/create-issue-from-file@v5
       with:
-        title: Test Issue
+        title: $title_name
         token : ${{ secrets.MY_PAT }}
         content-filepath: ./test_results_summary.md
