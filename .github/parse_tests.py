@@ -43,7 +43,6 @@ def generate_markdown_table(total_tests, passed_tests, failed_tests, failure_det
 
 # 파일 경로 검색
 junit_xml_files_paths = glob.glob('./build/test-results/test/TEST-*.xml')
-print(junit_xml_files_paths)
 
 # 각 파일에 대해 테스트 결과 집계
 total_tests = passed_tests = failed_tests = 0
