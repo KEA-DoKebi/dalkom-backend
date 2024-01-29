@@ -12,6 +12,7 @@ import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
+import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageAlreadyApplyException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
@@ -48,6 +49,12 @@ public class ExceptionAdvice {
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response employeeNotFoundException() {
 		return Response.failure(-1002, "임직원 정보가 존재하지 않습니다.");
+	}
+
+	@ExceptionHandler(MissingJiraRequestHeaderException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response missingJiraRequestHeaderException() {
+		return Response.failure(-1003, "Jira 요청 헤더가 누락되었습니다.");
 	}
 
 	// @ExceptionHandler(MissingRequestHeaderException.class)

@@ -19,6 +19,8 @@ import com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
+import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
+import com.dokebi.dalkom.domain.jira.service.JiraService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
@@ -32,13 +34,18 @@ public class InquiryService {
 	private final CategoryService categoryService;
 	private final UserService userService;
 	private final AdminService adminService;
+	private final JiraService jiraService;
 
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), InquiryAnswerState.NO);
-		inquiryRepository.save(inquiry);
+		inquiry = inquiryRepository.save(inquiry);
+		// 문의 내용 Jira로 보내기
+		JiraInquiryRequest jiraInquiryRequest = new JiraInquiryRequest(request.getTitle(), request.getContent(),
+			user.getNickname(), inquiry.getInquirySeq());
+		jiraService.createIssueInquiry(jiraInquiryRequest);
 	}
 
 	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
