@@ -29,7 +29,9 @@ jobs:
 
 
     - name: Parse test results and generate markdown
-      run: python .github/parse_tests.py
+      run: >
+        python .github/parse_tests.py
+        echo "title_name=$(echo Test Result of ${GITHUB_REF#refs/heads/})" >> $GITHUB_ENV
 
     - name: Create Issue From File
       id: ciff
