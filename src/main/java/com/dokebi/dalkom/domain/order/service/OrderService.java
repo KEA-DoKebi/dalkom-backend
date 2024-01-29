@@ -162,34 +162,6 @@ public class OrderService {
 		orderRepository.save(order);
 	}
 
-	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
-		Product product = productService.readProductByProductSeq(request.getProductSeqList().get(i));
-		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-		Integer amount = request.getAmountList().get(i);
-		Integer price = product.getPrice();
-
-		productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
-
-		return amount * price;
-	}
-
-	// 주문 상세 만들기
-	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
-		Long productSeq = request.getProductSeqList().get(i);
-		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-		Integer amount = request.getAmountList().get(i);
-
-		Product product = productService.readProductByProductSeq(productSeq);
-		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
-		Integer price = product.getPrice();
-
-		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount, price);
-		//상품 재고 변경
-		productStockService.updateStockByProductSeqAndOptionSeq(productSeq, prdtOptionSeq, amount);
-
-		return orderDetail;
-	}
-
 	// 주문 검색 조회 서비스
 	public Page<OrderUserReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
 		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
@@ -267,6 +239,34 @@ public class OrderService {
 		} else {
 			throw new MileageLackException();
 		}
+	}
+
+	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
+		Product product = productService.readProductByProductSeq(request.getProductSeqList().get(i));
+		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
+		Integer amount = request.getAmountList().get(i);
+		Integer price = product.getPrice();
+
+		productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
+
+		return amount * price;
+	}
+
+	// 주문 상세 만들기
+	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
+		Long productSeq = request.getProductSeqList().get(i);
+		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
+		Integer amount = request.getAmountList().get(i);
+
+		Product product = productService.readProductByProductSeq(productSeq);
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
+		Integer price = product.getPrice();
+
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount, price);
+		//상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(productSeq, prdtOptionSeq, amount);
+
+		return orderDetail;
 	}
 
 	// 주문 취소 - 주문 취소 처리
