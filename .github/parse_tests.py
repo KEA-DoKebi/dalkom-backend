@@ -12,20 +12,16 @@ def parse_junit_xml(file_path):
     failure_details = []
 
     for testcase in root.iter('testcase'):
-        total_tests += 1
-        class_name = testcase.attrib['classname']
-        method_name = testcase.attrib['name']
-        status = 'PASSED'
-
         for child in testcase:
             if child.tag == 'failure':
-                status = 'FAILED'
                 failed_tests += 1
-                failure_message = child.attrib.get('message', 'No message')  # 메시지가 없는 경우 대비
-                failure_details.append([class_name, method_name, failure_message])
+            else :
+                passed_tests += 1
+            total_tests += 1
+            class_name = testcase.attrib['classname']
+            method_name = testcase.attrib['name']
+            failure_details.append([class_name, method_name])
 
-        if status == 'PASSED':
-            passed_tests += 1
 
     return total_tests, passed_tests, failed_tests, failure_details
 
