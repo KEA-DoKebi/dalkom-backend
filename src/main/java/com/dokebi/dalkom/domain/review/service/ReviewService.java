@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.review.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -23,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class ReviewService {
@@ -32,13 +34,11 @@ public class ReviewService {
 	private final UserService userService;
 	private final OrderDetailService orderDetailService;
 
-	@Transactional
 	public Page<ReviewByProductResponse> readReviewListByProduct(Long productSeq, Pageable pageable) {
 
 		return reviewRepository.findReviewListByProduct(productSeq, pageable);
 	}
 
-	@Transactional
 	public Page<ReviewByUserResponse> readReviewListByUser(Long userSeq, Pageable pageable) {
 
 		return reviewRepository.findReviewListByUser(userSeq, pageable);
@@ -71,5 +71,16 @@ public class ReviewService {
 		} else {
 			throw new ReviewNotFoundException();
 		}
+	}
+
+	public List<Review> readReviewByOrderDetailList(List<OrderDetail> orderDetailList) {
+		List<Review> reviewList = new ArrayList<>();
+
+		for (OrderDetail orderDetail : orderDetailList) {
+			reviewRepository.findReviewListByOrderDetailSeq(orderDetail.getOrdrDetailSeq())
+				.ifPresent(reviewList::add);
+		}
+
+		return reviewList;
 	}
 }

@@ -39,19 +39,20 @@ public class OrderFactory {
 	}
 
 	public static OrderUserReadResponse createOrderDtoOne() {
-		return new OrderUserReadResponse(1L, 100, "1", LocalDateTime.parse("2024-01-21T00:00:00"));
+		return new OrderUserReadResponse(1L, "상품명", 3L, 100, "1", LocalDateTime.parse("2024-01-21T00:00:00"));
 	}
 
 	public static OrderUserReadResponse createOrderDtoTwo() {
-		return new OrderUserReadResponse(2L, 100, "1", LocalDateTime.parse("2024-01-20T00:00:00"));
+		return new OrderUserReadResponse(2L, "상품명", 3L, 100, "1", LocalDateTime.parse("2024-01-20T00:00:00"));
 	}
 
 	public static Page<OrderAdminReadResponse> createOrderList() {
 		List<OrderAdminReadResponse> orderUserReadResponseList = new ArrayList<>();
 		orderUserReadResponseList.add(
-			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), "suha", "suha", 1000, "1"));
+			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), 2L, "suha", "suha", 1000, "1"));
 		orderUserReadResponseList.add(
-			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), "hauha", "hahha", 3000, "1"));
+			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), 2L, "hauha", "hahha", 3000,
+				"1"));
 
 		return new PageImpl<>(orderUserReadResponseList, PageRequest.of(0, 10), orderUserReadResponseList.size());
 	}
