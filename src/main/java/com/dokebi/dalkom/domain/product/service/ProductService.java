@@ -15,7 +15,6 @@ import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
-import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
@@ -63,16 +62,15 @@ public class ProductService {
 		// responseBody에 필요한 값들을 탐색
 		ReadProductDetailDto productDetailDto = productRepository.findProductDetailByProductSeq(productSeq);
 		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
-		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageByProductSeq(productSeq);
 
 		// 조회 결과 검사
-		if (stockList == null || optionList == null || stockList.isEmpty() || optionList.isEmpty()) {
+		if (stockList == null || stockList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
 		// response용 DTO에 담아서 return
-		return new ReadProductDetailResponse(productDetailDto, optionList, stockList, productImageUrlList);
+		return new ReadProductDetailResponse(productDetailDto, stockList, productImageUrlList);
 	}
 
 	// PRODUCT-003 (상품 정보 추가)
