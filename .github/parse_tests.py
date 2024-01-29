@@ -33,7 +33,7 @@ def generate_markdown_table(total_tests, passed_tests, failed_tests, failure_det
         file.write(f"Success Rate: {success_rate}%\n\n")
         
         if failed_tests > 0:
-            df = pd.DataFrame(failure_details, columns=['Class', 'Method', 'Reason'])
+            df = pd.DataFrame(failure_details, columns=['Class', 'Method'])
             markdown_table = df.to_markdown(index=False)
             file.write(markdown_table)
 
