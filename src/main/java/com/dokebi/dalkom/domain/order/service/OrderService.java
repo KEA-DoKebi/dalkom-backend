@@ -156,6 +156,7 @@ public class OrderService {
 	}
 
 	// 주문 상태 수정
+	@Transactional
 	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
 		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
 
@@ -218,7 +219,6 @@ public class OrderService {
 	}
 
 	// 결제시 비밀번호 인증
-	@Transactional
 	public void authorizeOrderByPassword(Long userSeq, AuthorizeOrderRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 

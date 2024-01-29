@@ -100,7 +100,7 @@ public class OrderController {
 	}
 
 	//ORDER-010 (결제 비밀번호 인증)
-	@PutMapping("/api/order/authorize")
+	@GetMapping("/api/order/authorize")
 	@ResponseStatus(HttpStatus.OK)
 	public Response authorizeOrderByPassword(@LoginUser Long userSeq,
 		@Valid @RequestBody AuthorizeOrderRequest request) {
