@@ -12,15 +12,16 @@ def parse_junit_xml(file_path):
     failure_details = []
 
     for testcase in root.iter('testcase'):
-        for child in testcase:
-            if child.tag == 'failure':
+        total_tests += 1
+        class_name = testcase.attrib['classname']
+        method_name = testcase.attrib['name']
+
+        if(testcase) :
+            for child in testcase:
                 failed_tests += 1
-            else :
-                passed_tests += 1
-            total_tests += 1
-            class_name = testcase.attrib['classname']
-            method_name = testcase.attrib['name']
-            failure_details.append([class_name, method_name])
+                failure_details.append([class_name, method_name])
+        else :
+            passed_tests += 1
 
 
     return total_tests, passed_tests, failed_tests, failure_details
