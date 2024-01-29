@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 // ReadProductDetailResponse의 List용 DTO
 public class StockListDto {
-
 	private Long productStockSeq;
+	private Long productOptionSeq;
+	private String detail;
 	private Integer amount;
 }

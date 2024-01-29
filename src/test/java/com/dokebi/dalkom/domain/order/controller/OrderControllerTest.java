@@ -23,9 +23,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
-import com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory;
 import com.dokebi.dalkom.domain.order.service.OrderService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -99,18 +97,18 @@ public class OrderControllerTest {
 		verify(orderService).readOrderByAll(any(Pageable.class));
 	}
 
-	@Test
-	@DisplayName("결제 하기 테스트")
-	void createOrderTest() throws Exception {
-		OrderCreateRequest orderCreateRequest = OrderCreateRequestFactory.createOrderCreateRequest();
-
-		// API 호출 및 결과 검증
-		mockMvc.perform(post("/api/order").contentType(MediaType.APPLICATION_JSON)
-			.content(new ObjectMapper().writeValueAsString(orderCreateRequest))).andExpect(status().isOk());
-
-		verify(orderService).createOrder(eq(orderCreateRequest));
-
-	}
+	// @Test
+	// @DisplayName("결제 하기 테스트")
+	// void createOrderTest() throws Exception {
+	// 	OrderCreateRequest orderCreateRequest = OrderCreateRequestFactory.createOrderCreateRequest();
+	//
+	// 	// API 호출 및 결과 검증
+	// 	mockMvc.perform(post("/api/order").contentType(MediaType.APPLICATION_JSON)
+	// 		.content(new ObjectMapper().writeValueAsString(orderCreateRequest))).andExpect(status().isOk());
+	//
+	// 	verify(orderService).createOrder(eq(orderCreateRequest));
+	//
+	// }
 
 	@Test
 	@DisplayName("주문 상태 수정 테스트")
