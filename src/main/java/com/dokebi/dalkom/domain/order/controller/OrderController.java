@@ -68,7 +68,7 @@ public class OrderController {
 	}
 
 	//  ORDER-006 (특정 주문 상태 수정)
-	@PutMapping("/api/order/{orderSeq}/state")
+	@PutMapping("/api/order/state/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateOrderState(@PathVariable("orderSeq") Long orderSeq,
 		@Valid @RequestBody OrderStateUpdateRequest request) {
@@ -100,7 +100,7 @@ public class OrderController {
 	}
 
 	//ORDER-010 (결제 비밀번호 인증)
-	@PutMapping("/api/order/authorize")
+	@GetMapping("/api/order/authorize")
 	@ResponseStatus(HttpStatus.OK)
 	public Response authorizeOrderByPassword(@LoginUser Long userSeq,
 		@Valid @RequestBody AuthorizeOrderRequest request) {
