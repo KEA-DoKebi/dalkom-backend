@@ -79,6 +79,7 @@ public class OrderService {
 				request.getReceiverInfoRequest().getReceiverMobileNum(),
 				request.getReceiverInfoRequest().getReceiverMemo(),
 				orderTotalPrice);
+			order.setOrderState(OrderState.CONFIRMED);
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
@@ -90,14 +91,14 @@ public class OrderService {
 				// 각 세부 주문 DB에 저장
 				orderDetailService.saveOrderDetail(orderDetail);
 			}
-			// 마일리지 감소 시점을 비밀번호 인증시로 이동
-			// // 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
-			// Integer totalMileage = (user.getMileage() - orderTotalPrice);
-			//
-			// mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
-			//
-			// // 사용자의 마일리지 업데이트
-			// user.setMileage(totalMileage);
+
+			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
+			Integer totalMileage = (user.getMileage() - orderTotalPrice);
+
+			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
+
+			// 사용자의 마일리지 업데이트
+			user.setMileage(totalMileage);
 
 		} else {
 			throw new MileageLackException();
@@ -165,28 +166,6 @@ public class OrderService {
 		orderRepository.save(order);
 	}
 
-	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
-		Integer amount = orderProduct.getProductAmount();
-		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		return amount * orderProduct.getProductPrice();
-	}
-
-	// 주문 상세 만들기
-	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
-		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
-		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
-			orderProduct.getProductOptionSeq());
-		Integer amount = orderProduct.getProductAmount();
-
-		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			orderProduct.getProductPrice());
-		// 상품 재고 변경
-		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
-			orderProduct.getProductOptionSeq(), amount);
-
-		return orderDetail;
-	}
-
 	// 주문 검색 조회 서비스
 	public Page<OrderUserReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
 		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
@@ -242,28 +221,34 @@ public class OrderService {
 	@Transactional
 	public void authorizeOrderByPassword(Long userSeq, AuthorizeOrderRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
-		Order order = orderRepository.findById(request.getOrderSeq()).orElseThrow(OrderNotFoundException::new);
-
-		if (!order.getOrderState().equals(OrderState.WATING)) {
-			throw new InvalidOrderStateException();
-		}
 
 		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			throw new PasswordNotValidException();
 		}
+	}
 
-		if (order.getTotalPrice() <= user.getMileage()) {
-			order.setOrderState(OrderState.CONFIRMED);
+	/** private **/
 
-			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
-			Integer totalMileage = (user.getMileage() - order.getTotalPrice());
-			mileageService.createMileageHistory(user, order.getTotalPrice(), totalMileage, MileageHistoryState.USED);
+	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		int amount = orderProduct.getProductAmount();
+		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
+		return amount * orderProduct.getProductPrice();
+	}
 
-			// 사용자의 마일리지 업데이트
-			user.setMileage(totalMileage);
-		} else {
-			throw new MileageLackException();
-		}
+	// 주문 상세 만들기
+	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
+			orderProduct.getProductOptionSeq());
+		Integer amount = orderProduct.getProductAmount();
+
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
+			orderProduct.getProductPrice());
+		// 상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
+			orderProduct.getProductOptionSeq(), amount);
+
+		return orderDetail;
 	}
 
 	// 주문 취소 - 주문 취소 처리
