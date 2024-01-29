@@ -9,8 +9,12 @@ public class OrderState {
 	public static String FINALIZED = "15"; // 구매확정
 	public static String CANCELED = "21"; // 주문취소
 	public static String REFUND_CONFIRMED = "31"; // 환불접수
-	public static String RETURNING = "32"; // 반송시작
-	public static String RETURNED = "33"; // 반송완료
-	public static String REFUNDED = "34"; // 환불완료
+	public static String RETURNED = "32"; // 반송완료
+	public static String REFUNDED = "33"; // 환불완료
+
+	//"11" : 주문확인, "12" : 배송준비, "13" : 배송시작, "14" : 배송완료, "15" : 구매확정,
+	// "21" : 주문취소,
+	// "31" : 반품접수, "32" : 반송시작, "33" : 반송완료, "34" : 반품완료,
+	// "41" : 환불
 
 }
