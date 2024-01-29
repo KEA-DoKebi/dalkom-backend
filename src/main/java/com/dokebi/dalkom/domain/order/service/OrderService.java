@@ -255,14 +255,18 @@ public class OrderService {
 			throw new PasswordNotValidException();
 		}
 
-		order.setOrderState(OrderState.CONFIRMED);
+		if (order.getTotalPrice() <= user.getMileage()) {
+			order.setOrderState(OrderState.CONFIRMED);
 
-		// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
-		Integer totalMileage = (user.getMileage() - order.getTotalPrice());
-		mileageService.createMileageHistory(user, order.getTotalPrice(), totalMileage, MileageHistoryState.USED);
+			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
+			Integer totalMileage = (user.getMileage() - order.getTotalPrice());
+			mileageService.createMileageHistory(user, order.getTotalPrice(), totalMileage, MileageHistoryState.USED);
 
-		// 사용자의 마일리지 업데이트
-		user.setMileage(totalMileage);
+			// 사용자의 마일리지 업데이트
+			user.setMileage(totalMileage);
+		} else {
+			throw new MileageLackException();
+		}
 	}
 
 	// 주문 취소 - 주문 취소 처리
