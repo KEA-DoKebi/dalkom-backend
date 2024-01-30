@@ -186,4 +186,5 @@ public class ProductService {
 
 		product.setState(ProductActiveState.ACTIVE);
 	}
+
 }

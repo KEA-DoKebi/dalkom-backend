@@ -62,8 +62,8 @@ public class OrderController {
 	// ORDER-005 (결제 하기)
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createOrder(@Valid @RequestBody OrderCreateRequest request) {
-		orderService.createOrder(request);
+	public Response createOrder(@LoginUser Long userSeq, @Valid @RequestBody OrderCreateRequest request) {
+		orderService.createOrder(userSeq, request);
 		return Response.success();
 	}
 
