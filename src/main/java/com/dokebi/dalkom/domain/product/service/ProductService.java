@@ -141,6 +141,7 @@ public class ProductService {
 		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
+	@Transactional
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
