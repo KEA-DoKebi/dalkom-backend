@@ -95,6 +95,7 @@ tasks.withType(Checkstyle) {
 
 if (System.getProperty('doCheck') == 'true') {
     tasks.withType(Checkstyle) {
+        version = 8.17
         enabled = true
     }
 }
