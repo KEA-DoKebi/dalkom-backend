@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.common.magicnumber.OrderState;
+import com.dokebi.dalkom.domain.cart.dto.OrderCartDeleteRequest;
+import com.dokebi.dalkom.domain.cart.service.OrderCartService;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
@@ -58,16 +60,24 @@ public class OrderService {
 	private final UserService userService;
 	private final ReviewService reviewService;
 	private final PasswordEncoder passwordEncoder;
+	private final OrderCartService orderCartService;
 
 	// 결제 하기
 	@Transactional
 	public Integer createOrder(Long userSeq, OrderCreateRequest request) {
 
 		int orderTotalPrice = 0;
-
+		OrderCartDeleteRequest orderCartDeleteRequest = new OrderCartDeleteRequest(new ArrayList<>());
+		System.out.println("---------------------------------------------------------------");
+		System.out.println(request);
+		System.out.println("---------------------------------------------------------------");
 		// orderTotalPrice를 먼저 계산해준다.
 		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
 			orderTotalPrice += calculateProductPrice(orderProduct);
+		}
+		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
+			Long orderCartSeq = orderProduct.getOrderCartSeq();
+			orderCartDeleteRequest.getOrderCartSeqList().add(orderCartSeq);
 		}
 
 		// 사용자 정보 조회
@@ -100,6 +110,9 @@ public class OrderService {
 
 			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
 
+			//장바구니의 상품 삭제
+			orderCartService.deleteOrderCart(orderCartDeleteRequest);
+
 			// 사용자의 마일리지 업데이트
 			user.setMileage(totalMileage);
 			return user.getMileage();
@@ -125,9 +138,14 @@ public class OrderService {
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
 
+			//option detail 조회
+
+			String optionDetail = productOptionService.readOptionDetailByPdtOptionSeq(optionSeq);
+
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto(productSeq, optionSeq, productAmount,
-				productInfo.getName(), productInfo.getPrice(), productInfo.getPrice() * order.getProductAmount());
+				productInfo.getName(), productInfo.getPrice(), optionDetail,
+				productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);
 		});
