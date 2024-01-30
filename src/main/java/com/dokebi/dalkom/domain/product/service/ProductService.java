@@ -177,7 +177,6 @@ public class ProductService {
 			} else if (reviewSimpleDto.getRating() < 4 && negativeReview.size() < 5) {
 				negativeReview.add(reviewSimpleDto);
 			}
-
 		}
 		avgRating = avgRating / listLength;
 
