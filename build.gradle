@@ -93,5 +93,7 @@ checkstyle {
     config = resources.text.fromFile('./config/checkstyle/checkstyle.xml')
 }
 
-check.dependsOn.remove('checkstyleMain')
-check.dependsOn.remove('checkstyleTest')
+tasks.named('check') {
+    dependsOn.remove("checkstyleMain")
+    dependsOn.remove("checkstyleTest")
+}
