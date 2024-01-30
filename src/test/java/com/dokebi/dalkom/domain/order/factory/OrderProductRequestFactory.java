@@ -7,10 +7,10 @@ public class OrderProductRequestFactory {
 		return new OrderProductRequest(
 			1L,        // productSeq
 			2L,        // productOptionSeq
-			3,         // productAmount
-			"TestProduct",  // productName
-			1000,      // productPrice
-			3000       // totalPrice
+			3         // productAmount
+			// "TestProduct",  // productName
+			// 1000,      // productPrice
+			// 3000       // totalPrice
 		);
 	}
 }
