@@ -92,3 +92,7 @@ checkstyle {
     toolVersion = '8.45.1'
     config = resources.text.fromFile('./config/checkstyle/checkstyle.xml')
 }
+
+if (project.hasProperty('doCheckstyle')) {
+    check.dependsOn checkstyleMain, checkstyleTest
+}
