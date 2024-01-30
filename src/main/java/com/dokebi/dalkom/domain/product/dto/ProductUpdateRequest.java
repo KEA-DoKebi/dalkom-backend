@@ -12,8 +12,10 @@ import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ProductUpdateRequest {
 	@NotNull(message = "ProductUpdateRequest categorySeq NotNull 에러")
