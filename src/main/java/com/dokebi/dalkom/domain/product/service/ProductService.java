@@ -147,6 +147,32 @@ public class ProductService {
 		return categoryMap;
 	}
 
+	// PRODUCT-008 (특정 상품 정보 수정)
+	@Transactional
+	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
+		Product product = productRepository.findProductByProductSeq(productSeq)
+			.orElseThrow(ProductNotFoundException::new);
+
+		// 상품 정보 저장
+		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
+		product.setName(request.getName());
+		product.setPrice(request.getPrice());
+		product.setInfo(request.getInfo());
+		product.setImageUrl(request.getImageUrl());
+		product.setCompany(request.getCompany());
+		product.setState(request.getState());
+
+		for (OptionAmountDto optionAmountDto : request.getOptionAmountList()) {
+			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
+				optionAmountDto.getPrdtOptionSeq());
+
+			// updateStock은 History를 남기는 메서드이므로, 재고가 다를 경우에만 실행하기
+			if (!Objects.equals(stock.getAmount(), optionAmountDto.getAmount())) {
+				productStockService.updateStockByStockSeq(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
+			}
+		}
+	}
+
 	// PRODUCT-009 (상품 리스트 검색)
 	public Page<ReadProductResponse> readProductListSearch(String name, String company, Pageable pageable) {
 		return productRepository.findProductListSearch(name, company, pageable);
@@ -199,31 +225,6 @@ public class ProductService {
 		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
-	@Transactional
-	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
-		Product product = productRepository.findProductByProductSeq(productSeq)
-			.orElseThrow(ProductNotFoundException::new);
-
-		// 상품 정보 저장
-		product.setCategory(categoryService.readCategoryByCategorySeq(request.getCategorySeq()));
-		product.setName(request.getName());
-		product.setPrice(request.getPrice());
-		product.setInfo(request.getInfo());
-		product.setImageUrl(request.getImageUrl());
-		product.setCompany(request.getCompany());
-		product.setState(request.getState());
-
-		for (OptionAmountDto optionAmountDto : request.getOptionAmountList()) {
-			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
-				optionAmountDto.getPrdtOptionSeq());
-
-			// updateStock은 History를 남기는 메서드이므로, 재고가 다를 경우에만 실행하기
-			if (!Objects.equals(stock.getAmount(), optionAmountDto.getAmount())) {
-				productStockService.updateStockByStockSeq(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
-			}
-		}
-	}
-
 	public String checkProductActiveState(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
@@ -270,16 +271,6 @@ public class ProductService {
 
 			// 요청 전송 및 응답 수신
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-			// // JSON 문자열을 JSONObject 객체로 변환
-			// JSONObject responseBody = new JSONObject(response.body());
-			//
-			// // "choices" 배열에서 첫 번째 요소를 추출
-			// JSONArray choicesArray = responseBody.getJSONArray("choices");
-			// JSONObject firstChoice = choicesArray.getJSONObject(0);
-			//
-			// // "message" 객체에서 "content" 필드 추출
-			// return firstChoice.getJSONObject("message").getString("content").trim();
 
 			return response.body().trim();
 
