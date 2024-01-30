@@ -9,6 +9,7 @@ import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
 import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse;
+import com.dokebi.dalkom.domain.mileage.dto.MileageStateRequest;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.mileage.exception.MileageAlreadyApplyException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
@@ -48,7 +49,7 @@ public class MileageApplyService {
 	}
 
 	@Transactional
-	public void updateMileageApply(Long milgApplySeq) {
+	public void updateMileageApply(Long milgApplySeq, MileageStateRequest request) {
 
 		MileageApply mileageApply = readByMilgApplySeq(milgApplySeq);
 		User user = mileageApply.getUser();
@@ -57,8 +58,8 @@ public class MileageApplyService {
 		Integer amount = mileageApply.getAmount();
 		Integer totalMileage = user.getMileage() + amount;
 
-		if (approvedState.equals(MileageApplyState.WAITING)) {
-			mileageApply.setApprovedState(MileageApplyState.YES);
+		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING)) {
+			mileageApply.setApprovedState(request.getApprovedState());
 
 			mileageService.createMileageHistory(user, amount, totalMileage,
 				MileageHistoryState.CHARGED);
