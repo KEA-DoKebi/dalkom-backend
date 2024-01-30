@@ -17,6 +17,7 @@ import com.dokebi.dalkom.domain.inquiry.dto.FaqReadListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqReadOneResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqUpdateRequest;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
+import com.dokebi.dalkom.domain.inquiry.exception.FaqNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.repository.FaqRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -51,10 +52,14 @@ public class FaqService {
 	public void updateFaq(Long adminSeq, Long inquirySeq, FaqUpdateRequest request) {
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		Optional<Inquiry> faq = faqRepository.findById(inquirySeq);
-		Inquiry inquiry = faq.get();
-		inquiry.setAdmin(admin);
-		inquiry.setTitle(request.getTitle());
-		inquiry.setContent(request.getContent());
+		if (faq.isPresent()) {
+			Inquiry inquiry = faq.get();
+			inquiry.setAdmin(admin);
+			inquiry.setTitle(request.getTitle());
+			inquiry.setContent(request.getContent());
+		} else {
+			throw new FaqNotFoundException();
+		}
 
 	}
 
