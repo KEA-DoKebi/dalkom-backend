@@ -29,6 +29,7 @@ public class InquiryController {
 
 	// INQUIRY-001 (문의 등록)
 	@PostMapping("/api/inquiry/user")
+	@ResponseStatus(HttpStatus.OK)
 	public Response createInquiry(@LoginUser Long userSeq,
 		@Valid @RequestBody InquiryCreateRequest request) {
 		inquiryService.createInquiry(userSeq, request);

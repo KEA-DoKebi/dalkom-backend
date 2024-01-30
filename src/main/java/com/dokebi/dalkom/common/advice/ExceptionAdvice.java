@@ -11,6 +11,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
+import com.dokebi.dalkom.domain.inquiry.exception.FaqNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
 import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageAlreadyApplyException;
@@ -218,6 +219,12 @@ public class ExceptionAdvice {
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response inquiryNotFoundException() {
 		return Response.failure(-2100, "해당 문의를 찾을 수 없습니다.");
+	}
+
+	@ExceptionHandler(FaqNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response FaqNotFoundException() {
+		return Response.failure(-2101, "해당 FAQ를 찾을 수 없습니다.");
 	}
 
 	// 공지사항
