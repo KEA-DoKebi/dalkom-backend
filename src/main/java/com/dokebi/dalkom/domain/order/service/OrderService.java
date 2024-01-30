@@ -20,11 +20,14 @@ import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailSimpleResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderProductRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
+import com.dokebi.dalkom.domain.order.dto.ReceiverDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
@@ -58,7 +61,7 @@ public class OrderService {
 
 	// 결제 하기
 	@Transactional
-	public void createOrder(OrderCreateRequest request) {
+	public Integer createOrder(Long userSeq, OrderCreateRequest request) {
 
 		int orderTotalPrice = 0;
 
@@ -67,8 +70,8 @@ public class OrderService {
 			orderTotalPrice += calculateProductPrice(orderProduct);
 		}
 
-		// 어떤 사용자인지 조회
-		User user = userService.readUserByUserSeq(request.getReceiverInfoRequest().getUserSeq());
+		// 사용자 정보 조회
+		User user = userService.readUserByUserSeq(userSeq);
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (orderTotalPrice <= user.getMileage()) {
@@ -99,6 +102,7 @@ public class OrderService {
 
 			// 사용자의 마일리지 업데이트
 			user.setMileage(totalMileage);
+			return user.getMileage();
 
 		} else {
 			throw new MileageLackException();
@@ -147,7 +151,17 @@ public class OrderService {
 
 	// 주문별 상세 조회
 	public OrderDetailReadResponse readOrderByOrderSeq(Long orderSeq) {
-		return orderRepository.findOrderDetailByOrdrSeq(orderSeq).orElseThrow(OrderNotFoundException::new);
+		List<OrderDetailDto> orderDetailDtoList = orderDetailService.readOrderDetailDtoByOrderSeq(orderSeq);
+		ReceiverDetailDto receiverDetailDto = orderRepository.findReceiverDetailDtoByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		int totalPrice = 0;
+
+		for (OrderDetailDto orderDetail : orderDetailDtoList) {
+			totalPrice += orderDetail.getTotalPrice();
+		}
+
+		return new OrderDetailReadResponse(orderDetailDtoList,
+			receiverDetailDto, totalPrice);
 	}
 
 	// 주문 전체 조회
@@ -156,6 +170,7 @@ public class OrderService {
 	}
 
 	// 주문 상태 수정
+	@Transactional
 	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
 		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
 
@@ -218,7 +233,6 @@ public class OrderService {
 	}
 
 	// 결제시 비밀번호 인증
-	@Transactional
 	public void authorizeOrderByPassword(Long userSeq, AuthorizeOrderRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 
@@ -227,12 +241,17 @@ public class OrderService {
 		}
 	}
 
+	public OrderDetailSimpleResponse readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
+	}
+
 	/** private **/
 
 	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
 		int amount = orderProduct.getProductAmount();
 		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		return amount * orderProduct.getProductPrice();
+		return amount * product.getPrice();
 	}
 
 	// 주문 상세 만들기
@@ -243,7 +262,7 @@ public class OrderService {
 		Integer amount = orderProduct.getProductAmount();
 
 		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			orderProduct.getProductPrice());
+			product.getPrice() * amount);
 		// 상품 재고 변경
 		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
 			orderProduct.getProductOptionSeq(), amount);

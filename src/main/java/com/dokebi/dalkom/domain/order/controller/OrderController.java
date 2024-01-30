@@ -62,13 +62,12 @@ public class OrderController {
 	// ORDER-005 (결제 하기)
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createOrder(@Valid @RequestBody OrderCreateRequest request) {
-		orderService.createOrder(request);
-		return Response.success();
+	public Response createOrder(@LoginUser Long userSeq, @Valid @RequestBody OrderCreateRequest request) {
+		return Response.success(orderService.createOrder(userSeq, request));
 	}
 
 	//  ORDER-006 (특정 주문 상태 수정)
-	@PutMapping("/api/order/{orderSeq}/state")
+	@PutMapping("/api/order/state/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateOrderState(@PathVariable("orderSeq") Long orderSeq,
 		@Valid @RequestBody OrderStateUpdateRequest request) {
@@ -99,12 +98,19 @@ public class OrderController {
 		return Response.success();
 	}
 
-	//ORDER-010 (결제 비밀번호 인증)
-	@PutMapping("/api/order/authorize")
+	// ORDER-010 (결제 비밀번호 인증)
+	@PostMapping("/api/order/authorize")
 	@ResponseStatus(HttpStatus.OK)
 	public Response authorizeOrderByPassword(@LoginUser Long userSeq,
 		@Valid @RequestBody AuthorizeOrderRequest request) {
 		orderService.authorizeOrderByPassword(userSeq, request);
 		return Response.success();
+	}
+
+	// ORDER-011 (리뷰용 단일 주문상세 조회)
+	@GetMapping("/api/order/detail/{orderDetailSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderDetailByOrderDetailSeq(@PathVariable Long orderDetailSeq) {
+		return Response.success(orderService.readOrderDetailByOrderDetailSeq(orderDetailSeq));
 	}
 }

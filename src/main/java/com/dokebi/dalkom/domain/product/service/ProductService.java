@@ -141,6 +141,7 @@ public class ProductService {
 		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
+	@Transactional
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
@@ -154,7 +155,7 @@ public class ProductService {
 		product.setCompany(request.getCompany());
 		product.setState(request.getState());
 
-		for (OptionAmountDto optionAmountDto : request.getOpitonAmountList()) {
+		for (OptionAmountDto optionAmountDto : request.getOptionAmountList()) {
 			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
 				optionAmountDto.getPrdtOptionSeq());
 
@@ -185,4 +186,5 @@ public class ProductService {
 
 		product.setState(ProductActiveState.ACTIVE);
 	}
+
 }

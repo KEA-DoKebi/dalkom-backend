@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
-import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
@@ -61,18 +60,18 @@ public class OrderFactory {
 		return new Order(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100);
 	}
 
-	public static OrderDetailReadResponse createOrderDetailReadResponse() {
-		return new OrderDetailReadResponse(
-			"Product Name",
-			LocalDateTime.now(),
-			1L,
-			3,
-			150,
-			"Shipped",
-			"John Doe",
-			"555-1234",
-			"123 Main St",
-			"Special instructions for delivery"
-		);
-	}
+	// public static OrderDetailReadResponse createOrderDetailReadResponse() {
+	// 	return new OrderDetailReadResponse(
+	// 		"Product Name",
+	// 		LocalDateTime.now(),
+	// 		1L,
+	// 		3,
+	// 		150,
+	// 		"Shipped",
+	// 		"John Doe",
+	// 		"555-1234",
+	// 		"123 Main St",
+	// 		"Special instructions for delivery"
+	// 	);
+	// }
 }
