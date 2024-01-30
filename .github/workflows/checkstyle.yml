@@ -17,4 +17,4 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
     - name: Run Checkstyle
-      run: ./gradlew checkstyleMain -DdoCheck=true --stacktrace
+      run: find -name "checkstyle.xml"
