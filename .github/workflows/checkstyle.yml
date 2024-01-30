@@ -1,24 +1,24 @@
 name: Checkstyle
 
-on: 
-    push
+on: [push, pull_request]
 
 jobs:
   build:
-    name: Checkstyle
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-
+    - uses: actions/checkout@v2
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
         java-version: '11'
         distribution: 'adopt'
-
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
     - name: Run Checkstyle
-      run: |
-        wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-8.41/checkstyle-8.41-all.jar
-        java -jar checkstyle-8.41-all.jar -c /google_checks.xml ./**/*.java
+      run: ./gradlew checkstyleMain checkstyleTest
+    - name: Archive Checkstyle reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: checkstyle-reports
+        path: build/reports/checkstyle/
