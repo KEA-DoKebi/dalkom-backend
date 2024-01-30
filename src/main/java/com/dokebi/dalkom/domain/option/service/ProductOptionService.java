@@ -26,6 +26,10 @@ public class ProductOptionService {
 		return productOptionRepository.findDetailByOptionCode(optionCode);
 	}
 
+	public String readOptionDetailByPdtOptionSeq(Long prdtOptionSeq) {
+		return productOptionRepository.findDetailByPrdtOptionSeq(prdtOptionSeq);
+	}
+
 	public ProductOption readProductOptionByPrdtOptionSeq(Long prdtOptionSeq) {
 		return productOptionRepository.findProductOptionByPrdtOptionSeq(prdtOptionSeq)
 			.orElseThrow(ProductOptionNotFoundException::new);

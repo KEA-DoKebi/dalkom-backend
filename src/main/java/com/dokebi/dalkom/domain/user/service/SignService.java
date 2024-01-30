@@ -47,7 +47,7 @@ public class SignService {
 		String refreshToken = tokenService.createRefreshToken(subject);
 		// redis에 accessToken : refreshToken 형태로 저장된다.
 		redisService.createValues(accessToken, refreshToken);
-		
+
 		// 로그인 시 refreshToken는 반환되지 않는다.
 		return new LogInUserResponse(accessToken, mileage);
 	}
@@ -64,7 +64,7 @@ public class SignService {
 		String refreshToken = tokenService.createRefreshToken(subject);
 		// redis에 accessToken : refreshToken 형태로 저장된다.
 		redisService.createValues(accessToken, refreshToken);
-		
+
 		// 로그인 시 refreshToken는 반환되지 않는다.
 		return new LogInAdminResponse(accessToken, role);
 	}
@@ -143,8 +143,8 @@ public class SignService {
 		Employee employee = employeeRepository.findByEmpId(request.getEmpId())
 			.orElseThrow(EmployeeNotFoundException::new);
 		if (employee.getName().equals(request.getName()) &&
-		    employee.getEmail().equals(request.getEmail()) &&
-		    employee.getJoinedAt().equals(request.getJoinedAt())) {
+			employee.getEmail().equals(request.getEmail()) &&
+			employee.getJoinedAt().equals(request.getJoinedAt())) {
 			return true;
 		} else {
 			throw new EmployeeNotFoundException();

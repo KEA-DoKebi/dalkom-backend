@@ -64,7 +64,7 @@ class MileageApplyControllerTest {
 		mockMvc.perform(put("/api/milage/ask/{milgApplySeq}", milgApplySeq))
 			.andExpect(status().isOk());
 
-		verify(mileageApplyService).updateMileageApply(eq(milgApplySeq));
+		verify(mileageApplyService).updateMileageApply(eq(milgApplySeq), null);
 	}
 
 	@Test

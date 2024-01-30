@@ -45,4 +45,5 @@ public class SignController {
 	public Response signInAdmin(@Valid @RequestBody LogInAdminRequest request) {
 		return Response.success(signService.signInAdmin(request));
 	}
+
 }

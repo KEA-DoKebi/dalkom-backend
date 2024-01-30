@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
+import com.dokebi.dalkom.domain.mileage.dto.MileageStateRequest;
 import com.dokebi.dalkom.domain.mileage.service.MileageApplyService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 
@@ -29,8 +30,9 @@ public class MileageApplyController {
 	// MILEAGE-003 (마일리지 승인 여부 변경 (관리자))
 	@PutMapping("/api/milage/apply/{milgApplySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq) {
-		mileageApplyService.updateMileageApply(milgApplySeq);
+	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq,
+		@Valid @RequestBody MileageStateRequest request) {
+		mileageApplyService.updateMileageApply(milgApplySeq, request);
 		return Response.success();
 	}
 
