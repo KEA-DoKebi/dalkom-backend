@@ -92,6 +92,3 @@ checkstyle {
     toolVersion = '8.45.1'
     config = resources.text.fromFile('./config/checkstyle/checkstyle.xml')
 }
-
-// Checkstyle 작업이 빌드 프로세스의 일부가 되도록 설정
-check.dependsOn checkstyleMain, checkstyleTest
