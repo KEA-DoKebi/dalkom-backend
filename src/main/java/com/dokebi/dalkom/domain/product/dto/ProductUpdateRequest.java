@@ -12,8 +12,10 @@ import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class ProductUpdateRequest {
 	@NotNull(message = "ProductUpdateRequest categorySeq NotNull 에러")
@@ -41,5 +43,5 @@ public class ProductUpdateRequest {
 	private String state;
 
 	@NotEmpty(message = "ProductUpdateRequest stockByOptionList NotEmpty 에러")
-	private List<OptionAmountDto> opitonAmountList;
+	private List<OptionAmountDto> optionAmountList;
 }
