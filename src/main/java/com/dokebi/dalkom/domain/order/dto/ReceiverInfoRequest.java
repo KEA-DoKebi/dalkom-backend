@@ -1,8 +1,6 @@
 package com.dokebi.dalkom.domain.order.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,9 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReceiverInfoRequest {
-	@NotNull(message = "ReceiverInfoRequest userSeq NotNull 에러")
-	@Positive(message = "ReceiverInfoRequest userSeq Positive 에러")
-	private long userSeq;
 
 	@NotBlank(message = "ReceiverInfoRequest receiverName NotBlank 에러")
 	private String receiverName;
