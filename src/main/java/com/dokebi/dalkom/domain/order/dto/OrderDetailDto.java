@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetailDto {
+	private Long ordrDetailSeq;
 	private String productName;
 	private String imageUrl;
 	private Long optionSeq;

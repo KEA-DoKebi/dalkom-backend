@@ -18,8 +18,8 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
 	List<OrderDetail> findOrderDetailListByOrderSeq(@Param("orderSeq") Long orderSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.order.dto.OrderDetailDto( "
-		+ "od.product.name, od.product.imageUrl, od.productOption.prdtOptionSeq, od.productOption.detail, "
-		+ "od.order.createdAt, od.order.ordrSeq, od.amount, od.price, od.order.orderState) "
+		+ "od.ordrDetailSeq, od.product.name, od.product.imageUrl, od.productOption.prdtOptionSeq, "
+		+ "od.productOption.detail, od.order.createdAt, od.order.ordrSeq, od.amount, od.price, od.order.orderState) "
 		+ "FROM  OrderDetail od WHERE od.order.ordrSeq =:orderSeq")
 	List<OrderDetailDto> findOrderDetailDtoListByOrderSeq(@Param("orderSeq") Long orderSeq);
 
