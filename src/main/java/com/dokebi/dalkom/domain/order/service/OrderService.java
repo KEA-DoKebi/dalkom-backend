@@ -58,7 +58,7 @@ public class OrderService {
 
 	// 결제 하기
 	@Transactional
-	public void createOrder(OrderCreateRequest request) {
+	public void createOrder(Long userSeq, OrderCreateRequest request) {
 
 		int orderTotalPrice = 0;
 
@@ -67,8 +67,8 @@ public class OrderService {
 			orderTotalPrice += calculateProductPrice(orderProduct);
 		}
 
-		// 어떤 사용자인지 조회
-		User user = userService.readUserByUserSeq(request.getReceiverInfoRequest().getUserSeq());
+		// 사용자 정보 조회
+		User user = userService.readUserByUserSeq(userSeq);
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (orderTotalPrice <= user.getMileage()) {
@@ -230,9 +230,10 @@ public class OrderService {
 	/** private **/
 
 	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
 		int amount = orderProduct.getProductAmount();
 		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		return amount * orderProduct.getProductPrice();
+		return amount * product.getPrice();
 	}
 
 	// 주문 상세 만들기
@@ -243,7 +244,7 @@ public class OrderService {
 		Integer amount = orderProduct.getProductAmount();
 
 		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			orderProduct.getProductPrice());
+			product.getPrice() * amount);
 		// 상품 재고 변경
 		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
 			orderProduct.getProductOptionSeq(), amount);

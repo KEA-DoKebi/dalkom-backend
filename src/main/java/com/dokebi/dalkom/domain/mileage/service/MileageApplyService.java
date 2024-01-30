@@ -28,8 +28,14 @@ public class MileageApplyService {
 	private final UserService userService;
 	private final MileageService mileageService;
 
+	@Transactional(readOnly = true)
 	public Page<MileageApplyResponse> readMileageApply(Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApply(pageable);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<MileageApplyResponse> readMileageApplyWaitState(Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApplyWaitState(pageable);
 	}
 
 	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq, Pageable pageable) {
