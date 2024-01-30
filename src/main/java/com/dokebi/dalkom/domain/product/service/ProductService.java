@@ -281,7 +281,7 @@ public class ProductService {
 			JSONObject firstChoice = choicesArray.getJSONObject(0);
 
 			// "message" 객체에서 "content" 필드 추출
-			return firstChoice.getJSONObject("message").getString("content");
+			return firstChoice.getJSONObject("message").getString("content").trim();
 
 		} catch (Exception e) {
 			throw new GptNoResponseException();
