@@ -56,10 +56,6 @@
         <module name="AvoidStarImport"/>
         <module name="TodoComment"/>
         <module name="UpperEll"/>
-        <module name="EmptyBlock">
-            <property name="option" value="text"/>
-            <property name="tokens" value="CLASS_DEF, INTERFACE_DEF"/>
-        </module>
         
     </module>
 </module>
