@@ -63,8 +63,7 @@ public class OrderController {
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createOrder(@LoginUser Long userSeq, @Valid @RequestBody OrderCreateRequest request) {
-		orderService.createOrder(userSeq, request);
-		return Response.success();
+		return Response.success(orderService.createOrder(userSeq, request));
 	}
 
 	//  ORDER-006 (특정 주문 상태 수정)

@@ -61,7 +61,7 @@ public class OrderService {
 
 	// 결제 하기
 	@Transactional
-	public void createOrder(Long userSeq, OrderCreateRequest request) {
+	public Integer createOrder(Long userSeq, OrderCreateRequest request) {
 
 		int orderTotalPrice = 0;
 
@@ -102,6 +102,7 @@ public class OrderService {
 
 			// 사용자의 마일리지 업데이트
 			user.setMileage(totalMileage);
+			return user.getMileage();
 
 		} else {
 			throw new MileageLackException();
