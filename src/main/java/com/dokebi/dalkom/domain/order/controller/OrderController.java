@@ -39,7 +39,7 @@ public class OrderController {
 	}
 
 	// ORDER-002 (주문 확인하기)
-	@GetMapping("/api/order/orderListPage")
+	@PostMapping("/api/order/orderListPage")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderPageByProductSeq(@Valid @RequestBody OrderPageDto orderPageDto) {
 		return Response.success(orderService.readProductDetail(orderPageDto.getOrderList()));
@@ -68,7 +68,7 @@ public class OrderController {
 	}
 
 	//  ORDER-006 (특정 주문 상태 수정)
-	@PutMapping("/api/order/{orderSeq}/state")
+	@PutMapping("/api/order/state/{orderSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateOrderState(@PathVariable("orderSeq") Long orderSeq,
 		@Valid @RequestBody OrderStateUpdateRequest request) {

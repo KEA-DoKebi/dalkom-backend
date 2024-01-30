@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FaqReadListResponse {
+	private long inquirySeq;
 	private LocalDateTime createdAt;
-	private String categoryName;
 	private String title;
+
 }

@@ -41,9 +41,7 @@ public class TokenService {
 	}
 
 	public AuthResponse decryptAccessToken(String accessToken) {
-		System.out.println("@@@");
 		Jws<Claims> claims = validateToken(accessKey, accessToken);
-		System.out.println(claims.toString());
 
 		String subject = jwtHandler.extractToken(claims);
 
