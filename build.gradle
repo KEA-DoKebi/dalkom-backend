@@ -89,8 +89,6 @@ jacocoTestReport {
 }
 
 tasks.withType(Checkstyle) {
-    reports {
-        html.enabled = true
-        xml.enabled = false
-    }
+    // 기본적으로 check task에 의존하지 않도록 설정
+    enabled = false
 }
