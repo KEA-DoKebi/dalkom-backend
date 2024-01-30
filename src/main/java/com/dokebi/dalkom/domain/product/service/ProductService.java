@@ -11,8 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -178,7 +176,7 @@ public class ProductService {
 				negativeReview.add(reviewSimpleDto);
 			}
 		}
-		avgRating = avgRating / listLength;
+		avgRating = (double)Math.round((avgRating / listLength * 100)) / 100;
 
 		//리뷰 샘플 리스트 예외처리
 		if (positiveReview.isEmpty()) {
@@ -265,7 +263,7 @@ public class ProductService {
 
 			//ChatGptController로 요청 전송
 			HttpRequest request = HttpRequest.newBuilder()
-				.uri(new URI("http://localhost:8080/review/summary"))
+				.uri(new URI("http://localhost:8080/api/v1/chatGpt/review/summary"))
 				.header("Content-Type", "application/json")
 				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
 				.build();
@@ -273,15 +271,17 @@ public class ProductService {
 			// 요청 전송 및 응답 수신
 			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-			// JSON 문자열을 JSONObject 객체로 변환
-			JSONObject responseBody = new JSONObject(response.body());
+			// // JSON 문자열을 JSONObject 객체로 변환
+			// JSONObject responseBody = new JSONObject(response.body());
+			//
+			// // "choices" 배열에서 첫 번째 요소를 추출
+			// JSONArray choicesArray = responseBody.getJSONArray("choices");
+			// JSONObject firstChoice = choicesArray.getJSONObject(0);
+			//
+			// // "message" 객체에서 "content" 필드 추출
+			// return firstChoice.getJSONObject("message").getString("content").trim();
 
-			// "choices" 배열에서 첫 번째 요소를 추출
-			JSONArray choicesArray = responseBody.getJSONArray("choices");
-			JSONObject firstChoice = choicesArray.getJSONObject(0);
-
-			// "message" 객체에서 "content" 필드 추출
-			return firstChoice.getJSONObject("message").getString("content").trim();
+			return response.body().trim();
 
 		} catch (Exception e) {
 			throw new GptNoResponseException();
