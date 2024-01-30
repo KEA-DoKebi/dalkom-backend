@@ -88,12 +88,9 @@ jacocoTestReport {
     }
 }
 
-checkstyle {
-    toolVersion = '8.45.1'
-    config = resources.text.fromFile('./config/checkstyle/checkstyle.xml')
-}
-
-tasks.named('check') {
-    dependsOn.remove("checkstyleMain")
-    dependsOn.remove("checkstyleTest")
+tasks.withType(Checkstyle) {
+    reports {
+        html.enabled = true
+        xml.enabled = false
+    }
 }
