@@ -158,10 +158,8 @@ public class OrderService {
 			totalPrice += orderDetail.getTotalPrice();
 		}
 
-		OrderDetailReadResponse orderDetailReadResponse = new OrderDetailReadResponse(orderDetailDtoList,
+		return new OrderDetailReadResponse(orderDetailDtoList,
 			receiverDetailDto, totalPrice);
-
-		return orderDetailReadResponse;
 	}
 
 	// 주문 전체 조회
