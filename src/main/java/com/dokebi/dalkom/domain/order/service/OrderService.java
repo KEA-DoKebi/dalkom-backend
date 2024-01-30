@@ -70,9 +70,6 @@ public class OrderService {
 		// 사용자 정보 조회
 		User user = userService.readUserByUserSeq(userSeq);
 
-		System.out.println("Price >> " + orderTotalPrice);
-		System.out.println("user >> " + user.getMileage());
-		System.out.println(orderTotalPrice <= user.getMileage());
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (orderTotalPrice <= user.getMileage()) {
 
@@ -247,7 +244,7 @@ public class OrderService {
 		Integer amount = orderProduct.getProductAmount();
 
 		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			product.getPrice());
+			product.getPrice() * amount);
 		// 상품 재고 변경
 		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
 			orderProduct.getProductOptionSeq(), amount);
