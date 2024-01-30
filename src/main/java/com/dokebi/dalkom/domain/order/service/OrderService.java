@@ -22,6 +22,7 @@ import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailSimpleResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderProductRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
@@ -237,6 +238,10 @@ public class OrderService {
 		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			throw new PasswordNotValidException();
 		}
+	}
+
+	public OrderDetailSimpleResponse readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
 	}
 
 	/** private **/

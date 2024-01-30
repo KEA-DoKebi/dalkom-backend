@@ -99,12 +99,19 @@ public class OrderController {
 		return Response.success();
 	}
 
-	//ORDER-010 (결제 비밀번호 인증)
+	// ORDER-010 (결제 비밀번호 인증)
 	@PostMapping("/api/order/authorize")
 	@ResponseStatus(HttpStatus.OK)
 	public Response authorizeOrderByPassword(@LoginUser Long userSeq,
 		@Valid @RequestBody AuthorizeOrderRequest request) {
 		orderService.authorizeOrderByPassword(userSeq, request);
 		return Response.success();
+	}
+
+	// ORDER-011 (리뷰용 단일 주문상세 조회)
+	@GetMapping("/api/order/detail/{orderDetailSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderDetailByOrderDetailSeq(@PathVariable Long orderDetailSeq) {
+		return Response.success(orderService.readOrderDetailByOrderDetailSeq(orderDetailSeq));
 	}
 }
