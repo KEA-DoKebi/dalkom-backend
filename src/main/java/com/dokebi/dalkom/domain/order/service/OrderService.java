@@ -20,11 +20,13 @@ import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderProductRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
+import com.dokebi.dalkom.domain.order.dto.ReceiverDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
@@ -146,8 +148,20 @@ public class OrderService {
 	}
 
 	// 주문별 상세 조회
-	public List<OrderDetailReadResponse> readOrderByOrderSeq(Long orderSeq) {
-		return orderRepository.findOrderDetailByOrdrSeq(orderSeq);
+	public OrderDetailReadResponse readOrderByOrderSeq(Long orderSeq) {
+		List<OrderDetailDto> orderDetailDtoList = orderDetailService.readOrderDetailDtoByOrderSeq(orderSeq);
+		ReceiverDetailDto receiverDetailDto = orderRepository.findReceiverDetailDtoByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		int totalPrice = 0;
+
+		for (OrderDetailDto orderDetail : orderDetailDtoList) {
+			totalPrice += orderDetail.getTotalPrice();
+		}
+
+		OrderDetailReadResponse orderDetailReadResponse = new OrderDetailReadResponse(orderDetailDtoList,
+			receiverDetailDto, totalPrice);
+
+		return orderDetailReadResponse;
 	}
 
 	// 주문 전체 조회

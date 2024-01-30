@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
 import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
@@ -36,5 +37,15 @@ public class OrderDetailService {
 		}
 
 		return orderDetailList;
+	}
+
+	public List<OrderDetailDto> readOrderDetailDtoByOrderSeq(Long orderSeq) {
+		List<OrderDetailDto> orderDetailDtoList = orderDetailRepository.findOrderDetailDtoListByOrderSeq(orderSeq);
+
+		if (orderDetailDtoList.isEmpty()) {
+			throw new OrderDetailNotFoundException();
+		}
+
+		return orderDetailDtoList;
 	}
 }

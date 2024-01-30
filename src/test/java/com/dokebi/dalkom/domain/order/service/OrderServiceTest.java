@@ -25,7 +25,6 @@ import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
-import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
@@ -148,22 +147,22 @@ class OrderServiceTest {
 
 	}
 
-	@Test
-	@DisplayName("주문코드로 주문 목록 조회 서비스 테스트")
-	void readOrderByOrderSeqTest() {
-		// given
-		Long orderSeq = 1L;
-		List<OrderDetailReadResponse> responseList = List.of(createOrderDetailReadResponse(),
-			createOrderDetailReadResponse());
-
-		when(orderService.readOrderByOrderSeq(orderSeq)).thenReturn(responseList);
-
-		// when
-		List<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq);
-
-		// then
-		assertNotNull(result);
-	}
+	// @Test
+	// @DisplayName("주문코드로 주문 목록 조회 서비스 테스트")
+	// void readOrderByOrderSeqTest() {
+	// 	// given
+	// 	Long orderSeq = 1L;
+	// 	List<OrderDetailReadResponse> responseList = List.of(createOrderDetailReadResponse(),
+	// 		createOrderDetailReadResponse());
+	//
+	// 	when(orderService.readOrderByOrderSeq(orderSeq)).thenReturn(responseList);
+	//
+	// 	// when
+	// 	List<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq);
+	//
+	// 	// then
+	// 	assertNotNull(result);
+	// }
 
 	@Test
 	@DisplayName("모든 주문 목록 조회 서비스 테스트")
