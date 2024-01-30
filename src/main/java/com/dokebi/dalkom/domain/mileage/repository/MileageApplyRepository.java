@@ -14,6 +14,7 @@ import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 public interface MileageApplyRepository extends JpaRepository<MileageApply, Long> {
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse( "
 		+ " m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) FROM MileageApply m"
+		+ " WHERE m.approvedState = 'Y' OR m.approvedState = 'N'"
 		+ " ORDER BY m.milgApplySeq desc")
 	Page<MileageApplyResponse> findAllMileageApply(Pageable pageable);
 
