@@ -1,9 +1,10 @@
-name: Checkstyle
+name: 컨벤션을 지키자
 
-on: [push, pull_request]
+on: 
+  pull_request
 
 jobs:
-  build:
+  Does_Follow_The_Convention :
     runs-on: ubuntu-latest
 
     steps:
