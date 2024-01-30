@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.review.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +62,7 @@ public class ReviewServiceTest {
 		ReviewCreateRequest request = ReviewCreateRequestFactory.createReviewCreateRequest();
 
 		User user = new User("empId", "password", "name", "email@email.com",
-			"address", "joinedAt", "nickname", 1200000);
+			"address", LocalDate.now(), "nickname", 1200000);
 		Category category = new Category("name", 1L, "imageUrl");
 		Product product = new Product(category, "name", 1000, "info", "imageUrl", "company", "Y");
 		Order order = new Order(user, "rcvrName", "rcvrAddress", "rcvrMobileNum", "rcvrMemo", 100000);
@@ -135,7 +136,7 @@ public class ReviewServiceTest {
 	@Test
 	void updateReviewTest() {
 		// Given
-		User user = new User("empId", "pwd", "name", "email", "address", "joinedAt", "nickname", 1000);
+		User user = new User("empId", "pwd", "name", "email", "address", LocalDate.now(), "nickname", 1000);
 		OrderDetail orderDetail = new OrderDetail();
 		Review review = new Review(user, orderDetail, "content", 5);
 
@@ -159,7 +160,7 @@ public class ReviewServiceTest {
 	void deleteReviewSuccessTest() {
 		// Given
 		Long reviewSeq = 1L;
-		User user = new User("empId", "pwd", "name", "email", "address", "joinedAt", "nickname", 1000);
+		User user = new User("empId", "pwd", "name", "email", "address", LocalDate.now(), "nickname", 1000);
 		OrderDetail orderDetail = new OrderDetail();
 		Review review = new Review(user, orderDetail, "content", 5);
 

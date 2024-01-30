@@ -32,8 +32,8 @@ public class MileageApplyService {
 		return mileageApplyRepository.findAllMileageApply(pageable);
 	}
 
-	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq,Pageable pageable) {
-		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq,pageable);
+	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq, Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq, pageable);
 	}
 
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
@@ -51,7 +51,7 @@ public class MileageApplyService {
 		Integer amount = mileageApply.getAmount();
 		Integer totalMileage = user.getMileage() + amount;
 
-		if (approvedState.equals(MileageApplyState.WAIT)) {
+		if (approvedState.equals(MileageApplyState.WAITING)) {
 			mileageApply.setApprovedState(MileageApplyState.YES);
 
 			mileageService.createMileageHistory(user, amount, totalMileage,
@@ -67,7 +67,7 @@ public class MileageApplyService {
 		User user = userService.readUserByUserSeq(userSeq);
 		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
 		isApprovedStateIsWaitByUserSeq(userSeq);
-		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING);
 		mileageApplyRepository.save(mileageApply);
 
 	}

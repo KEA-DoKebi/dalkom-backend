@@ -21,7 +21,7 @@ public class OrderCartReadResponse {
 
 	private String productName;
 
-	private String prdtOptionName;
+	private String prdtOptionDetail;
 
 	private String imageUrl;
 

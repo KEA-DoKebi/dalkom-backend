@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "FROM Product p "
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
-		+ "WHERE p.category.parentSeq = :categorySeq "
+		+ "WHERE p.category.parentSeq = :categorySeq and p.state != 'N'"
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
 	Page<ProductByCategoryResponse> findProductListByCategory(
 		@Param("categorySeq") Long categorySeq, Pageable pageable);
@@ -57,7 +57,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "FROM Product p "
 		+ "LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
-		+ "WHERE p.category.categorySeq = :categorySeq "
+		+ "WHERE p.category.categorySeq = :categorySeq and p.state != 'N'"
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
 	Page<ProductByCategoryDetailResponse> findProductListByDetailCategory(
 		@Param("categorySeq") Long categorySeq, Pageable pageable);
@@ -69,7 +69,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "JOIN p.category c "
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
-		+ "WHERE c.parentSeq = :categorySeq "
+		+ "WHERE c.parentSeq = :categorySeq and p.state != 'N'"
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
 	Page<ProductMainResponse> findProductListByCategoryAll(@Param("categorySeq") Long categorySeq, Pageable pageable);
 
@@ -78,8 +78,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "FROM Product p "
 		+ "INNER JOIN ProductStock ps "
 		+ "ON p.productSeq = ps.product.productSeq "
-		+ "WHERE (p.name LIKE CONCAT('%', :name, '%')) "
-		+ "OR (p.company LIKE CONCAT('%', :company, '%')) "
+		+ "WHERE ((p.name LIKE CONCAT('%', :name, '%')) "
+		+ "OR (p.company LIKE CONCAT('%', :company, '%')))"
+		+ "AND p.state != 'N'"
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findProductListSearch(@Param("name") String name, @Param("company") String company,
