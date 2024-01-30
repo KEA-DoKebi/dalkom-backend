@@ -29,8 +29,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.ReceiverDetailDto( "
 		+ "o.receiverName, o.receiverMobileNum, o.receiverAddress, o.receiverMemo) "
 		+ "FROM Order o "
-		+ "WHERE o.ordrSeq =:ordrSeq ")
-	Optional<ReceiverDetailDto> findReceiverDetailDtoByOrdrSeq(@Param("ordrSeq") Long orderSeq);
+		+ "WHERE o.ordrSeq = :ordrSeq ")
+	Optional<ReceiverDetailDto> findReceiverDetailDtoByOrdrSeq(@Param("ordrSeq") Long ordrSeq);
 
 	// 전체 주문조회
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse("
