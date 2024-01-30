@@ -39,7 +39,7 @@ public class OrderController {
 	}
 
 	// ORDER-002 (주문 확인하기)
-	@GetMapping("/api/order/orderListPage")
+	@PostMapping("/api/order/orderListPage")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderPageByProductSeq(@Valid @RequestBody OrderPageDto orderPageDto) {
 		return Response.success(orderService.readProductDetail(orderPageDto.getOrderList()));

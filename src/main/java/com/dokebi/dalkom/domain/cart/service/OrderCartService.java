@@ -18,10 +18,12 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class OrderCartService {
 	private final OrderCartRepository orderCartRepository;
 	private final UserService userService;
@@ -42,6 +44,7 @@ public class OrderCartService {
 
 	@Transactional
 	public void deleteOrderCart(OrderCartDeleteRequest request) {
+		log.info(request.toString());
 		try {
 			for (Long orderCartSeq : request.getOrderCartSeqList()) {
 				orderCartRepository.deleteById(orderCartSeq);

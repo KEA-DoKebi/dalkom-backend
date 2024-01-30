@@ -20,6 +20,9 @@ public class JiraService {
 	@Value("${jira.url}")
 	private String jiraUrl;
 
+	@Value("${jira.project.key}")
+	private String projectKey;
+
 	@Value("${jira.user.email}")
 	private String userEmail;
 
@@ -36,7 +39,7 @@ public class JiraService {
 		String inquiryUrl = "http://dalkom.shop/admin/inquiry/order/" + request.getInquirySeq();
 		JSONObject issueDetails = new JSONObject();
 		JSONObject fields = new JSONObject();
-		fields.put("project", new JSONObject().put("key", "DOK"));
+		fields.put("project", new JSONObject().put("key", projectKey));
 		fields.put("issuetype", new JSONObject().put("name", "문의사항"));
 		fields.put("summary", "[달콤샵 문의접수] " + request.getSummary());
 
