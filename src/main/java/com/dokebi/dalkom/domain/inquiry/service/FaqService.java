@@ -63,4 +63,8 @@ public class FaqService {
 
 	}
 
+	@Transactional
+	public void deleteFaq(Long inquirySeq) {
+		faqRepository.deleteById(inquirySeq);
+	}
 }
