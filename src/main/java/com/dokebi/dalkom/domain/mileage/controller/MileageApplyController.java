@@ -58,11 +58,17 @@ public class MileageApplyController {
 		return Response.success(mileageApplyService.readMileageAskSearch(email, nickname, name, pageable));
 	}
 
-	// MILEAGE-007 (마일리지 신청 조회 W인 값들만 조회(유저))
+	// MILEAGE-007 (마일리지 신청 조회 대기중(W)인 값들만 조회(사용자))
 	@GetMapping("/api/mileage/apply/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageApplyByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
 		return Response.success(mileageApplyService.readMileageApplyByUserSeq(userSeq, pageable));
 	}
 
+	// MILEAGE-008 (마일리지 신청 조회 - 대기중(W)인 값 조회 (관리자))
+	@GetMapping("/api/mileage/apply/wait")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readMileageApplyWaitState(Pageable pageable) {
+		return Response.success(mileageApplyService.readMileageApplyWaitState(pageable));
+	}
 }
