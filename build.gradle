@@ -105,7 +105,7 @@ task checkstyleMain(type: Checkstyle) {
     source 'src/main/java'
     include '**/*.java'
     exclude '**/generated/**'
-    classpath = files()
+    classpath = sourceSets.main.compileClasspath
     configFile = file('config/checkstyle/checkstyle.xml')
     enabled = true // Enable this task explicitly
 }
