@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
@@ -85,6 +86,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findProductListSearch(@Param("name") String name, @Param("company") String company,
 		Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto( "
+		+ "p.name, p.imageUrl, p.price) "
+		+ "FROM Product p WHERE p.productSeq = :productSeq")
+	Optional<ProductCompareDetailDto> readProductCompareDetailByProductSeq(@Param("productSeq") Long productSeq);
 
 	// 다른 Domain Service에서 사용하도록 하는 메소드
 	Optional<Product> findProductByProductSeq(Long productSeq);
