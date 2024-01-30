@@ -3,10 +3,12 @@ package com.dokebi.dalkom.domain.inquiry.controller;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
@@ -24,6 +26,7 @@ public class FaqController {
 
 	// FAQ-001 (FAQ 상세 조회)
 	@GetMapping("/api/faq/{inquirySeq}")
+	@ResponseStatus(HttpStatus.OK)
 	public Response readFaqByInquirySeq(@PathVariable Long inquirySeq) {
 
 		return Response.success(faqService.readFaqByInquirySeq(inquirySeq));
@@ -31,6 +34,7 @@ public class FaqController {
 
 	// FAQ-002 (FAQ 전체 조회 )
 	@GetMapping("/api/faq")
+	@ResponseStatus(HttpStatus.OK)
 	public Response readFaqList(Pageable pageable) {
 
 		return Response.success(faqService.readFaqList(pageable));
@@ -38,6 +42,7 @@ public class FaqController {
 
 	// FAQ-003 (FAQ 등록)
 	@PostMapping("/api/faq")
+	@ResponseStatus(HttpStatus.OK)
 	public Response createFaq(@LoginUser Long adminSeq,
 		@Valid @RequestBody FaqCreateRequest request) {
 		faqService.createFaq(adminSeq, request);
