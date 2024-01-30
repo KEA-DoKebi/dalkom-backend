@@ -43,5 +43,5 @@ public class ProductUpdateRequest {
 	private String state;
 
 	@NotEmpty(message = "ProductUpdateRequest stockByOptionList NotEmpty 에러")
-	private List<OptionAmountDto> opitonAmountList;
+	private List<OptionAmountDto> optionAmountList;
 }

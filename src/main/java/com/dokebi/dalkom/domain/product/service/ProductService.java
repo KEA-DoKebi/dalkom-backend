@@ -154,7 +154,7 @@ public class ProductService {
 		product.setCompany(request.getCompany());
 		product.setState(request.getState());
 
-		for (OptionAmountDto optionAmountDto : request.getOpitonAmountList()) {
+		for (OptionAmountDto optionAmountDto : request.getOptionAmountList()) {
 			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
 				optionAmountDto.getPrdtOptionSeq());
 
