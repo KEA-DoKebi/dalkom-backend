@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.inquiry.service;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqCreateRequest;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqReadListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqReadOneResponse;
+import com.dokebi.dalkom.domain.inquiry.dto.FaqUpdateRequest;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.inquiry.repository.FaqRepository;
 
@@ -44,6 +47,15 @@ public class FaqService {
 		return faqRepository.findFaqList(pageable);
 	}
 
-	// public Page<InquiryListByUserResponse> readFaq(Pageable pageable) {
-	// }
+	@Transactional
+	public void updateFaq(Long adminSeq, Long inquirySeq, FaqUpdateRequest request) {
+		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
+		Optional<Inquiry> faq = faqRepository.findById(inquirySeq);
+		Inquiry inquiry = faq.get();
+		inquiry.setAdmin(admin);
+		inquiry.setTitle(request.getTitle());
+		inquiry.setContent(request.getContent());
+
+	}
+
 }

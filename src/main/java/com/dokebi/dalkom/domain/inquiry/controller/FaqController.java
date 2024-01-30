@@ -7,12 +7,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqCreateRequest;
+import com.dokebi.dalkom.domain.inquiry.dto.FaqUpdateRequest;
 import com.dokebi.dalkom.domain.inquiry.service.FaqService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 
@@ -46,6 +48,16 @@ public class FaqController {
 	public Response createFaq(@LoginUser Long adminSeq,
 		@Valid @RequestBody FaqCreateRequest request) {
 		faqService.createFaq(adminSeq, request);
+		return Response.success();
+	}
+
+	// FAQ-004 (FAQ 수정)
+	@PutMapping("/api/faq/{inquirySeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response updateFaq(@LoginUser Long adminSeq,
+		@PathVariable Long inquirySeq,
+		@Valid @RequestBody FaqUpdateRequest request) {
+		faqService.updateFaq(adminSeq, inquirySeq, request);
 		return Response.success();
 	}
 
