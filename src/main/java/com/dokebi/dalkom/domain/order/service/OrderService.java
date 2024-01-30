@@ -125,9 +125,14 @@ public class OrderService {
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
 
+			//option detail 조회
+
+			String optionDetail = productOptionService.readOptionDetailByPdtOptionSeq(optionSeq);
+
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto(productSeq, optionSeq, productAmount,
-				productInfo.getName(), productInfo.getPrice(), productInfo.getPrice() * order.getProductAmount());
+				productInfo.getName(), productInfo.getPrice(), optionDetail,
+				productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);
 		});
