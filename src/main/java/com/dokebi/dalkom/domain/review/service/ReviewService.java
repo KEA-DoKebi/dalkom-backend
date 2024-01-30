@@ -87,11 +87,6 @@ public class ReviewService {
 
 	public List<ReviewSimpleDto> readReviewSimpleByProductSeq(Long productSeq) {
 		List<ReviewSimpleDto> reviewSimpleDtoList = reviewRepository.readReviewSimpleByProductSeq(productSeq);
-
-		if (reviewSimpleDtoList.isEmpty()) {
-			throw new ReviewNotFoundException();
-		}
-
 		return reviewSimpleDtoList;
 	}
 }
