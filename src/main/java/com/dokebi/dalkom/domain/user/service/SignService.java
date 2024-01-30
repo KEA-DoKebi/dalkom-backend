@@ -30,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class SignService {
-
 	private final TokenService tokenService;
 	private final RedisService redisService;
 	private final AdminService adminService;
@@ -48,6 +47,7 @@ public class SignService {
 		String refreshToken = tokenService.createRefreshToken(subject);
 		// redis에 accessToken : refreshToken 형태로 저장된다.
 		redisService.createValues(accessToken, refreshToken);
+		
 		// 로그인 시 refreshToken는 반환되지 않는다.
 		return new LogInUserResponse(accessToken, mileage);
 	}
@@ -64,6 +64,7 @@ public class SignService {
 		String refreshToken = tokenService.createRefreshToken(subject);
 		// redis에 accessToken : refreshToken 형태로 저장된다.
 		redisService.createValues(accessToken, refreshToken);
+		
 		// 로그인 시 refreshToken는 반환되지 않는다.
 		return new LogInAdminResponse(accessToken, role);
 	}
@@ -94,7 +95,7 @@ public class SignService {
 
 		LocalDateTime currentDateTime = LocalDateTime.now();
 		LocalDate startOfYear = LocalDate.of(currentDateTime.getYear(), 1, 1);
-		//15일 구분용
+		// 15일 구분용
 		LocalDate joinedDate = request.getJoinedAt();
 		LocalDate midDate = LocalDate.of(joinedDate.getYear(), joinedDate.getMonth(), 15);
 		if (joinedDate.isBefore(midDate)) {
@@ -137,15 +138,13 @@ public class SignService {
 		return signUpResponse;
 	}
 
-	//임직원 데이터 조회, 일치여부 확인
+	// 임직원 데이터 조회, 일치여부 확인
 	private boolean checkEmployee(SignUpRequest request) {
-
 		Employee employee = employeeRepository.findByEmpId(request.getEmpId())
 			.orElseThrow(EmployeeNotFoundException::new);
-		if (
-			employee.getName().equals(request.getName()) &&
-				employee.getEmail().equals(request.getEmail()) &&
-				employee.getJoinedAt().equals(request.getJoinedAt())) {
+		if (employee.getName().equals(request.getName()) &&
+		    employee.getEmail().equals(request.getEmail()) &&
+		    employee.getJoinedAt().equals(request.getJoinedAt())) {
 			return true;
 		} else {
 			throw new EmployeeNotFoundException();
