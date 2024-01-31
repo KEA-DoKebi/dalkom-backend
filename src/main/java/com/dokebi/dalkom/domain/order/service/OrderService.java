@@ -206,7 +206,7 @@ public class OrderService {
 		if (whenCancel.contains(order.getOrderState())) {
 			cancelOrder(reviewList, user, order);
 		} else if (whenRefund.contains(order.getOrderState())) {
-			refundOrder(reviewList, order);
+			order.setOrderState(OrderState.REFUND_CONFIRMED);
 		} else {
 			throw new InvalidOrderStateException();
 		}
@@ -256,30 +256,6 @@ public class OrderService {
 
 		// 주문 상태 변경
 		order.setOrderState(OrderState.CANCELED);
-	}
-
-	// 주문 취소 - 환불 처리
-	private void refundOrder(List<Review> reviewList, Order order) {
-
-		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
-		// TODO 환불의 경우 일단 상품을 받았으니 리뷰를 남겨둘지 고려
-		for (Review review : reviewList) {
-			reviewService.deleteReview(review.getReviewSeq());
-		}
-
-		/*
-		// 환불 후 금액
-		Integer amountChanged = user.getMileage() + order.getTotalPrice();
-
-		// 마일리지 복구
-		mileageService.createMileageHistory(
-			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
-
-		user.setMileage(amountChanged);
-		*/
-
-		// 주문 상태 변경
-		order.setOrderState(OrderState.REFUND_CONFIRMED);
 	}
 }
 
