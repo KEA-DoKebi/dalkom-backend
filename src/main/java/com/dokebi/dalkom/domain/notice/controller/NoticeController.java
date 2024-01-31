@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class NoticeController {
-
 	private final NoticeService noticeService;
 
 	// NOTICE-001 (특정 공지 조회)
@@ -69,8 +68,8 @@ public class NoticeController {
 	// NOTICE-006 (공지 검색)
 	@GetMapping("/api/notice/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readNoticeListBySearch(@RequestParam String nickname, @RequestParam String title,
-		Pageable pageable) {
+	public Response readNoticeListBySearch(@RequestParam String nickname,
+		@RequestParam String title, Pageable pageable) {
 		return Response.success(noticeService.readNoticeListBySearch(nickname, title, pageable));
 	}
 }

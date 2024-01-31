@@ -60,6 +60,7 @@ public class FaqController {
 		return Response.success();
 	}
 
+	// FAQ-005 (FAQ 삭제)
 	@DeleteMapping("/api/faq/{inquirySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteFaq(@PathVariable Long inquirySeq) {
