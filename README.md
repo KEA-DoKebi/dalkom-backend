@@ -1,7 +1,7 @@
 # 달콤한 복지, 임직원 전용 쇼핑몰 🍭DalKom.shop
 
 <center>
-    <img src="./dalkom.shop.png" alt="dalkom" style="zoom:100%;" align="center"/>
+    <img src="./dalkom.shop.png" alt="dalkom" style="zoom:100%;" align="center"/>
 </center>
 
 <br/>
