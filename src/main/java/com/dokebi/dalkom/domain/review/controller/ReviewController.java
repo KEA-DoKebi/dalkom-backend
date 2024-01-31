@@ -35,17 +35,12 @@ public class ReviewController {
 		return Response.success(reviewService.readReviewListByProduct(productSeq, pageable));
 	}
 
-	// REVIEWS-002 (사용자별 리뷰 조회) - 입력받은 userSeq의 리뷰 목록 반환
+	// REVIEWS-002 (사용자별 리뷰 목록 조회) - 입력받은 userSeq의 리뷰 목록 반환
 	@GetMapping("/api/review/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByUser(@LoginUser Long userSeq, Pageable pageable) {
 		return Response.success(reviewService.readReviewListByUser(userSeq, pageable));
 	}
-
-	//public Response readReviewByUser(HttpServletRequest request) {
-	//	String userSeq = (String)request.getAttribute("userSeq");
-	//	return Response.success(reviewService.readReviewListByUser(Long.valueOf(userSeq)));
-	//}
 
 	// REVIEWS-003 (리뷰 작성)
 	@PostMapping("/api/review/user")
@@ -71,7 +66,6 @@ public class ReviewController {
 	@DeleteMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteReview(@PathVariable Long reviewSeq) {
-
 		reviewService.deleteReview(reviewSeq);
 		return Response.success();
 	}

@@ -1,6 +1,8 @@
 package com.dokebi.dalkom.domain.product.service;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -22,7 +24,7 @@ import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.chat.dto.ChatGptMessage;
 import com.dokebi.dalkom.domain.chat.dto.ChatGptRequest;
-import com.dokebi.dalkom.domain.chat.exception.GptNoResponseException;
+import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
 import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
@@ -236,14 +238,14 @@ public class ProductService {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.SOLDOUT);
+		product.setState(ProductActiveState.SOLDOUT.getState());
 	}
 
 	public void activeProductByProductSeq(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.ACTIVE);
+		product.setState(ProductActiveState.ACTIVE.getState());
 	}
 
 	/** private method **/
@@ -274,10 +276,13 @@ public class ProductService {
 
 			return response.body().trim();
 
-		} catch (Exception e) {
-			throw new GptNoResponseException();
+		} catch (URISyntaxException | IOException e) {
+			throw new GptResponseFailException();
+		} catch (InterruptedException e) {
+			// 인터럽트 상태를 복원
+			Thread.currentThread().interrupt();
+			throw new GptResponseFailException();
 		}
-
 	}
 
 }

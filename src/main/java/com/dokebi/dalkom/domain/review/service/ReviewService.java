@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.review.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,17 +71,6 @@ public class ReviewService {
 		} else {
 			throw new ReviewNotFoundException();
 		}
-	}
-
-	public List<Review> readReviewByOrderDetailList(List<OrderDetail> orderDetailList) {
-		List<Review> reviewList = new ArrayList<>();
-
-		for (OrderDetail orderDetail : orderDetailList) {
-			reviewRepository.findReviewListByOrderDetailSeq(orderDetail.getOrdrDetailSeq())
-				.ifPresent(reviewList::add);
-		}
-
-		return reviewList;
 	}
 
 	public List<ReviewSimpleDto> readReviewSimpleByProductSeq(Long productSeq) {

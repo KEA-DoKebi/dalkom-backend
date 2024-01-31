@@ -1,7 +1,6 @@
 package com.dokebi.dalkom.domain.notice.service;
 
-import java.util.Optional;
-
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -63,18 +62,16 @@ public class NoticeService {
 
 	@Transactional
 	public void deleteNotice(Long noticeSeq) {
-
-		Optional<Notice> notice = noticeRepository.findById(noticeSeq);
-		if (notice.isPresent()) {
+		try {
 			noticeRepository.deleteById(noticeSeq);
-		} else {
+		} catch (EmptyResultDataAccessException e) {
 			throw new NoticeNotFoundException();
 		}
 	}
 
 	@Transactional
-	public Page<NoticeListResponse> readNoticeListBySearch(String nickName,String title ,Pageable pageable) {
+	public Page<NoticeListResponse> readNoticeListBySearch(String nickName, String title, Pageable pageable) {
 
-		return noticeRepository.findNoticeListByNickNameOrTitle(nickName,title,pageable);
+		return noticeRepository.findNoticeListByNickNameOrTitle(nickName, title, pageable);
 	}
 }

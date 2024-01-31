@@ -1,7 +1,8 @@
 package com.dokebi.dalkom.domain.admin.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,6 +19,7 @@ import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
+import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
@@ -36,12 +38,11 @@ public class AdminService {
 	private final EmployeeRepository employeeRepository;
 
 	public Page<AdminDto> readAdminList(Pageable pageable) {
-		List<Admin> adminList = adminRepository.findAll();
-		List<AdminDto> adminDtoList = new ArrayList<>();
-		for (Admin admin : adminList) {
-			AdminDto adminDto = AdminDto.toDto(admin);
-			adminDtoList.add(adminDto);
-		}
+		Page<Admin> adminPage = adminRepository.findAll(pageable);
+
+		List<AdminDto> adminDtoList = adminPage.stream()
+			.map(AdminDto::toDto)
+			.collect(Collectors.toList());
 
 		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
 	}
@@ -58,7 +59,7 @@ public class AdminService {
 	}
 
 	@Transactional
-	public SignUpResponse createUser(SignUpRequest request) {
+	public void createUser(SignUpRequest request) {
 		SignUpResponse signUpResponse = new SignUpResponse();
 
 		// 임직원 테이블에 입력한 정보가 있는지 확인
@@ -78,8 +79,16 @@ public class AdminService {
 		} else {
 			signUpResponse.setMessage("임직원 데이터가 존재하지 않음");
 		}
+	}
 
-		return signUpResponse;
+	@Transactional
+	public void updateUser(Long userSeq) {
+		Optional<User> optionalUser = userRepository.findById(userSeq);
+		optionalUser.ifPresent(user -> {
+			// 값이 존재할 때만 실행됨
+			user.setState("N");
+		});
+
 	}
 
 	public Admin readAdminByAdminSeq(Long adminSeq) {
@@ -91,14 +100,13 @@ public class AdminService {
 	}
 
 	public Page<AdminDto> readAdminListSearch(String adminId, String name, String nickname, Pageable pageable) {
-		Page<Admin> adminList = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
-		List<AdminDto> adminDtoList = new ArrayList<>();
-		for (Admin admin : adminList) {
-			AdminDto adminDto = AdminDto.toDto(admin);
-			adminDtoList.add(adminDto);
-		}
+		Page<Admin> adminPage = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
 
-		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
+		List<AdminDto> adminDtoList = adminPage.stream()
+			.map(AdminDto::toDto)
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(adminDtoList, pageable, adminPage.getTotalElements());
 	}
 
 	private void validateNickname(String nickname) {
