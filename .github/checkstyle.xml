@@ -24,7 +24,6 @@
         <!-- 클래스, 인터페이스, 메서드, 생성자, 테스트 클래스 이름 패턴 검사 -->
         <module name="TypeName">
             <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
-            <property name="violationMessage" value="Invalid name pattern"/>
         </module>
 
         <!-- 상수명은 대문자와 언더스코어로 구성되어야 한다. -->
