@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.user.dto.ReadUserSelfDetailResponse;
 import com.dokebi.dalkom.domain.user.dto.UserListResponse;
 import com.dokebi.dalkom.domain.user.dto.UserUpdateRequest;
@@ -26,18 +26,21 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
+	private final PasswordEncoder passwordEncoder;
+
 	@Transactional
-	public Response updateUser(Long userSeq, UserUpdateRequest request) {
-		try {
-			if (request.getPassword() != null)
-				updateUserWithPassword(userSeq, request);
-			else
-				updateUserWithoutPassword(userSeq, request);
-			return Response.success();
-		} catch (UserNicknameAlreadyExistsException e) {
-			// 닉네임 중복 예외 처리
-			return Response.failure(0, e.getMessage());
+	public void updateUser(Long userSeq, UserUpdateRequest request) {
+		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
+
+		//변화 없는것도 그대로 전송하기로 하지 않았나?
+		if (request.getPassword() != null && !request.getPassword().isBlank()) {
+			request.encodedPassword(passwordEncoder.encode(request.getPassword()));
+			user.setPassword(request.getPassword());
 		}
+
+		validateNickname(request.getNickname());
+		user.setNickname(request.getNickname());
+		user.setAddress(request.getAddress());
 	}
 
 	@Transactional
@@ -55,7 +58,7 @@ public class UserService {
 
 	private void validateNickname(String nickname) {
 		if (userRepository.existsByNickname(nickname)) {
-			throw new UserNicknameAlreadyExistsException(nickname + "은 이미 사용중입니다.");
+			throw new UserNicknameAlreadyExistsException(nickname);
 		}
 	}
 
