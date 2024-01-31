@@ -17,9 +17,17 @@ public enum ProductActiveState {
 	private final String state;
 	private final String name;
 
-	ProductActiveState(String state, String message) {
+	ProductActiveState(String state, String name) {
 		this.state = state;
-		this.name = message;
+		this.name = name;
 	}
 
+	public static String getNameByState(String state) {
+		for (ProductActiveState productActiveState : ProductActiveState.values()) {
+			if (productActiveState.state.equals(state)) {
+				return productActiveState.name;
+			}
+		}
+		return null; // 또는 기본값
+	}
 }

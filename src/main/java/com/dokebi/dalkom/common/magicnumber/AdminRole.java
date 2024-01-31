@@ -11,9 +11,17 @@ public enum AdminRole {
 	private final String state;
 	private final String name;
 
-	AdminRole(String state, String message) {
+	AdminRole(String state, String name) {
 		this.state = state;
-		this.name = message;
+		this.name = name;
 	}
 
+	public static String getNameByState(String state) {
+		for (AdminRole adminRole : AdminRole.values()) {
+			if (adminRole.state.equals(state)) {
+				return adminRole.name;
+			}
+		}
+		return null; // 또는 기본값
+	}
 }

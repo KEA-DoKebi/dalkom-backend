@@ -18,9 +18,9 @@ public enum OrderState {
 	private final String state;
 	private final String name;
 
-	OrderState(String state, String message) {
+	OrderState(String state, String name) {
 		this.state = state;
-		this.name = message;
+		this.name = name;
 	}
 
 	public static String getNameByState(String state) {

@@ -14,9 +14,17 @@ public enum MileageHistoryState {
 	private final String state;
 	private final String name;
 
-	MileageHistoryState(String state, String message) {
+	MileageHistoryState(String state, String name) {
 		this.state = state;
-		this.name = message;
+		this.name = name;
 	}
 
+	public static String getNameByState(String state) {
+		for (MileageHistoryState mileageHistoryState : MileageHistoryState.values()) {
+			if (mileageHistoryState.state.equals(state)) {
+				return mileageHistoryState.name;
+			}
+		}
+		return null; // 또는 기본값
+	}
 }
