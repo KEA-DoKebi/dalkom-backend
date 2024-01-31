@@ -35,7 +35,6 @@ public class MileageService {
 
 	// 유저별 마일리지 내역 조회 서비스
 	public Page<MileageHistoryResponse> readMileageHistoryByUserSeq(Long userSeq, Pageable pageable) {
-
 		return mileageHistoryRepository.findMileageHistoryListByUserSeq(userSeq, pageable);
 	}
 
