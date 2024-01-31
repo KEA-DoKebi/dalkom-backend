@@ -1,7 +1,6 @@
 package com.dokebi.dalkom.domain.review.service;
 
-import java.util.Optional;
-
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -65,10 +64,9 @@ public class ReviewService {
 	@Transactional
 	public void deleteReview(Long reviewSeq) {
 
-		Optional<Review> review = reviewRepository.findById(reviewSeq);
-		if (review.isPresent()) {
+		try {
 			reviewRepository.deleteById(reviewSeq);
-		} else {
+		} catch (EmptyResultDataAccessException e) {
 			throw new ReviewNotFoundException();
 		}
 	}
