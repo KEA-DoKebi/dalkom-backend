@@ -32,13 +32,14 @@ public class UserService {
 	@Transactional
 	public Response updateUser(Long userSeq, UserUpdateRequest request) {
 		try {
-			if (request.getPassword() != null && !request.getPassword().equals("")) {
+			if (request.getPassword() != null) {
 				request.encodedPassword(passwordEncoder.encode(request.getPassword()));
 				updateUserWithPassword(userSeq, request);
 			} else
 				updateUserWithoutPassword(userSeq, request);
 			return Response.success();
 		} catch (UserNicknameAlreadyExistsException e) {
+			// 닉네임 중복 예외 처리
 			return Response.failure(0, e.getMessage());
 		}
 	}
