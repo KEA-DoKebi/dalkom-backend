@@ -30,12 +30,12 @@ public class FaqService {
 	private final AdminService adminService;
 	private final CategoryService categoryService;
 	private final FaqRepository faqRepository;
-	private static final long faqCategorySeq = 38L;
+	private static final long FAQ_CATEGORY_SEQ = 38L;
 
 	@Transactional
 	public void createFaq(Long adminSeq, FaqCreateRequest request) {
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
-		Category category = categoryService.readCategoryByCategorySeq(faqCategorySeq);
+		Category category = categoryService.readCategoryByCategorySeq(FAQ_CATEGORY_SEQ);
 		Inquiry inquiry = new Inquiry(category, admin, request.getTitle(), request.getContent(), InquiryAnswerState.NO);
 		faqRepository.save(inquiry);
 

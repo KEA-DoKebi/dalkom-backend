@@ -11,7 +11,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
-import com.dokebi.dalkom.domain.chat.exception.GptNoResponseException;
+import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
 import com.dokebi.dalkom.domain.inquiry.exception.FaqNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
 import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
@@ -236,7 +236,7 @@ public class ExceptionAdvice {
 	}
 
 	// ChatGPT
-	@ExceptionHandler(GptNoResponseException.class)
+	@ExceptionHandler(GptResponseFailException.class)
 	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) //503
 	public Response gptNoResponseException() {
 		return Response.failure(-2300, "리뷰 요약을 생성할 수 없습니다.");
