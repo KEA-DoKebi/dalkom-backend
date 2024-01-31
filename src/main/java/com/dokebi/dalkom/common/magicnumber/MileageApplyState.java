@@ -17,4 +17,13 @@ public enum MileageApplyState {
 		this.name = message;
 	}
 
+	public static String getNameByState(String state) {
+		for (MileageApplyState applyState : MileageApplyState.values()) {
+			if (applyState.state.equals(state)) {
+				return applyState.name;
+			}
+		}
+		return null; // 또는 기본값
+	}
+
 }

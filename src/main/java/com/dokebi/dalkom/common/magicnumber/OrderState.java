@@ -23,6 +23,15 @@ public enum OrderState {
 		this.name = message;
 	}
 
+	public static String getNameByState(String state) {
+		for (OrderState orderState : OrderState.values()) {
+			if (orderState.state.equals(state)) {
+				return orderState.name;
+			}
+		}
+		return null; // 또는 기본값
+	}
+
 	// "11" : 주문확인, "12" : 배송준비, "13" : 배송시작, "14" : 배송완료, "15" : 구매확정,
 	// "21" : 주문취소,
 	// "31" : 반품접수, "32" : 반송시작, "33" : 반송완료, "34" : 반품완료,
