@@ -22,7 +22,6 @@ public class ProductOptionController {
 	@GetMapping("/api/option")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOptionListByCategory() {
-
 		return Response.success(productOptionService.readOptionList());
 	}
 
@@ -30,7 +29,6 @@ public class ProductOptionController {
 	@GetMapping("/api/option/{optionCode}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOptionListByCategory(@PathVariable String optionCode) {
-
 		return Response.success(productOptionService.readOptionDetailList(optionCode));
 	}
 }
