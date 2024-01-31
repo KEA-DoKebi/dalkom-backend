@@ -32,7 +32,6 @@ public class NoticeController {
 	@GetMapping("/api/notice/{noticeSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readNotice(@PathVariable Long noticeSeq) {
-
 		return Response.success(noticeService.readNotice(noticeSeq));
 	}
 
@@ -40,7 +39,6 @@ public class NoticeController {
 	@DeleteMapping("/api/notice/{noticeSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteNotice(@PathVariable Long noticeSeq) {
-
 		noticeService.deleteNotice(noticeSeq);
 		return Response.success();
 	}
@@ -49,7 +47,6 @@ public class NoticeController {
 	@PutMapping("/api/notice/{noticeSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateNotice(@PathVariable Long noticeSeq, @Valid @RequestBody NoticeUpdateRequest request) {
-
 		noticeService.updateNotice(noticeSeq, request);
 		return Response.success();
 	}
@@ -58,7 +55,6 @@ public class NoticeController {
 	@PostMapping("/api/notice")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createNotice(@LoginUser Long adminSeq, @Valid @RequestBody NoticeCreateRequest request) {
-
 		noticeService.createNotice(adminSeq, request);
 		return Response.success();
 	}
@@ -67,14 +63,14 @@ public class NoticeController {
 	@GetMapping("/api/notice")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readNoticeList(Pageable pageable) {
-
 		return Response.success(noticeService.readNoticeList(pageable));
 	}
 
 	// NOTICE-006 (공지 검색)
-	@GetMapping ("/api/notice/search")
+	@GetMapping("/api/notice/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readNoticeListBySearch(@RequestParam String nickname,@RequestParam String title,Pageable pageable){
-		return Response.success(noticeService.readNoticeListBySearch(nickname,title,pageable));
+	public Response readNoticeListBySearch(@RequestParam String nickname, @RequestParam String title,
+		Pageable pageable) {
+		return Response.success(noticeService.readNoticeListBySearch(nickname, title, pageable));
 	}
 }
