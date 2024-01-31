@@ -21,15 +21,10 @@
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
         </module>
 
-        <!-- 클래스명과 인터페이스명에는 대문자로 시작하는 카멜케이스를 사용한다. -->
+        <!-- 클래스, 인터페이스, 메서드, 생성자, 테스트 클래스 이름 패턴 검사 -->
         <module name="TypeName">
             <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
-        </module>
-
-        <!-- 테스트 클래스는 "Test"로 끝나야 한다. -->
-        <module name="TypeName">
-            <property name="format" value=".*Test$"/>
-            <message key="name.invalidPattern" value="Test class name must end with 'Test'"/>
+            <property name="violationMessage" value="Invalid name pattern"/>
         </module>
 
         <!-- 상수명은 대문자와 언더스코어로 구성되어야 한다. -->
@@ -41,28 +36,10 @@
         <module name="LocalVariableName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
-        <module name="MemberName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
-        </module>
-        <module name="ParameterName">
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
-        </module>
 
         <!-- 모든 이름에 대하여 1글자로 구성된 이름을 사용할 수 없다. -->
-        <module name="LocalVariableName">
-            <property name="format" value="^[a-zA-Z][a-zA-Z0-9]{1,}$"/>
-        </module>
-        <module name="MemberName">
-            <property name="format" value="^[a-zA-Z][a-zA-Z0-9]{1,}$"/>
-        </module>
-        <module name="ParameterName">
-            <property name="format" value="^[a-zA-Z][a-zA-Z0-9]{1,}$"/>
-        </module>
-        <module name="TypeName">
-            <property name="format" value="^[A-Z][a-zA-Z0-9]{1,}$"/>
-        </module>
-        <module name="ConstantName">
-            <property name="format" value="^[A-Z][A-Z0-9]{1,}$"/>
+        <module name="NameLength">
+            <property name="min" value="2"/>
         </module>
 
         <!-- 탑레벨 클래스는 소스 파일에 단 하나만 작성해야 한다. -->
@@ -124,10 +101,6 @@
             <property name="allowEmptyLoops" value="true"/>
         </module>
 
-        <module name="WhitespaceAround">
-            <property name="tokens" value="LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO"/>
-        </module>
-
         <module name="TypecastParenPad">
             <property name="option" value="nospace"/>
         </module>
@@ -151,10 +124,6 @@
 
         <module name="GenericWhitespace">
         </module>
-
-        <!-- 변수에 하드코딩을 해서는 안된다. 필요한 경우에는 상수를 사용해야 한다. - 이 규칙은 Checkstyle로 직접 지정할 수 없습니다. -->
-        <!-- 내용이 없는 블럭인 경우에는 새 줄을 사용하지 않고 한 줄에서 열고 닫는다. - Checkstyle로 이 규칙을 직접 지정할 수 없습니다. -->
-
 
     </module>
 </module>
