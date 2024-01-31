@@ -24,11 +24,10 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class MileageApplyController {
-
 	private final MileageApplyService mileageApplyService;
 
 	// MILEAGE-003 (마일리지 승인 여부 변경 (관리자))
-	@PutMapping("/api/milage/apply/{milgApplySeq}")
+	@PutMapping("/api/mileage/apply/{milgApplySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq,
 		@Valid @RequestBody MileageStateRequest request) {
@@ -60,7 +59,7 @@ public class MileageApplyController {
 		return Response.success(mileageApplyService.readMileageAskSearch(email, nickname, name, pageable));
 	}
 
-	// MILEAGE-007 (마일리지 신청 조회 대기중(W)인 값들만 조회(사용자))
+	// MILEAGE-007 (마일리지 신청 조회 - 대기중(W)인 값 조회 (사용자))
 	@GetMapping("/api/mileage/apply/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageApplyByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
