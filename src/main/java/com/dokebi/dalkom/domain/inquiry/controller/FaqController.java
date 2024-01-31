@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +31,6 @@ public class FaqController {
 	@GetMapping("/api/faq/{inquirySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readFaqByInquirySeq(@PathVariable Long inquirySeq) {
-
 		return Response.success(faqService.readFaqByInquirySeq(inquirySeq));
 	}
 
@@ -38,7 +38,6 @@ public class FaqController {
 	@GetMapping("/api/faq")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readFaqList(Pageable pageable) {
-
 		return Response.success(faqService.readFaqList(pageable));
 	}
 
@@ -61,4 +60,10 @@ public class FaqController {
 		return Response.success();
 	}
 
+	@DeleteMapping("/api/faq/{inquirySeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response deleteFaq(@PathVariable Long inquirySeq) {
+		faqService.deleteFaq(inquirySeq);
+		return Response.success();
+	}
 }
