@@ -26,13 +26,6 @@
             <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
         </module>
 
-        <!-- 테스트 클래스는 "Test"로 끝나야 한다. -->
-        <module name="Regexp">
-            <property name="format" value="Test\.java$"/>
-            <property name="message" value="Test class name must end with 'Test'"/>
-            <property name="fileExtensions" value="java"/>
-        </module>
-
         <!-- 상수명은 대문자와 언더스코어로 구성되어야 한다. -->
         <module name="ConstantName">
             <property name="format" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
