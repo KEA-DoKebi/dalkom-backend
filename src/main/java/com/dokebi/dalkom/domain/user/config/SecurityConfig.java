@@ -1,14 +1,11 @@
 package com.dokebi.dalkom.domain.user.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.dokebi.dalkom.domain.user.config.security.CustomUserService;
@@ -44,11 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterBefore(new JwtAuthenticationFilter(tokenService, userService),
 				UsernamePasswordAuthenticationFilter.class);
 
-	}
-
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
 }
