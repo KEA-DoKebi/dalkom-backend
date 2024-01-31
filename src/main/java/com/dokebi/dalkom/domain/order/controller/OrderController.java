@@ -67,7 +67,7 @@ public class OrderController {
 	}
 
 	//  ORDER-006 (특정 주문 상태 수정)
-	@PutMapping("/api/order/state/{orderSeq}")
+	@PutMapping("/api/order/{orderSeq}/state")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateOrderState(@PathVariable("orderSeq") Long orderSeq,
 		@Valid @RequestBody OrderStateUpdateRequest request) {
