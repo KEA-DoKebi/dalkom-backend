@@ -259,7 +259,7 @@ public class OrderService {
 		User user = order.getUser();
 
 		//반송이 완료되었다면
-		if (order.getOrderState().equals(OrderState.RETURNED)) {
+		if (order.getOrderState().equals(OrderState.RETURNED.getState())) {
 			// 환불 후 금액
 			Integer amountChanged = user.getMileage() + order.getTotalPrice();
 

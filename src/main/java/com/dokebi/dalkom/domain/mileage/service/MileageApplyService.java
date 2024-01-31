@@ -58,7 +58,7 @@ public class MileageApplyService {
 		Integer amount = mileageApply.getAmount();
 		Integer totalMileage = user.getMileage() + amount;
 
-		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING)) {
+		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING.getState())) {
 			mileageApply.setApprovedState(request.getApprovedState());
 
 			mileageService.createMileageHistory(user, amount, totalMileage,
