@@ -32,28 +32,10 @@ public class UserService {
 	public void updateUser(Long userSeq, UserUpdateRequest request) {
 		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 
-		//변화 없는것도 그대로 전송하기로 하지 않았나?
-		if (request.getPassword() != null && !request.getPassword().isBlank()) {
-			request.encodedPassword(passwordEncoder.encode(request.getPassword()));
-			user.setPassword(request.getPassword());
-		}
-
+		user.setPassword(request.getPassword());
 		validateNickname(request.getNickname());
 		user.setNickname(request.getNickname());
 		user.setAddress(request.getAddress());
-	}
-
-	@Transactional
-	public void updateUserWithPassword(Long userSeq, UserUpdateRequest request) {
-		validateNickname(request.getNickname());
-		userRepository.updateUserWithPassword(userSeq, request.getPassword(), request.getNickname(),
-			request.getAddress());
-	}
-
-	@Transactional
-	public void updateUserWithoutPassword(Long userSeq, UserUpdateRequest request) {
-		validateNickname(request.getNickname());
-		userRepository.updateUserWithoutPassword(userSeq, request.getNickname(), request.getAddress());
 	}
 
 	private void validateNickname(String nickname) {
