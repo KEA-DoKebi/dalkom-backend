@@ -12,9 +12,9 @@ public enum MileageApplyState {
 	private final String state;
 	private final String name;
 
-	MileageApplyState(String state, String message) {
+	MileageApplyState(String state, String name) {
 		this.state = state;
-		this.name = message;
+		this.name = name;
 	}
 
 	public static String getNameByState(String state) {
