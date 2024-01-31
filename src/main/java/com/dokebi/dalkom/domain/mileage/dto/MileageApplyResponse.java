@@ -14,10 +14,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class MileageApplyResponse {
+	private Long milgApplySeq;
 	private Long userSeq;
+	private String name;
+	private String email;
+	private String nickname;
 	private Integer amount;
 	private Integer balance;
 	private String approvedState;
+	private LocalDateTime approvedAt;
 	private LocalDateTime createdAt;
 
 }

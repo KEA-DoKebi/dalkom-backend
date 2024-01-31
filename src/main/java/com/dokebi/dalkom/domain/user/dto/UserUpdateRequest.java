@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserUpdateRequest {
 
-	@NotNull(message = "UserUpdateRequest password notnull 에러")
-	@NotBlank(message = "UserUpdateRequest password notblank 에러")
 	private String password;
 
 	@NotNull(message = "UserUpdateRequest nickname notnull 에러")
@@ -23,4 +21,8 @@ public class UserUpdateRequest {
 	@NotNull(message = "UserUpdateRequest address notnull 에러")
 	@NotBlank(message = "UserUpdateRequest address notblank 에러")
 	private String address;
+
+	public String encodedPassword(String password) {
+		return this.password = password;
+	}
 }

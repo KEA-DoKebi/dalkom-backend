@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
@@ -38,7 +39,7 @@ public class OrderController {
 	}
 
 	// ORDER-002 (주문 확인하기)
-	@GetMapping("/api/order/orderListPage")
+	@PostMapping("/api/order/orderListPage")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderPageByProductSeq(@Valid @RequestBody OrderPageDto orderPageDto) {
 		return Response.success(orderService.readProductDetail(orderPageDto.getOrderList()));
@@ -61,9 +62,8 @@ public class OrderController {
 	// ORDER-005 (결제 하기)
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createOrder(@Valid @RequestBody OrderCreateRequest request) {
-		orderService.createOrder(request);
-		return Response.success();
+	public Response createOrder(@LoginUser Long userSeq, @Valid @RequestBody OrderCreateRequest request) {
+		return Response.success(orderService.createOrder(userSeq, request));
 	}
 
 	//  ORDER-006 (특정 주문 상태 수정)
@@ -96,5 +96,21 @@ public class OrderController {
 	public Response refundOrderByOrderSeq(@PathVariable Long orderSeq) {
 		orderService.confirmRefundByOrderSeq(orderSeq);
 		return Response.success();
+	}
+
+	// ORDER-010 (결제 비밀번호 인증)
+	@PostMapping("/api/order/authorize")
+	@ResponseStatus(HttpStatus.OK)
+	public Response authorizeOrderByPassword(@LoginUser Long userSeq,
+		@Valid @RequestBody AuthorizeOrderRequest request) {
+		orderService.authorizeOrderByPassword(userSeq, request);
+		return Response.success();
+	}
+
+	// ORDER-011 (리뷰용 단일 주문상세 조회)
+	@GetMapping("/api/order/detail/{orderDetailSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderDetailByOrderDetailSeq(@PathVariable Long orderDetailSeq) {
+		return Response.success(orderService.readOrderDetailByOrderDetailSeq(orderDetailSeq));
 	}
 }

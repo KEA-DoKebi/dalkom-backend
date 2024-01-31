@@ -90,7 +90,16 @@ public class ProductController {
 	// PRODUCT-009 (상품 리스트 검색)
 	@GetMapping("/api/product/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductList(@RequestParam(required = false) String name,@RequestParam(required = false) String company, Pageable pageable) {
-		return Response.success(productService.readProductListSearch(name,company,pageable));
+	public Response readProductList(@RequestParam(required = false) String name,
+		@RequestParam(required = false) String company, Pageable pageable) {
+		return Response.success(productService.readProductListSearch(name, company, pageable));
 	}
+
+	// PRODUCT-010 (특정 상품 정보 (상품 비교용) 조회)
+	@GetMapping("/api/product/compare/{productSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductCompareData(@PathVariable Long productSeq) {
+		return Response.success(productService.readProductCompareDetailByProductSeq(productSeq));
+	}
+
 }

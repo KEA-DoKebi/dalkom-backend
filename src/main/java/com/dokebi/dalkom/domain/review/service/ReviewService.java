@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.review.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -7,9 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.magicnumber.OrderState;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
-import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
 import com.dokebi.dalkom.domain.order.service.OrderDetailService;
 import com.dokebi.dalkom.domain.review.dto.ReviewByProductResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
@@ -46,14 +46,9 @@ public class ReviewService {
 
 	@Transactional
 	public void createReview(Long userSeq, ReviewCreateRequest request) {
+
 		User user = userService.readUserByUserSeq(userSeq);
 		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq());
-		String orderState = orderDetail.getOrder().getOrderState();
-
-		if (!orderState.equals(OrderState.DELIVERED) && !orderState.equals(OrderState.FINALIZED)) {
-			throw new InvalidOrderStateException();
-		}
-
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
 		reviewRepository.save(review);
 	}
@@ -76,5 +71,16 @@ public class ReviewService {
 		} else {
 			throw new ReviewNotFoundException();
 		}
+	}
+
+	public List<Review> readReviewByOrderDetailList(List<OrderDetail> orderDetailList) {
+		List<Review> reviewList = new ArrayList<>();
+
+		for (OrderDetail orderDetail : orderDetailList) {
+			reviewRepository.findReviewListByOrderDetailSeq(orderDetail.getOrdrDetailSeq())
+				.ifPresent(reviewList::add);
+		}
+
+		return reviewList;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +27,15 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
+	private final PasswordEncoder passwordEncoder;
+
 	@Transactional
 	public Response updateUser(Long userSeq, UserUpdateRequest request) {
 		try {
-			if (request.getPassword() != null)
+			if (request.getPassword() != null) {
+				request.encodedPassword(passwordEncoder.encode(request.getPassword()));
 				updateUserWithPassword(userSeq, request);
-			else
+			} else
 				updateUserWithoutPassword(userSeq, request);
 			return Response.success();
 		} catch (UserNicknameAlreadyExistsException e) {

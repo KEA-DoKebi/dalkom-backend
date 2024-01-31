@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.cart.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,9 +54,10 @@ public class OrderCartServiceTest {
 		Long userSeq = 1L;
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory
 			.createOrderCartCreateRequest();
+		LocalDate joinedAt = LocalDate.now();
 
 		User user = new User("empId", "password", "name", "email@email.com",
-			"address", "joinedAt", "nickname", 1200000);
+			"address", joinedAt, "nickname", 1200000);
 		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
 
 		Category category = new Category("name", 1L, "imageUrl");

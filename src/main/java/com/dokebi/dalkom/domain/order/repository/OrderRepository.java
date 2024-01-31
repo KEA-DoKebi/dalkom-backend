@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
-import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
+import com.dokebi.dalkom.domain.order.dto.ReceiverDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 
 import io.lettuce.core.dynamic.annotation.Param;
@@ -26,10 +26,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	Page<OrderUserReadResponse> findOrderListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	// 특정 주문 상세조회
-	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse("
-		+ "o.product.name, o.order.createdAt, o.order.ordrSeq, o.amount, o.amount*o.price, o.order.orderState, "
-		+ "o.order.receiverName, o.order.receiverMobileNum, o.order.receiverAddress, o.order.receiverMemo) FROM OrderDetail o WHERE o.order.ordrSeq = :orderSeq")
-	Optional<OrderDetailReadResponse> findOrderDetailByOrdrSeq(Long orderSeq);
+	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.ReceiverDetailDto( "
+		+ "o.receiverName, o.receiverMobileNum, o.receiverAddress, o.receiverMemo) "
+		+ "FROM Order o "
+		+ "WHERE o.ordrSeq = :ordrSeq ")
+	Optional<ReceiverDetailDto> findReceiverDetailDtoByOrdrSeq(@Param("ordrSeq") Long ordrSeq);
 
 	// 전체 주문조회
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse("
@@ -39,7 +40,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	Page<OrderAdminReadResponse> findAllOrderList(Pageable pageable);
 
 	//전체 주문조회 검색
-	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse("
+	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse( "
 		+ "o.ordrSeq, od.product.name, COUNT(*), o.totalPrice, o.orderState, o.createdAt) "
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
