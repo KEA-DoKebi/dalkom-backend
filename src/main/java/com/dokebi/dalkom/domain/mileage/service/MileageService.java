@@ -40,8 +40,8 @@ public class MileageService {
 	}
 
 	// 관리자가 충전을 승인하는 경우 마일리지 내역을 추가하는 서비스
-	public MileageHistory createMileageHistory(User user, Integer amount, Integer totalMileage, String type) {
+	public void createMileageHistory(User user, Integer amount, Integer totalMileage, String type) {
 		MileageHistory mileageHistory = new MileageHistory(amount, totalMileage, type, user);
-		return mileageHistoryRepository.save(mileageHistory);
+		mileageHistoryRepository.save(mileageHistory);
 	}
 }
