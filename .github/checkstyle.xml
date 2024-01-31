@@ -132,10 +132,6 @@
             <property name="option" value="nospace"/>
         </module>
 
-        <module name="GenericWhitespace">
-            <property name="validateEmptyGenerics" value="true"/>
-        </module>
-
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI, TYPECAST"/>
         </module>
@@ -151,6 +147,9 @@
             <property name="allowByTailComment" value="true"/> <!-- 이스케이프 시퀀스 뒤의 주석을 통해 허용 -->
             <property name="allowIfAllCharactersEscaped" value="true"/> <!-- 모든 문자가 이스케이프된 경우 허용 -->
             <property name="allowNonPrintableEscapes" value="true"/> <!-- 출력할 수 없는 문자에 대한 이스케이프 허용 -->
+        </module>
+
+        <module name="GenericWhitespace">
         </module>
 
         <!-- 변수에 하드코딩을 해서는 안된다. 필요한 경우에는 상수를 사용해야 한다. - 이 규칙은 Checkstyle로 직접 지정할 수 없습니다. -->
