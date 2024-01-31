@@ -39,8 +39,6 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.review.entity.Review;
-import com.dokebi.dalkom.domain.review.service.ReviewService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -58,7 +56,6 @@ public class OrderService {
 	private final ProductStockService productStockService;
 	private final MileageService mileageService;
 	private final UserService userService;
-	private final ReviewService reviewService;
 	private final PasswordEncoder passwordEncoder;
 	private final OrderCartService orderCartService;
 
@@ -188,7 +185,6 @@ public class OrderService {
 	}
 
 	// 주문 상태 수정
-	@Transactional
 	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
 		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
 
@@ -197,6 +193,35 @@ public class OrderService {
 
 		// db 저장
 		orderRepository.save(order);
+	}
+
+	public OrderDetailSimpleResponse readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
+	}
+
+	/** private **/
+
+	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		int amount = orderProduct.getProductAmount();
+		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
+		return amount * product.getPrice();
+	}
+
+	// 주문 상세 만들기
+	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
+			orderProduct.getProductOptionSeq());
+		Integer amount = orderProduct.getProductAmount();
+
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
+			product.getPrice() * amount);
+		// 상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
+			orderProduct.getProductOptionSeq(), amount);
+
+		return orderDetail;
 	}
 
 	// 주문 검색 조회 서비스
@@ -210,16 +235,14 @@ public class OrderService {
 		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
 			.orElseThrow(OrderNotFoundException::new);
 		User user = order.getUser();
-		List<OrderDetail> orderDetailList = orderDetailService.readOrderDetailByOrderSeq(orderSeq);
-		List<Review> reviewList = reviewService.readReviewByOrderDetailList(orderDetailList);
 
 		List<String> whenCancel = List.of(OrderState.CONFIRMED, OrderState.PREPARING);
 		List<String> whenRefund = List.of(OrderState.SHIPPED, OrderState.DELIVERED, OrderState.FINALIZED);
 
 		if (whenCancel.contains(order.getOrderState())) {
-			cancelOrder(reviewList, user, order);
+			cancelOrder(user, order);
 		} else if (whenRefund.contains(order.getOrderState())) {
-			refundOrder(reviewList, order);
+			order.setOrderState(OrderState.REFUND_CONFIRMED);
 		} else {
 			throw new InvalidOrderStateException();
 		}
@@ -259,43 +282,8 @@ public class OrderService {
 		}
 	}
 
-	public OrderDetailSimpleResponse readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
-		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
-	}
-
-	/** private **/
-
-	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
-		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
-		int amount = orderProduct.getProductAmount();
-		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		return amount * product.getPrice();
-	}
-
-	// 주문 상세 만들기
-	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
-		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
-		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
-			orderProduct.getProductOptionSeq());
-		Integer amount = orderProduct.getProductAmount();
-
-		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			product.getPrice() * amount);
-		// 상품 재고 변경
-		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
-			orderProduct.getProductOptionSeq(), amount);
-
-		return orderDetail;
-	}
-
 	// 주문 취소 - 주문 취소 처리
-	private void cancelOrder(List<Review> reviewList, User user, Order order) {
-
-		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
-		for (Review review : reviewList) {
-			reviewService.deleteReview(review.getReviewSeq());
-		}
-
+	private void cancelOrder(User user, Order order) {
 		// 환불 후 금액
 		Integer amountChanged = user.getMileage() + order.getTotalPrice();
 
@@ -307,30 +295,6 @@ public class OrderService {
 
 		// 주문 상태 변경
 		order.setOrderState(OrderState.CANCELED);
-	}
-
-	// 주문 취소 - 환불 처리
-	private void refundOrder(List<Review> reviewList, Order order) {
-
-		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
-		// TODO 환불의 경우 일단 상품을 받았으니 리뷰를 남겨둘지 고려
-		for (Review review : reviewList) {
-			reviewService.deleteReview(review.getReviewSeq());
-		}
-
-		/*
-		// 환불 후 금액
-		Integer amountChanged = user.getMileage() + order.getTotalPrice();
-
-		// 마일리지 복구
-		mileageService.createMileageHistory(
-			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
-
-		user.setMileage(amountChanged);
-		*/
-
-		// 주문 상태 변경
-		order.setOrderState(OrderState.REFUND_CONFIRMED);
 	}
 }
 

@@ -1,9 +1,8 @@
 package com.dokebi.dalkom.domain.review.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,15 +35,18 @@ public class ReviewService {
 	private final OrderDetailService orderDetailService;
 
 	public Page<ReviewByProductResponse> readReviewListByProduct(Long productSeq, Pageable pageable) {
+
 		return reviewRepository.findReviewListByProduct(productSeq, pageable);
 	}
 
 	public Page<ReviewByUserResponse> readReviewListByUser(Long userSeq, Pageable pageable) {
+
 		return reviewRepository.findReviewListByUser(userSeq, pageable);
 	}
 
 	@Transactional
 	public void createReview(Long userSeq, ReviewCreateRequest request) {
+
 		User user = userService.readUserByUserSeq(userSeq);
 		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq());
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
@@ -53,6 +55,7 @@ public class ReviewService {
 
 	@Transactional
 	public void updateReview(Long reviewSeq, ReviewUpdateRequest request) {
+
 		Review review = reviewRepository.findByReviewSeq(reviewSeq);
 		review.setContent(request.getContent());
 		review.setRating(request.getRating());
@@ -61,22 +64,13 @@ public class ReviewService {
 
 	@Transactional
 	public void deleteReview(Long reviewSeq) {
-		try {
+
+		Optional<Review> review = reviewRepository.findById(reviewSeq);
+		if (review.isPresent()) {
 			reviewRepository.deleteById(reviewSeq);
-		} catch (EmptyResultDataAccessException e) {
+		} else {
 			throw new ReviewNotFoundException();
 		}
-	}
-
-	public List<Review> readReviewByOrderDetailList(List<OrderDetail> orderDetailList) {
-		List<Review> reviewList = new ArrayList<>();
-
-		for (OrderDetail orderDetail : orderDetailList) {
-			reviewRepository.findReviewListByOrderDetailSeq(orderDetail.getOrdrDetailSeq())
-				.ifPresent(reviewList::add);
-		}
-
-		return reviewList;
 	}
 
 	public List<ReviewSimpleDto> readReviewSimpleByProductSeq(Long productSeq) {

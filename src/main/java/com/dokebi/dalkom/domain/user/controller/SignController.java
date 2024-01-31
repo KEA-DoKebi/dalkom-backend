@@ -25,7 +25,7 @@ public class SignController {
 
 	private final SignService signService;
 
-	// USER-004 (사용자 회원가입)
+	// USER-005 (사용자 회원가입)
 	@PostMapping("/api/user/sign-up")
 	@ResponseStatus(HttpStatus.OK)
 	public SignUpResponse signUp(@Valid @RequestBody SignUpRequest request) {

@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.admin.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -18,6 +19,7 @@ import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
+import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
@@ -78,6 +80,16 @@ public class AdminService {
 		} else {
 			signUpResponse.setMessage("임직원 데이터가 존재하지 않음");
 		}
+	}
+
+	@Transactional
+	public void updateUser(Long userSeq) {
+		Optional<User> optionalUser = userRepository.findById(userSeq);
+		optionalUser.ifPresent(user -> {
+			// 값이 존재할 때만 실행됨
+			user.setState("N");
+		});
+
 	}
 
 	public Admin readAdminByAdminSeq(Long adminSeq) {
