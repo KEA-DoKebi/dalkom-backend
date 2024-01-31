@@ -30,8 +30,6 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.review.entity.Review;
-import com.dokebi.dalkom.domain.review.service.ReviewService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -51,7 +49,6 @@ public class OrderService {
 	private final ProductStockService productStockService;
 	private final MileageService mileageService;
 	private final UserService userService;
-	private final ReviewService reviewService;
 
 	// 결제 하기
 	@Transactional
@@ -197,14 +194,12 @@ public class OrderService {
 		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
 			.orElseThrow(OrderNotFoundException::new);
 		User user = order.getUser();
-		List<OrderDetail> orderDetailList = orderDetailService.readOrderDetailByOrderSeq(orderSeq);
-		List<Review> reviewList = reviewService.readReviewByOrderDetailList(orderDetailList);
 
 		List<String> whenCancel = List.of(OrderState.CONFIRMED, OrderState.PREPARING);
 		List<String> whenRefund = List.of(OrderState.SHIPPED, OrderState.DELIVERED, OrderState.FINALIZED);
 
 		if (whenCancel.contains(order.getOrderState())) {
-			cancelOrder(reviewList, user, order);
+			cancelOrder(user, order);
 		} else if (whenRefund.contains(order.getOrderState())) {
 			order.setOrderState(OrderState.REFUND_CONFIRMED);
 		} else {
@@ -238,12 +233,7 @@ public class OrderService {
 	}
 
 	// 주문 취소 - 주문 취소 처리
-	private void cancelOrder(List<Review> reviewList, User user, Order order) {
-
-		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
-		for (Review review : reviewList) {
-			reviewService.deleteReview(review.getReviewSeq());
-		}
+	private void cancelOrder(User user, Order order) {
 
 		// 환불 후 금액
 		Integer amountChanged = user.getMileage() + order.getTotalPrice();
