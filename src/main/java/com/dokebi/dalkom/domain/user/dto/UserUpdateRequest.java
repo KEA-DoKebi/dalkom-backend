@@ -23,7 +23,7 @@ public class UserUpdateRequest {
 	@NotBlank(message = "UserUpdateRequest address NotBlank 에러")
 	private String address;
 
-	public String encodedPassword(String password) {
-		return this.password = password;
+	public void encodedPassword(String password) {
+		this.password = password;
 	}
 }
