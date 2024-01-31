@@ -22,24 +22,11 @@ public class ChatGptController {
 		this.restTemplate = restTemplate;
 	}
 
-	@Value("https://api.openai.com/v1/chat/completions")
-	private String apiUrl;
-
-	// @PostMapping("/review/summary")
-	// public ChatGptResponse sendQuestion(@RequestParam Long productSeq, @RequestBody ChatGptRequest request) {
-	// 	//ChatGptRequest request = new ChatGptRequest("gpt-3.5-turbo-1106", review);
-	// 	//ChatGptRequest request = new ChatGptRequest(request);
-	// 	ChatGptResponse response = restTemplate.postForObject(apiUrl, request, ChatGptResponse.class);
-	//
-	// 	assert response != null;
-	// 	//return response.getChoices().get(0).getMessage().getContent();
-	//
-	// 	return chatGptService.summarizeReview(productSeq, request);
-	// }
+	private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
 	@PostMapping("/review/summary")
 	public String sendQuestion(@RequestBody ChatGptRequest request) {
-		ChatGptResponse response = restTemplate.postForObject(apiUrl, request, ChatGptResponse.class);
+		ChatGptResponse response = restTemplate.postForObject(API_URL, request, ChatGptResponse.class);
 
 		//적절한 예외처리
 		assert response != null;
