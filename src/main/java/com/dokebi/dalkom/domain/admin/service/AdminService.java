@@ -111,7 +111,7 @@ public class AdminService {
 
 	private void validateNickname(String nickname) {
 		if (adminRepository.existsByNickname(nickname)) {
-			throw new UserNicknameAlreadyExistsException(nickname + "은 이미 사용중입니다.");
+			throw new UserNicknameAlreadyExistsException(nickname);
 		}
 	}
 
