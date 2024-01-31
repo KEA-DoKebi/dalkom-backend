@@ -9,6 +9,7 @@ import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
 import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse;
+import com.dokebi.dalkom.domain.mileage.dto.MileageStateRequest;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.mileage.exception.MileageAlreadyApplyException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
@@ -28,12 +29,18 @@ public class MileageApplyService {
 	private final UserService userService;
 	private final MileageService mileageService;
 
+	@Transactional(readOnly = true)
 	public Page<MileageApplyResponse> readMileageApply(Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApply(pageable);
 	}
 
-	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq,Pageable pageable) {
-		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq,pageable);
+	@Transactional(readOnly = true)
+	public Page<MileageApplyResponse> readMileageApplyWaitState(Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApplyWaitState(pageable);
+	}
+
+	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq, Pageable pageable) {
+		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq, pageable);
 	}
 
 	public MileageApply readByMilgApplySeq(Long milgApplySeq) {
@@ -42,7 +49,7 @@ public class MileageApplyService {
 	}
 
 	@Transactional
-	public void updateMileageApply(Long milgApplySeq) {
+	public void updateMileageApply(Long milgApplySeq, MileageStateRequest request) {
 
 		MileageApply mileageApply = readByMilgApplySeq(milgApplySeq);
 		User user = mileageApply.getUser();
@@ -51,8 +58,8 @@ public class MileageApplyService {
 		Integer amount = mileageApply.getAmount();
 		Integer totalMileage = user.getMileage() + amount;
 
-		if (approvedState.equals(MileageApplyState.WAIT)) {
-			mileageApply.setApprovedState(MileageApplyState.YES);
+		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING)) {
+			mileageApply.setApprovedState(request.getApprovedState());
 
 			mileageService.createMileageHistory(user, amount, totalMileage,
 				MileageHistoryState.CHARGED);
@@ -67,7 +74,7 @@ public class MileageApplyService {
 		User user = userService.readUserByUserSeq(userSeq);
 		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
 		isApprovedStateIsWaitByUserSeq(userSeq);
-		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING);
 		mileageApplyRepository.save(mileageApply);
 
 	}

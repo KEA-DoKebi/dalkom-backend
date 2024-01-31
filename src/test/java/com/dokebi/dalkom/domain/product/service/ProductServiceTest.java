@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
-import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
@@ -95,7 +94,6 @@ public class ProductServiceTest {
 		Long productSeq = 1L;
 		given(productRepository.findProductDetailByProductSeq(productSeq)).willReturn(new ReadProductDetailDto());
 		given(productStockService.readStockListDtoByProductSeq(productSeq)).willReturn(List.of(new StockListDto()));
-		given(productOptionService.readOptionListDtoByProductSeq(productSeq)).willReturn(List.of(new OptionListDto()));
 		given(productRepository.findProductImageByProductSeq(productSeq)).willReturn(List.of("imageURL"));
 
 		// When: 상품 상세 정보 조회 메서드 실행
@@ -113,7 +111,6 @@ public class ProductServiceTest {
 		Long productSeq = 1L;
 
 		given(productStockService.readStockListDtoByProductSeq(anyLong())).willReturn(null);
-		given(productOptionService.readOptionListDtoByProductSeq(anyLong())).willReturn(null);
 		given(productRepository.findProductImageByProductSeq(anyLong())).willReturn(null);
 
 		// When & Then: 예외가 발생하는지 확인

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
+import com.dokebi.dalkom.domain.mileage.dto.MileageStateRequest;
 import com.dokebi.dalkom.domain.mileage.service.MileageApplyService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 
@@ -29,8 +30,9 @@ public class MileageApplyController {
 	// MILEAGE-003 (마일리지 승인 여부 변경 (관리자))
 	@PutMapping("/api/milage/apply/{milgApplySeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq) {
-		mileageApplyService.updateMileageApply(milgApplySeq);
+	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq,
+		@Valid @RequestBody MileageStateRequest request) {
+		mileageApplyService.updateMileageApply(milgApplySeq, request);
 		return Response.success();
 	}
 
@@ -58,11 +60,17 @@ public class MileageApplyController {
 		return Response.success(mileageApplyService.readMileageAskSearch(email, nickname, name, pageable));
 	}
 
-	// MILEAGE-007 (마일리지 신청 조회 W인 값들만 조회(유저))
+	// MILEAGE-007 (마일리지 신청 조회 대기중(W)인 값들만 조회(사용자))
 	@GetMapping("/api/mileage/apply/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageApplyByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
 		return Response.success(mileageApplyService.readMileageApplyByUserSeq(userSeq, pageable));
 	}
 
+	// MILEAGE-008 (마일리지 신청 조회 - 대기중(W)인 값 조회 (관리자))
+	@GetMapping("/api/mileage/apply/wait")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readMileageApplyWaitState(Pageable pageable) {
+		return Response.success(mileageApplyService.readMileageApplyWaitState(pageable));
+	}
 }

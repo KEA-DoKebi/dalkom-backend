@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
+import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,9 +41,22 @@ public class AdminController {
 	// ADMIN-007 (관리자 목록 조회 검색)
 	@GetMapping("/api/admin/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readAdminListSearch(@RequestParam  String adminId,
-		@RequestParam  String name,
+	public Response readAdminListSearch(@RequestParam String adminId,
+		@RequestParam String name,
 		@RequestParam String nickname, Pageable pageable) {
-		return Response.success(adminService.readAdminListSearch(adminId,name,nickname,pageable));
+		return Response.success(adminService.readAdminListSearch(adminId, name, nickname, pageable));
+	}
+
+	@GetMapping("/api/admin/dashboard")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readDashboard() {
+		return Response.success();
+	}
+
+	@PostMapping("/api/admin/user")
+	@ResponseStatus(HttpStatus.OK)
+	public Response createUser(@Valid @RequestBody SignUpRequest request) {
+		adminService.createUser(request);
+		return Response.success();
 	}
 }

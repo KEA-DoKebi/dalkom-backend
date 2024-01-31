@@ -71,7 +71,6 @@ public class ReviewController {
 	@DeleteMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteReview(@PathVariable Long reviewSeq) {
-
 		reviewService.deleteReview(reviewSeq);
 		return Response.success();
 	}

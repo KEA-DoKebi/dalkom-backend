@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.user.dto;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -40,8 +42,7 @@ public class SignUpRequest {
 	private String address;
 
 	@NotNull(message = "SignUpRequest joinedAt notnull 에러")
-	@NotBlank(message = "SignUpRequest joinedAt notblank 에러")
-	private String joinedAt;
+	private LocalDate joinedAt;
 
 	@NotNull(message = "SignUpRequest nickname notnull 에러")
 	@NotBlank(message = "SignUpRequest nickname notblank 에러")

@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
-import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
@@ -39,19 +38,20 @@ public class OrderFactory {
 	}
 
 	public static OrderUserReadResponse createOrderDtoOne() {
-		return new OrderUserReadResponse(1L, 100, "1", LocalDateTime.parse("2024-01-21T00:00:00"));
+		return new OrderUserReadResponse(1L, "상품명", 3L, 100, "1", LocalDateTime.parse("2024-01-21T00:00:00"));
 	}
 
 	public static OrderUserReadResponse createOrderDtoTwo() {
-		return new OrderUserReadResponse(2L, 100, "1", LocalDateTime.parse("2024-01-20T00:00:00"));
+		return new OrderUserReadResponse(2L, "상품명", 3L, 100, "1", LocalDateTime.parse("2024-01-20T00:00:00"));
 	}
 
 	public static Page<OrderAdminReadResponse> createOrderList() {
 		List<OrderAdminReadResponse> orderUserReadResponseList = new ArrayList<>();
 		orderUserReadResponseList.add(
-			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), "suha", "suha", 1000, "1"));
+			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), 2L, "suha", "suha", 1000, "1"));
 		orderUserReadResponseList.add(
-			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), "hauha", "hahha", 3000, "1"));
+			new OrderAdminReadResponse(1L, LocalDateTime.parse("2024-01-21T00:00:00"), 2L, "hauha", "hahha", 3000,
+				"1"));
 
 		return new PageImpl<>(orderUserReadResponseList, PageRequest.of(0, 10), orderUserReadResponseList.size());
 	}
@@ -60,18 +60,18 @@ public class OrderFactory {
 		return new Order(1L, "John Doe", "123 Main St", "555-1234", "Some memo", 100);
 	}
 
-	public static OrderDetailReadResponse createOrderDetailReadResponse() {
-		return new OrderDetailReadResponse(
-			"Product Name",
-			LocalDateTime.now(),
-			1L,
-			3,
-			150,
-			"Shipped",
-			"John Doe",
-			"555-1234",
-			"123 Main St",
-			"Special instructions for delivery"
-		);
-	}
+	// public static OrderDetailReadResponse createOrderDetailReadResponse() {
+	// 	return new OrderDetailReadResponse(
+	// 		"Product Name",
+	// 		LocalDateTime.now(),
+	// 		1L,
+	// 		3,
+	// 		150,
+	// 		"Shipped",
+	// 		"John Doe",
+	// 		"555-1234",
+	// 		"123 Main St",
+	// 		"Special instructions for delivery"
+	// 	);
+	// }
 }
