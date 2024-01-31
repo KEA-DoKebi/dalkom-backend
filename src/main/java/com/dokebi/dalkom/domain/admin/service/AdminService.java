@@ -58,7 +58,7 @@ public class AdminService {
 	}
 
 	@Transactional
-	public SignUpResponse createUser(SignUpRequest request) {
+	public void createUser(SignUpRequest request) {
 		SignUpResponse signUpResponse = new SignUpResponse();
 
 		// 임직원 테이블에 입력한 정보가 있는지 확인
@@ -78,8 +78,6 @@ public class AdminService {
 		} else {
 			signUpResponse.setMessage("임직원 데이터가 존재하지 않음");
 		}
-
-		return signUpResponse;
 	}
 
 	public Admin readAdminByAdminSeq(Long adminSeq) {
