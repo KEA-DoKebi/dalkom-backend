@@ -1,13 +1,25 @@
 package com.dokebi.dalkom.common.magicnumber;
 
-public class ProductActiveState {
+import lombok.Getter;
+
+@Getter
+public enum ProductActiveState {
 
 	// 판매중, 사용자에게 공개됨
-	public static final String ACTIVE = "Y";
+	ACTIVE("Y", "판매중"),
 
 	// 판매 안함, 사용자에게 공개됨 (품절)
-	public static final String SOLDOUT = "S";
+	SOLDOUT("S", "품절"),
 
 	// 판매 안함, 사용자에게 공개되지 않음
-	public static final String INACTIVE = "N";
+	INACTIVE("N", "판매중지");
+
+	private final String state;
+	private final String name;
+
+	ProductActiveState(String state, String message) {
+		this.state = state;
+		this.name = message;
+	}
+
 }

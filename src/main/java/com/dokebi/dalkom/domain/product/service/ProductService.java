@@ -238,14 +238,14 @@ public class ProductService {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.SOLDOUT);
+		product.setState(ProductActiveState.SOLDOUT.getState());
 	}
 
 	public void activeProductByProductSeq(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.ACTIVE);
+		product.setState(ProductActiveState.ACTIVE.getState());
 	}
 
 	/** private method **/

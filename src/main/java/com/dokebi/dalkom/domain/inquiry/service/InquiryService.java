@@ -41,7 +41,8 @@ public class InquiryService {
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
-		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), InquiryAnswerState.NO);
+		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(),
+			InquiryAnswerState.NO.getState());
 		inquiry = inquiryRepository.save(inquiry);
 		// 문의 내용 Jira로 보내기
 		JiraInquiryRequest jiraInquiryRequest = new JiraInquiryRequest(request.getTitle(), request.getContent(),
@@ -95,7 +96,7 @@ public class InquiryService {
 	private void makeInquiryAnswer(InquiryAnswerRequest request, Inquiry inquiry, Admin admin) {
 		inquiry.setAnswerContent(request.getAnswerContent());
 		inquiry.setAdmin(admin);
-		inquiry.setAnswerState(InquiryAnswerState.YES);
+		inquiry.setAnswerState(InquiryAnswerState.YES.getState());
 		inquiry.setAnsweredAt(LocalDateTime.now());
 	}
 

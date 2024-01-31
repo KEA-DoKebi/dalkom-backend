@@ -89,7 +89,7 @@ public class OrderService {
 				request.getReceiverInfoRequest().getReceiverMobileNum(),
 				request.getReceiverInfoRequest().getReceiverMemo(),
 				orderTotalPrice);
-			order.setOrderState(OrderState.CONFIRMED);
+			order.setOrderState(OrderState.CONFIRMED.getState());
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
@@ -105,7 +105,8 @@ public class OrderService {
 			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
 			Integer totalMileage = (user.getMileage() - orderTotalPrice);
 
-			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
+			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage,
+				MileageHistoryState.USED.getState());
 
 			//장바구니의 상품 삭제
 			orderCartService.deleteOrderCart(orderCartDeleteRequest);
@@ -236,13 +237,14 @@ public class OrderService {
 			.orElseThrow(OrderNotFoundException::new);
 		User user = order.getUser();
 
-		List<String> whenCancel = List.of(OrderState.CONFIRMED, OrderState.PREPARING);
-		List<String> whenRefund = List.of(OrderState.SHIPPED, OrderState.DELIVERED, OrderState.FINALIZED);
+		List<String> whenCancel = List.of(OrderState.CONFIRMED.getState(), OrderState.PREPARING.getState());
+		List<String> whenRefund = List.of(OrderState.SHIPPED.getState(), OrderState.DELIVERED.getState(),
+			OrderState.FINALIZED.getState());
 
 		if (whenCancel.contains(order.getOrderState())) {
 			cancelOrder(user, order);
 		} else if (whenRefund.contains(order.getOrderState())) {
-			order.setOrderState(OrderState.REFUND_CONFIRMED);
+			order.setOrderState(OrderState.REFUND_CONFIRMED.getState());
 		} else {
 			throw new InvalidOrderStateException();
 		}
@@ -257,17 +259,17 @@ public class OrderService {
 		User user = order.getUser();
 
 		//반송이 완료되었다면
-		if (order.getOrderState().equals(OrderState.RETURNED)) {
+		if (order.getOrderState().equals(OrderState.RETURNED.getState())) {
 			// 환불 후 금액
 			Integer amountChanged = user.getMileage() + order.getTotalPrice();
 
 			// 마일리지 복구
 			mileageService.createMileageHistory(
-				order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
+				order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED.getState());
 
 			user.setMileage(amountChanged);
 
-			order.setOrderState(OrderState.REFUNDED);
+			order.setOrderState(OrderState.REFUNDED.getState());
 		} else {
 			throw new InvalidOrderStateException();
 		}
@@ -289,12 +291,12 @@ public class OrderService {
 
 		// 마일리지 복구
 		mileageService.createMileageHistory(
-			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.CANCELLED);
+			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.CANCELLED.getState());
 
 		user.setMileage(amountChanged);
 
 		// 주문 상태 변경
-		order.setOrderState(OrderState.CANCELED);
+		order.setOrderState(OrderState.CANCELED.getState());
 	}
 }
 

@@ -4,12 +4,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
+import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
 import com.dokebi.dalkom.domain.user.dto.LogInAdminRequest;
 import com.dokebi.dalkom.domain.user.dto.LogInAdminResponse;
 import com.dokebi.dalkom.domain.user.dto.LogInRequest;
@@ -22,6 +26,7 @@ import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
@@ -38,8 +43,8 @@ public class SignService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
-	public LogInUserResponse signIn(LogInRequest request) {
-		User user = userRepository.findByEmail(request.getEmail());
+	public LogInUserResponse signInUser(LogInRequest request) {
+		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
 		validatePassword(request, user);
 		Integer mileage = user.getMileage();
 		String subject = createSubject(user);
@@ -67,6 +72,16 @@ public class SignService {
 
 		// 로그인 시 refreshToken는 반환되지 않는다.
 		return new LogInAdminResponse(accessToken, role);
+	}
+
+	@Transactional
+	public Response signOut(HttpServletRequest request) {
+		String token = (request.getHeader("AccessToken"));
+		if (token == null || token.isEmpty()) {
+			throw new MissingJiraRequestHeaderException();
+		}
+		redisService.deleteValues(token);
+		return Response.success();
 	}
 
 	private String createSubject(User user) {
