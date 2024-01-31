@@ -21,10 +21,11 @@
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
         </module>
 
-        <!-- 클래스, 인터페이스, 메서드, 생성자, 테스트 클래스 이름 패턴 검사 -->
+        <!-- 클래스명과 인터페이스명에는 대문자로 시작하는 카멜케이스를 사용한다. -->
         <module name="TypeName">
             <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
         </module>
+        
 
         <!-- 상수명은 대문자와 언더스코어로 구성되어야 한다. -->
         <module name="ConstantName">
@@ -34,11 +35,15 @@
         <!-- 변수명, 멤버변수, 지역변수, 메서드 파라미터명은 소문자로 시작하는 카멜케이스를 사용한다. -->
         <module name="LocalVariableName">
             <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+            <property name="minLength" value="2"/>
         </module>
-
-        <!-- 모든 이름에 대하여 1글자로 구성된 이름을 사용할 수 없다. -->
-        <module name="NameLength">
-            <property name="min" value="2"/>
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+            <property name="minLength" value="2"/>
+        </module>
+        <module name="ParameterName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+            <property name="minLength" value="2"/>
         </module>
 
         <!-- 탑레벨 클래스는 소스 파일에 단 하나만 작성해야 한다. -->
@@ -110,19 +115,16 @@
 
         <module name="Regexp">
             <property name="format" value="@Data"/>
-            <property name="message" value="The use of @Data annotation is prohibited! Use  @Getter, @Setter, @RequiredArgsConstructor, and @AllArgsConstructor. "/>
+            <property name="message" value="The use of @Data annotation is prohibited! Use @Getter, @Setter, @RequiredArgsConstructor, and @AllArgsConstructor."/>
         </module>
 
         <module name="AvoidEscapedUnicodeCharacters">
-            <!-- 허용할 유니코드 이스케이프 시퀀스를 정의합니다. 일반적으로 이 줄은 비워둘 수 있습니다. -->
-            <property name="allowEscapesForControlCharacters" value="true"/> <!-- 컨트롤 문자에 대한 이스케이프는 허용 -->
-            <property name="allowByTailComment" value="true"/> <!-- 이스케이프 시퀀스 뒤의 주석을 통해 허용 -->
-            <property name="allowIfAllCharactersEscaped" value="true"/> <!-- 모든 문자가 이스케이프된 경우 허용 -->
-            <property name="allowNonPrintableEscapes" value="true"/> <!-- 출력할 수 없는 문자에 대한 이스케이프 허용 -->
+            <property name="allowEscapesForControlCharacters" value="true"/>
+            <property name="allowByTailComment" value="true"/>
+            <property name="allowIfAllCharactersEscaped" value="true"/>
+            <property name="allowNonPrintableEscapes" value="true"/>
         </module>
 
-        <module name="GenericWhitespace">
-        </module>
-
+        <module name="GenericWhitespace"/>
     </module>
 </module>
