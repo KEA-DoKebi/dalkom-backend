@@ -1,18 +1,15 @@
 package com.dokebi.dalkom.domain.admin.service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.domain.admin.dto.AdminDto;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
+import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
@@ -37,14 +34,9 @@ public class AdminService {
 	private final UserRepository userRepository;
 	private final EmployeeRepository employeeRepository;
 
-	public Page<AdminDto> readAdminList(Pageable pageable) {
-		Page<Admin> adminPage = adminRepository.findAll(pageable);
+	public Page<ReadAdminResponse> readAdminList(Pageable pageable) {
+		return adminRepository.findAllAdminList(pageable);
 
-		List<AdminDto> adminDtoList = adminPage.stream()
-			.map(AdminDto::toDto)
-			.collect(Collectors.toList());
-
-		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
 	}
 
 	@Transactional
@@ -99,14 +91,10 @@ public class AdminService {
 		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
 	}
 
-	public Page<AdminDto> readAdminListSearch(String adminId, String name, String nickname, Pageable pageable) {
-		Page<Admin> adminPage = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
-
-		List<AdminDto> adminDtoList = adminPage.stream()
-			.map(AdminDto::toDto)
-			.collect(Collectors.toList());
-
-		return new PageImpl<>(adminDtoList, pageable, adminPage.getTotalElements());
+	public Page<ReadAdminResponse> readAdminListSearch(String adminId, String name, String nickname,
+		Pageable pageable) {
+		Page<ReadAdminResponse> adminPage = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
+		return adminPage;
 	}
 
 	private void validateNickname(String nickname) {
