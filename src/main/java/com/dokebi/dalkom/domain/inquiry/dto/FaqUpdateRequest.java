@@ -9,11 +9,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FaqUpdateRequest {
-	@NotNull(message = "FaqCreateRequest title NotNull 에러")
-	@NotBlank(message = "FaqCreateRequest title NotBlank 에러")
+	@NotNull(message = "FaqUpdateRequest title NotNull 에러")
+	@NotBlank(message = "FaqUpdateRequest title NotBlank 에러")
 	private String title;
 
-	@NotNull(message = "FaqCreateRequest content NotNull 에러")
-	@NotBlank(message = "FaqCreateRequest content NotBlank 에러")
+	@NotNull(message = "FaqUpdateRequest content NotNull 에러")
+	@NotBlank(message = "FaqUpdateRequest content NotBlank 에러")
 	private String content;
 }
