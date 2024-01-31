@@ -1,8 +1,8 @@
 package com.dokebi.dalkom.domain.admin.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,12 +38,11 @@ public class AdminService {
 	private final EmployeeRepository employeeRepository;
 
 	public Page<AdminDto> readAdminList(Pageable pageable) {
-		List<Admin> adminList = adminRepository.findAll();
-		List<AdminDto> adminDtoList = new ArrayList<>();
-		for (Admin admin : adminList) {
-			AdminDto adminDto = AdminDto.toDto(admin);
-			adminDtoList.add(adminDto);
-		}
+		Page<Admin> adminPage = adminRepository.findAll(pageable);
+
+		List<AdminDto> adminDtoList = adminPage.stream()
+			.map(AdminDto::toDto)
+			.collect(Collectors.toList());
 
 		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
 	}
@@ -101,14 +100,13 @@ public class AdminService {
 	}
 
 	public Page<AdminDto> readAdminListSearch(String adminId, String name, String nickname, Pageable pageable) {
-		Page<Admin> adminList = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
-		List<AdminDto> adminDtoList = new ArrayList<>();
-		for (Admin admin : adminList) {
-			AdminDto adminDto = AdminDto.toDto(admin);
-			adminDtoList.add(adminDto);
-		}
+		Page<Admin> adminPage = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
 
-		return new PageImpl<>(adminDtoList, pageable, adminDtoList.size());
+		List<AdminDto> adminDtoList = adminPage.stream()
+			.map(AdminDto::toDto)
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(adminDtoList, pageable, adminPage.getTotalElements());
 	}
 
 	private void validateNickname(String nickname) {
