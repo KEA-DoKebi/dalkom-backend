@@ -20,6 +20,7 @@ import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
+import com.dokebi.dalkom.domain.order.dto.CancelRefundReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
@@ -199,29 +200,34 @@ public class OrderService {
 		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
 	}
 
-	/** private **/
+	public Page<CancelRefundReadResponse> readOrderCancelListByUserSeq(Long userSeq, Pageable pageable) {
+		/*
+		 * 1. 사용자의 모든 주문을 검색한다.
+		 * 2. 각 주문멸 주문 상세의 첫번째 값을 검색한다.
+		 * 3. 조립해서 CancelRefundReadResponse의 List를 생성한다.
+		 * 3. 그걸 Page로 변환한다.
+		 */
+		List<CancelRefundReadResponse> responseList = new ArrayList<>();
 
-	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
-		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
-		int amount = orderProduct.getProductAmount();
-		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		return amount * product.getPrice();
-	}
+		List<Order> orderList = orderRepository.findAllByUser_UserSeq(userSeq);
 
-	// 주문 상세 만들기
-	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
-		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
-		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
-			orderProduct.getProductOptionSeq());
-		Integer amount = orderProduct.getProductAmount();
+		for (Order order : orderList) {
+			OrderDetail orderDetail = orderDetailService.readFirstOrderDetailByOrderSeq(order.getOrdrSeq());
+			Product product = orderDetail.getProduct();
+			String requestType;
+			String requestState;
 
-		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			product.getPrice() * amount);
-		// 상품 재고 변경
-		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
-			orderProduct.getProductOptionSeq(), amount);
+			switch (order.getOrderState()) {
+				case OrderState.CANCELED:
+					requestType = "취소";
+					requestState = "완료";
+			}
 
-		return orderDetail;
+			responseList.add(new CancelRefundReadResponse(product.getName(), product.getImageUrl(),
+				orderDetail.getProductOption().getDetail(), order.getModifiedAt(), order.getOrderState()));
+		}
+
+		//CancelRefundReadDto cancelRefundReadDto = orderDetailService.readOrderCancelListByUserSeq(userSeq, pageable);
 	}
 
 	// 주문 검색 조회 서비스
@@ -280,6 +286,31 @@ public class OrderService {
 		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			throw new PasswordNotValidException();
 		}
+	}
+
+	/** private **/
+
+	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		int amount = orderProduct.getProductAmount();
+		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
+		return amount * product.getPrice();
+	}
+
+	// 주문 상세 만들기
+	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
+			orderProduct.getProductOptionSeq());
+		Integer amount = orderProduct.getProductAmount();
+
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
+			product.getPrice() * amount);
+		// 상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
+			orderProduct.getProductOptionSeq(), amount);
+
+		return orderDetail;
 	}
 
 	// 주문 취소 - 주문 취소 처리
