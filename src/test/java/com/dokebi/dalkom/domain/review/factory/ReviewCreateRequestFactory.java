@@ -6,7 +6,6 @@ public class ReviewCreateRequestFactory {
 
 	public static ReviewCreateRequest createReviewCreateRequest() {
 		return new ReviewCreateRequest(
-			1L,
 			"content",
 			4
 		);
@@ -14,6 +13,6 @@ public class ReviewCreateRequestFactory {
 
 	public static ReviewCreateRequest createReviewCreateRequest(
 		Long orderDetailSeq, String content, Integer rating) {
-		return new ReviewCreateRequest(orderDetailSeq, content, rating);
+		return new ReviewCreateRequest(content, rating);
 	}
 }
