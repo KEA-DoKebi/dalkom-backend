@@ -3,6 +3,7 @@ package com.dokebi.dalkom.common.advice;
 import javax.management.InvalidApplicationException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -55,17 +56,17 @@ public class ExceptionAdvice {
 		return Response.failure(-1002, "임직원 정보가 존재하지 않습니다.");
 	}
 
+	@ExceptionHandler(MissingRequestHeaderException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response missingRequestHeaderException(MissingRequestHeaderException e) {
+		return Response.failure(-1003, e.getHeaderName() + "요청 헤더가 누락되었습니다.");
+	}
+
 	@ExceptionHandler(MissingJiraRequestHeaderException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response missingJiraRequestHeaderException() {
-		return Response.failure(-1003, "Jira 요청 헤더가 누락되었습니다.");
+		return Response.failure(-1004, "Jira 요청 헤더가 누락되었습니다.");
 	}
-
-	// @ExceptionHandler(MissingRequestHeaderException.class)
-	// @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
-	// 	return Response.failure(-1009, e.getHeaderName() + "요청 헤더가 누락되었습니다.");
-	// }
 
 	// // 사용자 + 로그인
 

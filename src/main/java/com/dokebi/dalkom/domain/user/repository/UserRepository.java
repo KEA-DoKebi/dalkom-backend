@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByUserSeq(Long userSeq);
 
-	User findByEmail(String email);
+	Optional<User> findByEmail(String email);
 
 	boolean existsByEmail(String email);
 
@@ -33,6 +33,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT u FROM User u " +
 		"WHERE (:email IS NULL OR u.email LIKE CONCAT('%', :email, '%')) " +
 		"AND (:nickname IS NULL OR u.nickname LIKE CONCAT('%', :nickname, '%'))")
-	Page<User> findUsersBySearch(@Param("email") String email,@Param("nickname") String nickname,
+	Page<User> findUsersBySearch(@Param("email") String email, @Param("nickname") String nickname,
 		Pageable pageable);
 }
