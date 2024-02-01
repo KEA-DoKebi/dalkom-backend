@@ -42,13 +42,13 @@ public class ReviewController {
 		return Response.success(reviewService.readReviewListByUser(userSeq, pageable));
 	}
 
-	// REVIEWS-003 (리뷰 작성)
-	@PostMapping("/api/review/user")
+	// REVIEWS-003 (주문 상품에 대한 리뷰 작성)
+	@PostMapping("/api/review/{orderDetailSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createReview(@LoginUser Long userSeq,
+	public Response createReview(@LoginUser Long userSeq, @PathVariable Long orderDetailSeq,
 		@Valid @RequestBody ReviewCreateRequest request) {
 
-		reviewService.createReview(userSeq, request);
+		reviewService.createReview(userSeq, orderDetailSeq, request);
 		return Response.success();
 	}
 
