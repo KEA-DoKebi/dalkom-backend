@@ -67,9 +67,6 @@ public class OrderService {
 
 		int orderTotalPrice = 0;
 		OrderCartDeleteRequest orderCartDeleteRequest = new OrderCartDeleteRequest(new ArrayList<>());
-		System.out.println("---------------------------------------------------------------");
-		System.out.println(request);
-		System.out.println("---------------------------------------------------------------");
 		// orderTotalPrice를 먼저 계산해준다.
 		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
 			orderTotalPrice += calculateProductPrice(orderProduct);
