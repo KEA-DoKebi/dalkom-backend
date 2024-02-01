@@ -199,6 +199,7 @@ public class OrderService {
 		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
 	}
 
+	// 취소 / 환불 리스트 조회
 	public Page<CancelRefundReadResponse> readOrderCancelListByUserSeq(Long userSeq, Pageable pageable) {
 		Page<Order> orderPage = orderRepository.findCancelRefundListByUserSeq(userSeq, pageable);
 
