@@ -115,12 +115,18 @@ public class OrderController {
 		return Response.success(orderService.readOrderDetailByOrderDetailSeq(orderDetailSeq));
 	}
 
-	// ORDER-012 (관리자 주문 목록 검색 )
+	
+	// ORDER-012 (취소/환불 목록 조회)
+	@GetMapping("/api/order/canclerefundlist")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderCancelListByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
+		return Response.success(orderService.readOrderCancelListByUserSeq(userSeq, pageable));
+	}
+	// ORDER-013 (관리자 주문 목록 검색 )
 	@GetMapping("/api/order/admin/search")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderListByAdminSearch(@RequestParam(required = false) String receiverName,
 		@RequestParam(required = false) String name, Pageable pageable) {
 		return Response.success(orderService.readOrderListByAdminSearch(receiverName, name, pageable));
-	}
-
+		}
 }

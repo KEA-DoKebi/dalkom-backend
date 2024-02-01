@@ -28,6 +28,7 @@ import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
 import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailPage;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto;
@@ -120,18 +121,19 @@ public class ProductService {
 	}
 
 	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)
-	public Page<ProductByCategoryDetailResponse> readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
+	public ProductByCategoryDetailResponse readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
 		// 탐색
-		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByDetailCategory(
+		Category category = categoryService.readCategoryByCategorySeq(categorySeq);
+		Page<ProductByCategoryDetailPage> productPage = productRepository.findProductListByDetailCategory(
 			categorySeq, pageable);
 
 		// 결과 검사
-		if (productList == null || productList.isEmpty()) {
+		if (productPage == null || productPage.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
 		// 결과 전송
-		return productList;
+		return new ProductByCategoryDetailResponse(category.getName(), productPage);
 	}
 
 	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)

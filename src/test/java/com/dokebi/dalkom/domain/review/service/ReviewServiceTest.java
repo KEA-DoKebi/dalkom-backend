@@ -70,10 +70,10 @@ public class ReviewServiceTest {
 		OrderDetail orderDetail = new OrderDetail(order, product, productOption, 1, 100000);
 
 		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
-		when(orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq())).thenReturn(orderDetail);
+		//when(orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq())).thenReturn(orderDetail);
 
 		// When
-		reviewService.createReview(userSeq, request);
+		reviewService.createReview(userSeq, 1L, request);
 
 		// Then
 		verify(reviewRepository).save(reviewArgumentCaptor.capture());

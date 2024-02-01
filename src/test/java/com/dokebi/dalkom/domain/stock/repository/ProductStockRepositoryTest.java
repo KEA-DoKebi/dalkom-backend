@@ -1,4 +1,3 @@
-// TODO 데이터베이스 연동 하는 법 배운 뒤에 다시 해보기
 // package com.dokebi.dalkom.domain.stock.repository;
 //
 // import static org.assertj.core.api.Assertions.*;

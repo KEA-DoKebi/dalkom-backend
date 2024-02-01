@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailPage;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
@@ -53,14 +53,14 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<ReadProductResponse> findAdminPageProductList(Pageable pageable);
 
 	// PRODUCT-005 - 하위 카테고리 별 상품 목록 조회
-	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse( "
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailPage( "
 		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
 		+ "LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
 		+ "WHERE p.category.categorySeq = :categorySeq and p.state != 'N'"
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
-	Page<ProductByCategoryDetailResponse> findProductListByDetailCategory(
+	Page<ProductByCategoryDetailPage> findProductListByDetailCategory(
 		@Param("categorySeq") Long categorySeq, Pageable pageable);
 
 	// PRODUCT-006 - 전체 카테고리 별 상품 목록 조회 - 메인 화면

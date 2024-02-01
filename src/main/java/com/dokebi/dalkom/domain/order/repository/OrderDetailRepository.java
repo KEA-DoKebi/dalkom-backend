@@ -26,7 +26,8 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.order.dto.OrderDetailSimpleResponse( "
 		+ "od.product.name, od.product.imageUrl, od.productOption.prdtOptionSeq, od.productOption.detail) "
 		+ "FROM  OrderDetail od WHERE od.ordrDetailSeq =:ordrDetailSeq")
-	Optional<OrderDetailSimpleResponse> readOrderDetailSimpleResponseByordrDetailSeq(
+	Optional<OrderDetailSimpleResponse> readOrderDetailSimpleResponseByOrdrDetailSeq(
 		@Param("ordrDetailSeq") Long ordrDetailSeq);
 
+	Optional<OrderDetail> readFirstByOrder_OrdrSeq(Long ordrSeq);
 }
