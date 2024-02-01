@@ -45,10 +45,10 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public void createReview(Long userSeq, ReviewCreateRequest request) {
+	public void createReview(Long userSeq, Long orderDetailSeq, ReviewCreateRequest request) {
 
 		User user = userService.readUserByUserSeq(userSeq);
-		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq());
+		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(orderDetailSeq);
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
 		reviewRepository.save(review);
 	}
