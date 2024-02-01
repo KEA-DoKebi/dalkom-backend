@@ -26,10 +26,12 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class InquiryService {
 	private final InquiryRepository inquiryRepository;
 	private final CategoryService categoryService;
@@ -45,9 +47,14 @@ public class InquiryService {
 			InquiryAnswerState.NO.getState());
 		inquiry = inquiryRepository.save(inquiry);
 		// 문의 내용 Jira로 보내기
-		JiraInquiryRequest jiraInquiryRequest = new JiraInquiryRequest(request.getTitle(), request.getContent(),
-			user.getNickname(), inquiry.getInquirySeq());
-		jiraService.createIssueInquiry(jiraInquiryRequest);
+		try {
+			JiraInquiryRequest jiraInquiryRequest = new JiraInquiryRequest(request.getTitle(), request.getContent(),
+				user.getNickname(), inquiry.getInquirySeq());
+			jiraService.createIssueInquiry(jiraInquiryRequest);
+		} catch (Exception e) {
+			// Jira 연동 실패 로그 기록
+			log.error("Jira 이슈 생성 중 오류 발생", e);
+		}
 	}
 
 	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
