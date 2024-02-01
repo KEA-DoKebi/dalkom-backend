@@ -30,5 +30,4 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
 		@Param("ordrDetailSeq") Long ordrDetailSeq);
 
 	Optional<OrderDetail> readFirstByOrder_OrdrSeq(Long ordrSeq);
-
 }

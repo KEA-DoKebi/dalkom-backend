@@ -13,6 +13,7 @@ import com.dokebi.dalkom.domain.order.service.OrderDetailService;
 import com.dokebi.dalkom.domain.review.dto.ReviewByProductResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewCreateRequest;
+import com.dokebi.dalkom.domain.review.dto.ReviewReadResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
 import com.dokebi.dalkom.domain.review.dto.ReviewUpdateRequest;
 import com.dokebi.dalkom.domain.review.entity.Review;
@@ -75,5 +76,9 @@ public class ReviewService {
 
 	public List<ReviewSimpleDto> readReviewSimpleByProductSeq(Long productSeq) {
 		return reviewRepository.readReviewSimpleByProductSeq(productSeq);
+	}
+
+	public ReviewReadResponse readReviewByReviewSeq(Long reviewSeq) {
+		return reviewRepository.findReviewByReviewSeq(reviewSeq).orElseThrow(ReviewNotFoundException::new);
 	}
 }
