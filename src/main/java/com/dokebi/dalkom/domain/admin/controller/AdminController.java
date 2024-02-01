@@ -48,7 +48,7 @@ public class AdminController {
 		return Response.success(adminService.readAdminList(pageable));
 	}
 
-	// ADMIN-008 (관리자가 유저 생성)
+	// ADMIN-008 (관리자 유저 생성)
 	@PostMapping("/api/admin/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response createUser(@Valid @RequestBody SignUpRequest request) {
@@ -56,7 +56,7 @@ public class AdminController {
 		return Response.success();
 	}
 
-	// ADMIN-009 (대쉬보드 생성)
+	// ADMIN-009 (대쉬 보드 생성)
 	@GetMapping("/api/admin/dashboard")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readDashboard() {
@@ -71,4 +71,5 @@ public class AdminController {
 		@RequestParam String nickname, Pageable pageable) {
 		return Response.success(adminService.readAdminListSearch(adminId, name, nickname, pageable));
 	}
+
 }

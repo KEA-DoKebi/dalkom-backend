@@ -19,15 +19,15 @@ public class AdminDtoTest {
 		);
 
 		// When
-		AdminDto adminDto = AdminDto.toDto(admin);
+		ReadAdminResponse readAdminResponse = ReadAdminResponse.toDto(admin);
 
 		// Then
-		assertNotNull(adminDto);
-		assertEquals(admin.getAdminSeq(), adminDto.getAdminSeq());
-		assertEquals(admin.getAdminId(), adminDto.getAdminId());
-		assertEquals(admin.getRole(), adminDto.getRole());
-		assertEquals(admin.getNickname(), adminDto.getNickname());
-		assertEquals(admin.getName(), adminDto.getName());
-		assertEquals(admin.getDepart(), adminDto.getDepart());
+		assertNotNull(readAdminResponse);
+		assertEquals(admin.getAdminSeq(), readAdminResponse.getAdminSeq());
+		assertEquals(admin.getAdminId(), readAdminResponse.getAdminId());
+		assertEquals(admin.getRole(), readAdminResponse.getRole());
+		assertEquals(admin.getNickname(), readAdminResponse.getNickname());
+		assertEquals(admin.getName(), readAdminResponse.getName());
+		assertEquals(admin.getDepart(), readAdminResponse.getDepart());
 	}
 }

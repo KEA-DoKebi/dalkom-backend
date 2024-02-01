@@ -20,4 +20,5 @@ public class NoticeListResponse {
 	private LocalDateTime modifiedAt;
 	private String nickname;
 	private String state;
+
 }
