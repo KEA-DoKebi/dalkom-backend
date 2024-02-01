@@ -209,11 +209,11 @@ public class OrderService {
 			String requestState = OrderState.getNameByState(order.getOrderState());
 			String requestType;
 
-			if (Objects.equals(requestState, OrderState.CANCELED.getState())) {
+			if (Objects.equals(requestState, OrderState.CANCELED.getName())) {
 				requestType = "취소";
-			} else if (Objects.equals(requestState, OrderState.REFUND_CONFIRMED.getState())
-				|| Objects.equals(requestState, OrderState.RETURNED.getState())
-				|| Objects.equals(requestState, OrderState.REFUNDED.getState())) {
+			} else if (Objects.equals(requestState, OrderState.REFUND_CONFIRMED.getName())
+				|| Objects.equals(requestState, OrderState.RETURNED.getName())
+				|| Objects.equals(requestState, OrderState.REFUNDED.getName())) {
 				requestType = "환불";
 			} else {
 				throw new InvalidOrderStateException();
