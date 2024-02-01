@@ -51,6 +51,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	Optional<Order> findOrderByOrdrSeq(Long orderSeq);
 
 	@Query("SELECT o FROM Order o "
-		+ "WHERE o.user.userSeq = :userSeq AND (o.orderState = '21' OR o.orderState = '31' OR o.orderState = '32' OR o.orderState = '33')")
+		+ "WHERE o.user.userSeq = :userSeq "
+		+ "AND (o.orderState = '21' OR o.orderState = '31' OR o.orderState = '32' OR o.orderState = '33')")
 	Page<Order> findCancelRefundListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 }
