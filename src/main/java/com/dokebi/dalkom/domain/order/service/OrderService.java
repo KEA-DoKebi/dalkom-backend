@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.order.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -202,33 +203,30 @@ public class OrderService {
 	}
 
 	public Page<CancelRefundReadResponse> readOrderCancelListByUserSeq(Long userSeq, Pageable pageable) {
-		/*
-		 * 1. 사용자의 모든 주문을 검색한다.
-		 * 2. 각 주문멸 주문 상세의 첫번째 값을 검색한다.
-		 * 3. 조립해서 CancelRefundReadResponse의 List를 생성한다.
-		 * 3. 그걸 Page로 변환한다.
-		 */
-		List<CancelRefundReadResponse> responseList = new ArrayList<>();
+		Page<Order> orderPage = orderRepository.findCancelRefundListByUserSeq(userSeq, pageable);
 
-		List<Order> orderList = orderRepository.findAllByUser_UserSeq(userSeq);
-
-		for (Order order : orderList) {
+		List<CancelRefundReadResponse> responseList = orderPage.stream().map(order -> {
 			OrderDetail orderDetail = orderDetailService.readFirstOrderDetailByOrderSeq(order.getOrdrSeq());
 			Product product = orderDetail.getProduct();
+			String requestState = OrderState.getNameByState(order.getOrderState());
 			String requestType;
-			String requestState;
 
-			switch (order.getOrderState()) {
-				case OrderState.CANCELED:
-					requestType = "취소";
-					requestState = "완료";
+			if (Objects.equals(requestState, OrderState.CANCELED.getState())) {
+				requestType = "취소";
+			} else if (Objects.equals(requestState, OrderState.REFUND_CONFIRMED.getState())
+				|| Objects.equals(requestState, OrderState.RETURNED.getState())
+				|| Objects.equals(requestState, OrderState.REFUNDED.getState())) {
+				requestType = "환불";
+			} else {
+				throw new InvalidOrderStateException();
 			}
 
-			responseList.add(new CancelRefundReadResponse(product.getName(), product.getImageUrl(),
-				orderDetail.getProductOption().getDetail(), order.getModifiedAt(), order.getOrderState()));
-		}
+			return new CancelRefundReadResponse(product.getName(), product.getImageUrl(),
+				orderDetail.getProductOption().getDetail(), order.getModifiedAt(), order.getOrderState(),
+				requestType, requestState);
+		}).collect(Collectors.toList());
 
-		//CancelRefundReadDto cancelRefundReadDto = orderDetailService.readOrderCancelListByUserSeq(userSeq, pageable);
+		return new PageImpl<>(responseList, pageable, orderPage.getTotalElements());
 	}
 
 	// 주문 검색 조회 서비스

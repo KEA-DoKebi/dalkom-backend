@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.order.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -51,5 +50,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	Optional<Order> findOrderByOrdrSeq(Long orderSeq);
 
-	List<Order> findAllByUser_UserSeq(Long userSeq);
+	@Query("SELECT o FROM Order o "
+		+ "WHERE o.user.userSeq = :userSeq AND (o.orderState = '21' OR o.orderState = '31' OR o.orderState = '32' OR o.orderState = '33')")
+	Page<Order> findCancelRefundListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 }
