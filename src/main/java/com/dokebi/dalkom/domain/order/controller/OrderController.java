@@ -115,9 +115,9 @@ public class OrderController {
 	}
 
 	// ORDER-012 (취소/환불 목록 조회)
-	@GetMapping("/api/order/canclerefundlist/{userSeq}")
+	@GetMapping("/api/order/canclerefundlist/")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderCancelListByUserSeq(@PathVariable Long userSeq, Pageable pageable) {
+	public Response readOrderCancelListByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
 		return Response.success(orderService.readOrderCancelListByUserSeq(userSeq, pageable));
 	}
 
