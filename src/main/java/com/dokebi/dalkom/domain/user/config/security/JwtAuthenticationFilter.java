@@ -15,6 +15,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import com.dokebi.dalkom.domain.user.dto.AuthResponse;
 import com.dokebi.dalkom.domain.user.service.TokenService;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,10 +54,15 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 				if (loginSeq == null) {
 					handleRefreshTokenExpired(request, response);
 					return;
+
 				}
 
 				//인증
 				setAuthentication(loginSeq);
+			} catch (ExpiredJwtException e) {
+				// Refresh Token까지 만료된 경우
+				handleRefreshTokenExpired(request, response);
+				return;
 			} catch (Exception e) {
 				log.error("Error processing token", e);
 			}
@@ -79,10 +85,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 	}
 
 	private void handleRefreshTokenExpired(ServletRequest request, ServletResponse response) throws IOException {
-		// refresh token이 만료되었을 때의 처리를 수행
-		// 클라이언트에게 로그아웃 요청이나 새로운 인증을 받을 수 있도록 안내
 		HttpServletResponse httpResponse = (HttpServletResponse)response;
-		httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Refresh token expired");
+		httpResponse.setContentType("application/json");
+		httpResponse.setCharacterEncoding("UTF-8");
+
+		String jsonResponse = "{\"code\": -1103, \"message\": \"로그인이 만료되었습니다.\"}";
+		httpResponse.getWriter().write(jsonResponse);
 	}
 
 }

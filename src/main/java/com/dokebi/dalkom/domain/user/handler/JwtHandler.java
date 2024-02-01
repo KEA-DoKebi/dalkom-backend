@@ -10,8 +10,10 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtHandler {
 	private String type = "Bearer ";
 
@@ -50,11 +52,11 @@ public class JwtHandler {
 
 	public Jws<Claims> parse(String key, String token) {
 		try {
-			System.out.println("===토큰 유효====");
+			log.info("===토큰 유효====");
 			return Jwts.parser().setSigningKey(key).parseClaimsJws(untype(token));
 		} catch (ExpiredJwtException e) {
-			System.out.println("===토큰 만료===");
-			return null;
+			log.info("===토큰 만료====");
+			throw e;
 
 		}
 
