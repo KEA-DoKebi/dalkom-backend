@@ -38,8 +38,8 @@ jwt:
     access: ${JWT_ACCESS_KEY}
     refresh: ${JWT_REFRESH_KEY}
   max-age:
-    access: 20 #3시간 - 10800
-    refresh: 30 #일주일
+    access: 604800 #3시간 - 10800
+    refresh: 604800 #일주일
 
 
 jira:
