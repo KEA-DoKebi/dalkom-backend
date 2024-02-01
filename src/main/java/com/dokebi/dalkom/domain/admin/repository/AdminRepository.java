@@ -23,14 +23,43 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) FROM Admin a")
 	Page<ReadAdminResponse> findAllAdminList(Pageable pageable);
 
+	// 이렇게 하는경우 세번의 query를 돌려야 하니깐 하나씩 나눠서하는게 좋을것같다.
+	// @Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
+	// 	"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
+	// 	"FROM Admin a WHERE (a.adminId LIKE CONCAT('%', :adminId, '%')) " +
+	// 	"OR (a.name LIKE CONCAT('%', :name, '%')) " +
+	// 	"OR (a.nickname LIKE CONCAT('%', :nickname, '%'))")
+	// Page<ReadAdminResponse> findAdminListBySearch(
+	// 	@Param("name") String name,
+	// 	@Param("adminId") String adminId,
+	// 	@Param("nickname") String nickname,
+	// 	Pageable pageable);
+
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
 		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
-		"FROM Admin a WHERE (:adminId IS NULL OR a.adminId LIKE CONCAT('%', :adminId, '%')) " +
-		"OR (:name IS NULL OR a.name LIKE CONCAT('%', :name, '%')) " +
-		"OR (:nickname IS NULL OR a.nickname LIKE CONCAT('%', :nickname, '%'))")
-	Page<ReadAdminResponse> findAdminListBySearch(
-		@Param("adminId") String adminId,
+		"FROM Admin a WHERE a.name LIKE CONCAT('%', :name, '%')")
+	Page<ReadAdminResponse> findAdminListByName(
 		@Param("name") String name,
+		Pageable pageable);
+
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
+		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
+		"FROM Admin a WHERE (a.adminId LIKE CONCAT('%', :adminId, '%')) ")
+	Page<ReadAdminResponse> findAdminListByAdminId(
+		@Param("adminId") String adminId,
+		Pageable pageable);
+
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
+		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
+		"FROM Admin a WHERE (a.depart LIKE CONCAT('%', :depart, '%')) ")
+	Page<ReadAdminResponse> findAdminListByDepart(
+		@Param("depart") String depart,
+		Pageable pageable);
+
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
+		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
+		"FROM Admin a WHERE (a.nickname LIKE CONCAT('%', :nickname, '%')) ")
+	Page<ReadAdminResponse> findAdminListByNickname(
 		@Param("nickname") String nickname,
 		Pageable pageable);
 

@@ -23,4 +23,11 @@ public interface FaqRepository extends JpaRepository<Inquiry, Long> {
 		+ "WHERE i.category.name = 'FAQ'")
 	Page<FaqReadListResponse> findFaqList(Pageable pageable);
 
+	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.FaqReadListResponse("
+		+ "i.inquirySeq, i.createdAt, i.title) "
+		+ "FROM Inquiry i "
+		+ "WHERE i.category.name = 'FAQ' "
+		+ "AND i.title LIKE CONCAT('%', :title, '%')")
+	Page<FaqReadListResponse> findFaqListSearch(@Param("title") String title, Pageable pageable);
+
 }

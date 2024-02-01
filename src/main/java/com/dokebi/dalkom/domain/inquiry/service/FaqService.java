@@ -50,6 +50,11 @@ public class FaqService {
 		return faqRepository.findFaqList(pageable);
 	}
 
+	//faq 검색
+	public Page<FaqReadListResponse> readFaqListBySearch(String title, Pageable pageable) {
+		return faqRepository.findFaqListSearch(title, pageable);
+	}
+
 	@Transactional
 	public void updateFaq(Long adminSeq, Long inquirySeq, FaqUpdateRequest request) {
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);

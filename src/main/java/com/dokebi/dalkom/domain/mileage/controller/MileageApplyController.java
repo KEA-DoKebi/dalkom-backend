@@ -51,25 +51,35 @@ public class MileageApplyController {
 		return Response.success();
 	}
 
-	// MILEAGE-006 (마일리지 신청 조회 검색 (관리자))
+	// MILEAGE-006 (마일리지 신청 조회 내역 검색 (관리자))
 	@GetMapping("/api/mileage/apply/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readMileageApplySearch(@RequestParam String email, @RequestParam String nickname,
-		@RequestParam String name, Pageable pageable) {
-		return Response.success(mileageApplyService.readMileageAskSearch(email, nickname, name, pageable));
+	public Response readMileageApplyHistorySearch(@RequestParam(required = false) String email,
+		@RequestParam(required = false) String nickname, @RequestParam(required = false) String name,
+		Pageable pageable) {
+		return Response.success(mileageApplyService.readMileageApplyHistoryListSearch(email, nickname, name, pageable));
 	}
 
 	// MILEAGE-007 (마일리지 신청 조회 - 대기중(W)인 값 조회 (사용자))
 	@GetMapping("/api/mileage/apply/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageApplyByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
-		return Response.success(mileageApplyService.readMileageApplyByUserSeq(userSeq, pageable));
+		return Response.success(mileageApplyService.readMileageApplyListByUserSeq(userSeq, pageable));
 	}
 
 	// MILEAGE-008 (마일리지 신청 조회 - 대기중(W)인 값 조회 (관리자))
 	@GetMapping("/api/mileage/apply/wait")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readMileageApplyWaitState(Pageable pageable) {
-		return Response.success(mileageApplyService.readMileageApplyWaitState(pageable));
+		return Response.success(mileageApplyService.readMileageApplyWaitStateList(pageable));
+	}
+
+	// MILEAGE-009 (마일리지 신청 검색 - 대기중(W)인 값 조회 (관리자))
+	@GetMapping("/api/mileage/apply/wait/search")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readMileageApplyWaitStateSearch(@RequestParam(required = false) String email,
+		@RequestParam(required = false) String nickname, @RequestParam(required = false) String name,
+		Pageable pageable) {
+		return Response.success(mileageApplyService.readMileageApplyWaitStateSearch(email, nickname, name, pageable));
 	}
 }

@@ -66,10 +66,12 @@ public class AdminController {
 	// ADMIN-010 (관리자 목록 조회 검색)
 	@GetMapping("/api/admin/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readAdminListSearch(@RequestParam String adminId,
-		@RequestParam String name,
-		@RequestParam String nickname, Pageable pageable) {
-		return Response.success(adminService.readAdminListSearch(adminId, name, nickname, pageable));
+	public Response readAdminListSearch(
+		@RequestParam(required = false) String name,
+		@RequestParam(required = false) String adminId,
+		@RequestParam(required = false) String depart,
+		@RequestParam(required = false) String nickname, Pageable pageable) {
+		return Response.success(adminService.readAdminListSearch(name, adminId, depart, nickname, pageable));
 	}
 
 }

@@ -179,7 +179,13 @@ public class ProductService {
 
 	// PRODUCT-009 (상품 리스트 검색)
 	public Page<ReadProductResponse> readProductListSearch(String name, String company, Pageable pageable) {
-		return productRepository.findProductListSearch(name, company, pageable);
+		if (name != null) {
+			return productRepository.findProductListSearchByName(name, pageable);
+		} else if (company != null) {
+			return productRepository.findProductListSearchByCompany(company, pageable);
+		} else {
+			return productRepository.findProductListSearch(pageable);
+		}
 	}
 
 	// PRODUCT-010 (특정 상품 정보 (상품 비교용) 조회)

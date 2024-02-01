@@ -91,10 +91,21 @@ public class AdminService {
 		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
 	}
 
-	public Page<ReadAdminResponse> readAdminListSearch(String adminId, String name, String nickname,
+	// 서비스
+	public Page<ReadAdminResponse> readAdminListSearch(String name, String adminId, String depart, String nickname,
 		Pageable pageable) {
-		Page<ReadAdminResponse> adminPage = adminRepository.findAdminListBySearch(adminId, name, nickname, pageable);
-		return adminPage;
+		if (name != null) {
+			return adminRepository.findAdminListByName(name, pageable);
+		} else if (adminId != null) {
+			return adminRepository.findAdminListByAdminId(adminId, pageable);
+		} else if (depart != null) {
+			return adminRepository.findAdminListByDepart(depart, pageable);
+		} else if (nickname != null) {
+			return adminRepository.findAdminListByNickname(nickname, pageable);
+		} else {
+			// 다른 조건이 없는 경우 기본적인 조회 수행
+			return adminRepository.findAllAdminList(pageable);
+		}
 	}
 
 	private void validateNickname(String nickname) {
