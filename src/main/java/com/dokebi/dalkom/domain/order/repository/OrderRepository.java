@@ -59,12 +59,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		Pageable pageable);
 
 	//관리자 주문조회 검색 수령인
-	//관리자 주문조회 검색 이름
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse( "
 		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) "
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
-		+ "WHERE o.user.name LIKE CONCAT('%', :name, '%')"
+		+ "WHERE o.user.name LIKE CONCAT('%', :receiverName, '%')"
 		+ "GROUP BY o.ordrSeq, od.product.productSeq")
 	Page<OrderAdminReadResponse> findOrderListByAdminWithName(@Param("receiverName") String name,
 		Pageable pageable);
