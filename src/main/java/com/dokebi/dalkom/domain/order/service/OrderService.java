@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.order.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
+import com.dokebi.dalkom.domain.order.dto.CancelRefundReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
@@ -197,29 +199,32 @@ public class OrderService {
 		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
 	}
 
-	/** private **/
+	// 취소 / 환불 리스트 조회
+	public Page<CancelRefundReadResponse> readOrderCancelListByUserSeq(Long userSeq, Pageable pageable) {
+		Page<Order> orderPage = orderRepository.findCancelRefundListByUserSeq(userSeq, pageable);
 
-	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
-		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
-		int amount = orderProduct.getProductAmount();
-		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		return amount * product.getPrice();
-	}
+		List<CancelRefundReadResponse> responseList = orderPage.stream().map(order -> {
+			OrderDetail orderDetail = orderDetailService.readFirstOrderDetailByOrderSeq(order.getOrdrSeq());
+			Product product = orderDetail.getProduct();
+			String requestState = OrderState.getNameByState(order.getOrderState());
+			String requestType;
 
-	// 주문 상세 만들기
-	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
-		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
-		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
-			orderProduct.getProductOptionSeq());
-		Integer amount = orderProduct.getProductAmount();
+			if (Objects.equals(requestState, OrderState.CANCELED.getName())) {
+				requestType = "취소";
+			} else if (Objects.equals(requestState, OrderState.REFUND_CONFIRMED.getName())
+				|| Objects.equals(requestState, OrderState.RETURNED.getName())
+				|| Objects.equals(requestState, OrderState.REFUNDED.getName())) {
+				requestType = "환불";
+			} else {
+				throw new InvalidOrderStateException();
+			}
 
-		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			product.getPrice() * amount);
-		// 상품 재고 변경
-		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
-			orderProduct.getProductOptionSeq(), amount);
+			return new CancelRefundReadResponse(product.getName(), product.getImageUrl(),
+				orderDetail.getProductOption().getDetail(), order.getModifiedAt(), order.getOrderState(),
+				requestType, requestState);
+		}).collect(Collectors.toList());
 
-		return orderDetail;
+		return new PageImpl<>(responseList, pageable, orderPage.getTotalElements());
 	}
 
 	// 주문 검색 조회 서비스
@@ -279,6 +284,31 @@ public class OrderService {
 		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 			throw new PasswordNotValidException();
 		}
+	}
+
+	/** private **/
+
+	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		int amount = orderProduct.getProductAmount();
+		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
+		return amount * product.getPrice();
+	}
+
+	// 주문 상세 만들기
+	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
+			orderProduct.getProductOptionSeq());
+		Integer amount = orderProduct.getProductAmount();
+
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
+			product.getPrice() * amount);
+		// 상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
+			orderProduct.getProductOptionSeq(), amount);
+
+		return orderDetail;
 	}
 
 	// 주문 취소 - 주문 취소 처리
