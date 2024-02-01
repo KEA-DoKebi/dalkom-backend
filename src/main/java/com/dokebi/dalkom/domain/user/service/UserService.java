@@ -83,14 +83,14 @@ public class UserService {
 	}
 
 	public Page<UserListResponse> readUserListSearch(String email, String nickname, Pageable pageable) {
-		Page<User> usersPage = userRepository.findUsersBySearch(email, nickname, pageable);
-
-		List<UserListResponse> dtoList = usersPage.getContent()
-			.stream()
-			.map(UserListResponse::toDto)
-			.collect(Collectors.toList());
-
-		return new PageImpl<>(dtoList, pageable, usersPage.getTotalElements());
+		if (email != null) {
+			return userRepository.findUserListByEmail(email, pageable);
+		} else if (nickname != null) {
+			return userRepository.findUserListByNickname(nickname, pageable);
+		} else {
+			// 다른 조건이 없는 경우 기본적인 조회 수행
+			return userRepository.findAllUserList(pageable);
+		}
 	}
 
 	public ReadUserSelfDetailResponse readUserSelfDetail(Long userSeq) {

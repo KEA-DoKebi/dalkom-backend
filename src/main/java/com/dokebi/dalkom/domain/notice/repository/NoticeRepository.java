@@ -28,8 +28,12 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
 		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
-		"FROM Notice n WHERE n.admin.nickname LIKE CONCAT('%', :nickname, '%') " +
-		"OR n.title LIKE CONCAT('%', :title, '%')")
-	Page<NoticeListResponse> findNoticeListByNickNameOrTitle(@Param("nickname") String nickname,
-		@Param("title") String title, Pageable pageable);
+		"FROM Notice n WHERE n.admin.nickname LIKE CONCAT('%', :nickname, '%') ")
+	Page<NoticeListResponse> findNoticeListByNickname(@Param("nickname") String nickname,
+		Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
+		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
+		"FROM Notice n WHERE n.title LIKE CONCAT('%', :title, '%')")
+	Page<NoticeListResponse> findNoticeListByTitle(@Param("title") String title, Pageable pageable);
 }

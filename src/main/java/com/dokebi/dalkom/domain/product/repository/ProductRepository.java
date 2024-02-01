@@ -79,13 +79,32 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "FROM Product p "
 		+ "INNER JOIN ProductStock ps "
 		+ "ON p.productSeq = ps.product.productSeq "
-		+ "WHERE ((p.name LIKE CONCAT('%', :name, '%')) "
-		+ "OR (p.company LIKE CONCAT('%', :company, '%')))"
-		+ "AND p.state != 'N'"
+		+ "WHERE (p.name LIKE CONCAT('%', :name, '%') "
+		+ "AND p.state != 'N') "
 		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
-	Page<ReadProductResponse> findProductListSearch(@Param("name") String name, @Param("company") String company,
-		Pageable pageable);
+	Page<ReadProductResponse> findProductListSearchByName(@Param("name") String name, Pageable pageable);
+
+	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.productOption.detail, ps.amount)"
+		+ "FROM Product p "
+		+ "INNER JOIN ProductStock ps "
+		+ "ON p.productSeq = ps.product.productSeq "
+		+ "WHERE (p.company LIKE CONCAT('%', :company, '%') "
+		+ "AND p.state != 'N') "
+		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
+		countQuery = "SELECT COUNT(p) FROM Product p ")
+	Page<ReadProductResponse> findProductListSearchByCompany(@Param("company") String company, Pageable pageable);
+
+	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, ps.productOption.detail, ps.amount)"
+		+ "FROM Product p "
+		+ "INNER JOIN ProductStock ps "
+		+ "ON p.productSeq = ps.product.productSeq "
+		+ "WHERE ( p.state != 'N') "
+		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
+		countQuery = "SELECT COUNT(p) FROM Product p ")
+	Page<ReadProductResponse> findProductListSearch(Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto( "
 		+ "p.name, p.imageUrl, p.price) "

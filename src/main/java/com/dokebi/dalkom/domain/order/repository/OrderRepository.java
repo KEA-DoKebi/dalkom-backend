@@ -32,14 +32,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "WHERE o.ordrSeq = :ordrSeq ")
 	Optional<ReceiverDetailDto> findReceiverDetailDtoByOrdrSeq(@Param("ordrSeq") Long ordrSeq);
 
-	// 전체 주문조회
+	// 관리자 전체 주문조회
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse("
 		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) FROM Order o "
 		+ "JOIN o.orderDetailList od "
 		+ "GROUP BY o.ordrSeq")
 	Page<OrderAdminReadResponse> findAllOrderList(Pageable pageable);
 
-	//전체 주문조회 검색
+	//사용자 주문조회 검색
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse( "
 		+ "o.ordrSeq, od.product.name, COUNT(*), o.totalPrice, o.orderState, o.createdAt) "
 		+ "FROM Order o "
@@ -47,6 +47,27 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "WHERE o.receiverName LIKE CONCAT('%', :receiverName, '%')"
 		+ "GROUP BY o.ordrSeq, od.product.productSeq")
 	Page<OrderUserReadResponse> findAllOrderListByReceiverName(@Param("receiverName") String receiverName,
+		Pageable pageable);
+
+	//관리자 주문조회 검색 이름
+	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse( "
+		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) "
+		+ "FROM Order o "
+		+ "JOIN o.orderDetailList od "
+		+ "WHERE o.receiverName LIKE CONCAT('%', :receiverName, '%')"
+		+ "GROUP BY o.ordrSeq, od.product.productSeq")
+	Page<OrderAdminReadResponse> findOrderListByAdminWithReceiverName(@Param("receiverName") String receiverName,
+		Pageable pageable);
+
+	//관리자 주문조회 검색 수령인
+	//관리자 주문조회 검색 이름
+	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse( "
+		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) "
+		+ "FROM Order o "
+		+ "JOIN o.orderDetailList od "
+		+ "WHERE o.user.name LIKE CONCAT('%', :name, '%')"
+		+ "GROUP BY o.ordrSeq, od.product.productSeq")
+	Page<OrderAdminReadResponse> findOrderListByAdminWithName(@Param("receiverName") String name,
 		Pageable pageable);
 
 	Optional<Order> findOrderByOrdrSeq(Long orderSeq);

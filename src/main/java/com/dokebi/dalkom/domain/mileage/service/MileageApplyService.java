@@ -35,11 +35,11 @@ public class MileageApplyService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<MileageApplyResponse> readMileageApplyWaitState(Pageable pageable) {
+	public Page<MileageApplyResponse> readMileageApplyWaitStateList(Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApplyWaitState(pageable);
 	}
 
-	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq, Pageable pageable) {
+	public Page<MileageApplyResponse> readMileageApplyListByUserSeq(Long userSeq, Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq, pageable);
 	}
 
@@ -85,9 +85,32 @@ public class MileageApplyService {
 			throw new MileageAlreadyApplyException();
 	}
 
-	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
+	public Page<MileageApplyResponse> readMileageApplyHistoryListSearch(String email, String nickname, String name,
 		Pageable pageable) {
-		return mileageApplyRepository.findAllMileageAskSearch(email, nickname, name, pageable);
+		if (email != null) {
+			return mileageApplyRepository.findMileageApplyHistoryListByEmail(email, pageable);
+		} else if (nickname != null) {
+			return mileageApplyRepository.findMileageApplyHistoryListByNickname(nickname, pageable);
+		} else if (name != null) {
+			return mileageApplyRepository.findMileageApplyHistoryListByName(name, pageable);
+		} else {
+			// 다른 조건이 없는 경우 기본적인 조회 수행
+			return mileageApplyRepository.findMileageHistoryApplyList(pageable);
+		}
+	}
+
+	public Page<MileageApplyResponse> readMileageApplyWaitStateSearch(String email, String nickname, String name,
+		Pageable pageable) {
+		if (email != null) {
+			return mileageApplyRepository.findAllMileageApplyWaitStateListByEmail(email, pageable);
+		} else if (nickname != null) {
+			return mileageApplyRepository.findAllMileageApplyWaitStateListByNickname(nickname, pageable);
+		} else if (name != null) {
+			return mileageApplyRepository.findAllMileageApplyWaitStateListByName(name, pageable);
+		} else {
+			// 다른 조건이 없는 경우 기본적인 조회 수행
+			return mileageApplyRepository.findMileageHistoryApplyList(pageable);
+		}
 	}
 
 }

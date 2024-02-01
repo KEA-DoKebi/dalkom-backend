@@ -71,7 +71,13 @@ public class NoticeService {
 
 	@Transactional
 	public Page<NoticeListResponse> readNoticeListBySearch(String nickName, String title, Pageable pageable) {
-
-		return noticeRepository.findNoticeListByNickNameOrTitle(nickName, title, pageable);
+		if (nickName != null) {
+			return noticeRepository.findNoticeListByNickname(nickName, pageable);
+		} else if (title != null) {
+			return noticeRepository.findNoticeListByTitle(title, pageable);
+		} else {
+			return noticeRepository.findNoticeList(pageable);
+		}
 	}
+
 }

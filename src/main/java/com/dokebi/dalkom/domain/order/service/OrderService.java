@@ -223,8 +223,21 @@ public class OrderService {
 	}
 
 	// 주문 검색 조회 서비스
-	public Page<OrderUserReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
+	public Page<OrderUserReadResponse> readOrderListByUserSearch(String receiverName, Pageable pageable) {
 		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
+	}
+
+	// 관리자 주문 검색
+	public Page<OrderAdminReadResponse> readOrderListByAdminSearch(String receiverName, String name,
+		Pageable pageable) {
+		if (receiverName != null) {
+			return orderRepository.findOrderListByAdminWithReceiverName(receiverName, pageable);
+		} else if (name != null) {
+			return orderRepository.findOrderListByAdminWithName(name, pageable);
+		} else {
+			return orderRepository.findAllOrderList(pageable);
+
+		}
 	}
 
 	// 주문 취소

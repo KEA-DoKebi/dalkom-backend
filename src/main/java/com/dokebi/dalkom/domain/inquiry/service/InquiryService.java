@@ -104,7 +104,6 @@ public class InquiryService {
 		Long categorySeq, String title, Pageable pageable) {
 		Page<InquiryListResponse> page = inquiryRepository.findInquiryListByCategorySearch(
 			categorySeq, title, pageable);
-
 		if (page.isEmpty()) {
 			throw new InquiryNotFoundException();
 		}
