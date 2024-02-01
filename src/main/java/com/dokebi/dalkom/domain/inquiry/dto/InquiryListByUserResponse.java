@@ -2,6 +2,8 @@ package com.dokebi.dalkom.domain.inquiry.dto;
 
 import java.time.LocalDateTime;
 
+import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,4 +23,16 @@ public class InquiryListByUserResponse {
 	private String title;
 	private LocalDateTime createdAt;
 	private String answerState;
+	private String answerStateName;
+
+	public InquiryListByUserResponse(Long inquirySeq, String category, String title, LocalDateTime createdAt,
+		String answerState) {
+		this.inquirySeq = inquirySeq;
+		this.category = category;
+		this.title = title;
+		this.createdAt = createdAt;
+		this.answerState = answerState;
+		this.answerStateName = InquiryAnswerState.getNameByState(answerState);
+	}
+
 }

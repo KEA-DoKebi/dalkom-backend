@@ -58,11 +58,11 @@ public class MileageApplyService {
 		Integer amount = mileageApply.getAmount();
 		Integer totalMileage = user.getMileage() + amount;
 
-		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING)) {
+		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING.getState())) {
 			mileageApply.setApprovedState(request.getApprovedState());
 
 			mileageService.createMileageHistory(user, amount, totalMileage,
-				MileageHistoryState.CHARGED);
+				MileageHistoryState.CHARGED.getState());
 
 			user.setMileage(totalMileage);
 		}
@@ -74,7 +74,7 @@ public class MileageApplyService {
 		User user = userService.readUserByUserSeq(userSeq);
 		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
 		isApprovedStateIsWaitByUserSeq(userSeq);
-		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING.getState());
 		mileageApplyRepository.save(mileageApply);
 
 	}

@@ -36,7 +36,8 @@ public class FaqService {
 	public void createFaq(Long adminSeq, FaqCreateRequest request) {
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		Category category = categoryService.readCategoryByCategorySeq(FAQ_CATEGORY_SEQ);
-		Inquiry inquiry = new Inquiry(category, admin, request.getTitle(), request.getContent(), InquiryAnswerState.NO);
+		Inquiry inquiry = new Inquiry(category, admin, request.getTitle(), request.getContent(),
+			InquiryAnswerState.NO.getState());
 		faqRepository.save(inquiry);
 
 	}
