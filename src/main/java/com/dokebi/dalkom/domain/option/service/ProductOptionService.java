@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.option.dto.OptionCodeResponse;
+import com.dokebi.dalkom.domain.option.dto.OptionDetailListResponse;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
@@ -22,7 +23,7 @@ public class ProductOptionService {
 		return productOptionRepository.findAllOptionCode();
 	}
 
-	public List<String> readOptionDetailList(String optionCode) {
+	public List<OptionDetailListResponse> readOptionDetailList(String optionCode) {
 		return productOptionRepository.findDetailByOptionCode(optionCode);
 	}
 
