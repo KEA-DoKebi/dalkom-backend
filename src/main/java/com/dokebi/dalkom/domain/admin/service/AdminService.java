@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.admin.service;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -115,8 +116,10 @@ public class AdminService {
 		response.setTotalMonthlyMileage(adminRepository.findTotalMonthlyPrice());
 		response.setTotalDailyMileage(adminRepository.findTotalDailyPrice());
 		response.setMonthlyPriceList(adminRepository.findMonthlyPriceList());
-		response.setMonthlyProductList(adminRepository.findMonthlyProductList());
 		response.setMonthlyCategoryList(adminRepository.findMonthlyCategoryList());
+		
+		Pageable topFive = PageRequest.of(0, 5);
+		response.setMonthlyProductList(adminRepository.findMonthlyProductList(topFive));
 		return response;
 	}
 

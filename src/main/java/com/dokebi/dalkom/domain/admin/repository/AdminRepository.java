@@ -92,7 +92,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 			+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW() , '%Y-%m') "
 			+ "GROUP by DATE_FORMAT(od.createdAt, '%Y-%m') , p.productSeq "
 			+ "ORDER by sum(od.amount) DESC ")
-	List<MonthlyProductListDto> findMonthlyProductList();
+	Page<MonthlyProductListDto> findMonthlyProductList(Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto(c.parentSeq, MAX(c2.name),  COUNT(*)) "
 		+ "from OrderDetail od "
