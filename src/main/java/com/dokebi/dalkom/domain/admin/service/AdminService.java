@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.admin.dto.AdminDashboardResponse;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
@@ -106,6 +107,17 @@ public class AdminService {
 			// 다른 조건이 없는 경우 기본적인 조회 수행
 			return adminRepository.findAllAdminList(pageable);
 		}
+	}
+
+	public AdminDashboardResponse readDashboard() {
+		AdminDashboardResponse response = new AdminDashboardResponse();
+		response.setTotalMileage(adminRepository.findTotalPrice());
+		response.setTotalMonthlyMileage(adminRepository.findTotalMonthlyPrice());
+		response.setTotalDailyMileage(adminRepository.findTotalDailyPrice());
+		response.setMonthlyPriceList(adminRepository.findMonthlyPriceList());
+		response.setMonthlyProductList(adminRepository.findMonthlyProductList());
+		response.setMonthlyCategoryList(adminRepository.findMonthlyCategoryList());
+		return response;
 	}
 
 	private void validateNickname(String nickname) {
