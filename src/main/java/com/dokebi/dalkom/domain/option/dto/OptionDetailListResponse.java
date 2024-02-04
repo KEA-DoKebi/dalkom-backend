@@ -3,13 +3,14 @@ package com.dokebi.dalkom.domain.option.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-// ReadProductDetailResponse의 List용 DTO
-public class OptionListDto {
-
-	private Long productOptionSeq;
+// OP-002에 해당하는 response
+public class OptionDetailListResponse {
+	private Long prdtOptionSeq;
 	private String detail;
 }

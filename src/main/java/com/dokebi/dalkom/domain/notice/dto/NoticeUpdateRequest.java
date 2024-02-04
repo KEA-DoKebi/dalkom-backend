@@ -23,9 +23,6 @@ public class NoticeUpdateRequest {
 	@NotBlank(message = "NoticeUpdateRequest content NotBlank 에러")
 	private String content;
 
-	@NotNull(message = "NoticeUpdateRequest adminSeq NotNull 에러")
-	private Long adminSeq;
-
 	@NotNull(message = "NoticeUpdateRequest state NotNull 에러")
 	@Pattern(regexp = "[NY]", message = "NoticeUpdateRequest state Pattern 에러")
 	private String state;

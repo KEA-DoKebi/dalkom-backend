@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.user.dto.ReadUserSelfDetailResponse;
 import com.dokebi.dalkom.domain.user.dto.UserListResponse;
 import com.dokebi.dalkom.domain.user.dto.UserUpdateRequest;
@@ -27,35 +26,18 @@ public class UserService {
 	private final UserRepository userRepository;
 
 	@Transactional
-	public Response updateUser(Long userSeq, UserUpdateRequest request) {
-		try {
-			if (request.getPassword() != null)
-				updateUserWithPassword(userSeq, request);
-			else
-				updateUserWithoutPassword(userSeq, request);
-			return Response.success();
-		} catch (UserNicknameAlreadyExistsException e) {
-			// 닉네임 중복 예외 처리
-			return Response.failure(0, e.getMessage());
-		}
-	}
+	public void updateUser(Long userSeq, UserUpdateRequest request) {
+		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 
-	@Transactional
-	public void updateUserWithPassword(Long userSeq, UserUpdateRequest request) {
+		user.setPassword(request.getPassword());
 		validateNickname(request.getNickname());
-		userRepository.updateUserWithPassword(userSeq, request.getPassword(), request.getNickname(),
-			request.getAddress());
-	}
-
-	@Transactional
-	public void updateUserWithoutPassword(Long userSeq, UserUpdateRequest request) {
-		validateNickname(request.getNickname());
-		userRepository.updateUserWithoutPassword(userSeq, request.getNickname(), request.getAddress());
+		user.setNickname(request.getNickname());
+		user.setAddress(request.getAddress());
 	}
 
 	private void validateNickname(String nickname) {
 		if (userRepository.existsByNickname(nickname)) {
-			throw new UserNicknameAlreadyExistsException(nickname + "은 이미 사용중입니다.");
+			throw new UserNicknameAlreadyExistsException(nickname);
 		}
 	}
 
@@ -79,14 +61,14 @@ public class UserService {
 	}
 
 	public Page<UserListResponse> readUserListSearch(String email, String nickname, Pageable pageable) {
-		Page<User> usersPage = userRepository.findUsersBySearch(email, nickname, pageable);
-
-		List<UserListResponse> dtoList = usersPage.getContent()
-			.stream()
-			.map(UserListResponse::toDto)
-			.collect(Collectors.toList());
-
-		return new PageImpl<>(dtoList, pageable, usersPage.getTotalElements());
+		if (email != null) {
+			return userRepository.findUserListByEmail(email, pageable);
+		} else if (nickname != null) {
+			return userRepository.findUserListByNickname(nickname, pageable);
+		} else {
+			// 다른 조건이 없는 경우 기본적인 조회 수행
+			return userRepository.findAllUserList(pageable);
+		}
 	}
 
 	public ReadUserSelfDetailResponse readUserSelfDetail(Long userSeq) {

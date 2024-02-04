@@ -1,7 +1,29 @@
 package com.dokebi.dalkom.common.magicnumber;
 
-public class MileageApplyState {
-	public static final String YES = "Y";
-	public static final String NO = "N";
-	public static final String WAIT = "W";
+import lombok.Getter;
+
+@Getter
+public enum MileageApplyState {
+
+	YES("Y", "승인"),
+	NO("N", "미승인"),
+	WAITING("W", "대기중");
+
+	private final String state;
+	private final String name;
+
+	MileageApplyState(String state, String name) {
+		this.state = state;
+		this.name = name;
+	}
+
+	public static String getNameByState(String state) {
+		for (MileageApplyState applyState : MileageApplyState.values()) {
+			if (applyState.state.equals(state)) {
+				return applyState.name;
+			}
+		}
+		return null; // 또는 기본값
+	}
+
 }

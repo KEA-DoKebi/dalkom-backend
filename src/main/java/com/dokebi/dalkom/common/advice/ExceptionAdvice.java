@@ -1,8 +1,14 @@
 package com.dokebi.dalkom.common.advice;
 
+import java.util.List;
+
 import javax.management.InvalidApplicationException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -11,7 +17,10 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
+import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
+import com.dokebi.dalkom.domain.inquiry.exception.FaqNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
+import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageAlreadyApplyException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageApplyNotFoundException;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
@@ -52,11 +61,31 @@ public class ExceptionAdvice {
 		return Response.failure(-1002, "임직원 정보가 존재하지 않습니다.");
 	}
 
-	// @ExceptionHandler(MissingRequestHeaderException.class)
-	// @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
-	// 	return Response.failure(-1009, e.getHeaderName() + "요청 헤더가 누락되었습니다.");
-	// }
+	@ExceptionHandler(MissingRequestHeaderException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response missingRequestHeaderException(MissingRequestHeaderException e) {
+		return Response.failure(-1003, e.getHeaderName() + "요청 헤더가 누락되었습니다.");
+	}
+
+	@ExceptionHandler(MissingJiraRequestHeaderException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response missingJiraRequestHeaderException() {
+		return Response.failure(-1004, "Jira 요청 헤더가 누락되었습니다.");
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response methodArgumentNotValidException(MethodArgumentNotValidException e) {
+		BindingResult result = e.getBindingResult();
+		List<FieldError> fieldErrorList = result.getFieldErrors();
+
+		if (!fieldErrorList.isEmpty()) {
+			return Response.failure(-1005, fieldErrorList.get(0).getDefaultMessage());
+		} else {
+			return Response.failure(-1005, "잘못된 값이 들어왔습니다.");
+		}
+
+	}
 
 	// // 사용자 + 로그인
 
@@ -213,10 +242,23 @@ public class ExceptionAdvice {
 		return Response.failure(-2100, "해당 문의를 찾을 수 없습니다.");
 	}
 
+	@ExceptionHandler(FaqNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
+	public Response FaqNotFoundException() {
+		return Response.failure(-2101, "해당 FAQ를 찾을 수 없습니다.");
+	}
+
 	// 공지사항
 	@ExceptionHandler(NoticeNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response noticeNotFoundException() {
 		return Response.failure(-2200, "해당 공지를 찾을 수 없습니다.");
+	}
+
+	// ChatGPT
+	@ExceptionHandler(GptResponseFailException.class)
+	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) //503
+	public Response gptNoResponseException() {
+		return Response.failure(-2300, "리뷰 요약을 생성할 수 없습니다.");
 	}
 }

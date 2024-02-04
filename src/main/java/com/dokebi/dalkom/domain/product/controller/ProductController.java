@@ -55,7 +55,7 @@ public class ProductController {
 		return Response.success();
 	}
 
-	// PRODUCT-004 (상품 리스트 조회 - 관리자 화면에서 전체 상품을 보여주는 것)
+	// PRODUCT-004 (관리자 상품 리스트 조회)
 	@GetMapping("/api/product")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readAdminPageProductList(Pageable pageable) {
@@ -69,7 +69,7 @@ public class ProductController {
 		return Response.success(productService.readProductListByDetailCategory(categorySeq, pageable));
 	}
 
-	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
+	// PRODUCT-006 (메인화면 상품 목록 조회)
 	@GetMapping("/api/product/category/main")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Map<String, List<ProductMainResponse>>> readProductListByCategoryAll(
@@ -90,7 +90,16 @@ public class ProductController {
 	// PRODUCT-009 (상품 리스트 검색)
 	@GetMapping("/api/product/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readProductList(@RequestParam(required = false) String name,@RequestParam(required = false) String company, Pageable pageable) {
-		return Response.success(productService.readProductListSearch(name,company,pageable));
+	public Response readProductList(@RequestParam(required = false) String name,
+		@RequestParam(required = false) String company, Pageable pageable) {
+		return Response.success(productService.readProductListSearch(name, company, pageable));
 	}
+
+	// PRODUCT-010 (특정 상품 정보 (상품 비교용) 조회)
+	@GetMapping("/api/product/compare/{productSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductCompareData(@PathVariable Long productSeq) {
+		return Response.success(productService.readProductCompareDetailByProductSeq(productSeq));
+	}
+
 }

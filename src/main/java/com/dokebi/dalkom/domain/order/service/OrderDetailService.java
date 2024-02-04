@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailSimpleResponse;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
 import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
@@ -23,8 +25,8 @@ public class OrderDetailService {
 		orderDetailRepository.save(orderDetail);
 	}
 
-	public OrderDetail readOrderDetailByOrderDetailSeq(Long orderdetailSeq) {
-		return orderDetailRepository.findOrderDetailByOrdrDetailSeq(orderdetailSeq)
+	public OrderDetail readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailRepository.findOrderDetailByOrdrDetailSeq(orderDetailSeq)
 			.orElseThrow(OrderDetailNotFoundException::new);
 	}
 
@@ -36,5 +38,27 @@ public class OrderDetailService {
 		}
 
 		return orderDetailList;
+	}
+
+	public List<OrderDetailDto> readOrderDetailDtoByOrderSeq(Long orderSeq) {
+		List<OrderDetailDto> orderDetailDtoList = orderDetailRepository.findOrderDetailDtoListByOrderSeq(orderSeq);
+
+		if (orderDetailDtoList.isEmpty()) {
+			throw new OrderDetailNotFoundException();
+		}
+
+		return orderDetailDtoList;
+	}
+
+	public OrderDetailSimpleResponse readOrderDetailSimpleResponseByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailRepository.readOrderDetailSimpleResponseByOrdrDetailSeq(orderDetailSeq)
+			.orElseThrow(OrderDetailNotFoundException::new);
+	}
+
+	public OrderDetail readFirstOrderDetailByOrderSeq(Long orderSeq) {
+		OrderDetail orderDetail = orderDetailRepository.readFirstByOrder_OrdrSeq(orderSeq)
+			.orElseThrow(OrderDetailNotFoundException::new);
+
+		return orderDetail;
 	}
 }

@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.review.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +13,8 @@ import com.dokebi.dalkom.domain.order.service.OrderDetailService;
 import com.dokebi.dalkom.domain.review.dto.ReviewByProductResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewCreateRequest;
+import com.dokebi.dalkom.domain.review.dto.ReviewReadResponse;
+import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
 import com.dokebi.dalkom.domain.review.dto.ReviewUpdateRequest;
 import com.dokebi.dalkom.domain.review.entity.Review;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
@@ -45,10 +46,10 @@ public class ReviewService {
 	}
 
 	@Transactional
-	public void createReview(Long userSeq, ReviewCreateRequest request) {
+	public void createReview(Long userSeq, Long orderDetailSeq, ReviewCreateRequest request) {
 
 		User user = userService.readUserByUserSeq(userSeq);
-		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq());
+		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(orderDetailSeq);
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
 		reviewRepository.save(review);
 	}
@@ -73,14 +74,11 @@ public class ReviewService {
 		}
 	}
 
-	public List<Review> readReviewByOrderDetailList(List<OrderDetail> orderDetailList) {
-		List<Review> reviewList = new ArrayList<>();
+	public List<ReviewSimpleDto> readReviewSimpleByProductSeq(Long productSeq) {
+		return reviewRepository.readReviewSimpleByProductSeq(productSeq);
+	}
 
-		for (OrderDetail orderDetail : orderDetailList) {
-			reviewRepository.findReviewListByOrderDetailSeq(orderDetail.getOrdrDetailSeq())
-				.ifPresent(reviewList::add);
-		}
-
-		return reviewList;
+	public ReviewReadResponse readReviewByReviewSeq(Long reviewSeq) {
+		return reviewRepository.findReviewByReviewSeq(reviewSeq).orElseThrow(ReviewNotFoundException::new);
 	}
 }

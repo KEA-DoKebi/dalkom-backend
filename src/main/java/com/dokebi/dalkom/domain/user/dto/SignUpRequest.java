@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.user.dto;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -23,7 +25,6 @@ public class SignUpRequest {
 	private String empId;
 
 	@NotNull(message = "SignUpRequest password notnull 에러")
-	@NotBlank(message = "SignUpRequest password notblank 에러")
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$", message = "비밀번호는 최소 8자리이면서 1개 이상의 알파벳,숫자,특수문자를 포함해야 한다.")
 	private String password;
 
@@ -40,8 +41,7 @@ public class SignUpRequest {
 	private String address;
 
 	@NotNull(message = "SignUpRequest joinedAt notnull 에러")
-	@NotBlank(message = "SignUpRequest joinedAt notblank 에러")
-	private String joinedAt;
+	private LocalDate joinedAt;
 
 	@NotNull(message = "SignUpRequest nickname notnull 에러")
 	@NotBlank(message = "SignUpRequest nickname notblank 에러")

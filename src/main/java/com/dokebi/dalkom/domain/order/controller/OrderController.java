@@ -39,7 +39,7 @@ public class OrderController {
 	}
 
 	// ORDER-002 (주문 확인하기)
-	@GetMapping("/api/order/orderListPage")
+	@PostMapping("/api/order/orderListPage")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderPageByProductSeq(@Valid @RequestBody OrderPageDto orderPageDto) {
 		return Response.success(orderService.readProductDetail(orderPageDto.getOrderList()));
@@ -62,9 +62,8 @@ public class OrderController {
 	// ORDER-005 (결제 하기)
 	@PostMapping("/api/order")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createOrder(@Valid @RequestBody OrderCreateRequest request) {
-		orderService.createOrder(request);
-		return Response.success();
+	public Response createOrder(@LoginUser Long userSeq, @Valid @RequestBody OrderCreateRequest request) {
+		return Response.success(orderService.createOrder(userSeq, request));
 	}
 
 	//  ORDER-006 (특정 주문 상태 수정)
@@ -76,12 +75,13 @@ public class OrderController {
 		return Response.success();
 	}
 
-	// ORDER-007 (주문 검색)
-	@GetMapping("/api/order/search")
-	@ResponseStatus(HttpStatus.OK)
-	public Response readOrderListBySearch(@RequestParam String receiverName, Pageable pageable) {
-		return Response.success(orderService.readOrderListBySearch(receiverName, pageable));
-	}
+	// // ORDER-007 (사용자 주문 검색)
+	// @GetMapping("/api/order/search")
+	// @ResponseStatus(HttpStatus.OK)
+	// public Response readOrderListBySearch(@RequestParam(required = false) String receiverName,
+	// 	@RequestParam(required = false) String receiverName, Pageable pageable) {
+	// 	return Response.success(orderService.readOrderListByUserSearch(receiverName, pageable));
+	// }
 
 	// ORDER-008 (주문 취소)
 	@DeleteMapping("/api/order/cancel/{orderSeq}")
@@ -99,12 +99,34 @@ public class OrderController {
 		return Response.success();
 	}
 
-	//ORDER-010 (결제 비밀번호 인증)
-	@PutMapping("/api/order/authorize")
+	// ORDER-010 (결제 비밀번호 인증)
+	@PostMapping("/api/order/authorize")
 	@ResponseStatus(HttpStatus.OK)
 	public Response authorizeOrderByPassword(@LoginUser Long userSeq,
 		@Valid @RequestBody AuthorizeOrderRequest request) {
 		orderService.authorizeOrderByPassword(userSeq, request);
 		return Response.success();
 	}
+
+	// ORDER-011 (리뷰용 단일 주문상세 조회)
+	@GetMapping("/api/order/detail/{orderDetailSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderDetailByOrderDetailSeq(@PathVariable Long orderDetailSeq) {
+		return Response.success(orderService.readOrderDetailByOrderDetailSeq(orderDetailSeq));
+	}
+
+	
+	// ORDER-012 (취소/환불 목록 조회)
+	@GetMapping("/api/order/canclerefundlist")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderCancelListByUserSeq(@LoginUser Long userSeq, Pageable pageable) {
+		return Response.success(orderService.readOrderCancelListByUserSeq(userSeq, pageable));
+	}
+	// ORDER-013 (관리자 주문 목록 검색 )
+	@GetMapping("/api/order/admin/search")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readOrderListByAdminSearch(@RequestParam(required = false) String receiverName,
+		@RequestParam(required = false) String name, Pageable pageable) {
+		return Response.success(orderService.readOrderListByAdminSearch(receiverName, name, pageable));
+		}
 }

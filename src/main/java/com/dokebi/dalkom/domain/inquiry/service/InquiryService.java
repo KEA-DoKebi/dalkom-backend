@@ -20,26 +20,41 @@ import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
+import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
+import com.dokebi.dalkom.domain.jira.service.JiraService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class InquiryService {
 	private final InquiryRepository inquiryRepository;
 	private final CategoryService categoryService;
 	private final UserService userService;
 	private final AdminService adminService;
+	private final JiraService jiraService;
 
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
-		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(), InquiryAnswerState.NO);
-		inquiryRepository.save(inquiry);
+		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(),
+			InquiryAnswerState.NO.getState());
+		inquiry = inquiryRepository.save(inquiry);
+		// 문의 내용 Jira로 보내기
+		try {
+			JiraInquiryRequest jiraInquiryRequest = new JiraInquiryRequest(request.getTitle(), request.getContent(),
+				user.getNickname(), inquiry.getInquirySeq());
+			jiraService.createIssueInquiry(jiraInquiryRequest);
+		} catch (Exception e) {
+			// Jira 연동 실패 로그 기록
+			log.error("Jira 이슈 생성 중 오류 발생", e);
+		}
 	}
 
 	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
@@ -88,7 +103,7 @@ public class InquiryService {
 	private void makeInquiryAnswer(InquiryAnswerRequest request, Inquiry inquiry, Admin admin) {
 		inquiry.setAnswerContent(request.getAnswerContent());
 		inquiry.setAdmin(admin);
-		inquiry.setAnswerState(InquiryAnswerState.YES);
+		inquiry.setAnswerState(InquiryAnswerState.YES.getState());
 		inquiry.setAnsweredAt(LocalDateTime.now());
 	}
 
@@ -96,7 +111,6 @@ public class InquiryService {
 		Long categorySeq, String title, Pageable pageable) {
 		Page<InquiryListResponse> page = inquiryRepository.findInquiryListByCategorySearch(
 			categorySeq, title, pageable);
-
 		if (page.isEmpty()) {
 			throw new InquiryNotFoundException();
 		}

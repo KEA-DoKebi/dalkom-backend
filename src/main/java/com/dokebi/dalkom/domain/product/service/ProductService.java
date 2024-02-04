@@ -1,9 +1,17 @@
 package com.dokebi.dalkom.domain.product.service;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +22,17 @@ import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
 import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
+import com.dokebi.dalkom.domain.chat.dto.ChatGptMessage;
+import com.dokebi.dalkom.domain.chat.dto.ChatGptRequest;
+import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
 import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
-import com.dokebi.dalkom.domain.option.dto.OptionListDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailPage;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto;
+import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
@@ -29,9 +42,12 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
+import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
+import com.dokebi.dalkom.domain.review.service.ReviewService;
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,6 +59,7 @@ public class ProductService {
 	private final ProductStockService productStockService;
 	private final CategoryService categoryService;
 	private final ProductOptionService productOptionService;
+	private final ReviewService reviewService;
 
 	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
@@ -63,16 +80,15 @@ public class ProductService {
 		// responseBody에 필요한 값들을 탐색
 		ReadProductDetailDto productDetailDto = productRepository.findProductDetailByProductSeq(productSeq);
 		List<StockListDto> stockList = productStockService.readStockListDtoByProductSeq(productSeq);
-		List<OptionListDto> optionList = productOptionService.readOptionListDtoByProductSeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageByProductSeq(productSeq);
 
 		// 조회 결과 검사
-		if (stockList == null || optionList == null || stockList.isEmpty() || optionList.isEmpty()) {
+		if (stockList == null || stockList.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
 		// response용 DTO에 담아서 return
-		return new ReadProductDetailResponse(productDetailDto, optionList, stockList, productImageUrlList);
+		return new ReadProductDetailResponse(productDetailDto, stockList, productImageUrlList);
 	}
 
 	// PRODUCT-003 (상품 정보 추가)
@@ -105,18 +121,19 @@ public class ProductService {
 	}
 
 	// PRODUCT-005 (하위 카테고리 별 상품 목록 조회)
-	public Page<ProductByCategoryDetailResponse> readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
+	public ProductByCategoryDetailResponse readProductListByDetailCategory(Long categorySeq, Pageable pageable) {
 		// 탐색
-		Page<ProductByCategoryDetailResponse> productList = productRepository.findProductListByDetailCategory(
+		Category category = categoryService.readCategoryByCategorySeq(categorySeq);
+		Page<ProductByCategoryDetailPage> productPage = productRepository.findProductListByDetailCategory(
 			categorySeq, pageable);
 
 		// 결과 검사
-		if (productList == null || productList.isEmpty()) {
+		if (productPage == null || productPage.isEmpty()) {
 			throw new ProductNotFoundException();
 		}
 
 		// 결과 전송
-		return productList;
+		return new ProductByCategoryDetailResponse(category.getName(), productPage);
 	}
 
 	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
@@ -134,15 +151,8 @@ public class ProductService {
 		return categoryMap;
 	}
 
-	public Page<ReadProductResponse> readProductListSearch(String name, String company, Pageable pageable) {
-		return productRepository.findProductListSearch(name, company, pageable);
-	}
-
-	/** 다른 Domain Service에서 사용할 메소드 **/
-	public Product readProductByProductSeq(Long productSeq) {
-		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
-	}
-
+	// PRODUCT-008 (특정 상품 정보 수정)
+	@Transactional
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
@@ -156,7 +166,7 @@ public class ProductService {
 		product.setCompany(request.getCompany());
 		product.setState(request.getState());
 
-		for (OptionAmountDto optionAmountDto : request.getOpitonAmountList()) {
+		for (OptionAmountDto optionAmountDto : request.getOptionAmountList()) {
 			ProductStock stock = productStockService.readStockByProductAndOptionSeq(productSeq,
 				optionAmountDto.getPrdtOptionSeq());
 
@@ -165,6 +175,64 @@ public class ProductService {
 				productStockService.updateStockByStockSeq(stock.getPrdtStockSeq(), optionAmountDto.getAmount());
 			}
 		}
+	}
+
+	// PRODUCT-009 (상품 리스트 검색)
+	public Page<ReadProductResponse> readProductListSearch(String name, String company, Pageable pageable) {
+		if (name != null) {
+			return productRepository.findProductListSearchByName(name, pageable);
+		} else if (company != null) {
+			return productRepository.findProductListSearchByCompany(company, pageable);
+		} else {
+			return productRepository.findProductListSearch(pageable);
+		}
+	}
+
+	// PRODUCT-010 (특정 상품 정보 (상품 비교용) 조회)
+	public ProductCompareDetailResponse readProductCompareDetailByProductSeq(Long productSeq) {
+		ProductCompareDetailDto productCompareDetailDto = productRepository.readProductCompareDetailByProductSeq(
+			productSeq).orElseThrow(ProductNotFoundException::new);
+
+		List<ReviewSimpleDto> reviewSimpleDtoList = reviewService.readReviewSimpleByProductSeq(productSeq);
+		List<ReviewSimpleDto> positiveReview = new ArrayList<>();
+		List<ReviewSimpleDto> negativeReview = new ArrayList<>();
+		String positiveReviewSummery;
+		String negativeReviewSummery;
+		int listLength = reviewSimpleDtoList.size();
+		double avgRating = 0;
+
+		for (ReviewSimpleDto reviewSimpleDto : reviewSimpleDtoList) {
+			// 평균 별점 계산
+			avgRating += reviewSimpleDto.getRating();
+
+			// 긍정 리뷰 & 부정 리뷰 샘플 리스트 생성
+			if (reviewSimpleDto.getRating() > 3 && positiveReview.size() < 5) {
+				positiveReview.add(reviewSimpleDto);
+			} else if (reviewSimpleDto.getRating() < 4 && negativeReview.size() < 5) {
+				negativeReview.add(reviewSimpleDto);
+			}
+		}
+		avgRating = (double)Math.round((avgRating / listLength * 100)) / 100;
+
+		//리뷰 샘플 리스트 예외처리
+		if (positiveReview.isEmpty()) {
+			positiveReviewSummery = "칭찬 리뷰가 존재하지 않습니다.";
+		} else {
+			positiveReviewSummery = sendGptApi(positiveReview);
+		}
+		if (negativeReview.isEmpty()) {
+			negativeReviewSummery = "불만 리뷰가 존재하지 않습니다.";
+		} else {
+			negativeReviewSummery = sendGptApi(negativeReview);
+		}
+
+		return new ProductCompareDetailResponse(productCompareDetailDto, avgRating, listLength,
+			positiveReviewSummery, negativeReviewSummery);
+	}
+
+	/** 다른 Domain Service에서 사용할 메소드 **/
+	public Product readProductByProductSeq(Long productSeq) {
+		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
 	}
 
 	public String checkProductActiveState(Long productSeq) {
@@ -178,13 +246,51 @@ public class ProductService {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.SOLDOUT);
+		product.setState(ProductActiveState.SOLDOUT.getState());
 	}
 
 	public void activeProductByProductSeq(Long productSeq) {
 		Product product = productRepository.findProductByProductSeq(productSeq)
 			.orElseThrow(ProductNotFoundException::new);
 
-		product.setState(ProductActiveState.ACTIVE);
+		product.setState(ProductActiveState.ACTIVE.getState());
 	}
+
+	/** private method **/
+	private String sendGptApi(List<ReviewSimpleDto> reviewList) {
+		try {
+			HttpClient client = HttpClient.newHttpClient();
+
+			List<ChatGptMessage> messages = reviewList.stream()
+				.map(review -> new ChatGptMessage("user", review.getContent()))
+				.collect(Collectors.toList());
+
+			// ChatGptRequest 객체 생성
+			ChatGptRequest chatGptRequest = new ChatGptRequest(messages);
+
+			// ObjectMapper를 사용하여 ChatGptRequest 객체를 JSON 문자열로 변환
+			ObjectMapper objectMapper = new ObjectMapper();
+			String requestBody = objectMapper.writeValueAsString(chatGptRequest);
+
+			//ChatGptController로 요청 전송
+			HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI("http://localhost:8080/api/v1/chatGpt/review/summary"))
+				.header("Content-Type", "application/json")
+				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
+				.build();
+
+			// 요청 전송 및 응답 수신
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+			return response.body().trim();
+
+		} catch (URISyntaxException | IOException e) {
+			throw new GptResponseFailException();
+		} catch (InterruptedException e) {
+			// 인터럽트 상태를 복원
+			Thread.currentThread().interrupt();
+			throw new GptResponseFailException();
+		}
+	}
+
 }
