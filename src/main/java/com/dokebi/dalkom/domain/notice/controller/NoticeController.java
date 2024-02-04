@@ -45,8 +45,9 @@ public class NoticeController {
 	// NOTICE-003 (특정 공지 수정)
 	@PutMapping("/api/notice/{noticeSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response updateNotice(@PathVariable Long noticeSeq, @Valid @RequestBody NoticeUpdateRequest request) {
-		noticeService.updateNotice(noticeSeq, request);
+	public Response updateNotice(@PathVariable Long noticeSeq, @LoginUser Long adminSeq,
+		@Valid @RequestBody NoticeUpdateRequest request) {
+		noticeService.updateNotice(noticeSeq, adminSeq, request);
 		return Response.success();
 	}
 
