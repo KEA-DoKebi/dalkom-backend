@@ -100,7 +100,8 @@ public class InquiryService {
 		makeInquiryAnswer(request, inquiry, admin);
 	}
 
-	private void makeInquiryAnswer(InquiryAnswerRequest request, Inquiry inquiry, Admin admin) {
+	@Transactional
+	public void makeInquiryAnswer(InquiryAnswerRequest request, Inquiry inquiry, Admin admin) {
 		inquiry.setAnswerContent(request.getAnswerContent());
 		inquiry.setAdmin(admin);
 		inquiry.setAnswerState(InquiryAnswerState.YES.getState());
@@ -116,5 +117,11 @@ public class InquiryService {
 		}
 
 		return page;
+	}
+
+	@Transactional
+	public void deleteInquiry(Long inquirySeq) {
+		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
+		inquiryRepository.delete(inquiry);
 	}
 }
