@@ -42,7 +42,7 @@ public class NoticeUpdateRequestTest {
 	void noticeUpdateRequestValidation_title_NotNull_NotBlank() {
 		// Given
 		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest(null, "content", 1L, "Y");
+			.createNoticeUpdateRequest(null, "content", "Y");
 
 		// When
 		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
@@ -59,7 +59,7 @@ public class NoticeUpdateRequestTest {
 	void noticeUpdateRequestValidation_title_NotBlank() {
 		// Given
 		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("", "content", 1L, "Y");
+			.createNoticeUpdateRequest("", "content", "Y");
 
 		// When
 		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
@@ -76,7 +76,7 @@ public class NoticeUpdateRequestTest {
 	void noticeUpdateRequestValidation_content_NotNull_NotBlank() {
 		// Given
 		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", null, 1L, "Y");
+			.createNoticeUpdateRequest("title", null, "Y");
 
 		// When
 		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
@@ -93,7 +93,7 @@ public class NoticeUpdateRequestTest {
 	void noticeUpdateRequestValidation_content_NotBlank() {
 		// Given
 		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "", 1L, "Y");
+			.createNoticeUpdateRequest("title", "", "Y");
 
 		// When
 		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
@@ -107,27 +107,10 @@ public class NoticeUpdateRequestTest {
 	}
 
 	@Test
-	void noticeUpdateRequestValidation_adminSeq_NotNull() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "content", null, "Y");
-
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
-
-		// Then
-		assertThat(violations)
-			.hasSize(1)
-			.extracting("message")
-			.contains("NoticeUpdateRequest adminSeq NotNull 에러");
-	}
-
-	@Test
 	void noticeUpdateRequestValidation_state_NotNull() {
 		// Given
 		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "content", 1L, null);
+			.createNoticeUpdateRequest("title", "content", null);
 
 		// When
 		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
@@ -144,7 +127,7 @@ public class NoticeUpdateRequestTest {
 	void noticeUpdateRequestValidation_state_Pattern() {
 		// Given
 		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "content", 1L, "A");
+			.createNoticeUpdateRequest("title", "content", "A");
 
 		// When
 		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
