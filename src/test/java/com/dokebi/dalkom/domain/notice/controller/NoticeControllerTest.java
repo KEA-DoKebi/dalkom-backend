@@ -129,6 +129,7 @@ public class NoticeControllerTest {
 	void updateNotice() throws Exception {
 		// Given
 		Long noticeSeq = 1L;
+		Long adminSeq = 1L;
 		NoticeUpdateRequest updateRequest = NoticeUpdateRequestFactory.createNoticeUpdateRequest();
 
 		// When, Then
@@ -137,7 +138,7 @@ public class NoticeControllerTest {
 				.content(asJsonString(updateRequest)))
 			.andExpect(status().isOk());
 
-		verify(noticeService).updateNotice(noticeSeq, updateRequest);
+		verify(noticeService).updateNotice(noticeSeq, adminSeq, updateRequest);
 	}
 
 	@Test

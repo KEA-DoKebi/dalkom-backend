@@ -185,6 +185,7 @@ public class OrderService {
 	}
 
 	// 주문 상태 수정
+	@Transactional
 	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
 		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
 
