@@ -43,7 +43,7 @@ public class FaqService {
 	}
 
 	public FaqReadOneResponse readFaqByInquirySeq(Long faqSeq) {
-		return faqRepository.findFaqOne(faqSeq);
+		return faqRepository.findFaqOne(faqSeq).orElseThrow(FaqNotFoundException::new);
 	}
 
 	public Page<FaqReadListResponse> readFaqList(Pageable pageable) {
