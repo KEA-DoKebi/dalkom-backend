@@ -30,19 +30,16 @@ public class NoticeService {
 
 	@Transactional
 	public NoticeOneResponse readNotice(Long noticeSeq) {
-
 		return noticeRepository.findNotice(noticeSeq);
 	}
 
 	@Transactional
 	public Page<NoticeListResponse> readNoticeList(Pageable pageable) {
-
 		return noticeRepository.findNoticeList(pageable);
 	}
 
 	@Transactional
 	public void createNotice(Long adminSeq, NoticeCreateRequest request) {
-
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		Notice notice = new Notice(admin, request.getTitle(), request.getContent(), request.getState());
 		noticeRepository.save(notice);
@@ -50,7 +47,6 @@ public class NoticeService {
 
 	@Transactional
 	public void updateNotice(Long noticeSeq, Long adminSeq, NoticeUpdateRequest request) {
-
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
 		notice.setTitle(request.getTitle());
 		notice.setContent(request.getContent());
@@ -79,5 +75,4 @@ public class NoticeService {
 			return noticeRepository.findNoticeList(pageable);
 		}
 	}
-
 }
