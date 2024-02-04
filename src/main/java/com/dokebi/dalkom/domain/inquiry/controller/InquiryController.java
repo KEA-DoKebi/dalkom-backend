@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,4 +75,11 @@ public class InquiryController {
 		return Response.success(inquiryService.readInquiryListByCategorySearch(categorySeq, title, pageable));
 	}
 
+	// INQUIRY-008 (문의 삭제)
+	@DeleteMapping("/api/inquiry/{inquirySeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response deleteInquiry(@PathVariable Long inquirySeq) {
+		inquiryService.deleteInquiry(inquirySeq);
+		return Response.success();
+	}
 }
