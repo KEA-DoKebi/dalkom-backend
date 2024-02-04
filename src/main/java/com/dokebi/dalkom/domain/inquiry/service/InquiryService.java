@@ -81,7 +81,7 @@ public class InquiryService {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
 		InquiryOneResponse inquiryOneResponse;
 
-		if (inquiry.getAnswerState().equals(InquiryAnswerState.YES)) {
+		if (inquiry.getAnswerState().equals(InquiryAnswerState.YES.getState())) {
 			inquiryOneResponse = new InquiryOneResponse(inquiry.getTitle(), inquiry.getContent(),
 				inquiry.getCreatedAt(), inquiry.getAnswerContent(), inquiry.getAnsweredAt(),
 				inquiry.getAdmin().getNickname());
