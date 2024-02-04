@@ -12,7 +12,7 @@ import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 
 public interface FaqRepository extends JpaRepository<Inquiry, Long> {
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.FaqReadOneResponse("
-		+ "i.title,i.createdAt,i.admin.name,i.category.name, i.content) "
+		+ "i.title,i.createdAt,i.admin.nickname,i.category.name, i.content) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.inquirySeq = :inquirySeq")
 	FaqReadOneResponse findFaqOne(@Param("inquirySeq") Long inquirySeq);
