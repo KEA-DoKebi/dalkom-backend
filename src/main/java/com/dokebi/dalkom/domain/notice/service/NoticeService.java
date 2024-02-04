@@ -49,12 +49,12 @@ public class NoticeService {
 	}
 
 	@Transactional
-	public void updateNotice(Long noticeSeq, NoticeUpdateRequest request) {
+	public void updateNotice(Long noticeSeq, Long adminSeq, NoticeUpdateRequest request) {
 
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
 		notice.setTitle(request.getTitle());
 		notice.setContent(request.getContent());
-		Admin admin = adminService.readAdminByAdminSeq(request.getAdminSeq());
+		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		notice.setAdmin(admin);
 		notice.setState(request.getState());
 		noticeRepository.save(notice);
