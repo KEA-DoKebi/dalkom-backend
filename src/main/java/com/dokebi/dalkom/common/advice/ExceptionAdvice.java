@@ -246,7 +246,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(CreateUserFailureException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Response createUserFailureException() {
-		return Response.failure(-2001, "사용자를 추가할 수 없습니다.");
+		return Response.failure(-2001, "임직원 데이터가 존재하지 않습니다.");
 	}
 
 	// 문의
