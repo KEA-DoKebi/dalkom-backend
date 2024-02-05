@@ -11,4 +11,11 @@ public class ReceiverInfoRequestFactory {
 			"Special instructions"  // receiverMemo
 		);
 	}
+
+	public static ReceiverInfoRequest createReceiverInfoRequest(
+		String receiverName, String receiverAddress, String receiverMobileNum, String receiverMemo) {
+		return new ReceiverInfoRequest(
+			receiverName, receiverAddress, receiverMobileNum, receiverMemo
+		);
+	}
 }

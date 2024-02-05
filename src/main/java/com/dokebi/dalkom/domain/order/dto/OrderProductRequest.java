@@ -31,14 +31,4 @@ public class OrderProductRequest {
 	@Positive(message = "OrderProductRequest productAmount Positive 에러")
 	private int productAmount;
 
-	// @NotBlank(message = "OrderProductRequest productName NotBlank 에러")
-	// private String productName;
-	//
-	// @NotNull(message = "OrderProductRequest productPrice NotNull 에러")
-	// @Positive(message = "OrderProductRequest productPrice Positive 에러")
-	// private int productPrice;
-	//
-	// @NotNull(message = "OrderProductRequest totalPrice NotNull 에러")
-	// @Positive(message = "OrderProductRequest totalPrice Positive 에러")
-	// private int totalPrice;
 }
