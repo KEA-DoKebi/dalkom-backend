@@ -251,7 +251,7 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(FaqNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response FaqNotFoundException() {
+	public Response faqNotFoundException() {
 		return Response.failure(-2101, "해당 FAQ를 찾을 수 없습니다.");
 	}
 

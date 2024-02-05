@@ -15,25 +15,27 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
 	Notice findByNoticeSeq(Long noticeSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeOneResponse("
-		+ " n.title, n.content, n.createdAt, n.admin.nickname, n.state) " +
-		"FROM Notice n " +
-		"WHERE n.noticeSeq = :noticeSeq")
+		+ " n.title, n.content, n.createdAt, n.admin.nickname, n.state) "
+		+ "FROM Notice n "
+		+ "WHERE n.noticeSeq = :noticeSeq")
 	NoticeOneResponse findNotice(@Param("noticeSeq") Long noticeSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
-		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
-		"FROM Notice n " +
-		"ORDER BY n.state DESC, n.createdAt ASC")
+		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) "
+		+ "FROM Notice n "
+		+ "ORDER BY n.state DESC, n.createdAt DESC ")
 	Page<NoticeListResponse> findNoticeList(Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
-		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
-		"FROM Notice n WHERE n.admin.nickname LIKE CONCAT('%', :nickname, '%') ")
+		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) "
+		+ "FROM Notice n WHERE n.admin.nickname LIKE CONCAT('%', :nickname, '%') "
+		+ "ORDER BY n.state DESC, n.createdAt DESC ")
 	Page<NoticeListResponse> findNoticeListByNickname(@Param("nickname") String nickname,
 		Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.notice.dto.NoticeListResponse("
-		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) " +
-		"FROM Notice n WHERE n.title LIKE CONCAT('%', :title, '%')")
+		+ "n.noticeSeq, n.title, n.content, n.createdAt, n.modifiedAt, n.admin.nickname, n.state) "
+		+ "FROM Notice n WHERE n.title LIKE CONCAT('%', :title, '%') "
+		+ "ORDER BY n.state DESC, n.createdAt DESC ")
 	Page<NoticeListResponse> findNoticeListByTitle(@Param("title") String title, Pageable pageable);
 }

@@ -16,7 +16,7 @@ public class ChatGptResponse {
 	private String object;
 	private long created;
 	private String model;
-	private String system_fingerprint;
+	private String systemFingerprint;
 	private List<Choice> choices;
 	private Usage usage;
 
