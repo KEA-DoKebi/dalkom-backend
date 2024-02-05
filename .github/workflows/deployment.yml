@@ -42,24 +42,15 @@ jobs:
         
     steps:
     - name: Deploy to Blue
-      env :
-        API_URL: ${{ secrets.API_URL }}
-        TOKEN: ${{ secrets.TOKEN }}
-        BASTION_IP: ${{ secrets.BASTION_IP }}
-        BASTION_PORT: ${{ secrets.BASTION_PORT }}
-        WAS_BLUE_IP: ${{ secrets.WAS_BLUE_IP }}
-        WAS_BLUE_PORT: ${{ secrets.WAS_BLUE_PORT }}
-        BLUE_IMAGE: ${{ secrets.BLUE_IMAGE }}
-        INNER_PORT: ${{ secrets.WAS_INNER_PORT }}
       run: |
         ssh -A -J bastion blue
-        docker pull $BLUE_IMAGE
+        docker pull ${{ secrets.BLUE_IMAGE }}
         docker stop spring_blue 2>/dev/null || true
-        export INFISICAL_API_URL= $API_URL
-        export INFISICAL_TOKEN = $TOKEN
+        export INFISICAL_API_URL= ${{ secrets.API_URL }}
+        export INFISICAL_TOKEN = ${{ secrets.TOKEN }}
         infisical export --path="/DB"  --format=dotenv > .env
         python string_to_num.py
-        docker run --name spring_blue --rm -itd -p $INNER_PORT:$WAS_BLUE_PORT --env-file .env $BLUE_IMAGE
+        docker run --name spring_blue --rm -itd -p ${{ secrets.WAS_INNER_PORT }}:${{ secrets.WAS_BLUE_PORT }} --env-file .env ${{ secrets.BLUE_IMAGE }}
 
   Health_Check :
     runs-on: self-hosted
