@@ -31,7 +31,7 @@ public class UserService {
 	public void updateUser(Long userSeq, UserUpdateRequest request) {
 		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 
-		if (request.getPassword() != null && !request.getPassword().equals("")) {
+		if (request.getPassword() != null && !request.getPassword().isBlank();) {
 			user.setPassword(passwordEncoder.encode(request.getPassword()));
 		}
 
