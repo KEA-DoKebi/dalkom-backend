@@ -42,7 +42,8 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long> {
 		+ "i.inquirySeq, i.title, i.createdAt, i.answerState) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.category.categorySeq = :categorySeq "
-		+ "AND i.title LIKE CONCAT('%', :title, '%')")
+		+ "AND i.title LIKE CONCAT('%', :title, '%')"
+		+ "ORDER BY i.inquirySeq DESC ")
 	Page<InquiryListResponse> findInquiryListByCategorySearch(@Param("categorySeq") Long categorySeq,
 		@Param("title") String title, Pageable pageable);
 }
