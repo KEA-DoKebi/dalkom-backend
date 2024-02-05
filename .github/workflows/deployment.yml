@@ -52,6 +52,7 @@ jobs:
         BLUE_IMAGE: ${{ secrets.BLUE_IMAGE }}
         INNER_PORT: ${{ secrets.WAS_INNER_PORT }}
       run: |
+        printenv
         ssh -A -J ubuntu@$BASTION_IP -p $BASTION_PORT ubuntu@$WAS_BLUE_IP
         docker pull $BLUE_IMAGE
         docker stop spring_blue 2>/dev/null || true
