@@ -56,11 +56,11 @@ public class AdminController {
 		return Response.success();
 	}
 
-	// ADMIN-009 (대쉬 보드 생성)
+	// ADMIN-009 (관리자 대시보드)
 	@GetMapping("/api/admin/dashboard")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readDashboard() {
-		return Response.success();
+		return Response.success(adminService.readDashboard());
 	}
 
 	// ADMIN-010 (관리자 목록 조회 검색)
