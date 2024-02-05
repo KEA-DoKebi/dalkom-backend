@@ -15,5 +15,4 @@ public class MonthlyCategoryListDto {
 	public Long categorySeq;
 	public String name;
 	public Long cnt;
-
 }

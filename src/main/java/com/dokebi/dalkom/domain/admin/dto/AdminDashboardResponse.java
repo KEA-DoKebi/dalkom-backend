@@ -16,7 +16,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AdminDashboardResponse {
-
 	public Integer totalMileage;
 	public Integer totalMonthlyMileage;
 	public Integer totalDailyMileage;

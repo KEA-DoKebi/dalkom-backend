@@ -20,5 +20,4 @@ public class MonthlyProductListDto {
 	public Long cnt;
 	public Long amount;
 	public Long totalPrice;
-
 }
