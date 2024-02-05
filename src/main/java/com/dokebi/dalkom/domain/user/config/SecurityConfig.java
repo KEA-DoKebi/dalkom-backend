@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.user.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -7,6 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.dokebi.dalkom.domain.user.config.security.CustomUserService;
 import com.dokebi.dalkom.domain.user.config.security.JwtAuthenticationFilter;
@@ -39,8 +43,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			//.anyRequest().authenticated()            // 나머지 모든 요청은  인증이 필요
 			.and()
 			.addFilterBefore(new JwtAuthenticationFilter(tokenService, userService),
-				UsernamePasswordAuthenticationFilter.class);
+				UsernamePasswordAuthenticationFilter.class)
+			.cors();
 
+	}
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+
+		configuration.addAllowedOriginPattern("*");
+		configuration.addAllowedHeader("*");
+		configuration.addAllowedMethod("*");
+		configuration.setAllowCredentials(true);
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**",configuration);
+		return source;
 	}
 
 }
