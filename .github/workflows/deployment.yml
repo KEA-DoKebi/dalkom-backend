@@ -41,7 +41,7 @@ jobs:
     needs: Push_to_Kakao
         
     steps:
-    - name: Deploy to Blue
+    - name: Deploy to Blue zz
       run: |
         ssh -A -J bastion blue
         docker pull ${{ secrets.BLUE_IMAGE }}
