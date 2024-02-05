@@ -6,7 +6,7 @@ on:
       - workflow
 #    branches:
 #      - release
-    types: [closed]
+#    types: [closed]
 
 jobs:
   Push_to_Kakao:
