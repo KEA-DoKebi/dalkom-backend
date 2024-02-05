@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +25,20 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
 	public void updateUser(Long userSeq, UserUpdateRequest request) {
 		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 
-		user.setPassword(request.getPassword());
-		validateNickname(request.getNickname());
+		if (request.getPassword() != null && !request.getPassword().equals("")) {
+			user.setPassword(passwordEncoder.encode(request.getPassword()));
+		}
+
+		if (!user.getNickname().equals(request.getNickname())) {
+			validateNickname(request.getNickname());
+		}
+
 		user.setNickname(request.getNickname());
 		user.setAddress(request.getAddress());
 	}
