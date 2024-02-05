@@ -51,6 +51,8 @@ public class InquiryController {
 		return Response.success(inquiryService.readInquiryListByCategory(categorySeq, pageable));
 	}
 
+	// INQUIRY-004 (특정 유저의 본인 문의 수정) 미구현 상태
+
 	// INQUIRY-005 (특정 문의 조회)
 	@GetMapping("/api/inquiry/{inquirySeq}")
 	@ResponseStatus(HttpStatus.OK)

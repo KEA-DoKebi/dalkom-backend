@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -55,6 +56,7 @@ public class InquiryServiceTest {
 
 	// Category가 정보가 없어서 그런가 제대로 안되서 category 부분은 제외하고 작성
 	@Test
+	@DisplayName("INQUIRY-001 (문의 등록)")
 	void createInquiryTest() {
 		// Given
 		Long userSeq = 1L;
@@ -87,6 +89,7 @@ public class InquiryServiceTest {
 	}
 
 	@Test
+	@DisplayName("INQUIRY-002 (유저별 문의 조회)")
 	void readInquiryListByUserTest() {
 		// Given
 		Long userSeq = 1L;
@@ -117,6 +120,7 @@ public class InquiryServiceTest {
 	}
 
 	@Test
+	@DisplayName("INQUIRY-003 (문의 카테고리 별 문의 조회)")
 	void readInquiryListByCategoryTest() {
 		// Given
 		Long categorySeq = 1L;
@@ -145,6 +149,7 @@ public class InquiryServiceTest {
 	}
 
 	@Test
+	@DisplayName("INQUIRY-005 (특정 문의 조회)")
 	void readInquiryOneTest() {
 		// Given
 		Long inquirySeq = 1L;
@@ -172,6 +177,7 @@ public class InquiryServiceTest {
 	}
 
 	@Test
+	@DisplayName("INQUIRY-006 (문의 답변)")
 	void answerInquiryTest() {
 		// Given
 		Long inquirySeq = 1L;

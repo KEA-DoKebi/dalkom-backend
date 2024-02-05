@@ -39,6 +39,7 @@ public class InquiryService {
 	private final AdminService adminService;
 	private final JiraService jiraService;
 
+	// INQUIRY-001 (문의 등록)
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
@@ -46,6 +47,7 @@ public class InquiryService {
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(),
 			InquiryAnswerState.NO.getState());
 		inquiry = inquiryRepository.save(inquiry);
+
 		// 문의 내용 Jira로 보내기
 		try {
 			JiraInquiryRequest jiraInquiryRequest = new JiraInquiryRequest(request.getTitle(), request.getContent(),
@@ -57,6 +59,7 @@ public class InquiryService {
 		}
 	}
 
+	// INQUIRY-002 (유저별 문의 조회)
 	public Page<InquiryListByUserResponse> readInquiryListByUser(Long userSeq, Pageable pageable) {
 		Page<InquiryListByUserResponse> page = inquiryRepository.findInquiryListByUserSeq(userSeq, pageable);
 
@@ -67,6 +70,7 @@ public class InquiryService {
 		return page;
 	}
 
+	// INQUIRY-003 (문의 카테고리 별 문의 조회)
 	public Page<InquiryListResponse> readInquiryListByCategory(Long categorySeq, Pageable pageable) {
 		Page<InquiryListResponse> page = inquiryRepository.findInquiryListByCategorySeq(categorySeq, pageable);
 
@@ -77,6 +81,9 @@ public class InquiryService {
 		return page;
 	}
 
+	// INQUIRY-004 미구현 상태
+
+	// INQUIRY-005 (특정 문의 조회)
 	public InquiryOneResponse readInquiryOne(Long inquirySeq) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
 		InquiryOneResponse inquiryOneResponse;
@@ -93,21 +100,20 @@ public class InquiryService {
 		return inquiryOneResponse;
 	}
 
+	// INQUIRY-006 (문의 답변)
 	@Transactional
 	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
-		makeInquiryAnswer(request, inquiry, admin);
-	}
 
-	@Transactional
-	public void makeInquiryAnswer(InquiryAnswerRequest request, Inquiry inquiry, Admin admin) {
+		// 이 부분이 따로 함수로 구현되어 있으면 테스트 코드 작성하기가 애매해서 그냥 합쳤습니다.
 		inquiry.setAnswerContent(request.getAnswerContent());
 		inquiry.setAdmin(admin);
 		inquiry.setAnswerState(InquiryAnswerState.YES.getState());
 		inquiry.setAnsweredAt(LocalDateTime.now());
 	}
 
+	// INQUIRY-007 (문의 카테고리 별 문의 검색)
 	public Page<InquiryListResponse> readInquiryListByCategorySearch(
 		Long categorySeq, String title, Pageable pageable) {
 		Page<InquiryListResponse> page = inquiryRepository.findInquiryListByCategorySearch(
@@ -119,6 +125,7 @@ public class InquiryService {
 		return page;
 	}
 
+	// INQUIRY-008 (문의 삭제)
 	@Transactional
 	public void deleteInquiry(Long inquirySeq) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
