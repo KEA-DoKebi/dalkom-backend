@@ -1,7 +1,9 @@
 name: Continuous Deployment
 
 on:
-  pull_request:
+  push :
+    branches:
+      - workflow
 #    branches:
 #      - release
     types: [closed]
