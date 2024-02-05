@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -39,9 +38,7 @@ public class ProductOptionControllerTest {
 		// Given
 
 		// When, Then
-		mockMvc.perform(get("/api/option")
-				.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+		mockMvc.perform(get("/api/option")).andExpect(status().isOk());
 
 		verify(productOptionService).readOptionList();
 	}
@@ -53,9 +50,7 @@ public class ProductOptionControllerTest {
 		String optionCode = "OP1";
 
 		// When, Then
-		mockMvc.perform(get("/api/option/{optionCode}", optionCode)
-				.contentType(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk());
+		mockMvc.perform(get("/api/option/{optionCode}", optionCode)).andExpect(status().isOk());
 
 		verify(productOptionService).readOptionDetailList(optionCode);
 	}
