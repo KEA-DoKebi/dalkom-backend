@@ -22,6 +22,7 @@ import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
+import com.dokebi.dalkom.domain.user.service.SignService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,10 +34,10 @@ public class AdminService {
 	private final PasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
 	private final EmployeeRepository employeeRepository;
+	private final SignService signService;
 
 	public Page<ReadAdminResponse> readAdminList(Pageable pageable) {
 		return adminRepository.findAllAdminList(pageable);
-
 	}
 
 	@Transactional
@@ -47,7 +48,6 @@ public class AdminService {
 		String password = passwordEncoder.encode(request.getPassword());
 		request.setPassword(password);
 		adminRepository.save(CreateAdminRequest.toEntity(request));
-
 	}
 
 	@Transactional
@@ -62,6 +62,9 @@ public class AdminService {
 			// 비밀번호 암호화
 			String password = passwordEncoder.encode(request.getPassword());
 			request.setPassword(password);
+
+			//마일리지 추가
+			request.setMileage(signService.calculateMileage(request.getJoinedAt()));
 
 			// 회원 정보 저장
 			userRepository.save(SignUpRequest.toEntity(request));
@@ -80,7 +83,6 @@ public class AdminService {
 			// 값이 존재할 때만 실행됨
 			user.setState("N");
 		});
-
 	}
 
 	public Admin readAdminByAdminSeq(Long adminSeq) {

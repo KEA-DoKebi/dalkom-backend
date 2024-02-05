@@ -108,34 +108,13 @@ public class SignService {
 	public SignUpResponse signUp(SignUpRequest request) {
 		SignUpResponse signUpResponse = new SignUpResponse();
 
-		LocalDateTime currentDateTime = LocalDateTime.now();
-		LocalDate startOfYear = LocalDate.of(currentDateTime.getYear(), 1, 1);
-		// 15일 구분용
-		LocalDate joinedDate = request.getJoinedAt();
-		LocalDate midDate = LocalDate.of(joinedDate.getYear(), joinedDate.getMonth(), 15);
-		if (joinedDate.isBefore(midDate)) {
-			joinedDate = joinedDate.withDayOfMonth(1);
-		} else {
-			joinedDate = joinedDate.plusMonths(1).withDayOfMonth(1);
-		}
-
-		int mileagePerMonth = 100000; //10만
-		int mileagePerYear = mileagePerMonth * 12;
-		int monthWorked;
-
 		// 임직원 테이블에 입력한 정보가 있는지 확인
 		if (checkEmployee(request)) {
 			// 이메일, 닉네임 중복성 검사
 			validateSignUpInfo(request);
 
-			//
-			if (joinedDate.isBefore(startOfYear)) {
-				monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(joinedDate, startOfYear));
-				request.setMileage(monthWorked * mileagePerMonth + mileagePerYear);
-			} else {
-				monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(startOfYear, joinedDate));
-				request.setMileage(monthWorked * mileagePerMonth);
-			}
+			//마일리지 추가
+			request.setMileage(calculateMileage(request.getJoinedAt()));
 
 			// 비밀번호 암호화
 			String password = passwordEncoder.encode(request.getPassword());
@@ -151,6 +130,31 @@ public class SignService {
 		}
 
 		return signUpResponse;
+	}
+
+	public Integer calculateMileage(LocalDate joinedAt) {
+		LocalDateTime currentDateTime = LocalDateTime.now();
+		LocalDate startOfYear = LocalDate.of(currentDateTime.getYear(), 1, 1);
+
+		// 15일 구분용
+		LocalDate midDate = LocalDate.of(joinedAt.getYear(), joinedAt.getMonth(), 15);
+		if (joinedAt.isBefore(midDate)) {
+			joinedAt = joinedAt.withDayOfMonth(1);
+		} else {
+			joinedAt = joinedAt.plusMonths(1).withDayOfMonth(1);
+		}
+
+		int mileagePerMonth = 100000; //10만
+		int mileagePerYear = mileagePerMonth * 12;
+		int monthWorked;
+
+		if (joinedAt.isBefore(startOfYear)) {
+			monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(joinedAt, startOfYear));
+			return monthWorked * mileagePerMonth + mileagePerYear;
+		} else {
+			monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(startOfYear, joinedAt));
+			return monthWorked * mileagePerMonth;
+		}
 	}
 
 	// 임직원 데이터 조회, 일치여부 확인
