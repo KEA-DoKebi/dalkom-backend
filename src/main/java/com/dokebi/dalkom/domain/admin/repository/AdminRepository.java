@@ -67,13 +67,15 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	Integer findTotalDailyPrice();
 
 	@Query(
-		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto(DATE_FORMAT(o.createdAt, '%Y-%m'), SUM(o.totalPrice)) "
+		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto("
+			+ "DATE_FORMAT(o.createdAt, '%Y-%m'), SUM(o.totalPrice)) "
 			+ "FROM Order o "
 			+ "GROUP BY DATE_FORMAT(o.createdAt, '%Y-%m')")
 	List<MonthlyPriceListDto> findMonthlyPriceList();
 
 	@Query(
-		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto(DATE_FORMAT(od.createdAt, '%Y-%m'), p.productSeq "
+		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto("
+			+ "DATE_FORMAT(od.createdAt, '%Y-%m'), p.productSeq "
 			+ ", max(p.name), max(p.company), max(p.price), COUNT(*), sum(od.amount), (sum(od.amount) * p.price)) "
 			+ " FROM OrderDetail od "
 			+ "LEFT JOIN od.product p "
@@ -82,7 +84,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 			+ "ORDER by sum(od.amount) DESC ")
 	Page<MonthlyProductListDto> findMonthlyProductList(Pageable pageable);
 
-	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto(c.parentSeq, MAX(c2.name),  COUNT(*)) "
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto("
+		+ "c.parentSeq, MAX(c2.name),  COUNT(*)) "
 		+ "from OrderDetail od "
 		+ "left join od.product p"
 		+ "LEFT JOIN od.product.category c "
