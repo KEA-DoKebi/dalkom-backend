@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.dokebi.dalkom.domain.option.dto.OptionCodeResponse;
+import com.dokebi.dalkom.domain.option.dto.OptionDetailListResponse;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
@@ -29,18 +30,28 @@ public class ProductOptionServiceTest {
 
 	@Test
 	void readOptionListTest() {
-		// Given: 옵션 코드와 설명이 설정된 OptionCodeResponse 객체 목록을 준비합니다.
+		// Given
 		OptionCodeResponse response1 = new OptionCodeResponse("OP1", "의상 사이즈");
 		OptionCodeResponse response2 = new OptionCodeResponse("OP2", "신발 사이즈");
 		List<OptionCodeResponse> responseList = Arrays.asList(response1, response2);
-		// productOptionRepository의 findAllOptionCode 메서드 호출 시 준비된 목록을 반환하도록 모킹합니다.
+
 		when(productOptionRepository.findAllOptionCode()).thenReturn(responseList);
 
-		// When: 서비스의 readOptionList 메서드를 호출합니다.
+		// When
 		List<OptionCodeResponse> resultList = productOptionService.readOptionList();
 
-		// Then: 반환된 결과가 준비된 목록과 동일한지 확인합니다.
+		// Then
 		assertEquals(responseList, resultList);
+	}
+
+	@Test
+	void readOptionDetailListTest() {
+		// Given
+		OptionDetailListResponse response1 = new OptionDetailListResponse(1L, "남성");
+		OptionDetailListResponse response2 = new OptionDetailListResponse(2L, "여성");
+		List<OptionDetailListResponse> responseList = Arrays.asList(response1, response2);
+
+		when(productOptionRepository.findDetailByOptionCode(anyString())).thenReturn(responseList);
 	}
 
 	@Test
