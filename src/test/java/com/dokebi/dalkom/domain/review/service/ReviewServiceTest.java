@@ -207,5 +207,4 @@ public class ReviewServiceTest {
 		// Then: 조회된 리뷰 정보가 반환됨
 		assertNotNull(response);
 	}
-
 }
