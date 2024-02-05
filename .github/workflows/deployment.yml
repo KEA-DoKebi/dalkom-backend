@@ -2,13 +2,13 @@ name: Continuous Deployment
 
 on:
   pull_request:
-    branches:
-      - release
+#    branches:
+#      - release
     types: [closed]
 
 jobs:
-  deploy_to_Kakao:
-    runs-on: ubuntu-latest
+  Push_to_Kakao:
+    runs-on: self-hosted
     if: github.event.pull_request.merged == true && github.base_ref == 'dev'
     
     steps:
@@ -16,13 +16,90 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile.linux --tag dokebi-was:latest
+      run: >
+        docker build . --file Dockerfile.linux --tag dokebi-was:blue
+        docker build . --file Dockerfile.linux --tag dokebi-was:green
+
 
     - name: Tag the Docker image
-      run: docker tag dokebi-was:latest dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/dokebi-was:latest
+      run: >
+        docker tag dokebi-was:blue ${{ secrets.BLUE_IMAGE }}
+        docker tag dokebi-was:green ${{ secrets.GREEN_IMAGE }}
+
+    - name: Push the Docker image
+      run: >
+        docker push ${{ secrets.BLUE_IMAGE }}
+        docker push ${{ secrets.GREEN_IMAGE }}
+
 
     - name: Login to Docker Registry
       run: docker login dokebi-shop.kr-gov-central-1.kcr.dev --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
 
-    - name: Push the Docker image
-      run: docker push dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/dokebi-was:latest
+  Run_Blue_on_Kakao :
+    runs-on: self-hosted
+    needs: Push_to_Kakao
+        
+    steps:
+    - name: Deploy to Blue
+      env :
+        API_URL: ${{ secrets.API_URL }}
+        TOKEN: ${{ secrets.TOKEN }}
+      run: >
+        ssh -A -J ubuntu@${{ secrets.BASTION_IP }} -p ${{ secrets.BASTION_PORT }} ubuntu@${{ secrets.WAS_BLUE_IP }}
+        docker pull ${{ secrets.BLUE_IMAGE }}
+        docker stop spring_blue 2>/dev/null || true
+        export INFISICAL_API_URL= $API_URL
+        export INFISICAL_TOKEN = $TOKEN
+        infisical export --path="/DB"  --format=dotenv > .env
+        python string_to_num.py
+        docker run --name spring_blue --rm -itd -p ${{ secrets.WAS_INNER_PORT }}:${{ secrets.WAS_BLUE_PORT }} --env-file .env ${{ secrets.BLUE_IMAGE }}
+
+  Health_Check :
+    runs-on: self-hosted
+    needs: Push_to_Kakao
+              
+    steps:
+    - name: Initial Delay for Application Startup
+      run: sleep 60
+
+    - name: Health Check for Green Environment
+      id: health-check
+      run: |
+        success_count=0
+        failure_count=0
+        while [ $success_count -lt 5 ] && [ $failure_count -lt 2 ]; do
+        response=$(curl --write-out "%{http_code}" --silent --output /dev/null ${{ secrets.GREEN_ENVIRONMENT_URL }})
+        if [ "$response" -eq 200 ]; then
+            ((success_count++))
+            failure_count=0
+          else
+            ((failure_count++))
+            success_count=0
+          fi
+          echo "Success count: $success_count, Failure count: $failure_count"
+          if [ $failure_count -eq 2 ]; then
+            echo "Health check failed."
+            exit 1
+          fi
+          sleep 30  # 체크 주기를 30초로 설정
+          done
+          echo "Health check passed."
+
+  Run_Green_on_Kakao :
+    runs-on: self-hosted
+    needs: Health_Check
+        
+    steps:
+    - name: Deploy to Green
+      env :
+        API_URL: ${{ secrets.API_URL }}
+        TOKEN: ${{ secrets.TOKEN }}
+      run: >
+        ssh -A -J ubuntu@${{ secrets.BASTION_IP }} -p ${{ secrets.BASTION_PORT }} ubuntu@${{ secrets.WAS_GREEN_IP }}
+        docker pull ${{ secrets.GREEN_IMAGE }}
+        docker stop spring_green 2>/dev/null || true
+        export INFISICAL_API_URL= $API_URL
+        export INFISICAL_TOKEN = $TOKEN
+        infisical export --path="/DB"  --format=dotenv > .env
+        python string_to_num.py
+        docker run --name spring_green --rm -itd -p ${{ secrets.WAS_INNER_PORT }}:${{ secrets.WAS_GREEN_PORT }} --env-file .env ${{ secrets.GREEN_IMAGE }}
