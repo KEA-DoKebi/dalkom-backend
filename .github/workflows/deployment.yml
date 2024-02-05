@@ -43,13 +43,7 @@ jobs:
     steps:
     - name: Deploy to Blue zz
       run: |
-        ssh -A -t -J bastion blue << EOF
-        docker pull ${{ secrets.BLUE_IMAGE }}
-        docker stop spring_blue 2>/dev/null || true
-        infisical export --path="/DB"  --format=dotenv > .env
-        python string_to_num.py
-        docker run --name spring_blue --rm -itd -p ${{ secrets.WAS_INNER_PORT }}:${{ secrets.WAS_BLUE_PORT }} --env-file .env ${{ secrets.BLUE_IMAGE }}
-        EOF
+        ssh -A -J bastion blue << ../deploying.sh
 
   Health_Check :
     runs-on: self-hosted
