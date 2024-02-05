@@ -52,8 +52,7 @@ jobs:
         BLUE_IMAGE: ${{ secrets.BLUE_IMAGE }}
         INNER_PORT: ${{ secrets.WAS_INNER_PORT }}
       run: |
-        ssh -A ubuntu@$BASTION_IP -p $BASTION_PORT
-        ssh -A ubuntu@$BLUE_IP      
+        ssh -A -J bastion blue
         docker pull $BLUE_IMAGE
         docker stop spring_blue 2>/dev/null || true
         export INFISICAL_API_URL= $API_URL
