@@ -21,7 +21,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
 		+ "WHERE o.user.userSeq = :userSeq "
-		+ "GROUP BY o.ordrSeq")
+		+ "GROUP BY o.ordrSeq "
+		+ "ORDER BY o.createdAt DESC ")
 	Page<OrderUserReadResponse> findOrderListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	// 특정 주문 상세조회
@@ -35,7 +36,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse("
 		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) FROM Order o "
 		+ "JOIN o.orderDetailList od "
-		+ "GROUP BY o.ordrSeq")
+		+ "GROUP BY o.ordrSeq "
+		+ "ORDER BY o.createdAt DESC ")
 	Page<OrderAdminReadResponse> findAllOrderList(Pageable pageable);
 
 	//사용자 주문조회 검색
@@ -44,7 +46,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
 		+ "WHERE o.receiverName LIKE CONCAT('%', :receiverName, '%')"
-		+ "GROUP BY o.ordrSeq, od.product.productSeq")
+		+ "GROUP BY o.ordrSeq, od.product.productSeq "
+		+ "ORDER BY o.createdAt DESC ")
 	Page<OrderUserReadResponse> findAllOrderListByReceiverName(@Param("receiverName") String receiverName,
 		Pageable pageable);
 
@@ -54,7 +57,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
 		+ "WHERE o.receiverName LIKE CONCAT('%', :receiverName, '%')"
-		+ "GROUP BY o.ordrSeq, od.product.productSeq")
+		+ "GROUP BY o.ordrSeq, od.product.productSeq "
+		+ "ORDER BY o.createdAt DESC ")
 	Page<OrderAdminReadResponse> findOrderListByAdminWithReceiverName(@Param("receiverName") String receiverName,
 		Pageable pageable);
 
@@ -64,7 +68,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
 		+ "WHERE o.user.name LIKE CONCAT('%', :receiverName, '%')"
-		+ "GROUP BY o.ordrSeq, od.product.productSeq")
+		+ "GROUP BY o.ordrSeq, od.product.productSeq "
+		+ "ORDER BY o.createdAt DESC ")
 	Page<OrderAdminReadResponse> findOrderListByAdminWithName(@Param("receiverName") String name,
 		Pageable pageable);
 
@@ -72,6 +77,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	@Query("SELECT o FROM Order o "
 		+ "WHERE o.user.userSeq = :userSeq "
-		+ "AND (o.orderState = '21' OR o.orderState = '31' OR o.orderState = '32' OR o.orderState = '33')")
+		+ "AND (o.orderState = '21' OR o.orderState = '31' OR o.orderState = '32' OR o.orderState = '33') "
+		+ "ORDER BY o.createdAt DESC ")
 	Page<Order> findCancelRefundListByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 }
