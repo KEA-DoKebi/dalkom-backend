@@ -20,12 +20,14 @@ public interface MileageApplyRepository extends JpaRepository<MileageApply, Long
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse( "
 		+ " m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) FROM MileageApply m"
-		+ " WHERE m.approvedState = 'W'")
+		+ " WHERE m.approvedState = 'W'"
+		+ "ORDER BY m.milgApplySeq desc")
 	Page<MileageApplyResponse> findAllMileageApplyWaitState(Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse( "
 		+ " m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) FROM MileageApply m"
-		+ " WHERE m.user.userSeq = :userSeq AND m.approvedState = 'W'")
+		+ " WHERE m.user.userSeq = :userSeq AND m.approvedState = 'W'"
+		+ "ORDER BY m.milgApplySeq desc")
 	Page<MileageApplyResponse> findAllMileageApplyByUserSeq(@Param("userSeq") Long userSeq, Pageable pageable);
 
 	Optional<MileageApply> findByMilgApplySeq(@Param("milgApplySeq") Long milgApplySeq);
@@ -35,42 +37,46 @@ public interface MileageApplyRepository extends JpaRepository<MileageApply, Long
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse("
 		+ "m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) "
-		+ "FROM MileageApply m ")
-	Page<MileageApplyResponse> findMileageHistoryApplyList(
-		Pageable pageable);
+		+ "FROM MileageApply m "
+		+ "ORDER BY m.milgApplySeq desc ")
+	Page<MileageApplyResponse> findMileageHistoryApplyList(Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse("
 		+ "m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) "
-		+ "FROM MileageApply m WHERE (m.user.email LIKE CONCAT('%', :email, '%')) ")
-	Page<MileageApplyResponse> findMileageApplyHistoryListByEmail(@Param("email") String email,
-		Pageable pageable);
+		+ "FROM MileageApply m WHERE (m.user.email LIKE CONCAT('%', :email, '%')) "
+		+ "ORDER BY m.milgApplySeq desc")
+	Page<MileageApplyResponse> findMileageApplyHistoryListByEmail(@Param("email") String email, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse("
 		+ "m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) "
-		+ "FROM MileageApply m WHERE (m.user.nickname LIKE CONCAT('%', :nickname, '%')) ")
+		+ "FROM MileageApply m WHERE (m.user.nickname LIKE CONCAT('%', :nickname, '%')) "
+		+ "ORDER BY m.milgApplySeq desc")
 	Page<MileageApplyResponse> findMileageApplyHistoryListByNickname(@Param("nickname") String nickname,
 		Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse("
 		+ "m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) "
-		+ "FROM MileageApply m WHERE (m.user.name LIKE CONCAT('%', :name, '%')) ")
-	Page<MileageApplyResponse> findMileageApplyHistoryListByName(@Param("name") String name,
-		Pageable pageable);
+		+ "FROM MileageApply m WHERE (m.user.name LIKE CONCAT('%', :name, '%')) "
+		+ "ORDER BY m.milgApplySeq desc")
+	Page<MileageApplyResponse> findMileageApplyHistoryListByName(@Param("name") String name, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse( "
 		+ " m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) FROM MileageApply m"
-		+ " WHERE m.approvedState = 'W' and (m.user.email LIKE CONCAT('%', :email, '%'))")
+		+ " WHERE m.approvedState = 'W' and (m.user.email LIKE CONCAT('%', :email, '%')) "
+		+ "ORDER BY m.milgApplySeq desc")
 	Page<MileageApplyResponse> findAllMileageApplyWaitStateListByEmail(@Param("email") String email, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse( "
 		+ " m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) FROM MileageApply m"
-		+ " WHERE m.approvedState = 'W' and (m.user.email LIKE CONCAT('%', :nickname, '%'))")
+		+ " WHERE m.approvedState = 'W' and (m.user.email LIKE CONCAT('%', :nickname, '%')) "
+		+ "ORDER BY m.milgApplySeq desc")
 	Page<MileageApplyResponse> findAllMileageApplyWaitStateListByNickname(@Param("nickname") String nickname,
 		Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse( "
 		+ " m.milgApplySeq, m.user.userSeq, m.user.name, m.user.email, m.user.nickname, m.amount,m.user.mileage, m.approvedState, m.approvedAt, m.createdAt) FROM MileageApply m"
-		+ " WHERE m.approvedState = 'W' and (m.user.email LIKE CONCAT('%', :name, '%'))")
+		+ " WHERE m.approvedState = 'W' and (m.user.email LIKE CONCAT('%', :name, '%')) "
+		+ "ORDER BY m.milgApplySeq desc")
 	Page<MileageApplyResponse> findAllMileageApplyWaitStateListByName(@Param("name") String name, Pageable pageable);
 }
 
