@@ -25,7 +25,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE p.category.parentSeq = :categorySeq and p.state != 'N'"
-		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company ")
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company "
+		+ "ORDER BY p.productSeq DESC ")
 	Page<ProductByCategoryResponse> findProductListByCategory(
 		@Param("categorySeq") Long categorySeq, Pageable pageable);
 
@@ -48,7 +49,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "FROM Product p "
 		+ "INNER JOIN ProductStock ps "
 		+ "ON p.productSeq = ps.product.productSeq "
-		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
+		+ "ORDER BY p.productSeq DESC , ps.productOption.prdtOptionSeq DESC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findAdminPageProductList(Pageable pageable);
 
@@ -59,7 +60,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
 		+ "WHERE p.category.categorySeq = :categorySeq and p.state != 'N'"
-		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company "
+		+ "ORDER BY p.productSeq DESC ")
 	Page<ProductByCategoryDetailPage> findProductListByDetailCategory(
 		@Param("categorySeq") Long categorySeq, Pageable pageable);
 
@@ -71,7 +73,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE c.parentSeq = :categorySeq and p.state != 'N'"
-		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company")
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company "
+		+ "ORDER BY p.productSeq DESC ")
 	Page<ProductMainResponse> findProductListByCategoryAll(@Param("categorySeq") Long categorySeq, Pageable pageable);
 
 	@Query(value = "SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductResponse( "
@@ -81,7 +84,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ON p.productSeq = ps.product.productSeq "
 		+ "WHERE (p.name LIKE CONCAT('%', :name, '%') "
 		+ "AND p.state != 'N') "
-		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
+		+ "ORDER BY p.productSeq DESC , ps.productOption.prdtOptionSeq DESC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findProductListSearchByName(@Param("name") String name, Pageable pageable);
 
@@ -92,7 +95,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ON p.productSeq = ps.product.productSeq "
 		+ "WHERE (p.company LIKE CONCAT('%', :company, '%') "
 		+ "AND p.state != 'N') "
-		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
+		+ "ORDER BY p.productSeq DESC , ps.productOption.prdtOptionSeq DESC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findProductListSearchByCompany(@Param("company") String company, Pageable pageable);
 
@@ -102,7 +105,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "INNER JOIN ProductStock ps "
 		+ "ON p.productSeq = ps.product.productSeq "
 		+ "WHERE ( p.state != 'N') "
-		+ "ORDER BY p.productSeq ASC, ps.productOption.prdtOptionSeq ASC ",
+		+ "ORDER BY p.productSeq DESC , ps.productOption.prdtOptionSeq DESC ",
 		countQuery = "SELECT COUNT(p) FROM Product p ")
 	Page<ReadProductResponse> findProductListSearch(Pageable pageable);
 
