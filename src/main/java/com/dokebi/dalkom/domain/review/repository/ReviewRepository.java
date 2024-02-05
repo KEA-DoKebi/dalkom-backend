@@ -50,4 +50,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		+ "FROM OrderDetail od "
 		+ "WHERE od.review.reviewSeq = :reviewSeq")
 	Optional<ReviewReadResponse> findReviewByReviewSeq(@Param("reviewSeq") Long reviewSeq);
+
+	Boolean existsByOrderDetail_OrdrDetailSeq(Long ordrDetailSeq);
 }

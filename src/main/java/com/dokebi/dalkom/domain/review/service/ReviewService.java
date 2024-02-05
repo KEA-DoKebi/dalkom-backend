@@ -17,6 +17,7 @@ import com.dokebi.dalkom.domain.review.dto.ReviewReadResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
 import com.dokebi.dalkom.domain.review.dto.ReviewUpdateRequest;
 import com.dokebi.dalkom.domain.review.entity.Review;
+import com.dokebi.dalkom.domain.review.exception.ReviewAlreadyExistsException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.review.repository.ReviewRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -50,6 +51,9 @@ public class ReviewService {
 
 		User user = userService.readUserByUserSeq(userSeq);
 		OrderDetail orderDetail = orderDetailService.readOrderDetailByOrderDetailSeq(orderDetailSeq);
+		if (reviewRepository.existsByOrderDetail_OrdrDetailSeq(orderDetailSeq)) {
+			throw new ReviewAlreadyExistsException();
+		}
 		Review review = new Review(user, orderDetail, request.getContent(), request.getRating());
 		reviewRepository.save(review);
 	}
