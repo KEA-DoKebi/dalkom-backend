@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
+import com.dokebi.dalkom.domain.admin.exception.CreateUserFailureException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
@@ -240,6 +241,12 @@ public class ExceptionAdvice {
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response adminNotFoundException() {
 		return Response.failure(-2000, "해당 관리자를 찾을 수 없습니다.");
+	}
+
+	@ExceptionHandler(CreateUserFailureException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public Response createUserFailureException() {
+		return Response.failure(-2001, "사용자를 추가할 수 없습니다.");
 	}
 
 	// 문의

@@ -27,4 +27,10 @@ public class Employee {
 
 	private LocalDate joinedAt;
 
+	public Employee(String empId, String email, String name, LocalDate joinedAt) {
+		this.empId = empId;
+		this.email = email;
+		this.name = name;
+		this.joinedAt = joinedAt;
+	}
 }

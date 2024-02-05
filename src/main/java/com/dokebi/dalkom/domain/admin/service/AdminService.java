@@ -15,6 +15,7 @@ import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
+import com.dokebi.dalkom.domain.admin.exception.CreateUserFailureException;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
@@ -28,7 +29,6 @@ import com.dokebi.dalkom.domain.user.repository.UserRepository;
 import com.dokebi.dalkom.domain.user.service.SignService;
 
 @Service
-
 @Transactional(readOnly = true)
 public class AdminService {
 	private final AdminRepository adminRepository;
@@ -46,10 +46,17 @@ public class AdminService {
 		this.signService = signService;
 	}
 
-	public Page<ReadAdminResponse> readAdminList(Pageable pageable) {
-		return adminRepository.findAllAdminList(pageable);
+	// ADMIN-001 (유저 비활성화)
+	@Transactional
+	public void updateUser(Long userSeq) {
+		Optional<User> optionalUser = userRepository.findById(userSeq);
+		optionalUser.ifPresent(user -> {
+			// 값이 존재할 때만 실행됨
+			user.setState("N");
+		});
 	}
 
+	// ADMIN-006 (관리자 생성)
 	@Transactional
 	public void createAdmin(CreateAdminRequest request) {
 		validateNickname(request.getNickname());
@@ -60,10 +67,14 @@ public class AdminService {
 		adminRepository.save(CreateAdminRequest.toEntity(request));
 	}
 
+	// ADMIN-007 (관리자 목록 조회)
+	public Page<ReadAdminResponse> readAdminList(Pageable pageable) {
+		return adminRepository.findAllAdminList(pageable);
+	}
+
+	// ADMIN-008 (관리자 유저 생성)
 	@Transactional
 	public void createUser(SignUpRequest request) {
-		SignUpResponse signUpResponse = new SignUpResponse();
-
 		// 임직원 테이블에 입력한 정보가 있는지 확인
 		if (checkEmployee(request)) {
 			// 이메일, 닉네임 중복성 검사
@@ -78,21 +89,23 @@ public class AdminService {
 
 			// 회원 정보 저장
 			userRepository.save(SignUpRequest.toEntity(request));
-			signUpResponse.setEmpId(request.getEmpId());
-			signUpResponse.setEmail(request.getEmail());
-			signUpResponse.setMessage("회원가입 성공");
 		} else {
-			signUpResponse.setMessage("임직원 데이터가 존재하지 않음");
+			throw new CreateUserFailureException();
 		}
 	}
 
-	@Transactional
-	public void updateUser(Long userSeq) {
-		Optional<User> optionalUser = userRepository.findById(userSeq);
-		optionalUser.ifPresent(user -> {
-			// 값이 존재할 때만 실행됨
-			user.setState("N");
-		});
+	// ADMIN-009 (관리자 대시보드)
+	public AdminDashboardResponse readDashboard() {
+		AdminDashboardResponse response = new AdminDashboardResponse();
+		response.setTotalMileage(adminRepository.findTotalPrice());
+		response.setTotalMonthlyMileage(adminRepository.findTotalMonthlyPrice());
+		response.setTotalDailyMileage(adminRepository.findTotalDailyPrice());
+		response.setMonthlyPriceList(adminRepository.findMonthlyPriceList());
+		response.setMonthlyCategoryList(adminRepository.findMonthlyCategoryList());
+
+		Pageable topFive = PageRequest.of(0, 5);
+		response.setMonthlyProductList(adminRepository.findMonthlyProductList(topFive));
+		return response;
 	}
 
 	public Admin readAdminByAdminSeq(Long adminSeq) {
@@ -103,7 +116,7 @@ public class AdminService {
 		return adminRepository.findByAdminId(adminId).orElseThrow(AdminNotFoundException::new);
 	}
 
-	// 서비스
+	// ADMIN-010 (관리자 목록 조회 검색)
 	public Page<ReadAdminResponse> readAdminListSearch(String name, String adminId, String depart, String nickname,
 		Pageable pageable) {
 		if (name != null) {
@@ -120,26 +133,13 @@ public class AdminService {
 		}
 	}
 
-	public AdminDashboardResponse readDashboard() {
-		AdminDashboardResponse response = new AdminDashboardResponse();
-		response.setTotalMileage(adminRepository.findTotalPrice());
-		response.setTotalMonthlyMileage(adminRepository.findTotalMonthlyPrice());
-		response.setTotalDailyMileage(adminRepository.findTotalDailyPrice());
-		response.setMonthlyPriceList(adminRepository.findMonthlyPriceList());
-		response.setMonthlyCategoryList(adminRepository.findMonthlyCategoryList());
-		
-		Pageable topFive = PageRequest.of(0, 5);
-		response.setMonthlyProductList(adminRepository.findMonthlyProductList(topFive));
-		return response;
-	}
-
 	private void validateNickname(String nickname) {
 		if (adminRepository.existsByNickname(nickname)) {
 			throw new UserNicknameAlreadyExistsException(nickname);
 		}
 	}
 
-	private boolean checkEmployee(SignUpRequest request) {
+	protected boolean checkEmployee(SignUpRequest request) {
 		Employee employee = employeeRepository.findByEmpId(request.getEmpId())
 			.orElseThrow(EmployeeNotFoundException::new);
 		if (employee.getName().equals(request.getName()) &&
@@ -152,7 +152,7 @@ public class AdminService {
 	}
 
 	// 이메일, 닉네임 중복성 검사
-	private void validateSignUpInfo(SignUpRequest request) {
+	protected void validateSignUpInfo(SignUpRequest request) {
 		if (userRepository.existsByEmail(request.getEmail())) {
 			throw new UserEmailAlreadyExistsException(request.getEmail());
 		}
