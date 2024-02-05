@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.admin.service;
 
 import java.util.Optional;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,10 +25,8 @@ import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 import com.dokebi.dalkom.domain.user.service.SignService;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
+
 @Transactional(readOnly = true)
 public class AdminService {
 	private final AdminRepository adminRepository;
@@ -35,6 +34,15 @@ public class AdminService {
 	private final UserRepository userRepository;
 	private final EmployeeRepository employeeRepository;
 	private final SignService signService;
+
+	public AdminService(AdminRepository adminRepository, PasswordEncoder passwordEncoder, UserRepository userRepository,
+		EmployeeRepository employeeRepository, @Lazy SignService signService) {
+		this.adminRepository = adminRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.userRepository = userRepository;
+		this.employeeRepository = employeeRepository;
+		this.signService = signService;
+	}
 
 	public Page<ReadAdminResponse> readAdminList(Pageable pageable) {
 		return adminRepository.findAllAdminList(pageable);
