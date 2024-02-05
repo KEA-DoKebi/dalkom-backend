@@ -32,6 +32,7 @@ import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.PasswordNotValidException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
+import com.dokebi.dalkom.domain.review.exception.ReviewAlreadyExistsException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
@@ -221,6 +222,12 @@ public class ExceptionAdvice {
 		return Response.failure(-1801, "요청하신 주문상세를 찾을 수 없습니다.");
 	}
 
+	@ExceptionHandler(ReviewAlreadyExistsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response reviewAlreadyExistsException() {
+		return Response.failure(-1802, "이미 리뷰가 존재합니다.");
+	}
+
 	// 카테고리
 	@ExceptionHandler(CategoryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
@@ -244,7 +251,7 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(FaqNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response FaqNotFoundException() {
+	public Response faqNotFoundException() {
 		return Response.failure(-2101, "해당 FAQ를 찾을 수 없습니다.");
 	}
 
