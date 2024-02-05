@@ -11,7 +11,7 @@ on:
 jobs:
   Push_to_Kakao:
     runs-on: self-hosted
-    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
+#    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
     
     steps:
     - name: Checkout code
@@ -58,7 +58,7 @@ jobs:
 
   Health_Check :
     runs-on: self-hosted
-    needs: Push_to_Kakao
+    needs: Run_Blue_on_Kakao
               
     steps:
     - name: Initial Delay for Application Startup
