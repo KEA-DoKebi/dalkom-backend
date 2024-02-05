@@ -71,7 +71,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	@DisplayName("상품별 리뷰 리스트 조회 테스트")
+	@DisplayName("REVIEW-001 상품별 리뷰 리스트 조회 테스트")
 	void readReviewByProduct() throws Exception {
 		// Given
 		Long productSeq = 1L;
@@ -88,7 +88,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	@DisplayName("사용자별 리뷰 리스트 조회 테스트")
+	@DisplayName("REVIEW-002 사용자별 리뷰 리스트 조회 테스트")
 	void readReviewByUser() throws Exception {
 		// Given
 		Long userSeq = 1L;
@@ -104,27 +104,25 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	@DisplayName("리뷰 작성 테스트")
-	void createReview() throws Exception {
+	@DisplayName("REVIEW-003 주문 상품에 대한 리뷰 작성 테스트")
+	void createReviewCorrected() throws Exception {
 		// Given
-		// Long userSeq = 1L;
+		Long userSeq = 1L; // 가정
+		Long orderDetailSeq = 1L; // 주문 상세 시퀀스
 		ReviewCreateRequest request = ReviewCreateRequestFactory.createReviewCreateRequest();
 
 		// When, Then
-		mockMvc.perform(post("/api/review/user")
+		mockMvc.perform(post("/api/review/{orderDetailSeq}", orderDetailSeq)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
-		// reviewService가 createReview를 1번 호출하여 createReview를 수행하는지 확인
-		// verify(reviewService, times(1)).createReview(userSeq, request);
-
 		// 서비스 메소드 호출 검증
-		verify(reviewService).createReview(any(Long.class), any(Long.class), any(ReviewCreateRequest.class));
+		verify(reviewService).createReview(eq(userSeq), eq(orderDetailSeq), any(ReviewCreateRequest.class));
 	}
 
 	@Test
-	@DisplayName("리뷰 수정 테스트")
+	@DisplayName("REVIEW-004 리뷰 수정 테스트")
 	void updateReview() throws Exception {
 		// Given
 		Long reviewSeq = 1L;
@@ -140,7 +138,7 @@ public class ReviewControllerTest {
 	}
 
 	@Test
-	@DisplayName("리뷰 삭제 테스트")
+	@DisplayName("REVIEW-005 리뷰 삭제 테스트")
 	void deleteReview() throws Exception {
 		// Given
 		Long reviewSeq = 1L;
@@ -153,5 +151,19 @@ public class ReviewControllerTest {
 			.andExpect(status().isOk());
 
 		verify(reviewService).deleteReview(reviewSeq);
+	}
+
+	@Test
+	@DisplayName("REVIEW-006 단일 리뷰 조회 테스트")
+	void readReview() throws Exception {
+		// Given
+		Long reviewSeq = 1L; // 리뷰 시퀀스
+
+		// When, Then
+		mockMvc.perform(get("/api/review/{reviewSeq}", reviewSeq))
+			.andExpect(status().isOk());
+
+		// 서비스 메소드 호출 검증
+		verify(reviewService).readReviewByReviewSeq(reviewSeq);
 	}
 }
