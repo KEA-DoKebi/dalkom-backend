@@ -12,11 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LogInAdminRequest {
 
-	@NotNull(message = "LogInAdminRequest title notnull 에러")
-	@NotBlank(message = "LogInAdminRequest title notblank 에러")
-	private String adminId;
+	@NotNull(message = "LogInAdminRequest email(adminId) notnull 에러")
+	@NotBlank(message = "LogInAdminRequest email(adminId) notblank 에러")
+	private String email;
 
 	@NotNull(message = "LogInAdminRequest password notnull 에러")
 	@NotBlank(message = "LogInAdminRequest password notblank 에러")
 	private String password;
+
+	public String getAdminId() {
+		return email;
+	}
 }

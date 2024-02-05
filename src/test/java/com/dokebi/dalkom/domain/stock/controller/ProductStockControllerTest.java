@@ -42,17 +42,17 @@ public class ProductStockControllerTest {
 		Long stockSeq = 1L;
 		Integer changedAmount = 3;
 
-		ProductStockEditRequest req = new ProductStockEditRequest(changedAmount);
+		ProductStockEditRequest request = new ProductStockEditRequest(changedAmount);
 
 		// when
 		mockMvc.perform(
 				put("/api/stock/{stockSeq}", stockSeq)
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(req)))
+					.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isOk()); // then (API 요청을 했을 때 200을 반환하는지 검증)
 
 		//productStockController에서 productStockService updateStock을 호출했는지 검증
-		verify(productStockService).updateStock(stockSeq, req.getAmount());
+		verify(productStockService).updateStockByStockSeq(stockSeq, request.getAmount());
 	}
 
 	@Test
@@ -63,13 +63,13 @@ public class ProductStockControllerTest {
 		Long stockSeq = 1L;
 		Integer changedAmount = -3;
 
-		ProductStockEditRequest req = new ProductStockEditRequest(changedAmount);
+		ProductStockEditRequest request = new ProductStockEditRequest(changedAmount);
 
 		// when
 		mockMvc.perform(
 				put("/api/stock/{stockSeq}", stockSeq)
 					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(req)))
+					.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isBadRequest()); // thenAPI 요청을 했을 때 400을 반환하는지 검증
 	}
 }

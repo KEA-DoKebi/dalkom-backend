@@ -18,11 +18,9 @@ import com.dokebi.dalkom.domain.cart.service.OrderCartService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class OrderCartController {
 	private final OrderCartService orderCartService;
 

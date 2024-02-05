@@ -41,3 +41,12 @@ jwt:
     access: 604800 #3시간 - 10800
     refresh: 604800 #일주일
 
+
+jira:
+  url: ${JIRA_URL} # Jira 인스턴스의 베이스 URL
+  project:
+    key: ${JIRA_PROJECT_KEY}
+  user:
+    email: ${JIRA_USER_EMAIL} # Jira API를 사용할 사용자의 이메일
+  api:
+    token: ${JIRA_API_TOKEN} # Jira API 토큰

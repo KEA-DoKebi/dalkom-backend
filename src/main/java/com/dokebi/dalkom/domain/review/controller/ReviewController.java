@@ -27,7 +27,7 @@ public class ReviewController {
 
 	private final ReviewService reviewService;
 
-	// REVIEWS-001 (상품별 리뷰 조회) - 입력받은 productSeq의 리뷰 목록 반환
+	// REVIEW-001 (상품별 리뷰 조회) - 입력받은 productSeq의 리뷰 목록 반환
 	@GetMapping("/api/review/product/{productSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByProduct(@PathVariable Long productSeq, Pageable pageable) {
@@ -35,29 +35,24 @@ public class ReviewController {
 		return Response.success(reviewService.readReviewListByProduct(productSeq, pageable));
 	}
 
-	// REVIEWS-002 (사용자별 리뷰 조회) - 입력받은 userSeq의 리뷰 목록 반환
+	// REVIEW-002 (사용자별 리뷰 목록 조회) - 입력받은 userSeq의 리뷰 목록 반환
 	@GetMapping("/api/review/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readReviewByUser(@LoginUser Long userSeq, Pageable pageable) {
 		return Response.success(reviewService.readReviewListByUser(userSeq, pageable));
 	}
 
-	//public Response readReviewByUser(HttpServletRequest request) {
-	//	String userSeq = (String)request.getAttribute("userSeq");
-	//	return Response.success(reviewService.readReviewListByUser(Long.valueOf(userSeq)));
-	//}
-
-	// REVIEWS-003 (리뷰 작성)
-	@PostMapping("/api/review/user")
+	// REVIEW-003 (주문 상품에 대한 리뷰 작성)
+	@PostMapping("/api/review/{orderDetailSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response createReview(@LoginUser Long userSeq,
+	public Response createReview(@LoginUser Long userSeq, @PathVariable Long orderDetailSeq,
 		@Valid @RequestBody ReviewCreateRequest request) {
 
-		reviewService.createReview(userSeq, request);
+		reviewService.createReview(userSeq, orderDetailSeq, request);
 		return Response.success();
 	}
 
-	// REVIEWS-004 (리뷰 수정)
+	// REVIEW-004 (리뷰 수정)
 	@PutMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateReview(@PathVariable Long reviewSeq,
@@ -67,12 +62,18 @@ public class ReviewController {
 		return Response.success();
 	}
 
-	//REVIEWS-005 (리뷰 삭제)
+	//REVIEW-005 (리뷰 삭제)
 	@DeleteMapping("/api/review/{reviewSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response deleteReview(@PathVariable Long reviewSeq) {
-
 		reviewService.deleteReview(reviewSeq);
 		return Response.success();
+	}
+
+	// REVIEW-006 (단일 리뷰 조회)
+	@GetMapping("/api/review/{reviewSeq}")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readReview(@PathVariable Long reviewSeq) {
+		return Response.success(reviewService.readReviewByReviewSeq(reviewSeq));
 	}
 }

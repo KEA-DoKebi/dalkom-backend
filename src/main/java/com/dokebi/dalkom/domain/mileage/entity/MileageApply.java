@@ -50,4 +50,8 @@ public class MileageApply extends EntityDate {
 		this.approvedState = approvedState;
 		this.approvedAt = LocalDateTime.now();
 	}
+
+	public void changeApprovedState(String state) {
+		this.approvedState = state;
+	}
 }

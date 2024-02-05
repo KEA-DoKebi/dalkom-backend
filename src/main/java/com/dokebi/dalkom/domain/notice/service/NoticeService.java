@@ -1,7 +1,6 @@
 package com.dokebi.dalkom.domain.notice.service;
 
-import java.util.Optional;
-
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,31 +30,27 @@ public class NoticeService {
 
 	@Transactional
 	public NoticeOneResponse readNotice(Long noticeSeq) {
-
 		return noticeRepository.findNotice(noticeSeq);
 	}
 
 	@Transactional
 	public Page<NoticeListResponse> readNoticeList(Pageable pageable) {
-
 		return noticeRepository.findNoticeList(pageable);
 	}
 
 	@Transactional
 	public void createNotice(Long adminSeq, NoticeCreateRequest request) {
-
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		Notice notice = new Notice(admin, request.getTitle(), request.getContent(), request.getState());
 		noticeRepository.save(notice);
 	}
 
 	@Transactional
-	public void updateNotice(Long noticeSeq, NoticeUpdateRequest request) {
-
+	public void updateNotice(Long noticeSeq, Long adminSeq, NoticeUpdateRequest request) {
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
 		notice.setTitle(request.getTitle());
 		notice.setContent(request.getContent());
-		Admin admin = adminService.readAdminByAdminSeq(request.getAdminSeq());
+		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		notice.setAdmin(admin);
 		notice.setState(request.getState());
 		noticeRepository.save(notice);
@@ -63,12 +58,21 @@ public class NoticeService {
 
 	@Transactional
 	public void deleteNotice(Long noticeSeq) {
-
-		Optional<Notice> notice = noticeRepository.findById(noticeSeq);
-		if (notice.isPresent()) {
+		try {
 			noticeRepository.deleteById(noticeSeq);
-		} else {
+		} catch (EmptyResultDataAccessException e) {
 			throw new NoticeNotFoundException();
+		}
+	}
+
+	@Transactional
+	public Page<NoticeListResponse> readNoticeListBySearch(String nickName, String title, Pageable pageable) {
+		if (nickName != null) {
+			return noticeRepository.findNoticeListByNickname(nickName, pageable);
+		} else if (title != null) {
+			return noticeRepository.findNoticeListByTitle(title, pageable);
+		} else {
+			return noticeRepository.findNoticeList(pageable);
 		}
 	}
 }

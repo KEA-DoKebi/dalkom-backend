@@ -12,12 +12,10 @@ import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-@Slf4j
 public class CategoryService {
 
 	private final CategoryRepository categoryRepository;
@@ -30,7 +28,7 @@ public class CategoryService {
 		return categoryRepository.findSubCategoryList(categorySeq);
 	}
 
-	public Category readCategoryBySeq(Long categorySeq) {
-		return categoryRepository.findByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
+	public Category readCategoryByCategorySeq(Long categorySeq) {
+		return categoryRepository.findCategoryByCategorySeq(categorySeq).orElseThrow(CategoryNotFoundException::new);
 	}
 }

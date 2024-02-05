@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.user.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
+import com.dokebi.dalkom.common.magicnumber.UserState;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
@@ -51,7 +53,7 @@ public class User extends EntityDate {
 	private String address;
 
 	@Column(name = "joinedAt", nullable = false)
-	private String joinedAt;
+	private LocalDate joinedAt;
 
 	@Column(name = "nickname", nullable = false, unique = true)
 	private String nickname;
@@ -60,7 +62,7 @@ public class User extends EntityDate {
 	private Integer mileage;
 
 	@Column(name = "state", nullable = false)
-	private String deleteState;
+	private String state;
 
 	@Column(name = "deletedAt")
 	private LocalDateTime deletedAt;
@@ -83,7 +85,7 @@ public class User extends EntityDate {
 	@OneToMany(mappedBy = "user")
 	private List<Inquiry> inquiry = new ArrayList<>();
 
-	public User(String empId, String password, String name, String email, String address, String joinedAt,
+	public User(String empId, String password, String name, String email, String address, LocalDate joinedAt,
 		String nickname, Integer mileage) {
 		this.empId = empId;
 		this.password = password;
@@ -93,7 +95,7 @@ public class User extends EntityDate {
 		this.joinedAt = joinedAt;
 		this.nickname = nickname;
 		this.mileage = mileage;
-		this.deleteState = "N";
+		this.state = UserState.ACTIVE.getState();
 	}
 }
 

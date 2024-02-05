@@ -18,9 +18,6 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class ReviewCreateRequest {
 
-	@NotNull(message = "ReviewCreateRequest orderDetailSeq NotNull 에러")
-	private Long orderDetailSeq;
-
 	@NotNull(message = "ReviewCreateRequest content NotNull 에러")
 	@NotBlank(message = "ReviewCreateRequest content NotBlank 에러")
 	private String content;

@@ -3,9 +3,11 @@ package com.dokebi.dalkom.domain.inquiry.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,6 +59,7 @@ public class InquiryServiceTest {
 		// Given
 		Long userSeq = 1L;
 		InquiryCreateRequest request = InquiryCreateRequestFactory.createInquiryCreateRequest();
+		LocalDate joinedAt = LocalDate.now();
 
 		User user = new User(
 			"empId",
@@ -64,7 +67,7 @@ public class InquiryServiceTest {
 			"name",
 			"email@email.com",
 			"address",
-			"2024-01-23",
+			joinedAt,
 			"nickname",
 			1200000
 		);
@@ -135,11 +138,9 @@ public class InquiryServiceTest {
 			InquiryListResponse expect = expectedList.get(i);
 			InquiryListResponse actual = result.getContent().get(i);
 
+			assertEquals(expect.getInquirySeq(), actual.getInquirySeq());
 			assertEquals(expect.getTitle(), actual.getTitle());
-			assertEquals(expect.getContent(), actual.getContent());
 			assertEquals(expect.getCreatedAt(), actual.getCreatedAt());
-			assertEquals(expect.getAnsweredAt(), actual.getAnsweredAt());
-			assertEquals(expect.getAnswerContent(), actual.getAnswerContent());
 		}
 	}
 
@@ -157,7 +158,7 @@ public class InquiryServiceTest {
 			null
 		);
 
-		when(inquiryService.readInquiryOne(inquirySeq)).thenReturn(response);
+		when(inquiryRepository.findInquiryOne(inquirySeq)).thenReturn(response);
 
 		// When
 		InquiryOneResponse result = inquiryService.readInquiryOne(inquirySeq);
@@ -175,11 +176,12 @@ public class InquiryServiceTest {
 		// Given
 		Long inquirySeq = 1L;
 		Long adminSeq = 1L;
+		LocalDate joinedAt = LocalDate.now();
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory.createInquiryAnswerRequest();
 
 		Category category = new Category("name", 1L, "imageUrl");
 		User user = new User("empId", "pw", "name",
-			"email@email.com", "address", "joinedAt",
+			"email@email.com", "address", joinedAt,
 			"nickname", 1200000);
 
 		Inquiry inquiry = new Inquiry(
@@ -190,7 +192,7 @@ public class InquiryServiceTest {
 			"N"
 		);
 
-		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(inquiry);
+		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(Optional.of(inquiry));
 
 		// When
 		inquiryService.answerInquiry(inquirySeq, adminSeq, request);

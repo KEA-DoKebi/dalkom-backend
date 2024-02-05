@@ -92,14 +92,16 @@ class MileageServiceTest {
 		User user = createMockUser(); // 적절한 값으로 초기화
 		user.setMileage(500); // 적절한 초기 마일리지 값으로 설정
 
-		MileageHistory savedMileageHistory = new MileageHistory(amount, user.getMileage() + amount, type, user);
+		Integer totalMileage = user.getMileage() + amount;
+
+		MileageHistory savedMileageHistory = new MileageHistory(amount, totalMileage, type, user);
 
 		// Mocking
 		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
 		when(mileageHistoryRepository.save(any(MileageHistory.class))).thenReturn(savedMileageHistory);
 
 		// When
-		mileageService.createMileageHistoryAndUpdateUser(userSeq, amount, type);
+		mileageService.createMileageHistory(user, amount, totalMileage, type);
 
 		// Then
 		verify(userService).readUserByUserSeq(userSeq);

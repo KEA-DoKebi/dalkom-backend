@@ -120,7 +120,7 @@ public class ReviewControllerTest {
 		// verify(reviewService, times(1)).createReview(userSeq, request);
 
 		// 서비스 메소드 호출 검증
-		verify(reviewService).createReview(any(Long.class), any(ReviewCreateRequest.class));
+		verify(reviewService).createReview(any(Long.class), any(Long.class), any(ReviewCreateRequest.class));
 	}
 
 	@Test
