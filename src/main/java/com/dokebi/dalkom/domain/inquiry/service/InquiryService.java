@@ -9,9 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
-import com.dokebi.dalkom.domain.admin.service.AdminService;
+import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
+import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.category.service.CategoryService;
+import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
+import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryAnswerRequest;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryCreateRequest;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse;
@@ -23,7 +25,8 @@ import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
 import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
 import com.dokebi.dalkom.domain.jira.service.JiraService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.service.UserService;
+import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
+import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,16 +37,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InquiryService {
 	private final InquiryRepository inquiryRepository;
-	private final CategoryService categoryService;
-	private final UserService userService;
-	private final AdminService adminService;
+	private final UserRepository userRepository;
+	private final CategoryRepository categoryRepository;
+	private final AdminRepository adminRepository;
 	private final JiraService jiraService;
 
 	// INQUIRY-001 (문의 등록)
 	@Transactional
 	public void createInquiry(Long userSeq, InquiryCreateRequest request) {
-		User user = userService.readUserByUserSeq(userSeq);
-		Category category = categoryService.readCategoryByCategorySeq(request.getCategorySeq());
+		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
+		Category category = categoryRepository.findCategoryByCategorySeq(request.getCategorySeq())
+			.orElseThrow(CategoryNotFoundException::new);
 		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(),
 			InquiryAnswerState.NO.getState());
 		inquiry = inquiryRepository.save(inquiry);
@@ -104,7 +108,7 @@ public class InquiryService {
 	@Transactional
 	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
-		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
+		Admin admin = adminRepository.findByAdminSeq(adminSeq).orElseThrow(AdminNotFoundException::new);
 
 		// 이 부분이 따로 함수로 구현되어 있으면 테스트 코드 작성하기가 애매해서 그냥 합쳤습니다.
 		inquiry.setAnswerContent(request.getAnswerContent());
@@ -114,8 +118,8 @@ public class InquiryService {
 	}
 
 	// INQUIRY-007 (문의 카테고리 별 문의 검색)
-	public Page<InquiryListResponse> readInquiryListByCategorySearch(
-		Long categorySeq, String title, Pageable pageable) {
+	public Page<InquiryListResponse> readInquiryListByCategorySearch(Long categorySeq, String title,
+		Pageable pageable) {
 		Page<InquiryListResponse> page = inquiryRepository.findInquiryListByCategorySearch(
 			categorySeq, title, pageable);
 		if (page.isEmpty()) {
