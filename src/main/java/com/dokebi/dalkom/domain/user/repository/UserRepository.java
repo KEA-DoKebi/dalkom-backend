@@ -51,14 +51,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query("SELECT new com.dokebi.dalkom.domain.user.dto.UserListResponse(" +
 		"u.userSeq, u.email, u.nickname, u.mileage, u.address) " +
 		"FROM User u WHERE (u.nickname LIKE CONCAT('%', :nickname, '%')) ")
-	Page<UserListResponse> findUserListByNickname(
-		@Param("nickname") String nickname,
-		Pageable pageable);
+	Page<UserListResponse> findUserListByNickname(@Param("nickname") String nickname, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.user.dto.UserListResponse(" +
 		"u.userSeq, u.email, u.nickname, u.mileage, u.address) " +
 		"FROM User u WHERE (u.email LIKE CONCAT('%', :email, '%')) ")
-	Page<UserListResponse> findUserListByEmail(
-		@Param("email") String email,
-		Pageable pageable);
+	Page<UserListResponse> findUserListByEmail(@Param("email") String email, Pageable pageable);
 }

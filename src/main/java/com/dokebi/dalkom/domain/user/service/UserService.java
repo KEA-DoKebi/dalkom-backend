@@ -28,7 +28,7 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public void updateUser(Long userSeq, UserUpdateRequest request) {
+	public void updateUserByUserSeq(Long userSeq, UserUpdateRequest request) {
 		User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 
 		if (request.getPassword() != null && !request.getPassword().isBlank()) {
