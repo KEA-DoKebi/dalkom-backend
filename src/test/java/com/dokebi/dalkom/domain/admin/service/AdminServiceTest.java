@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -54,6 +55,7 @@ public class AdminServiceTest {
 
 	// ADMIN-001 (유저 비활성화)
 	@Test
+	@DisplayName("ADMIN-001 (유저 비활성화)")
 	void updateUserTest() {
 		// Given
 		Long userSeq = 1L;
@@ -71,6 +73,7 @@ public class AdminServiceTest {
 
 	// ADMIN-006 (관리자 생성)
 	@Test
+	@DisplayName("ADMIN-006 (관리자 생성)")
 	void createAdminTest() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory.createCreateAdminRequest();
@@ -87,6 +90,7 @@ public class AdminServiceTest {
 
 	// ADMIN-007 (관리자 목록 조회)
 	@Test
+	@DisplayName("ADMIN-007 (관리자 목록 조회)")
 	void readAdminListTest() {
 		// Given
 		Pageable pageable = PageRequest.of(0, 3);
@@ -123,6 +127,7 @@ public class AdminServiceTest {
 
 	// ADMIN-008 (관리자 유저 생성)
 	@Test
+	@DisplayName("ADMIN-008 (관리자 유저 생성)")
 	void createUserTest() {
 		// Given
 		SignUpRequest request = new SignUpRequest(
@@ -147,7 +152,8 @@ public class AdminServiceTest {
 
 	// ADMIN-009 (관리자 대시보드)
 	@Test
-	void testReadDashboard() {
+	@DisplayName("ADMIN-009 (관리자 대시보드)")
+	void readDashboardTest() {
 		// Given
 		when(adminRepository.findTotalPrice()).thenReturn(1000);
 		when(adminRepository.findTotalMonthlyPrice()).thenReturn(500);
@@ -180,6 +186,7 @@ public class AdminServiceTest {
 
 	// ADMIN-010 (관리자 목록 조회 검색) - 이름
 	@Test
+	@DisplayName("ADMIN-010 (관리자 목록 조회 검색) - 이름")
 	void readAdminListSearchNameTest() {
 		// Given
 		String name = "John";
@@ -197,6 +204,7 @@ public class AdminServiceTest {
 
 	// ADMIN-010 (관리자 목록 조회 검색) - adminId
 	@Test
+	@DisplayName("ADMIN-010 (관리자 목록 조회 검색) - adminId")
 	void readAdminListSearchAdminIdTest() {
 		// Given
 		String adminId = "admin123";
@@ -214,6 +222,7 @@ public class AdminServiceTest {
 
 	// ADMIN-010 (관리자 목록 조회 검색) - depart
 	@Test
+	@DisplayName("ADMIN-010 (관리자 목록 조회 검색) - depart")
 	void readAdminListSearchDepartTest() {
 		// Given
 		String depart = "HR";
@@ -231,6 +240,7 @@ public class AdminServiceTest {
 
 	// ADMIN-010 (관리자 목록 조회 검색) - 닉네임
 	@Test
+	@DisplayName("ADMIN-010 (관리자 목록 조회 검색) - 닉네임")
 	void readAdminListSearchNicknameTest() {
 		// Given
 		String nickname = "johndoe";
@@ -248,6 +258,7 @@ public class AdminServiceTest {
 
 	// ADMIN-010 (관리자 목록 조회 검색)
 	@Test
+	@DisplayName("ADMIN-010 (관리자 목록 조회 검색)")
 	void readAdminListSearchTest() {
 		// Given
 		Pageable pageable = Pageable.unpaged();

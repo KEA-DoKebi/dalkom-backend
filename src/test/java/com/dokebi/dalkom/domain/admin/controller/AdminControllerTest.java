@@ -75,7 +75,7 @@ public class AdminControllerTest {
 	}
 
 	@Test
-	@DisplayName("ADMIN-001 (사용자 비활성화) 테스트")
+	@DisplayName("ADMIN-001 (사용자 비활성화)")
 	void updateUserTest() throws Exception {
 		// Given
 		Long userSeq = 1L;
@@ -104,7 +104,7 @@ public class AdminControllerTest {
 	// }
 
 	@Test
-	@DisplayName("ADMIN-006 (관리자 생성) 테스트")
+	@DisplayName("ADMIN-006 (관리자 생성)")
 	void createAdminTest() throws Exception {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory.createCreateAdminRequest();
@@ -119,7 +119,7 @@ public class AdminControllerTest {
 	}
 
 	@Test
-	@DisplayName("ADMIN-007 (관리자 목록 조회) 테스트")
+	@DisplayName("ADMIN-007 (관리자 목록 조회)")
 	void readAdminListTest() throws Exception {
 		// Given
 		int page = 0; // 페이지 번호
@@ -136,7 +136,7 @@ public class AdminControllerTest {
 	}
 
 	@Test
-	@DisplayName("ADMIN-008 (관리자 유저 생성) 테스트")
+	@DisplayName("ADMIN-008 (관리자 유저 생성)")
 	void createUserTest() throws Exception {
 		// Given
 		SignUpRequest request = new SignUpRequest(
@@ -160,7 +160,7 @@ public class AdminControllerTest {
 	}
 
 	@Test
-	@DisplayName("ADMIN-009 (관리자 대쉬보드) 테스트")
+	@DisplayName("ADMIN-009 (관리자 대쉬보드)")
 	void readDashboardTest() throws Exception {
 		// When, Then
 		mockMvc.perform(get("/api/admin/dashboard"))
@@ -170,7 +170,7 @@ public class AdminControllerTest {
 	}
 
 	@Test
-	@DisplayName("ADMIN-010 (관리자 목록 조회 검색) 테스트")
+	@DisplayName("ADMIN-010 (관리자 목록 조회 검색)")
 	void readAdminListSearchTest() throws Exception {
 		// Given
 		String name = "John";

@@ -48,6 +48,5 @@ public class MileageHistory extends EntityDate {
 		this.balance = balance;
 		this.type = type;
 		this.user = user;
-
 	}
 }
