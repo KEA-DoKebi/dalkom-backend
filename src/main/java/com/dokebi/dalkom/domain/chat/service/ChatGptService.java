@@ -37,13 +37,13 @@ public class ChatGptService {
 			ChatGptResponse response = restTemplate.postForObject(API_URL, chatGptRequest, ChatGptResponse.class);
 
 			if (response == null || response.getChoices() == null || response.getChoices().isEmpty()) {
-				throw new GptResponseFailException();
+				throw new GptResponseFailException("빈 응답이 돌아왔습니다.");
 			}
 
 			return response.getChoices().get(0).getMessage().getContent();
 
 		} catch (RestClientException e) {
-			throw new GptResponseFailException();
+			throw new GptResponseFailException(e.getMessage());
 		}
 	}
 }
