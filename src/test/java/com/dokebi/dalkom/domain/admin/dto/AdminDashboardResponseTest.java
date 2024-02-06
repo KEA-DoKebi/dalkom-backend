@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 
@@ -13,7 +14,8 @@ public class AdminDashboardResponseTest {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	void testAdminDashboardResponse() {
+	@DisplayName("adminDashboardResponse 테스트")
+	void adminDashboardResponseTest() {
 		// Mock 데이터 생성
 		Integer totalMileage = 1000;
 		Integer totalMonthlyMileage = 500;
