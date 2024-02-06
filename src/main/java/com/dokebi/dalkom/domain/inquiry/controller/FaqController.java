@@ -34,7 +34,7 @@ public class FaqController {
 		return Response.success(faqService.readFaqByInquirySeq(inquirySeq));
 	}
 
-	// FAQ-002 (FAQ 전체 조회 )
+	// FAQ-002 (FAQ 전체 조회)
 	@GetMapping("/api/faq")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readFaqList(Pageable pageable) {
