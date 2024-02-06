@@ -20,4 +20,5 @@ public class OrderCartReadResponse {
 	private String imageUrl;
 	private Integer price;
 	private Integer amount;
+	private Integer stock;
 }
