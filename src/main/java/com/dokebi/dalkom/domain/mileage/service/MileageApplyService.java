@@ -1,7 +1,5 @@
 package com.dokebi.dalkom.domain.mileage.service;
 
-import java.util.Objects;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -57,16 +55,35 @@ public class MileageApplyService {
 		User user = mileageApply.getUser();
 
 		String approvedState = mileageApply.getApprovedState();
-		Integer amount = mileageApply.getAmount();
-		Integer totalMileage = user.getMileage() + amount;
+		Integer amount;
+		Integer totalMileage;
+		String historyState;
 
-		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING.getState()) && Objects.equals(
-			request.getApprovedState(), "Y")) {
+		if (approvedState == null) {
+			throw new MileageApplyNotFoundException();
+		}
+
+		if (approvedState.equals(MileageApplyState.WAITING.getState())) {
+
+			if (request.getApprovedState().equals(MileageApplyState.YES.getState())) {
+				amount = mileageApply.getAmount();
+				totalMileage = user.getMileage() + amount;
+				historyState = MileageHistoryState.CHARGED.getState();
+			} else if (request.getApprovedState().equals(MileageApplyState.NO.getState())) {
+				amount = 0;
+				totalMileage = user.getMileage();
+				historyState = MileageHistoryState.DENIED.getState();
+			} else {
+				return;
+			}
+
 			mileageApply.setApprovedState(request.getApprovedState());
-			mileageService.createMileageHistory(user, amount, totalMileage,
-				MileageHistoryState.CHARGED.getState());
+
+			mileageService.createMileageHistory(user, amount, totalMileage, historyState);
 
 			user.setMileage(totalMileage);
+		} else {
+			throw new MileageAlreadyApplyException();
 		}
 
 	}

@@ -6,10 +6,11 @@ import lombok.Getter;
 public enum MileageHistoryState {
 	ISSUED("0", "지급"),
 	CHARGED("1", "충전"),
-	USED("2", "사용"),
-	CANCELLED("3", "취소"),
-	RETURNED("4", "반품"),
-	REFUNDED("5", "환불");
+	DENIED("2", "충전거부"),
+	USED("3", "사용"),
+	CANCELLED("4", "취소"),
+	RETURNED("5", "반품"),
+	REFUNDED("6", "환불");
 
 	private final String state;
 	private final String name;
