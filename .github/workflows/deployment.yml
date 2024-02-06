@@ -48,40 +48,9 @@ jobs:
         source /root/credentials.sh
         ssh -A -J bastion blue 'bash -s' < /root/deploying.sh
 
-
-  Health_Check :
-    runs-on: self-hosted
-    needs: Run_Blue_on_Kakao
-              
-    steps:
-    - name: Initial Delay for Application Startup
-      run: sleep 60
-
-    - name: Health Check for Green Environment
-      id: health-check
-      run: |
-        success_count=0
-        failure_count=0
-        while [ $success_count -lt 5 ] && [ $failure_count -lt 2 ]; do
-        response=$(curl --write-out "%{http_code}" --silent --output /dev/null ${{ secrets.GREEN_ENVIRONMENT_URL }})
-        if [ "$response" -eq 200 ]; then
-            ((success_count++))
-            failure_count=0
-          else
-            ((failure_count++))
-            success_count=0
-          fi
-          echo "Success count: $success_count, Failure count: $failure_count"
-          if [ $failure_count -eq 2 ]; then
-            echo "Health check failed."
-            exit 1
-          fi
-          sleep 30  # 체크 주기를 30초로 설정
-          done
-          echo "Health check passed."
   Run_Green_on_Kakao :
     runs-on: self-hosted
-    needs: Health_Check
+    needs: Run_Blue_on_Kakao
         
     steps:
     - name: Deploy to Green
