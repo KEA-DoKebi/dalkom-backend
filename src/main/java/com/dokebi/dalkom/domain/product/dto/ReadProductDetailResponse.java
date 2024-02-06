@@ -25,7 +25,7 @@ public class ReadProductDetailResponse {
 	private List<StockListDTO> stockList;
 	private List<String> productImageUrlList;
 
-	public ReadProductDetailResponse(ReadProductDetailDTO productDetailDTO, List<OptionListDTO> optionList,
+	public ReadProductDetailResponse(ReadProductDetailDto productDetailDTO, List<OptionListDTO> optionList,
 		List<StockListDTO> stockList, List<String> productImageUrlList) {
 
 		this.categorySeq = productDetailDTO.getCategorySeq();

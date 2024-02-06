@@ -15,7 +15,7 @@ import com.dokebi.dalkom.domain.product.dto.OptionAmountDTO;
 import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
-import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
@@ -84,7 +84,7 @@ public class ProductService {
 	}
 
 	public ReadProductDetailResponse readProduct(Long productSeq) {
-		ReadProductDetailDTO productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
+		ReadProductDetailDto productDetailDTO = productRepository.findProductDetailBySeq(productSeq);
 		List<StockListDTO> stockList = productRepository.findStockListBySeq(productSeq);
 		List<OptionListDTO> optionList = productRepository.findOptionListBySeq(productSeq);
 		List<String> productImageUrlList = productRepository.findProductImageBySeq(productSeq);

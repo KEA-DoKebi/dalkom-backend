@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.dokebi.dalkom.domain.product.dto.OptionListDTO;
 import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
-import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.dto.StockListDTO;
 import com.dokebi.dalkom.domain.product.entity.Product;
@@ -42,7 +42,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDTO(p.category.categorySeq, "
 		+ "p.name, p.price, p.info, p.imageUrl, p.company) FROM Product p "
 		+ "WHERE p.productSeq = :productSeq")
-	ReadProductDetailDTO findProductDetailBySeq(@Param("productSeq") Long productSeq);
+	ReadProductDetailDto findProductDetailBySeq(@Param("productSeq") Long productSeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.StockListDTO(ps.prdtStockSeq, "
 		+ "ps.amount) FROM ProductStock ps "
