@@ -196,6 +196,7 @@ public class OrderService {
 		orderRepository.save(order);
 	}
 
+	// 주문 상세 seq 로 조회
 	public OrderDetailSimpleResponse readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
 		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
 	}
