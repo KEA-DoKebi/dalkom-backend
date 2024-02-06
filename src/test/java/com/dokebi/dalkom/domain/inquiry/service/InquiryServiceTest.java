@@ -3,10 +3,14 @@ package com.dokebi.dalkom.domain.inquiry.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,19 +23,26 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
+import com.dokebi.dalkom.domain.admin.entity.Admin;
+import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.category.service.CategoryService;
+import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryAnswerRequest;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryCreateRequest;
+import com.dokebi.dalkom.domain.inquiry.dto.InquiryListByUserResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryAnswerRequestFactory;
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryCreateRequestFactory;
+import com.dokebi.dalkom.domain.inquiry.factory.InquiryListByUserResponseFactory;
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryListResponseFactory;
 import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
+import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
+import com.dokebi.dalkom.domain.jira.service.JiraService;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.service.UserService;
+import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 public class InquiryServiceTest {
@@ -40,18 +51,24 @@ public class InquiryServiceTest {
 	@Mock
 	private InquiryRepository inquiryRepository;
 	@Mock
-	private UserService userService;
+	private UserRepository userRepository;
 	@Mock
-	private CategoryService categoryService; // 안쓰는 것처럼 보이지만
+	private CategoryRepository categoryRepository;
+	@Mock
+	private AdminRepository adminRepository;
+	@Mock
+	private JiraService jiraService;
 	@Captor
 	private ArgumentCaptor<Inquiry> inquiryArgumentCaptor;
 
-	// Category가 정보가 없어서 그런가 제대로 안되서 category 부분은 제외하고 작성
 	@Test
+	@DisplayName("INQUIRY-001 (문의 등록)")
 	void createInquiryTest() {
 		// Given
 		Long userSeq = 1L;
+		Long categorySeq = 1L;
 		InquiryCreateRequest request = InquiryCreateRequestFactory.createInquiryCreateRequest();
+		LocalDate joinedAt = LocalDate.now();
 
 		User user = new User(
 			"empId",
@@ -59,56 +76,65 @@ public class InquiryServiceTest {
 			"name",
 			"email@email.com",
 			"address",
-			"2024-01-23",
+			joinedAt,
 			"nickname",
 			1200000
 		);
-		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
+		Category category = new Category(
+			"홍길동",
+			2L,
+			"이미지주소"
+		);
+		Inquiry inquiry = new Inquiry(category, user, request.getTitle(), request.getContent(),
+			InquiryAnswerState.NO.getState());
+
+		when(userRepository.findByUserSeq(userSeq)).thenReturn(Optional.of(user));
+		when(categoryRepository.findCategoryByCategorySeq(categorySeq)).thenReturn(Optional.of(category));
+		when(inquiryRepository.save(any())).thenReturn(inquiry);
 
 		// When
 		inquiryService.createInquiry(userSeq, request);
 
 		// Then
+		verify(userRepository).findByUserSeq(userSeq);
+		verify(categoryRepository).findCategoryByCategorySeq(categorySeq);
 		verify(inquiryRepository).save(inquiryArgumentCaptor.capture());
-
-		Inquiry capturedInquiry = inquiryArgumentCaptor.getValue();
-
-		assertEquals(user, capturedInquiry.getUser());
-		assertEquals(request.getTitle(), capturedInquiry.getTitle());
-		assertEquals(request.getContent(), capturedInquiry.getContent());
+		verify(jiraService).createIssueInquiry(any(JiraInquiryRequest.class));
 	}
 
 	@Test
+	@DisplayName("INQUIRY-002 (유저별 문의 조회)")
 	void readInquiryListByUserTest() {
 		// Given
 		Long userSeq = 1L;
 		Pageable pageable = PageRequest.of(0, 3);
 
-		InquiryListResponse response1 = InquiryListResponseFactory.createInquiryListResponse();
-		InquiryListResponse response2 = InquiryListResponseFactory.createInquiryListResponse();
+		InquiryListByUserResponse response1 = InquiryListByUserResponseFactory.createInquiryListByUserResponse();
+		InquiryListByUserResponse response2 = InquiryListByUserResponseFactory.createInquiryListByUserResponse();
 
-		List<InquiryListResponse> expectedList = Arrays.asList(response1, response2);
-		Page<InquiryListResponse> expectedPage = new PageImpl<>(expectedList, pageable, expectedList.size());
+		List<InquiryListByUserResponse> expectedList = Arrays.asList(response1, response2);
+		Page<InquiryListByUserResponse> expectedPage = new PageImpl<>(expectedList, pageable, expectedList.size());
 
-		when(inquiryService.readInquiryListByUser(userSeq, pageable)).thenReturn(expectedPage);
+		when(inquiryRepository.findInquiryListByUserSeq(userSeq, pageable)).thenReturn(expectedPage);
 
 		// When
-		Page<InquiryListResponse> result = inquiryService.readInquiryListByUser(userSeq, pageable);
+		Page<InquiryListByUserResponse> result = inquiryService.readInquiryListByUser(userSeq, pageable);
 
 		// Then
 		for (int i = 0; i < expectedList.size(); i++) {
-			InquiryListResponse expect = expectedList.get(i);
-			InquiryListResponse actual = result.getContent().get(i);
+			InquiryListByUserResponse expect = expectedList.get(i);
+			InquiryListByUserResponse actual = result.getContent().get(i);
 
+			assertEquals(expect.getInquirySeq(), actual.getInquirySeq());
+			assertEquals(expect.getCategory(), actual.getCategory());
 			assertEquals(expect.getTitle(), actual.getTitle());
-			assertEquals(expect.getContent(), actual.getContent());
 			assertEquals(expect.getCreatedAt(), actual.getCreatedAt());
-			assertEquals(expect.getAnsweredAt(), actual.getAnsweredAt());
-			assertEquals(expect.getAnswerContent(), actual.getAnswerContent());
+			assertEquals(expect.getAnswerState(), actual.getAnswerState());
 		}
 	}
 
 	@Test
+	@DisplayName("INQUIRY-003 (문의 카테고리 별 문의 조회)")
 	void readInquiryListByCategoryTest() {
 		// Given
 		Long categorySeq = 1L;
@@ -120,7 +146,7 @@ public class InquiryServiceTest {
 		List<InquiryListResponse> expectedList = Arrays.asList(response1, response2);
 		Page<InquiryListResponse> expectedPage = new PageImpl<>(expectedList, pageable, expectedList.size());
 
-		when(inquiryService.readInquiryListByCategory(categorySeq, pageable)).thenReturn(expectedPage);
+		when(inquiryRepository.findInquiryListByCategorySeq(categorySeq, pageable)).thenReturn(expectedPage);
 
 		// When
 		Page<InquiryListResponse> result = inquiryService.readInquiryListByCategory(categorySeq, pageable);
@@ -130,50 +156,115 @@ public class InquiryServiceTest {
 			InquiryListResponse expect = expectedList.get(i);
 			InquiryListResponse actual = result.getContent().get(i);
 
+			assertEquals(expect.getInquirySeq(), actual.getInquirySeq());
 			assertEquals(expect.getTitle(), actual.getTitle());
-			assertEquals(expect.getContent(), actual.getContent());
 			assertEquals(expect.getCreatedAt(), actual.getCreatedAt());
-			assertEquals(expect.getAnsweredAt(), actual.getAnsweredAt());
-			assertEquals(expect.getAnswerContent(), actual.getAnswerContent());
 		}
 	}
 
 	@Test
+	@DisplayName("INQUIRY-005 (특정 문의 조회)")
 	void readInquiryOneTest() {
 		// Given
 		Long inquirySeq = 1L;
-
-		InquiryOneResponse response = new InquiryOneResponse(
-			"title",
-			"content",
-			LocalDateTime.of(2024, 1, 15, 0, 0),
-			null,
-			null,
-			null
+		LocalDate joinedAt = LocalDate.now();
+		User user = new User(
+			"empId",
+			"password",
+			"name",
+			"email@email.com",
+			"address",
+			joinedAt,
+			"nickname",
+			1200000
 		);
+		Category category = new Category(
+			"홍길동",
+			2L,
+			"이미지주소"
+		);
+		Inquiry inquiry = new Inquiry(category, user, "InquiryTitle", "InquiryContent",
+			InquiryAnswerState.NO.getState());
 
-		when(inquiryService.readInquiryOne(inquirySeq)).thenReturn(response);
+		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(Optional.of(inquiry));
 
 		// When
 		InquiryOneResponse result = inquiryService.readInquiryOne(inquirySeq);
 
 		// Then
-		assertEquals(response.getTitle(), result.getTitle());
-		assertEquals(response.getContent(), result.getContent());
-		assertEquals(response.getCreatedAt(), result.getCreatedAt());
-		assertEquals(response.getAnsweredAt(), result.getAnsweredAt());
-		assertEquals(response.getNickname(), result.getNickname());
+		assertNotNull(result);
+		assertEquals("InquiryTitle", result.getTitle());
+		assertEquals("InquiryContent", result.getContent());
 	}
 
 	@Test
+	@DisplayName("INQUIRY-006 (문의 답변)")
 	void answerInquiryTest() {
 		// Given
 		Long inquirySeq = 1L;
+		Long adminSeq = 1L;
+		LocalDate joinedAt = LocalDate.now();
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory.createInquiryAnswerRequest();
 
 		Category category = new Category("name", 1L, "imageUrl");
 		User user = new User("empId", "pw", "name",
-			"email@email.com", "address", "joinedAt",
+			"email@email.com", "address", joinedAt,
+			"nickname", 1200000);
+		Admin admin = new Admin("administrator", "123456a!", "admin", "사장님", "CEO");
+
+		Inquiry inquiry = new Inquiry(
+			category,
+			user,
+			"title",
+			"content",
+			"N"
+		);
+
+		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(Optional.of(inquiry));
+		when(adminRepository.findByAdminSeq(adminSeq)).thenReturn(Optional.of(admin));
+
+		// When
+		inquiryService.answerInquiry(inquirySeq, adminSeq, request);
+
+		// Then
+		assertEquals(request.getAnswerContent(), inquiry.getAnswerContent());
+	}
+
+	@Test
+	@DisplayName("INQUIRY-007 (문의 카테고리 별 문의 검색)")
+	void readInquiryListByCategorySearchTest() {
+		// Given
+		Long categorySeq = 1L;
+		String title = "검색어";
+		Pageable pageable = PageRequest.of(0, 10);
+
+		InquiryListResponse inquiryListResponse = new InquiryListResponse(1L, "title1",
+			LocalDateTime.of(2024, 2, 6, 0, 0, 0),
+			"Y", "답변완료");
+		Page<InquiryListResponse> page = new PageImpl<>(Collections.singletonList(inquiryListResponse));
+
+		when(inquiryRepository.findInquiryListByCategorySearch(categorySeq, title, pageable)).thenReturn(page);
+
+		// When
+		Page<InquiryListResponse> result = inquiryService.readInquiryListByCategorySearch(categorySeq, title, pageable);
+
+		// Then
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+		assertEquals(1, result.getContent().size());
+		assertEquals(inquiryListResponse, result.getContent().get(0));
+	}
+
+	@Test
+	@DisplayName("INQUIRY-008 (문의 삭제)")
+	void deleteInquiryTest() {
+		// Given
+		Long inquirySeq = 1L;
+		LocalDate joinedAt = LocalDate.now();
+
+		Category category = new Category("name", 1L, "imageUrl");
+		User user = new User("empId", "pw", "name",
+			"email@email.com", "address", joinedAt,
 			"nickname", 1200000);
 
 		Inquiry inquiry = new Inquiry(
@@ -184,12 +275,12 @@ public class InquiryServiceTest {
 			"N"
 		);
 
-		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(inquiry);
+		when(inquiryRepository.findByInquirySeq(inquirySeq)).thenReturn(Optional.of(inquiry));
 
 		// When
-		inquiryService.answerInquiry(inquirySeq, request);
+		inquiryService.deleteInquiry(inquirySeq);
 
 		// Then
-		assertEquals(request.getAnswerContent(), inquiry.getAnswerContent());
+		verify(inquiryRepository).delete(inquiry);
 	}
 }

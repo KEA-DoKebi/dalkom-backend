@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +31,6 @@ import com.dokebi.dalkom.domain.notice.exception.NoticeNotFoundException;
 import com.dokebi.dalkom.domain.notice.factory.NoticeCreateRequestFactory;
 import com.dokebi.dalkom.domain.notice.factory.NoticeListResponseFactory;
 import com.dokebi.dalkom.domain.notice.factory.NoticeOneResponseFactory;
-import com.dokebi.dalkom.domain.notice.factory.NoticeUpdateRequestFactory;
 import com.dokebi.dalkom.domain.notice.repository.NoticeRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,11 +49,11 @@ public class NoticeServiceTest {
 	private ArgumentCaptor<Notice> noticeArgumentCaptor;
 
 	@Test
+	@DisplayName("공지 생성 처리")
 	void createNoticeTest() {
 		// Given
 		Long adminSeq = 1L;
 		NoticeCreateRequest request = NoticeCreateRequestFactory.createNoticeCreateRequest();
-
 		Admin admin = new Admin("adminId", "password", "nickname", "name", "depart");
 
 		when(adminService.readAdminByAdminSeq(adminSeq)).thenReturn(admin);
@@ -73,6 +72,7 @@ public class NoticeServiceTest {
 	}
 
 	@Test
+	@DisplayName("단일 공지 조회 처리")
 	void readNoticeTest() {
 		// Given
 		Long noticeSeq = 1L;
@@ -88,62 +88,58 @@ public class NoticeServiceTest {
 	}
 
 	@Test
+	@DisplayName("공지 목록 조회 처리")
 	void readNoticeListTest() {
 		// Given
 		Pageable pageable = PageRequest.of(0, 3);
-
-		NoticeListResponse fakeResponse1 = NoticeListResponseFactory.createNoticeListResponse();
-		NoticeListResponse fakeResponse2 = NoticeListResponseFactory.createNoticeListResponse();
-		NoticeListResponse fakeResponse3 = NoticeListResponseFactory.createNoticeListResponse();
-
-		List<NoticeListResponse> responseList = Arrays.asList(fakeResponse1, fakeResponse2, fakeResponse3);
+		List<NoticeListResponse> responseList = Arrays.asList(
+			NoticeListResponseFactory.createNoticeListResponse(),
+			NoticeListResponseFactory.createNoticeListResponse(),
+			NoticeListResponseFactory.createNoticeListResponse()
+		);
 		Page<NoticeListResponse> responsePage = new PageImpl<>(responseList, pageable, responseList.size());
 
 		when(noticeService.readNoticeList(pageable)).thenReturn(responsePage);
 
 		// When
-		Page<NoticeListResponse> noticeListResponseListPage = noticeService.readNoticeList(pageable);
+		Page<NoticeListResponse> noticeListResponsePage = noticeService.readNoticeList(pageable);
 
 		// Then
-		assertEquals(responseList.size(), noticeListResponseListPage.getContent().size());
-		assertEquals(responseList, noticeListResponseListPage.getContent());
+		assertEquals(responseList.size(), noticeListResponsePage.getContent().size());
+		assertEquals(responseList, noticeListResponsePage.getContent());
 	}
 
 	@Test
+	@DisplayName("공지 수정 처리")
 	void updateNoticeTest() {
 		// Given
-		Admin admin = new Admin("adminId", "password", "nickname", "name", "depart");
-		Notice notice = new Notice(admin, "title", "content", "Y");
-
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest();
-
 		Long noticeSeq = 1L;
 		Long adminSeq = 1L;
+		Admin admin = new Admin("adminId", "password", "nickname", "name", "department");
+		admin.setAdminSeq(adminSeq);
+		Notice notice = new Notice(admin, "oldTitle", "oldContent", "Y");
+		NoticeUpdateRequest updateRequest = new NoticeUpdateRequest("updatedTitle", "updatedContent", "N");
+
 		when(adminService.readAdminByAdminSeq(adminSeq)).thenReturn(admin);
 		when(noticeRepository.findByNoticeSeq(noticeSeq)).thenReturn(notice);
 
 		// When
-		noticeService.updateNotice(noticeSeq, request);
+		noticeService.updateNotice(noticeSeq, adminSeq, updateRequest);
 
 		// Then
-		verify(noticeRepository).findByNoticeSeq(noticeSeq);
-		verify(adminService).readAdminByAdminSeq(adminSeq);
-		verify(noticeRepository).save(any(Notice.class));
-		assertEquals("updatedTitle", notice.getTitle());
-		assertEquals("updatedContent", notice.getContent());
-		assertEquals(admin, notice.getAdmin());
-		assertEquals("N", notice.getState());
+		verify(noticeRepository).save(noticeArgumentCaptor.capture());
+		Notice savedNotice = noticeArgumentCaptor.getValue();
+
+		assertEquals(updateRequest.getTitle(), savedNotice.getTitle());
+		assertEquals(updateRequest.getContent(), savedNotice.getContent());
+		assertEquals(updateRequest.getState(), savedNotice.getState());
 	}
 
 	@Test
-	@DisplayName("공지 삭제 - 성공")
+	@DisplayName("공지 삭제 처리")
 	void deleteNoticeSuccessTest() {
 		// Given
 		Long noticeSeq = 1L;
-		Admin admin = new Admin("adminId", "password", "nickname", "name", "depart");
-		Notice notice = new Notice(admin, "title", "content", "Y");
-
-		when(noticeRepository.findById(noticeSeq)).thenReturn(Optional.of(notice));
 
 		// When
 		noticeService.deleteNotice(noticeSeq);
@@ -153,17 +149,16 @@ public class NoticeServiceTest {
 	}
 
 	@Test
-	@DisplayName("공지 삭제 - 실패(공지를 찾을 수 없음)")
+	@DisplayName("공지 삭제 실패 - 공지를 찾을 수 없음")
 	void deleteNoticeFailTest() {
 		// Given
 		Long noticeSeq = 1L;
-
-		when(noticeRepository.findById(noticeSeq)).thenReturn(Optional.empty());
+		doThrow(new EmptyResultDataAccessException(1)).when(noticeRepository).deleteById(noticeSeq);
 
 		// When
-		assertThrows(NoticeNotFoundException.class, () -> noticeService.deleteNotice(noticeSeq));
+		Exception exception = assertThrows(NoticeNotFoundException.class, () -> noticeService.deleteNotice(noticeSeq));
 
 		// Then
-		verify(noticeRepository, never()).deleteById(anyLong());
+		assertNotNull(exception);
 	}
 }

@@ -37,7 +37,8 @@ public class CreateAdminRequest {
 	@NotBlank(message = "CreateAdminRequest depart notblank 에러")
 	private String depart;
 
-	public static Admin toEntity(CreateAdminRequest req) {
-		return new Admin(req.getAdminId(), req.getPassword(), req.getNickname(), req.getName(), req.getDepart());
+	public static Admin toEntity(CreateAdminRequest request) {
+		return new Admin(request.getAdminId(), request.getPassword(), request.getNickname(), request.getName(),
+			request.getDepart());
 	}
 }

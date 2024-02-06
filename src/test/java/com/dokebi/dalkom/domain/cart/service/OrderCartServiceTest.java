@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.cart.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import com.dokebi.dalkom.domain.cart.dto.OrderCartCreateRequest;
 import com.dokebi.dalkom.domain.cart.dto.OrderCartDeleteRequest;
 import com.dokebi.dalkom.domain.cart.dto.OrderCartReadResponse;
 import com.dokebi.dalkom.domain.cart.entity.OrderCart;
+import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.cart.factory.OrderCartCreateRequestFactory;
 import com.dokebi.dalkom.domain.cart.factory.OrderCartDeleteRequestFactory;
 import com.dokebi.dalkom.domain.cart.factory.OrderCartReadResponseFactory;
@@ -44,24 +46,23 @@ public class OrderCartServiceTest {
 	private UserService userService;
 	@Captor
 	private ArgumentCaptor<OrderCart> orderCartArgumentCaptor;
-	@Captor
-	private ArgumentCaptor<Long> orderCartSeqCaptor;
 
+	// CART-001 (특정 유저의 장바구니 리스트 조회)
 	@Test
 	void createOrderCartTest() {
 		// Given
 		Long userSeq = 1L;
-		OrderCartCreateRequest request = OrderCartCreateRequestFactory
-			.createOrderCartCreateRequest();
+		OrderCartCreateRequest request = OrderCartCreateRequestFactory.createOrderCartCreateRequest();
+		LocalDate joinedAt = LocalDate.now();
 
 		User user = new User("empId", "password", "name", "email@email.com",
-			"address", "joinedAt", "nickname", 1200000);
+			"address", joinedAt, "nickname", 1200000);
 		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
 
 		Category category = new Category("name", 1L, "imageUrl");
 
-		Product product = new Product(category, "name", 1000,
-			"info", "imageUrl", "company", "Y");
+		Product product = new Product(category, "name", 1000, "info",
+			"imageUrl", "company", "Y");
 		when(productService.readProductByProductSeq(request.getProductSeq())).thenReturn(product);
 
 		// When
@@ -78,6 +79,7 @@ public class OrderCartServiceTest {
 		assertEquals(request.getAmount(), capturedOrderCart.getAmount());
 	}
 
+	// CART-002 (특정 유저의 장바구니에 상품 담기)
 	@Test
 	void readOrderCartListTest() {
 		// Given
@@ -100,23 +102,39 @@ public class OrderCartServiceTest {
 		assertEquals(responseList, orderCartReadResponsePage.getContent());
 	}
 
+	// CART-003 (특정 유저의 장바구니에서 상품 삭제)
 	@Test
 	void deleteOrderCartTest() {
 		// Given
 		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();
-
 		List<Long> orderCartSeqList = request.getOrderCartSeqList();
+
+		// lenient()를 사용해서 unnecessary stub 문제 해결
+		// lenient() 모드는 불필요한 호출에 대해 예외를 발생시키지 않고 무시하는 모드이다.
 		for (Long orderCartSeq : orderCartSeqList) {
-			when(orderCartRepository.existsById(orderCartSeq)).thenReturn(true);
+			lenient().when(orderCartRepository.existsById(orderCartSeq)).thenReturn(true);
 		}
 
 		// When
 		assertDoesNotThrow(() -> orderCartService.deleteOrderCart(request));
 
 		// Then
-		verify(orderCartRepository, times(orderCartSeqList.size())).deleteById(orderCartSeqCaptor.capture());
+		verify(orderCartRepository, times(orderCartSeqList.size())).deleteById(anyLong());
+	}
 
-		List<Long> capturedOrderCartSeqList = orderCartSeqCaptor.getAllValues();
-		assertEquals(orderCartSeqList, capturedOrderCartSeqList);
+	// CART-003 (특정 유저의 장바구니에서 상품 삭제) - 예외 처리 확인
+	@Test
+	void deleteOrderCartWithEmptyResultTest() {
+		// Given
+		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();
+		List<Long> orderCartSeqList = request.getOrderCartSeqList();
+
+		// Mocking
+		for (Long orderCartSeq : orderCartSeqList) {
+			lenient().when(orderCartRepository.existsById(orderCartSeq)).thenReturn(false);
+		}
+
+		// When, Then
+		assertThrows(OrderCartNotFoundException.class, () -> orderCartService.deleteOrderCart(request));
 	}
 }

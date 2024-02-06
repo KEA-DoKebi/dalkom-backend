@@ -25,6 +25,7 @@ public class OrderPageDetailDto {
 	// DB에서 가져올 값
 	private String productName;
 	private Integer productPrice;
+	private String productOptionDetail;
 
 	// 만들어 낼 값
 	private Integer totalPrice;

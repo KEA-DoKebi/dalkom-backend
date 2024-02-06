@@ -79,4 +79,9 @@ public class Product extends EntityDate {
 		this.company = company;
 		this.state = state;
 	}
+
+	// 테스트용 생성자
+	public Product(Long productSeq) {
+		this.productSeq = productSeq;
+	}
 }

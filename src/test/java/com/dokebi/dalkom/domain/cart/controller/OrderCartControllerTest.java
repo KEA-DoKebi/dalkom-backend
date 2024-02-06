@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -42,7 +43,7 @@ public class OrderCartControllerTest {
 	private MockMvc mockMvc;
 
 	@BeforeEach
-	void setUp() {
+	void beforeEach() {
 		this.mockMvc = MockMvcBuilders
 			.standaloneSetup(orderCartController)
 			.setCustomArgumentResolvers(
@@ -73,29 +74,30 @@ public class OrderCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("특정 유저의 장바구니 리스트 조회 테스트")
+	@DisplayName("CART-001 (특정 유저의 장바구니 리스트 조회) 테스트")
 	void readOrderCartListTest() throws Exception {
 		// Given
 		Long userSeq = 1L;
+		Pageable pageable = PageRequest.of(0, 10);
 
 		// When, Then
-		mockMvc.perform(get("/api/cart/user/{userSeq}", userSeq)
+		mockMvc.perform(get("/api/cart/user", userSeq)
 				.param("page", "0")
 				.param("size", "10"))
 			.andExpect(status().isOk());
 
-		verify(orderCartService).readOrderCartList(eq(userSeq), any(Pageable.class));
+		verify(orderCartService).readOrderCartList(userSeq, pageable);
 	}
 
 	@Test
-	@DisplayName("특정 유저의 장바구니에 상품 담기 테스트")
+	@DisplayName("CART-002 (특정 유저의 장바구니에 상품 담기) 테스트")
 	void createOrderCartTest() throws Exception {
 		// Given
 		Long userSeq = 1L;
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory.createOrderCartCreateRequest();
 
 		// When, Then
-		mockMvc.perform(post("/api/cart/user/{userSeq}", userSeq)
+		mockMvc.perform(post("/api/cart/user", userSeq)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(request)))
 			.andExpect(status().isOk());
@@ -104,16 +106,15 @@ public class OrderCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("특정 유저의 장바구니에서 상품 삭제 테스트")
+	@DisplayName("CART-003 (특정 유저의 장바구니에서 상품 삭제) 테스트")
 	void deleteOrderCartTest() throws Exception {
 		// Given
 		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();
 
 		// When, Then
-		mockMvc.perform(
-				delete("/api/cart")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(asJsonString(request)))
+		mockMvc.perform(delete("/api/cart")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
 		verify(orderCartService).deleteOrderCart(request);

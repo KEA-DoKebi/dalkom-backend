@@ -2,38 +2,54 @@ package com.dokebi.dalkom.domain.order.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
+import com.dokebi.dalkom.common.magicnumber.OrderState;
+import com.dokebi.dalkom.domain.cart.dto.OrderCartDeleteRequest;
+import com.dokebi.dalkom.domain.cart.service.OrderCartService;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
+import com.dokebi.dalkom.domain.order.dto.CancelRefundReadResponse;
+import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
-import com.dokebi.dalkom.domain.order.dto.OrderDto;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailSimpleResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderProductRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
+import com.dokebi.dalkom.domain.order.dto.ReceiverDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
+import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
 import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
+import com.dokebi.dalkom.domain.order.exception.PasswordNotValidException;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
-@Transactional
+@Transactional(readOnly = true)
 public class OrderService {
 	private final OrderRepository orderRepository;
 	private final OrderDetailService orderDetailService;
@@ -42,49 +58,62 @@ public class OrderService {
 	private final ProductStockService productStockService;
 	private final MileageService mileageService;
 	private final UserService userService;
+	private final PasswordEncoder passwordEncoder;
+	private final OrderCartService orderCartService;
 
 	// 결제 하기
 	@Transactional
-	public void createOrder(OrderCreateRequest request) {
+	public Integer createOrder(Long userSeq, OrderCreateRequest request) {
 
-		int totalPrice = 0;
-
-		// totalPrice를 먼저 계산해준다.
-		for (int i = 0; i < request.getProductSeqList().size(); i++) {
-			totalPrice += calculateProductPrice(request, i);
+		int orderTotalPrice = 0;
+		OrderCartDeleteRequest orderCartDeleteRequest = new OrderCartDeleteRequest(new ArrayList<>());
+		// orderTotalPrice를 먼저 계산해준다.
+		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
+			orderTotalPrice += calculateProductPrice(orderProduct);
+		}
+		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
+			Long orderCartSeq = orderProduct.getOrderCartSeq();
+			orderCartDeleteRequest.getOrderCartSeqList().add(orderCartSeq);
 		}
 
-		// 어떤 사용자인지 조회
-		User user = userService.readUserByUserSeq(request.getUserSeq());
+		// 사용자 정보 조회
+		User user = userService.readUserByUserSeq(userSeq);
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
-		if (totalPrice <= user.getMileage()) {
+		if (orderTotalPrice <= user.getMileage()) {
 
 			// 주문을 위한 entity 생성 후 저장
-			Order order = new Order(
-				user,
-				request.getReceiverName(),
-				request.getReceiverAddress(),
-				request.getReceiverMobileNum(),
-				request.getReceiverMemo(),
-				totalPrice
-			);
+			Order order = new Order(user, request.getReceiverInfoRequest().getReceiverName(),
+				request.getReceiverInfoRequest().getReceiverAddress(),
+				request.getReceiverInfoRequest().getReceiverMobileNum(),
+				request.getReceiverInfoRequest().getReceiverMemo(),
+				orderTotalPrice);
+			order.setOrderState(OrderState.CONFIRMED.getState());
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
-			for (int i = 0; i < request.getProductSeqList().size(); i++) {
+			for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
 
 				// 상세 주문 내역 생성
-				OrderDetail orderDetail = createOrderDetail(order, request, i);
+				OrderDetail orderDetail = createOrderDetail(order, orderProduct);
 
 				// 각 세부 주문 DB에 저장
 				orderDetailService.saveOrderDetail(orderDetail);
 			}
 
 			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
-			Integer amount = (user.getMileage() - totalPrice);
+			Integer totalMileage = (user.getMileage() - orderTotalPrice);
 
-			mileageService.createMileageHistoryAndUpdateUser(user.getUserSeq(), amount, "2");
+			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage,
+				MileageHistoryState.USED.getState());
+
+			//장바구니의 상품 삭제
+			orderCartService.deleteOrderCart(orderCartDeleteRequest);
+
+			// 사용자의 마일리지 업데이트
+			user.setMileage(totalMileage);
+			return user.getMileage();
+
 		} else {
 			throw new MileageLackException();
 		}
@@ -106,9 +135,14 @@ public class OrderService {
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
 
+			//option detail 조회
+
+			String optionDetail = productOptionService.readOptionDetailByPdtOptionSeq(optionSeq);
+
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto(productSeq, optionSeq, productAmount,
-				productInfo.getName(), productInfo.getPrice(), productInfo.getPrice() * order.getProductAmount());
+				productInfo.getName(), productInfo.getPrice(), optionDetail,
+				productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);
 		});
@@ -116,49 +150,42 @@ public class OrderService {
 		return result;
 	}
 
-	// 사용자별 상품 조회
-	public List<OrderDto> readOrderByUserSeq(Long userSeq) {
-		List<Order> orders = orderRepository.findOrderListByUserSeq(userSeq);
+	// 사용자별 주문 전체 조회
+	public Page<OrderUserReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
 
-		return orders.stream()
-			.map(order ->
-				new OrderDto(order.getOrdrSeq(),
-					order.getReceiverName(),
-					order.getReceiverAddress(),
-					order.getReceiverMobileNum(),
-					order.getReceiverMemo(),
-					order.getTotalPrice()))
+		Page<OrderUserReadResponse> orderPage = orderRepository.findOrderListByUserSeq(userSeq, pageable);
+
+		List<OrderUserReadResponse> modifiedList = orderPage.getContent().stream()
+			.peek(orderResponse -> orderResponse.makeOrderTitle(orderResponse.getOrderTitle(),
+				orderResponse.getProductCnt()))
 			.collect(Collectors.toList());
+
+		return new PageImpl<>(modifiedList, pageable, orderPage.getTotalElements());
+
 	}
 
-	// 주문 별 주문 조회
-	public OrderDto readOrderByOrderSeq(Long orderSeq) {
-		Order order = orderRepository.findByOrdrSeq(orderSeq);
+	// 주문별 상세 조회
+	public OrderDetailReadResponse readOrderByOrderSeq(Long orderSeq) {
+		List<OrderDetailDto> orderDetailDtoList = orderDetailService.readOrderDetailDtoByOrderSeq(orderSeq);
+		ReceiverDetailDto receiverDetailDto = orderRepository.findReceiverDetailDtoByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		int totalPrice = 0;
 
-		return new OrderDto(order.getOrdrSeq(),
-			order.getReceiverName(),
-			order.getReceiverAddress(),
-			order.getReceiverMobileNum(),
-			order.getReceiverMemo(),
-			order.getTotalPrice());
+		for (OrderDetailDto orderDetail : orderDetailDtoList) {
+			totalPrice += orderDetail.getTotalPrice();
+		}
+
+		return new OrderDetailReadResponse(orderDetailDtoList,
+			receiverDetailDto, totalPrice);
 	}
+
 	// 주문 전체 조회
-
-	public List<OrderDto> readOrderByAll() {
-		List<Order> orders = orderRepository.findAll();
-
-		return orders.stream()
-			.map(order ->
-				new OrderDto(order.getOrdrSeq(),
-					order.getReceiverName(),
-					order.getReceiverAddress(),
-					order.getReceiverMobileNum(),
-					order.getReceiverMemo(),
-					order.getTotalPrice()))
-			.collect(Collectors.toList());
+	public Page<OrderAdminReadResponse> readOrderByAll(Pageable pageable) {
+		return orderRepository.findAllOrderList(pageable);
 	}
 
 	// 주문 상태 수정
+	@Transactional
 	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
 		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
 
@@ -169,38 +196,148 @@ public class OrderService {
 		orderRepository.save(order);
 	}
 
-	private Integer calculateProductPrice(OrderCreateRequest request, int i) {
-		Product product = productService.readByProductSeq(request.getProductSeqList().get(i));
-
-		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-		Integer amount = request.getAmountList().get(i);
-		Integer price = product.getPrice();
-
-		productStockService.checkStock(product.getProductSeq(), prdtOptionSeq, amount);
-
-		return amount * price;
+	public OrderDetailSimpleResponse readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
 	}
 
-	private OrderDetail createOrderDetail(Order order, OrderCreateRequest request, int i) {
-		Long productSeq = request.getProductSeqList().get(i);
-		Long prdtOptionSeq = request.getPrdtOptionSeqList().get(i);
-		Integer amount = request.getAmountList().get(i);
+	// 취소 / 환불 리스트 조회
+	public Page<CancelRefundReadResponse> readOrderCancelListByUserSeq(Long userSeq, Pageable pageable) {
+		Page<Order> orderPage = orderRepository.findCancelRefundListByUserSeq(userSeq, pageable);
 
-		Product product = productService.readByProductSeq(productSeq);
-		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(prdtOptionSeq);
-		Integer price = product.getPrice();
+		List<CancelRefundReadResponse> responseList = orderPage.stream().map(order -> {
+			OrderDetail orderDetail = orderDetailService.readFirstOrderDetailByOrderSeq(order.getOrdrSeq());
+			Product product = orderDetail.getProduct();
+			String requestState = OrderState.getNameByState(order.getOrderState());
+			String requestType;
 
-		OrderDetail orderDetail = new OrderDetail(
-			order,
-			product,
-			productOption,
-			amount,
-			price
-		);
-		ProductStock productStock = new ProductStock(product, productOption, amount);
-		productStockService.createStock(productStock);
+			if (Objects.equals(requestState, OrderState.CANCELED.getName())) {
+				requestType = "취소";
+			} else if (Objects.equals(requestState, OrderState.REFUND_CONFIRMED.getName())
+				|| Objects.equals(requestState, OrderState.RETURNED.getName())
+				|| Objects.equals(requestState, OrderState.REFUNDED.getName())) {
+				requestType = "환불";
+			} else {
+				throw new InvalidOrderStateException();
+			}
+
+			return new CancelRefundReadResponse(product.getName(), product.getImageUrl(),
+				orderDetail.getProductOption().getDetail(), order.getModifiedAt(), order.getOrderState(),
+				requestType, requestState);
+		}).collect(Collectors.toList());
+
+		return new PageImpl<>(responseList, pageable, orderPage.getTotalElements());
+	}
+
+	// 주문 검색 조회 서비스
+	public Page<OrderUserReadResponse> readOrderListByUserSearch(String receiverName, Pageable pageable) {
+		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
+	}
+
+	// 관리자 주문 검색
+	public Page<OrderAdminReadResponse> readOrderListByAdminSearch(String receiverName, String name,
+		Pageable pageable) {
+		if (receiverName != null) {
+			return orderRepository.findOrderListByAdminWithReceiverName(receiverName, pageable);
+		} else if (name != null) {
+			return orderRepository.findOrderListByAdminWithName(name, pageable);
+		} else {
+			return orderRepository.findAllOrderList(pageable);
+
+		}
+	}
+
+	// 주문 취소
+	@Transactional
+	public void deleteOrderByOrderSeq(Long orderSeq) {
+		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		User user = order.getUser();
+
+		List<String> whenCancel = List.of(OrderState.CONFIRMED.getState(), OrderState.PREPARING.getState());
+		List<String> whenRefund = List.of(OrderState.SHIPPED.getState(), OrderState.DELIVERED.getState(),
+			OrderState.FINALIZED.getState());
+
+		if (whenCancel.contains(order.getOrderState())) {
+			cancelOrder(user, order);
+		} else if (whenRefund.contains(order.getOrderState())) {
+			order.setOrderState(OrderState.REFUND_CONFIRMED.getState());
+		} else {
+			throw new InvalidOrderStateException();
+		}
+
+	}
+
+	// 환불 확인 (상품 수령 후)
+	@Transactional
+	public void confirmRefundByOrderSeq(Long orderSeq) {
+		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		User user = order.getUser();
+
+		//반송이 완료되었다면
+		if (order.getOrderState().equals(OrderState.RETURNED.getState())) {
+			// 환불 후 금액
+			Integer amountChanged = user.getMileage() + order.getTotalPrice();
+
+			// 마일리지 복구
+			mileageService.createMileageHistory(
+				order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED.getState());
+
+			user.setMileage(amountChanged);
+
+			order.setOrderState(OrderState.REFUNDED.getState());
+		} else {
+			throw new InvalidOrderStateException();
+		}
+	}
+
+	// 결제시 비밀번호 인증
+	public void authorizeOrderByPassword(Long userSeq, AuthorizeOrderRequest request) {
+		User user = userService.readUserByUserSeq(userSeq);
+
+		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+			throw new PasswordNotValidException();
+		}
+	}
+
+	/** private **/
+
+	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		int amount = orderProduct.getProductAmount();
+		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
+		return amount * product.getPrice();
+	}
+
+	// 주문 상세 만들기
+	private OrderDetail createOrderDetail(Order order, OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
+		ProductOption productOption = productOptionService.readProductOptionByPrdtOptionSeq(
+			orderProduct.getProductOptionSeq());
+		Integer amount = orderProduct.getProductAmount();
+
+		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
+			product.getPrice() * amount);
+		// 상품 재고 변경
+		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
+			orderProduct.getProductOptionSeq(), amount);
 
 		return orderDetail;
+	}
+
+	// 주문 취소 - 주문 취소 처리
+	private void cancelOrder(User user, Order order) {
+		// 환불 후 금액
+		Integer amountChanged = user.getMileage() + order.getTotalPrice();
+
+		// 마일리지 복구
+		mileageService.createMileageHistory(
+			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.CANCELLED.getState());
+
+		user.setMileage(amountChanged);
+
+		// 주문 상태 변경
+		order.setOrderState(OrderState.CANCELED.getState());
 	}
 }
 

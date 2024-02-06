@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -47,7 +48,7 @@ public class InquiryControllerTest {
 	}
 
 	@BeforeEach
-	void setUp() {
+	void beforeEach() {
 		this.mockMvc = MockMvcBuilders
 			.standaloneSetup(inquiryController)
 			.setCustomArgumentResolvers(
@@ -70,9 +71,10 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("문의 등록 테스트")
+	@DisplayName("INQUIRY-001 (문의 등록) 테스트")
 	void createInquiryTest() throws Exception {
 		// Given
+		Long userSeq = 1L;
 		InquiryCreateRequest request = InquiryCreateRequestFactory.createInquiryCreateRequest();
 
 		// When, Then
@@ -81,42 +83,47 @@ public class InquiryControllerTest {
 				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).createInquiry(1L, request);
+		verify(inquiryService).createInquiry(userSeq, request);
 	}
 
 	@Test
-	@DisplayName("특정 유저의 문의 조회")
+	@DisplayName("INQUIRY-002 (유저별 문의 조회) 테스트")
 	void readInquiryByUserTest() throws Exception {
-
 		//Given
 		Long userSeq = 1L;
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
+		Pageable pageable = PageRequest.of(0, 10);
 
 		// When, Then
 		mockMvc.perform(get("/api/inquiry/user")
-				.param("page", "0")
-				.param("size", "10"))
+				.param("page", String.valueOf(page))
+				.param("size", String.valueOf(size)))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).readInquiryListByUser(eq(userSeq), any(Pageable.class));
+		verify(inquiryService).readInquiryListByUser(userSeq, pageable);
 	}
 
 	@Test
-	@DisplayName("카테고리 별 문의 조회")
+	@DisplayName("INQUIRY-003 (문의 카테고리 별 문의 조회) 테스트")
 	void readInquiryByCategoryTest() throws Exception {
 		// Given
 		Long categorySeq = 1L;
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
+		Pageable pageable = PageRequest.of(0, 10);
 
 		// When, Then
 		mockMvc.perform(get("/api/inquiry/category/{categorySeq}", categorySeq)
-				.param("page", "0")
-				.param("size", "10"))
+				.param("page", String.valueOf(page))
+				.param("size", String.valueOf(size)))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).readInquiryListByCategory(eq(categorySeq), any(Pageable.class));
+		verify(inquiryService).readInquiryListByCategory(categorySeq, pageable);
 	}
 
 	@Test
-	@DisplayName("특정 문의 조회 테스트")
+	@DisplayName("INQUIRY-005 (특정 문의 조회) 테스트")
 	void readInquiryOneTest() throws Exception {
 		// Given
 		Long inquirySeq = 1L;
@@ -129,10 +136,11 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("문의 답변 테스트")
+	@DisplayName("INQUIRY-006 (문의 답변) 테스트")
 	void answerInquiryTest() throws Exception {
 		// Given
 		Long inquirySeq = 1L;
+		Long adminSeq = 1L;
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory.createInquiryAnswerRequest();
 
 		// When, Then
@@ -141,6 +149,39 @@ public class InquiryControllerTest {
 				.content(asJsonString(request)))
 			.andExpect(status().isOk());
 
-		verify(inquiryService).answerInquiry(inquirySeq, request);
+		verify(inquiryService).answerInquiry(inquirySeq, adminSeq, request);
+	}
+
+	@Test
+	@DisplayName("INQUIRY-007 (문의 카테고리 별 문의 검색) 테스트")
+	void readInquiryByCategorySearchTest() throws Exception {
+		// Given
+		Long categorySeq = 1L;
+		int page = 0; // 페이지 번호
+		int size = 10; // 페이지 크기
+		Pageable pageable = PageRequest.of(0, 10);
+		String title = "검색어";
+
+		// When, Then
+		mockMvc.perform(get("/api/inquiry/category/{categorySeq}/search", categorySeq)
+				.param("title", title)
+				.param("page", String.valueOf(page))
+				.param("size", String.valueOf(size)))
+			.andExpect(status().isOk());
+
+		verify(inquiryService).readInquiryListByCategorySearch(categorySeq, title, pageable);
+	}
+
+	@Test
+	@DisplayName("INQUIRY-008 (문의 삭제) 테스트")
+	void deleteInquiryTest() throws Exception {
+		// Given
+		Long inquirySeq = 1L;
+
+		// When, Then
+		mockMvc.perform(delete("/api/inquiry/{inquirySeq}", inquirySeq))
+			.andExpect(status().isOk());
+
+		verify(inquiryService).deleteInquiry(inquirySeq);
 	}
 }
