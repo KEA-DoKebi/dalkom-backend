@@ -29,7 +29,7 @@ jobs:
         build-args: |
           APM_SERVICE_NAME=${{ secrets.APM_SERVICE_NAME }}
           APM_SECRET_TOKEN=${{ secrets.APM_SECRET_TOKEN }}
-          ELASTIC_APM_SERVER_URL=${{ secrets.APM_SERVER_URL }}
+          APM_SERVER_URL=${{ secrets.APM_SERVER_URL }}
 
   Run_Blue_on_Kakao :
     runs-on: self-hosted
