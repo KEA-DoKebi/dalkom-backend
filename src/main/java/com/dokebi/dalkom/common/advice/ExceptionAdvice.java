@@ -272,7 +272,7 @@ public class ExceptionAdvice {
 	// ChatGPT
 	@ExceptionHandler(GptResponseFailException.class)
 	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) //503
-	public Response gptNoResponseException() {
-		return Response.failure(-2300, "리뷰 요약을 생성할 수 없습니다.");
+	public Response gptNoResponseException(GptResponseFailException e) {
+		return Response.failure(-2300, e.getMessage());
 	}
 }

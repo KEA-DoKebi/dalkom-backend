@@ -1,17 +1,10 @@
 package com.dokebi.dalkom.domain.product.service;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,9 +15,7 @@ import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
 import com.dokebi.dalkom.domain.category.dto.CategoryResponse;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.service.CategoryService;
-import com.dokebi.dalkom.domain.chat.dto.ChatGptMessage;
-import com.dokebi.dalkom.domain.chat.dto.ChatGptRequest;
-import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
+import com.dokebi.dalkom.domain.chat.service.ChatGptService;
 import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
@@ -47,7 +38,6 @@ import com.dokebi.dalkom.domain.review.service.ReviewService;
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -60,6 +50,7 @@ public class ProductService {
 	private final CategoryService categoryService;
 	private final ProductOptionService productOptionService;
 	private final ReviewService reviewService;
+	private final ChatGptService chatGptService;
 
 	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
@@ -218,12 +209,12 @@ public class ProductService {
 		if (positiveReview.isEmpty()) {
 			positiveReviewSummery = "칭찬 리뷰가 존재하지 않습니다.";
 		} else {
-			positiveReviewSummery = sendGptApi(positiveReview);
+			positiveReviewSummery = chatGptService.processChatGptRequest(positiveReview);
 		}
 		if (negativeReview.isEmpty()) {
 			negativeReviewSummery = "불만 리뷰가 존재하지 않습니다.";
 		} else {
-			negativeReviewSummery = sendGptApi(negativeReview);
+			negativeReviewSummery = chatGptService.processChatGptRequest(negativeReview);
 		}
 
 		return new ProductCompareDetailResponse(productCompareDetailDto, avgRating, listLength,
@@ -255,42 +246,4 @@ public class ProductService {
 
 		product.setState(ProductActiveState.ACTIVE.getState());
 	}
-
-	/** private method **/
-	private String sendGptApi(List<ReviewSimpleDto> reviewList) {
-		try {
-			HttpClient client = HttpClient.newHttpClient();
-
-			List<ChatGptMessage> messages = reviewList.stream()
-				.map(review -> new ChatGptMessage("user", review.getContent()))
-				.collect(Collectors.toList());
-
-			// ChatGptRequest 객체 생성
-			ChatGptRequest chatGptRequest = new ChatGptRequest(messages);
-
-			// ObjectMapper를 사용하여 ChatGptRequest 객체를 JSON 문자열로 변환
-			ObjectMapper objectMapper = new ObjectMapper();
-			String requestBody = objectMapper.writeValueAsString(chatGptRequest);
-
-			//ChatGptController로 요청 전송
-			HttpRequest request = HttpRequest.newBuilder()
-				.uri(new URI("http://localhost:8080/api/v1/chatGpt/review/summary"))
-				.header("Content-Type", "application/json")
-				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
-				.build();
-
-			// 요청 전송 및 응답 수신
-			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-			return response.body().trim();
-
-		} catch (URISyntaxException | IOException e) {
-			throw new GptResponseFailException();
-		} catch (InterruptedException e) {
-			// 인터럽트 상태를 복원
-			Thread.currentThread().interrupt();
-			throw new GptResponseFailException();
-		}
-	}
-
 }

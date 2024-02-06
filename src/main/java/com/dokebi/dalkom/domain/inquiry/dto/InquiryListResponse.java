@@ -10,14 +10,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// 카테고리별 문의 조회 response (관리자용)
 @Getter
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class InquiryListResponse {
-
-	// 카테고리별 문의 조회 response (관리자용)
 	private Long inquirySeq;
 	private String title;
 	private LocalDateTime createdAt;
