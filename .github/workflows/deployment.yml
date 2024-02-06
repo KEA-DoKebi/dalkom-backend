@@ -23,8 +23,8 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile.linux --tag dokebi-was:blue 
-        docker build . --file Dockerfile.linux --tag dokebi-was:green
+        docker build . --file Dockerfile.blue --tag dokebi-was:blue 
+        docker build . --file Dockerfile.green --tag dokebi-was:green
 
     - name: Tag the Docker image
       run: |
@@ -48,7 +48,7 @@ jobs:
         source /root/credentials.sh
         ssh -A -J bastion blue 'bash -s' < /root/deploying.sh
 
-        
+
   Health_Check :
     runs-on: self-hosted
     needs: Run_Blue_on_Kakao
