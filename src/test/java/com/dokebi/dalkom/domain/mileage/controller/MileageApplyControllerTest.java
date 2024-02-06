@@ -29,6 +29,8 @@ import com.dokebi.dalkom.domain.mileage.service.MileageApplyService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+// Note: Recompile with -Xlint:deprecation for details. 안뜨게 하는 Annotation
+@SuppressWarnings("deprecation")
 class MileageApplyControllerTest {
 	@InjectMocks
 	MileageApplyController mileageApplyController;
