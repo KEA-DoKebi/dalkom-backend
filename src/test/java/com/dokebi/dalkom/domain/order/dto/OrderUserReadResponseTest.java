@@ -10,7 +10,7 @@ class OrderUserReadResponseTest {
 	void createOrderDto() {
 		// Given
 		Long expectedOrdrSeq = 1L;
-		Integer expectedTotalPrice = 10000;
+		Integer expectedTotalPrice = 100;
 
 		// When
 		OrderUserReadResponse orderUserReadResponse = createOrderReadResponse();

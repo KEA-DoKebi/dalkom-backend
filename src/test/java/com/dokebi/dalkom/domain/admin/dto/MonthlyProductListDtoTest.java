@@ -2,11 +2,13 @@ package com.dokebi.dalkom.domain.admin.dto;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 class MonthlyProductListDtoTest {
 	@Test
-	void MonthlyProductListDtoGetter() {
+	@DisplayName("monthlyProductListDtoGetter 테스트")
+	void monthlyProductListDtoGetter() {
 		// Test data
 		String month = "January";
 		Long productSeq = 1L;
@@ -33,7 +35,8 @@ class MonthlyProductListDtoTest {
 	}
 
 	@Test
-	void MonthlyProductListDtoSetter() {
+	@DisplayName("monthlyProductListDtoGetter 테스트")
+	void monthlyProductListDtoSetter() {
 		// Test data
 		String month = "January";
 		Long productSeq = 1L;
@@ -69,7 +72,8 @@ class MonthlyProductListDtoTest {
 	}
 
 	@Test
-	void MonthlyProductListDtoEqualsAndHashCode() {
+	@DisplayName("monthlyProductListDtoEqualsAndHashCode 테스트")
+	void monthlyProductListDtoEqualsAndHashCode() {
 		// Test data
 		String month = "January";
 		Long productSeq = 1L;
@@ -94,7 +98,8 @@ class MonthlyProductListDtoTest {
 	}
 
 	@Test
-	void MonthlyProductListDtoAllArgsConstructor() {
+	@DisplayName("monthlyProductListDtoAllArgsConstructor 테스트")
+	void monthlyProductListDtoAllArgsConstructor() {
 		// Test data
 		String month = "January";
 		Long productSeq = 1L;
@@ -121,7 +126,8 @@ class MonthlyProductListDtoTest {
 	}
 
 	@Test
-	void MonthlyProductListDtoNoArgsConstructor() {
+	@DisplayName("monthlyProductListDtoNoArgsConstructor 테스트")
+	void monthlyProductListDtoNoArgsConstructor() {
 		// Create object using NoArgsConstructor
 		MonthlyProductListDto dto = new MonthlyProductListDto();
 

@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.cart.factory.OrderCartDeleteRequestFactory;
@@ -25,6 +26,7 @@ public class OrderCartDeleteRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartDeleteRequestValidation 테스트")
 	void orderCartDeleteRequestValidation() {
 		// Given
 		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();
@@ -38,6 +40,7 @@ public class OrderCartDeleteRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartDeleteRequestValidation_orderCartSeqList_NotEmpty 테스트")
 	void orderCartDeleteRequestValidation_orderCartSeqList_NotEmpty() {
 		// Given
 		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest(null);

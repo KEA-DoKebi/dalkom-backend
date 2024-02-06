@@ -1,7 +1,5 @@
 package com.dokebi.dalkom.domain.mileage.service;
 
-import java.util.Objects;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -60,8 +58,11 @@ public class MileageApplyService {
 		Integer amount = mileageApply.getAmount();
 		Integer totalMileage = user.getMileage() + amount;
 
-		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING.getState()) && Objects.equals(
-			request.getApprovedState(), "Y")) {
+		if (approvedState == null) {
+			throw new MileageApplyNotFoundException();
+		}
+
+		if (approvedState.equals(MileageApplyState.WAITING.getState())) {
 			mileageApply.setApprovedState(request.getApprovedState());
 
 			if (request.getApprovedState().equals(MileageApplyState.YES.getState())) {
@@ -74,6 +75,8 @@ public class MileageApplyService {
 					MileageHistoryState.DENIED.getState());
 			}
 
+		} else {
+			throw new MileageAlreadyApplyException();
 		}
 
 	}
