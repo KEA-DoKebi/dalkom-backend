@@ -1,6 +1,6 @@
 package com.dokebi.dalkom.domain.order.service;
 
-import static com.dokebi.dalkom.domain.order.factory.OrderFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderPageDtoFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderReadResponseFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;

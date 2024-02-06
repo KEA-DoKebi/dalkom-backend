@@ -93,7 +93,11 @@ public class SignService {
 	}
 
 	private void validatePassword(LogInRequest request, User user) {
-		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+		try {
+			if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+				throw new LoginFailureException();
+			}
+		} catch (IllegalArgumentException e) {
 			throw new LoginFailureException();
 		}
 	}
@@ -147,10 +151,13 @@ public class SignService {
 		int mileagePerMonth = 100000; //10만
 		int mileagePerYear = mileagePerMonth * 12;
 		int monthWorked;
+		int totalMileage;
 
 		if (joinedAt.isBefore(startOfYear)) {
 			monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(joinedAt, startOfYear));
-			return monthWorked * mileagePerMonth + mileagePerYear;
+			totalMileage = monthWorked * mileagePerMonth + mileagePerYear;
+			return Math.min(totalMileage, mileagePerYear);
+
 		} else {
 			monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(startOfYear, joinedAt));
 			return monthWorked * mileagePerMonth;

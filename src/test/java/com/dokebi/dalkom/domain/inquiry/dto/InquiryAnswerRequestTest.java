@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryAnswerRequestFactory;
@@ -25,7 +26,8 @@ public class InquiryAnswerRequestTest {
 	}
 
 	@Test
-	void InquiryAnswerRequestValidation() {
+	@DisplayName("정상 동작 테스트")
+	void inquiryAnswerRequestValidation() {
 		// Given
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory.createInquiryAnswerRequest();
 
@@ -38,7 +40,8 @@ public class InquiryAnswerRequestTest {
 	}
 
 	@Test
-	void InquiryAnswerRequestValidation_answerContent_NotNull() {
+	@DisplayName("answerContent NotNull 테스트")
+	void inquiryAnswerRequestValidation_answerContent_NotNull() {
 		// Given
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory
 			.createInquiryAnswerRequest(null);
@@ -56,7 +59,8 @@ public class InquiryAnswerRequestTest {
 	}
 
 	@Test
-	void InquiryAnswerRequestValidation_answerContent_NotBlank() {
+	@DisplayName("answerContent NotBlank 테스트")
+	void inquiryAnswerRequestValidation_answerContent_NotBlank() {
 		// Given
 		InquiryAnswerRequest request = InquiryAnswerRequestFactory
 			.createInquiryAnswerRequest(" ");

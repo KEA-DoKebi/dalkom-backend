@@ -41,5 +41,4 @@ public class CreateAdminRequest {
 		return new Admin(request.getAdminId(), request.getPassword(), request.getNickname(), request.getName(),
 			request.getDepart());
 	}
-
 }

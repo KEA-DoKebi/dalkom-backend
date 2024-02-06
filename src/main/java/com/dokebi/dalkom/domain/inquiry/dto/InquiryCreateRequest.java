@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InquiryCreateRequest {
-
 	@NotNull(message = "InquiryCreateRequest title NotNull 에러")
 	@NotBlank(message = "InquiryCreateRequest title NotBlank 에러")
 	private String title;

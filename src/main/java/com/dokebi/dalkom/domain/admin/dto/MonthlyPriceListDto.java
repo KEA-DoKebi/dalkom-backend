@@ -14,5 +14,4 @@ import lombok.Setter;
 public class MonthlyPriceListDto {
 	public String Month;
 	public Long monthlyPrice;
-
 }

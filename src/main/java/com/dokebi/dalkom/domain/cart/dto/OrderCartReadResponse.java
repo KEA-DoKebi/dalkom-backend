@@ -12,20 +12,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCartReadResponse {
-
 	private Long orderCartSeq;
-
 	private Long productSeq;
-
 	private Long prdtOptionSeq;
-
 	private String productName;
-
 	private String prdtOptionDetail;
-
 	private String imageUrl;
-
 	private Integer price;
-
 	private Integer amount;
+	private Integer stock;
 }

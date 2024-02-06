@@ -20,4 +20,16 @@ public class ProductCreateRequestFactory {
 			"Limbus Company",
 			optionList);
 	}
+
+	public static ProductCreateRequest createFalseProductCreateRequest() {
+		return new ProductCreateRequest(
+			0L,
+			"",
+			-100,
+			"",
+			"A",
+			"",
+			"",
+			List.of());
+	}
 }

@@ -38,8 +38,7 @@ public class ProductOptionControllerTest {
 		// Given
 
 		// When, Then
-		mockMvc.perform(get("/api/option"))
-			.andExpect(status().isOk());
+		mockMvc.perform(get("/api/option")).andExpect(status().isOk());
 
 		verify(productOptionService).readOptionList();
 	}
@@ -51,8 +50,7 @@ public class ProductOptionControllerTest {
 		String optionCode = "OP1";
 
 		// When, Then
-		mockMvc.perform(get("/api/option/{optionCode}", optionCode))
-			.andExpect(status().isOk());
+		mockMvc.perform(get("/api/option/{optionCode}", optionCode)).andExpect(status().isOk());
 
 		verify(productOptionService).readOptionDetailList(optionCode);
 	}

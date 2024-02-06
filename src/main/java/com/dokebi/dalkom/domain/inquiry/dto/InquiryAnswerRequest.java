@@ -15,7 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InquiryAnswerRequest {
-
 	@NotNull(message = "InquiryAnswerRequest answerContent NotNull 에러")
 	@NotBlank(message = "InquiryAnswerRequest answerContent NotBlank 에러")
 	private String answerContent;

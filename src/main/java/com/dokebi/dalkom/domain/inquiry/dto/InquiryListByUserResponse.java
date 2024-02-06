@@ -10,14 +10,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// 사용자별 문의 조회 response (사용자용)
 @Getter
 @Setter
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class InquiryListByUserResponse {
-
-	// 사용자별 문의 조회 response (사용자용)
 	private Long inquirySeq;
 	private String category;
 	private String title;
@@ -34,5 +33,4 @@ public class InquiryListByUserResponse {
 		this.answerState = answerState;
 		this.answerStateName = InquiryAnswerState.getNameByState(answerState);
 	}
-
 }

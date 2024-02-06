@@ -1,6 +1,6 @@
 package com.dokebi.dalkom.domain.mileage.dto;
 
-import static com.dokebi.dalkom.domain.mileage.factory.mileageApplyRequestFactory.*;
+import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyRequestFactory.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Set;
@@ -23,8 +23,8 @@ class MileageApplyRequestTest {
 	}
 
 	@Test
-	void mileageAskRequest_amount_Positive() {
-		MileageApplyRequest request = createMileageAskRequestFactory(-5000);
+	void mileageApplyRequest_amount_Positive() {
+		MileageApplyRequest request = createMileageApplyRequestFactory(-5000);
 
 		Set<ConstraintViolation<MileageApplyRequest>> violations = validator.validate(request);
 
