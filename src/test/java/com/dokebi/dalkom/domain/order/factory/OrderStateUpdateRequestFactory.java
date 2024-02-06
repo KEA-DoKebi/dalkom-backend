@@ -1,4 +1,4 @@
-package com.dokebi.dalkom.domain.inquiry.factory;
+package com.dokebi.dalkom.domain.order.factory;
 
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 
