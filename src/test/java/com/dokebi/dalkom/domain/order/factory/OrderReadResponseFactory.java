@@ -20,7 +20,6 @@ public class OrderReadResponseFactory {
 			100,
 			"Shipped",
 			LocalDateTime.now()
-
 		);
 	}
 }

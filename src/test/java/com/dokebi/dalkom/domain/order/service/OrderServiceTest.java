@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,17 +53,10 @@ class OrderServiceTest {
 	private MileageService mileageService;
 	@Mock
 	private UserService userService;
-
 	@Mock
 	private Product mockProduct;
 	@Mock
 	private MileageHistory mileageHistory;
-
-	// Setup your mock data and mock behaviors here
-	@BeforeEach
-	void setUp() {
-
-	}
 
 	// @Test
 	// @DisplayName("주문 생성 서비스 테스트 ")
@@ -135,7 +127,7 @@ class OrderServiceTest {
 
 		Page<OrderUserReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
 
-		when(orderService.readOrderByUserSeq(userSeq, pageable)).thenReturn(responsePage);
+		when(orderRepository.findOrderListByUserSeq(userSeq, pageable)).thenReturn(responsePage);
 
 		// when
 		Page<OrderUserReadResponse> result = orderService.readOrderByUserSeq(userSeq, pageable);

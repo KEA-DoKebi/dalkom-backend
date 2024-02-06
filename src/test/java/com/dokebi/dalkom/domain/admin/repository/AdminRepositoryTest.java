@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.admin.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto;
+import com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto;
+import com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
@@ -107,20 +111,117 @@ public class AdminRepositoryTest {
 
 		// Then
 		assertNotNull(adminListPage);
-		// assertFalse(adminListPage.isEmpty());
-
-		// 출력
-		System.out.println("검색된 관리자 수: " + adminListPage.getTotalElements());
-		System.out.println("페이지 수: " + adminListPage.getTotalPages());
-		System.out.println("현재 페이지의 관리자 수: " + adminListPage.getNumberOfElements());
-		System.out.println("페이지당 최대 관리자 수: " + adminListPage.getSize());
-		System.out.println("현재 페이지: " + adminListPage.getNumber());
-		System.out.println("이전 페이지 존재 여부: " + adminListPage.hasPrevious());
-		System.out.println("다음 페이지 존재 여부: " + adminListPage.hasNext());
-		System.out.println("첫 번째 페이지 여부: " + adminListPage.isFirst());
-		System.out.println("마지막 페이지 여부: " + adminListPage.isLast());
-		System.out.println("관리자 목록:");
-		adminListPage.forEach(admin -> System.out.println(admin.toString()));
+		assertFalse(adminListPage.isEmpty());
 	}
 
+	@Test
+	@DisplayName("findAdminListByAdminId 테스트")
+	void findAdminListByAdminIdTest() {
+		// Given
+		String adminId = "admin";
+		Pageable pageable = PageRequest.of(0, 7);
+
+		// When
+		Page<ReadAdminResponse> adminListPage = adminRepository.findAdminListByAdminId(adminId, pageable);
+
+		// Then
+		assertNotNull(adminListPage);
+		assertFalse(adminListPage.isEmpty());
+	}
+
+	@Test
+	@DisplayName("findAdminListByDepart 테스트")
+	void findAdminListByDepartTest() {
+		// Given
+		String depart = "개발";
+		Pageable pageable = PageRequest.of(0, 7);
+
+		// When
+		Page<ReadAdminResponse> adminListPage = adminRepository.findAdminListByDepart(depart, pageable);
+
+		// Then
+		assertNotNull(adminListPage);
+		assertFalse(adminListPage.isEmpty());
+	}
+
+	@Test
+	@DisplayName("findAdminListByNickname 테스트")
+	void findAdminListByNickname() {
+		// Given
+		String nickname = "관리자";
+		Pageable pageable = PageRequest.of(0, 7);
+
+		// When
+		Page<ReadAdminResponse> adminListPage = adminRepository.findAdminListByNickname(nickname, pageable);
+
+		// Then
+		assertNotNull(adminListPage);
+		assertFalse(adminListPage.isEmpty());
+	}
+
+	@Test
+	@DisplayName("findTotalPrice 테스트")
+	void findTotalPrice() {
+		// When
+		Integer TotalPrice = adminRepository.findTotalPrice();
+
+		// Then
+		assertNotNull(TotalPrice);
+	}
+
+	@Test
+	@DisplayName("findTotalMonthlyPrice 테스트")
+	void findTotalMonthlyPrice() {
+		// When
+		Integer TotalPrice = adminRepository.findTotalMonthlyPrice();
+
+		// Then
+		assertNotNull(TotalPrice);
+	}
+
+	@Test
+	@DisplayName("findTotalDailyPrice 테스트")
+	void findTotalDailyPrice() {
+		// When
+		Integer TotalPrice = adminRepository.findTotalDailyPrice();
+
+		// Then
+		assertNotNull(TotalPrice);
+	}
+
+	@Test
+	@DisplayName("findMonthlyPriceList 테스트")
+	void findMonthlyPriceList() {
+		// When
+		List<MonthlyPriceListDto> priceList = adminRepository.findMonthlyPriceList();
+
+		// Then
+		assertNotNull(priceList);
+		assertFalse(priceList.isEmpty());
+	}
+
+	@Test
+	@DisplayName("findMonthlyProductList 테스트")
+	void findMonthlyProductList() {
+		// Given
+		Pageable pageable = PageRequest.of(0, 10);
+
+		// When
+		Page<MonthlyProductListDto> pricePage = adminRepository.findMonthlyProductList(pageable);
+
+		// Then
+		assertNotNull(pricePage);
+		assertFalse(pricePage.isEmpty());
+	}
+
+	@Test
+	@DisplayName("findMonthlyCategoryList 테스트")
+	void findMonthlyCategoryList() {
+		// When
+		List<MonthlyCategoryListDto> categoryList = adminRepository.findMonthlyCategoryList();
+
+		// Then
+		assertNotNull(categoryList);
+		assertFalse(categoryList.isEmpty());
+	}
 }

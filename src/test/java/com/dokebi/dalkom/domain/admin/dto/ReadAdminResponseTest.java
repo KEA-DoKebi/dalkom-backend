@@ -1,15 +1,17 @@
 package com.dokebi.dalkom.domain.admin.dto;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 
 class ReadAdminResponseTest {
 
 	@Test
-	void constructorAndGetters() {
+	@DisplayName("readAdminResponseTestGetter 테스트")
+	void readAdminResponseTestGetter() {
 		// Test data
 		Long adminSeq = 1L;
 		String adminId = "admin123";
@@ -31,7 +33,8 @@ class ReadAdminResponseTest {
 	}
 
 	@Test
-	void toDto() {
+	@DisplayName("readAdminResponseToDto 테스트")
+	void readAdminResponseToDto() {
 		// Test data
 		Admin admin = new Admin("administrator", "12345a!", "nickname",
 			"name", "IT");
