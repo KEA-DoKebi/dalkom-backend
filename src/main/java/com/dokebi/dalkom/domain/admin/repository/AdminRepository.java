@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.admin.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -7,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto;
+import com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto;
+import com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 
@@ -22,18 +26,6 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
 		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) FROM Admin a")
 	Page<ReadAdminResponse> findAllAdminList(Pageable pageable);
-
-	// 이렇게 하는경우 세번의 query를 돌려야 하니깐 하나씩 나눠서하는게 좋을것같다.
-	// @Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
-	// 	"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
-	// 	"FROM Admin a WHERE (a.adminId LIKE CONCAT('%', :adminId, '%')) " +
-	// 	"OR (a.name LIKE CONCAT('%', :name, '%')) " +
-	// 	"OR (a.nickname LIKE CONCAT('%', :nickname, '%'))")
-	// Page<ReadAdminResponse> findAdminListBySearch(
-	// 	@Param("name") String name,
-	// 	@Param("adminId") String adminId,
-	// 	@Param("nickname") String nickname,
-	// 	Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
 		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
@@ -62,5 +54,45 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	Page<ReadAdminResponse> findAdminListByNickname(
 		@Param("nickname") String nickname,
 		Pageable pageable);
+
+	@Query("SELECT sum(o.totalPrice) FROM Order o")
+	Integer findTotalPrice();
+
+	@Query("SELECT sum(o.totalPrice) FROM Order o "
+		+ "WHERE DATE_FORMAT(o.createdAt, '%Y-%m') = DATE_FORMAT(NOW() , '%Y-%m')")
+	Integer findTotalMonthlyPrice();
+
+	@Query("SELECT sum(o.totalPrice) FROM Order o "
+		+ "WHERE DATE_FORMAT(o.createdAt, '%Y-%m-%d') = DATE_FORMAT(NOW() , '%Y-%m-%d')")
+	Integer findTotalDailyPrice();
+
+	@Query(
+		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto("
+			+ "DATE_FORMAT(o.createdAt, '%Y-%m'), SUM(o.totalPrice)) "
+			+ "FROM Order o "
+			+ "GROUP BY DATE_FORMAT(o.createdAt, '%Y-%m')")
+	List<MonthlyPriceListDto> findMonthlyPriceList();
+
+	@Query(
+		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto("
+			+ "DATE_FORMAT(od.createdAt, '%Y-%m'), p.productSeq "
+			+ ", max(p.name), max(p.company), max(p.price), COUNT(*), sum(od.amount), (sum(od.amount) * p.price)) "
+			+ " FROM OrderDetail od "
+			+ "LEFT JOIN od.product p "
+			+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW() , '%Y-%m') "
+			+ "GROUP by DATE_FORMAT(od.createdAt, '%Y-%m') , p.productSeq "
+			+ "ORDER by sum(od.amount) DESC ")
+	Page<MonthlyProductListDto> findMonthlyProductList(Pageable pageable);
+
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto("
+		+ "c.parentSeq, MAX(c2.name),  SUM(od.amount)) "
+		+ "from OrderDetail od "
+		+ "left join od.product p"
+		+ "LEFT JOIN od.product.category c "
+		+ "LEFT JOIN Category c2 "
+		+ "on c.parentSeq = c2.categorySeq "
+		+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW()  , '%Y-%m') "
+		+ "GROUP by c.parentSeq")
+	List<MonthlyCategoryListDto> findMonthlyCategoryList();
 
 }

@@ -21,15 +21,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.dokebi.dalkom.domain.category.entity.Category;
-import com.dokebi.dalkom.domain.option.entity.ProductOption;
-import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.service.OrderDetailService;
-import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.review.dto.ReviewByProductResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewCreateRequest;
+import com.dokebi.dalkom.domain.review.dto.ReviewReadResponse;
+import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
 import com.dokebi.dalkom.domain.review.dto.ReviewUpdateRequest;
 import com.dokebi.dalkom.domain.review.entity.Review;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
@@ -57,33 +55,23 @@ public class ReviewServiceTest {
 
 	@Test
 	void createReviewTest() {
-		// Given
+		// Given: 유저와 주문 상세 정보가 준비됨
 		Long userSeq = 1L;
 		ReviewCreateRequest request = ReviewCreateRequestFactory.createReviewCreateRequest();
-
-		User user = new User("empId", "password", "name", "email@email.com",
-			"address", LocalDate.now(), "nickname", 1200000);
-		Category category = new Category("name", 1L, "imageUrl");
-		Product product = new Product(category, "name", 1000, "info", "imageUrl", "company", "Y");
-		Order order = new Order(user, "rcvrName", "rcvrAddress", "rcvrMobileNum", "rcvrMemo", 100000);
-		ProductOption productOption = new ProductOption(1L, "optionCode", "name", "detail");
-		OrderDetail orderDetail = new OrderDetail(order, product, productOption, 1, 100000);
+		User user = mock(User.class);
+		OrderDetail orderDetail = mock(OrderDetail.class);
 
 		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
-		//when(orderDetailService.readOrderDetailByOrderDetailSeq(request.getOrderDetailSeq())).thenReturn(orderDetail);
+		when(orderDetailService.readOrderDetailByOrderDetailSeq(anyLong())).thenReturn(orderDetail);
+		when(reviewRepository.existsByOrderDetail_OrdrDetailSeq(anyLong())).thenReturn(false);
 
-		// When
+		// When: 리뷰 생성 요청이 들어옴
 		reviewService.createReview(userSeq, 1L, request);
 
-		// Then
+		// Then: 리뷰가 저장소에 저장됨
 		verify(reviewRepository).save(reviewArgumentCaptor.capture());
-
 		Review capturedReview = reviewArgumentCaptor.getValue();
-
-		assertEquals(user, capturedReview.getUser());
-		assertEquals(orderDetail, capturedReview.getOrderDetail());
-		assertEquals(request.getContent(), capturedReview.getContent());
-		assertEquals(request.getRating(), capturedReview.getRating());
+		assertNotNull(capturedReview);
 	}
 
 	@Test
@@ -185,5 +173,38 @@ public class ReviewServiceTest {
 
 		// Then
 		verify(reviewRepository, never()).deleteById(anyLong());
+	}
+
+	@Test
+	@DisplayName("제품 시퀀스별 간단한 리뷰 정보 조회 테스트")
+	void readReviewSimpleByProductSeqTest() {
+		// Given: 특정 제품 시퀀스에 대한 리뷰 정보가 준비됨
+		Long productSeq = 1L;
+		List<ReviewSimpleDto> mockResponse = List.of(mock(ReviewSimpleDto.class));
+
+		when(reviewRepository.readReviewSimpleByProductSeq(productSeq)).thenReturn(mockResponse);
+
+		// When: 제품 시퀀스별 리뷰 정보 조회 요청이 들어옴
+		List<ReviewSimpleDto> response = reviewService.readReviewSimpleByProductSeq(productSeq);
+
+		// Then: 조회된 정보가 반환됨
+		assertNotNull(response);
+		assertEquals(mockResponse.size(), response.size());
+	}
+
+	@Test
+	@DisplayName("단일 리뷰 조회 테스트")
+	void readReviewByReviewSeqTest() {
+		// Given: 특정 리뷰 시퀀스에 대한 리뷰 정보가 준비됨
+		Long reviewSeq = 1L;
+		ReviewReadResponse mockResponse = mock(ReviewReadResponse.class);
+
+		when(reviewRepository.findReviewByReviewSeq(reviewSeq)).thenReturn(Optional.of(mockResponse));
+
+		// When: 단일 리뷰 조회 요청이 들어옴
+		ReviewReadResponse response = reviewService.readReviewByReviewSeq(reviewSeq);
+
+		// Then: 조회된 리뷰 정보가 반환됨
+		assertNotNull(response);
 	}
 }

@@ -1,8 +1,8 @@
 package com.dokebi.dalkom.domain.mileage.service;
 
+import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyRequestFactory.*;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyResponseFactory.*;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageAskResponseFactory.*;
-import static com.dokebi.dalkom.domain.mileage.factory.mileageApplyRequestFactory.*;
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -90,7 +90,6 @@ class MileageApplyServiceTest {
 
 		MileageApply mileageApply = createMileageApplyResponse(mockUser);
 
-
 		when(userService.readUserByUserSeq(eq(userSeq))).thenReturn(mockUser);
 		when(mileageApplyRepository.save(any(MileageApply.class))).thenReturn(mileageApply);
 
@@ -111,7 +110,7 @@ class MileageApplyServiceTest {
 		// 테스트에 사용할 가상의 데이터 생성
 		Long userSeq = 1L;
 		int amount = 5000;
-		MileageApplyRequest mileageApplyRequest = createMileageAskRequestFactory(amount);
+		MileageApplyRequest mileageApplyRequest = createMileageApplyRequestFactory(amount);
 		User user = createMockUser();
 		// MileageApply mileageApply = createMileageApplyResponse(user);
 

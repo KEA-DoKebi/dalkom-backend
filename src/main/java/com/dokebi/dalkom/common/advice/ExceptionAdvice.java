@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
+import com.dokebi.dalkom.domain.admin.exception.CreateUserFailureException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
@@ -32,6 +33,7 @@ import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.PasswordNotValidException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
+import com.dokebi.dalkom.domain.review.exception.ReviewAlreadyExistsException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
@@ -221,6 +223,12 @@ public class ExceptionAdvice {
 		return Response.failure(-1801, "요청하신 주문상세를 찾을 수 없습니다.");
 	}
 
+	@ExceptionHandler(ReviewAlreadyExistsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response reviewAlreadyExistsException() {
+		return Response.failure(-1802, "이미 리뷰가 존재합니다.");
+	}
+
 	// 카테고리
 	@ExceptionHandler(CategoryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
@@ -235,6 +243,12 @@ public class ExceptionAdvice {
 		return Response.failure(-2000, "해당 관리자를 찾을 수 없습니다.");
 	}
 
+	@ExceptionHandler(CreateUserFailureException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public Response createUserFailureException() {
+		return Response.failure(-2001, "임직원 데이터가 존재하지 않습니다.");
+	}
+
 	// 문의
 	@ExceptionHandler(InquiryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
@@ -244,7 +258,7 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(FaqNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response FaqNotFoundException() {
+	public Response faqNotFoundException() {
 		return Response.failure(-2101, "해당 FAQ를 찾을 수 없습니다.");
 	}
 
@@ -258,7 +272,7 @@ public class ExceptionAdvice {
 	// ChatGPT
 	@ExceptionHandler(GptResponseFailException.class)
 	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) //503
-	public Response gptNoResponseException() {
-		return Response.failure(-2300, "리뷰 요약을 생성할 수 없습니다.");
+	public Response gptNoResponseException(GptResponseFailException e) {
+		return Response.failure(-2300, e.getMessage());
 	}
 }

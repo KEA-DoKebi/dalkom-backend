@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.review.factory.ReviewUpdateRequestFactory;
@@ -26,6 +27,7 @@ public class ReviewUpdateRequestTest {
 	}
 
 	@Test
+	@DisplayName("유효한 요청")
 	void reviewUpdateRequestValidation() {
 		// Given
 		ReviewUpdateRequest request = ReviewUpdateRequestFactory.createReviewUpdateRequest();
@@ -39,6 +41,7 @@ public class ReviewUpdateRequestTest {
 	}
 
 	@Test
+	@DisplayName("content NotNull 테스트")
 	void reviewUpdateRequestValidation_content_NotNull_NotBlank() {
 		// Given
 		ReviewUpdateRequest request = ReviewUpdateRequestFactory
@@ -56,6 +59,7 @@ public class ReviewUpdateRequestTest {
 	}
 
 	@Test
+	@DisplayName("content NotBlank 테스트")
 	void reviewUpdateRequestValidation_content_NotBlank() {
 		// Given
 		ReviewUpdateRequest request = ReviewUpdateRequestFactory
@@ -73,6 +77,7 @@ public class ReviewUpdateRequestTest {
 	}
 
 	@Test
+	@DisplayName("rating NotNull 테스트")
 	void reviewUpdateRequestValidation_rating_NotNull() {
 		// Given
 		ReviewUpdateRequest request = ReviewUpdateRequestFactory
@@ -90,6 +95,7 @@ public class ReviewUpdateRequestTest {
 	}
 
 	@Test
+	@DisplayName("rating Min 테스트")
 	void reviewUpdateRequestValidation_rating_Min() {
 		// Given
 		ReviewUpdateRequest request = ReviewUpdateRequestFactory
@@ -107,6 +113,7 @@ public class ReviewUpdateRequestTest {
 	}
 
 	@Test
+	@DisplayName("rating Max 테스트")
 	void reviewUpdateRequestValidation_rating_Max() {
 		// Given
 		ReviewUpdateRequest request = ReviewUpdateRequestFactory

@@ -14,7 +14,7 @@ import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
 
-public class OrderFactory {
+public class OrderPageDtoFactory {
 
 	public static OrderPageDto createOrderPageDto() {
 		List<OrderPageDetailDto> orderList = new ArrayList<>();
