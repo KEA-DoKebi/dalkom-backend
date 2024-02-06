@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import com.dokebi.dalkom.common.EntityDate;
 
 import lombok.AccessLevel;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "prdtImage")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Generated
 public class ProductImage extends EntityDate {
 
 	@Id

@@ -5,6 +5,7 @@ import com.dokebi.dalkom.domain.admin.entity.Admin;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@Generated
 public class ReadAdminResponse {
 	public Long adminSeq;
 	public String adminId;

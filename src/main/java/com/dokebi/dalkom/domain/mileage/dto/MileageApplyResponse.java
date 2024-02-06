@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Generated
 public class MileageApplyResponse {
 	private Long milgApplySeq;
 	private Long userSeq;

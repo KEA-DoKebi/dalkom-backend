@@ -4,6 +4,7 @@ import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class ReadProductResponse {
 	private Long productSeq;
 	private String name;

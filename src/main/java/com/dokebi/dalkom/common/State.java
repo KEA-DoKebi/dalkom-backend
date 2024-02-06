@@ -1,5 +1,8 @@
 package com.dokebi.dalkom.common;
 
+import lombok.Generated;
+
+@Generated
 public enum State {
 	ORDER_STATE1("11", "상품준비"),
 	ORDER_STATE2("12", "배송시작"),

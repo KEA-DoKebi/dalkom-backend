@@ -1,9 +1,9 @@
 package com.dokebi.dalkom.domain.order.controller;
 
-import static com.dokebi.dalkom.domain.order.factory.OrderStateUpdateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.AuthorizeOrderRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderPageDtoFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderStateUpdateRequestFactory.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -138,7 +138,7 @@ public class OrderControllerTest {
 	void updateOrderStateTest() throws Exception {
 		String orderState = "51";
 		Long orderSeq = 13L;
-		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequestFactory(orderState);
+		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequest(orderState);
 
 		mockMvc.perform(put("/api/order/{orderSeq}/state", orderSeq)
 				.contentType(MediaType.APPLICATION_JSON)

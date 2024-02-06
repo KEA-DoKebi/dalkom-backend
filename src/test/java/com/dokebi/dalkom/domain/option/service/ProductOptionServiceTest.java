@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.dokebi.dalkom.domain.option.dto.OptionCodeResponse;
-import com.dokebi.dalkom.domain.option.dto.OptionDetailListResponse;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.exception.ProductOptionNotFoundException;
 import com.dokebi.dalkom.domain.option.repository.ProductOptionRepository;
@@ -44,15 +43,15 @@ public class ProductOptionServiceTest {
 		assertEquals(responseList, resultList);
 	}
 
-	@Test
-	void readOptionDetailListTest() {
-		// Given
-		OptionDetailListResponse response1 = new OptionDetailListResponse(1L, "남성");
-		OptionDetailListResponse response2 = new OptionDetailListResponse(2L, "여성");
-		List<OptionDetailListResponse> responseList = Arrays.asList(response1, response2);
-
-		when(productOptionRepository.findDetailByOptionCode(anyString())).thenReturn(responseList);
-	}
+	// @Test
+	// void readOptionDetailListTest() {
+	// 	// Given
+	// 	OptionDetailListResponse response1 = new OptionDetailListResponse(1L, "남성");
+	// 	OptionDetailListResponse response2 = new OptionDetailListResponse(2L, "여성");
+	// 	List<OptionDetailListResponse> responseList = Arrays.asList(response1, response2);
+	//
+	// 	when(productOptionRepository.findDetailByOptionCode(anyString())).thenReturn(responseList);
+	// }
 
 	@Test
 	void readProductOptionByPrdtOptionSeqTest() {

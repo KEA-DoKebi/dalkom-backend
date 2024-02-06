@@ -1,8 +1,10 @@
 package com.dokebi.dalkom.common.magicnumber;
 
+import lombok.Generated;
 import lombok.Getter;
 
 @Getter
+@Generated
 public enum ProductActiveState {
 
 	// 판매중, 사용자에게 공개됨

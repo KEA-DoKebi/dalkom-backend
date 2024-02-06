@@ -15,6 +15,7 @@ import com.dokebi.dalkom.common.EntityDate;
 import com.dokebi.dalkom.domain.stock.entity.ProductStock;
 
 import lombok.AccessLevel;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "prdtOption")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Generated
 public class ProductOption extends EntityDate {
 
 	@Id

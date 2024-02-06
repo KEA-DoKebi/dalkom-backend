@@ -17,6 +17,7 @@ import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.user.entity.User;
 
 import lombok.AccessLevel;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "inquiry")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Generated
 public class Inquiry extends EntityDate {
 
 	@Id

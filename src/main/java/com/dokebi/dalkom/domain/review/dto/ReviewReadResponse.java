@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.review.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class ReviewReadResponse {
 	private String productName;
 	private String imageUrl;

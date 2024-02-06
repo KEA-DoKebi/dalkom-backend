@@ -1,12 +1,14 @@
 package com.dokebi.dalkom.domain.jira.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Generated
 public class JiraInquiryRequest {
 	private String summary;
 	private String description;

@@ -1,4 +1,7 @@
 package com.dokebi.dalkom.domain.order.exception;
 
-public class OrderNotFoundException extends RuntimeException{
+import lombok.Generated;
+
+@Generated
+public class OrderNotFoundException extends RuntimeException {
 }

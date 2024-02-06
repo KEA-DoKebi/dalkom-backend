@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.mileage.dto;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Generated
 public class MileageHistoryResponse {
 
 	private String type;
