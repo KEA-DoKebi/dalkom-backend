@@ -17,9 +17,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Set up JDK 11
+      run :
+        source ./pull_config.sh
+        find . -type d -name "src"
+        exit 1
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile.linux --tag dokebi-was:blue
+        docker build . --file Dockerfile.linux --tag dokebi-was:blue 
         docker build . --file Dockerfile.linux --tag dokebi-was:green
     - name: Tag the Docker image
       run: |
