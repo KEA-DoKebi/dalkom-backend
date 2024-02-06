@@ -17,11 +17,11 @@ public class OrderCartReadResponseTest {
 		String imageUrl = "test-image.jpg";
 		Integer price = 1000;
 		Integer amount = 2;
+		Integer stock = 80;
 
 		// When
 		OrderCartReadResponse orderCartReadResponse = new OrderCartReadResponse(
-			orderCartSeq, productSeq, prdtOptionSeq, productName, prdtOptionDetail, imageUrl, price, amount
-		);
+			orderCartSeq, productSeq, prdtOptionSeq, productName, prdtOptionDetail, imageUrl, price, amount, stock);
 
 		// Then
 		assertNotNull(orderCartReadResponse);
