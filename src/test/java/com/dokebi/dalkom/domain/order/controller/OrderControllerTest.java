@@ -1,6 +1,6 @@
 package com.dokebi.dalkom.domain.order.controller;
 
-import static com.dokebi.dalkom.domain.inquiry.factory.OrderStateUpdateRequestFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderStateUpdateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.AuthorizeOrderRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderPageDtoFactory.*;
