@@ -4,14 +4,15 @@ import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class FaqReadListResponse {
-	private long inquirySeq;
+	private Long inquirySeq;
 	private LocalDateTime createdAt;
 	private String title;
-
 }

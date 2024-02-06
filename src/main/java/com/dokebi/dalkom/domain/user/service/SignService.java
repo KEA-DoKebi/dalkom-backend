@@ -93,7 +93,11 @@ public class SignService {
 	}
 
 	private void validatePassword(LogInRequest request, User user) {
-		if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+		try {
+			if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+				throw new LoginFailureException();
+			}
+		} catch (IllegalArgumentException e) {
 			throw new LoginFailureException();
 		}
 	}

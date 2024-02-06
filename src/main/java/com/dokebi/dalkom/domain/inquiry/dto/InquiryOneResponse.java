@@ -14,13 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InquiryOneResponse {
-
 	private String title;
 	private String content;
 	private LocalDateTime createdAt;
 	private String answerContent;
 	private LocalDateTime answeredAt;
-	private String nickname; // 관리자 닉네임
+	private String nickname;
 
 	public InquiryOneResponse(String title, String content, LocalDateTime createdAt) {
 		this.title = title;

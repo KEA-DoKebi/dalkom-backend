@@ -85,7 +85,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	Page<MonthlyProductListDto> findMonthlyProductList(Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto("
-		+ "c.parentSeq, MAX(c2.name),  COUNT(*)) "
+		+ "c.parentSeq, MAX(c2.name),  SUM(od.amount)) "
 		+ "from OrderDetail od "
 		+ "left join od.product p"
 		+ "LEFT JOIN od.product.category c "
