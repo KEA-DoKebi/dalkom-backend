@@ -25,10 +25,10 @@ public class ChatGptRequest {
 	public ChatGptRequest(List<ChatGptMessage> messages) {
 		//this.messages = new ArrayList<>();
 		this.model = "gpt-3.5-turbo-1106";
-		this.maxTokens = 200;
+		this.maxTokens = 1000;
 		this.temperature = 0.0;
 		this.messages.add(new ChatGptMessage("system",
-			"You are review summary system for Korean shopping malls. Analyze the provided review(s) and summarize in third person, dry sentences. Never use subjects in sentences. Responses should be in Korean and within 150 tokens."));
+			"You are review summary system for Korean shopping malls. Analyze the provided review(s) and summarize in third person. Never use subjects in sentences. Responses should be in Korean and within 100 tokens."));
 		this.messages.addAll(messages);
 	}
 }

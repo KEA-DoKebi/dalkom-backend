@@ -3,7 +3,6 @@ package com.dokebi.dalkom.domain.mileage.factory;
 import java.time.LocalDateTime;
 
 import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse;
-import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.user.entity.User;
 
 public class MileageHistoryResponseFactory {

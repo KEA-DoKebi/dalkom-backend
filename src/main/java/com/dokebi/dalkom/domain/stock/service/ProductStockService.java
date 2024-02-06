@@ -55,7 +55,8 @@ public class ProductStockService {
 		// 재고 변화 결과에 따라 해당 상품의 판매 상태 변경
 		if (checkProductStock(stock.getPrdtStockSeq())) {
 			productService.soldoutProductByProductSeq(productSeq);
-		} else if (Objects.equals(productService.checkProductActiveState(productSeq), ProductActiveState.SOLDOUT)) {
+		} else if (Objects.equals(productService.checkProductActiveState(productSeq),
+			ProductActiveState.SOLDOUT.getState())) {
 			productService.activeProductByProductSeq(productSeq);
 		}
 	}
@@ -80,7 +81,8 @@ public class ProductStockService {
 		// 재고 변화 결과에 따라 해당 상품의 판매 상태 변경
 		if (checkProductStock(stock.getPrdtStockSeq())) {
 			productService.soldoutProductByProductSeq(productSeq);
-		} else if (Objects.equals(productService.checkProductActiveState(productSeq), ProductActiveState.SOLDOUT)) {
+		} else if (Objects.equals(productService.checkProductActiveState(productSeq),
+			ProductActiveState.SOLDOUT.getState())) {
 			productService.activeProductByProductSeq(productSeq);
 		}
 	}
