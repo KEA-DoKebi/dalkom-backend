@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
-	private final HttpServletRequest req;
+	private final HttpServletRequest request;
 
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
@@ -27,8 +27,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 	@Override
 	public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
 		NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-		if (req.getAttribute("userSeq") == null)
-			return Long.parseLong((String)req.getAttribute("adminSeq"));
-		return Long.parseLong((String)req.getAttribute("userSeq"));
+		if (request.getAttribute("userSeq") == null)
+			return Long.parseLong((String)request.getAttribute("adminSeq"));
+		return Long.parseLong((String)request.getAttribute("userSeq"));
 	}
 }

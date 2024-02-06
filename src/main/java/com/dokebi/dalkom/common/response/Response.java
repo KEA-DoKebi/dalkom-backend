@@ -16,12 +16,12 @@ public class Response {
 	private Result result;
 
 	public static Response success() { // 4
-		return new Response(true, 0, null);
+		return new Response(true, 200, null);
 	}
 
 	//성공했을 때는 응답 데이터도 반환해줍니다.
 	public static <T> Response success(T data) { // 5
-		return new Response(true, 0, new Success<>(data));
+		return new Response(true, 200, new Success<>(data));
 	}
 
 	//실패했을 때는 실패 메시지도 반환해줍니다.

@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.order.factory;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
@@ -7,14 +8,21 @@ import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 public class OrderCreateRequestFactory {
 	public static OrderCreateRequest createOrderCreateRequest() {
 		return new OrderCreateRequest(
-			1L,
-			"John Doe",
-			"123 Main St",
-			"555-1234",
-			"Some memo",
-			Collections.singletonList(1L),
-			Collections.singletonList(2L),
-			Collections.singletonList(3)
+			ReceiverInfoRequestFactory.createReceiverInfoRequest(),  // receiverInfoRequest
+			Arrays.asList(
+				OrderProductRequestFactory.createOrderProductRequest(),  // orderProductRequestList[0]
+				OrderProductRequestFactory.createOrderProductRequest()   // orderProductRequestList[1]
+			)
 		);
 	}
+
+	public static OrderCreateRequest createOrderCreateRequestWithUserSeqNull() {
+		return new OrderCreateRequest(
+			null,  // receiverInfoRequest
+			Collections.singletonList(
+				OrderProductRequestFactory.createOrderProductRequest()
+			)
+		);
+	}
+
 }

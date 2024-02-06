@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.user.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
@@ -25,24 +26,38 @@ public class SignController {
 
 	private final SignService signService;
 
-	// USER-004 (사용자 회원가입)
+	// USER-005 (사용자 회원가입)
 	@PostMapping("/api/user/sign-up")
 	@ResponseStatus(HttpStatus.OK)
-	public SignUpResponse signUp(@Valid @RequestBody SignUpRequest req) {
-		return signService.signUp(req);
+	public SignUpResponse signUp(@Valid @RequestBody SignUpRequest request) {
+		return signService.signUp(request);
 	}
 
 	// USER-002 (사용자 로그인)
 	@PostMapping("/api/user/login")
 	@ResponseStatus(HttpStatus.OK)
-	public Response signIn(@Valid @RequestBody LogInRequest req) {
-		return Response.success(signService.signIn(req));
+	public Response signIn(@Valid @RequestBody LogInRequest request) {
+		return Response.success(signService.signInUser(request));
 	}
 
 	// ADMIN-003 (관리자 로그인)
 	@PostMapping("/api/admin/login")
 	@ResponseStatus(HttpStatus.OK)
-	public Response signInAdmin(@Valid @RequestBody LogInAdminRequest req) {
-		return Response.success(signService.signInAdmin(req));
+	public Response signInAdmin(@Valid @RequestBody LogInAdminRequest request) {
+		return Response.success(signService.signInAdmin(request));
+	}
+
+	// USER-001 (사용자 로그아웃)
+	@PostMapping("api/user/logout")
+	@ResponseStatus(HttpStatus.OK)
+	public Response signOut(HttpServletRequest request) {
+		return signService.signOut(request);
+	}
+
+	// ADMIN-002 (관리자 로그아웃)
+	@PostMapping("api/admin/logout")
+	@ResponseStatus(HttpStatus.OK)
+	public Response signOutAdmin(HttpServletRequest request) {
+		return signService.signOut(request);
 	}
 }

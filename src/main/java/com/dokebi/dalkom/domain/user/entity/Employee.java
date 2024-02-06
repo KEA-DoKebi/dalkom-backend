@@ -1,29 +1,36 @@
 package com.dokebi.dalkom.domain.user.entity;
 
+import java.time.LocalDate;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
-@Table(name = "employee", schema = "dkt")
+@Table(name = "employee")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Employee {
 
-    @Id
-    private String empId;
+	@Id
+	private String empId;
 
-    private String email;
+	private String email;
 
-    private String name;
+	private String name;
 
-    private String joinedAt;
+	private LocalDate joinedAt;
 
+	public Employee(String empId, String email, String name, LocalDate joinedAt) {
+		this.empId = empId;
+		this.email = email;
+		this.name = name;
+		this.joinedAt = joinedAt;
+	}
 }

@@ -12,7 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.dokebi.dalkom.common.EntityDate;
-import com.dokebi.dalkom.domain.inqury.entity.Inquiry;
+import com.dokebi.dalkom.common.magicnumber.AdminRole;
+import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.notice.entity.Notice;
 
 import lombok.AccessLevel;
@@ -61,7 +62,6 @@ public class Admin extends EntityDate {
 		this.nickname = nickname;
 		this.name = name;
 		this.depart = depart;
-		this.role = "2";    //시스템에서 등록되는 관리자는 모두 일반관리자(2)이다.
+		this.role = AdminRole.NORMAL_ADMIN.getState();    //시스템에서 등록되는 관리자는 모두 일반관리자(2)이다.
 	}
-
 }

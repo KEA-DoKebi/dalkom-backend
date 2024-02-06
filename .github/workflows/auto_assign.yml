@@ -1,6 +1,7 @@
 name: 'Auto Assign'
 on:
-  pull_request
+  pull_request:
+    types: [opened]
 
 jobs:
   add-reviewers:

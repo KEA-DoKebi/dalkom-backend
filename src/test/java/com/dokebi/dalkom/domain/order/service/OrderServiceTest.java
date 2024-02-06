@@ -1,120 +1,201 @@
 package com.dokebi.dalkom.domain.order.service;
 
-import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
-import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
-import static org.mockito.ArgumentMatchers.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderPageDtoFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderReadResponseFactory.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
+import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
-import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
+import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
+import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
 import com.dokebi.dalkom.domain.order.entity.Order;
-import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.repository.OrderRepository;
+import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
+import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
-import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
-
-public class OrderServiceTest {
+class OrderServiceTest {
 	@InjectMocks
 	private OrderService orderService;
+
 	@Mock
 	private OrderRepository orderRepository;
 	@Mock
 	private OrderDetailService orderDetailService;
 	@Mock
-	private ProductOptionService productOptionService;
-	@Mock
 	private ProductService productService;
 	@Mock
 	private ProductStockService productStockService;
+	@Mock
+	private ProductOptionService productOptionService;
 	@Mock
 	private MileageService mileageService;
 	@Mock
 	private UserService userService;
 
-	@Test
-	void createOrderTest() {
-		// Mock data
-		OrderCreateRequest request = createOrderCreateRequest();
-		User user = createUser();
+	@Mock
+	private Product mockProduct;
+	@Mock
+	private MileageHistory mileageHistory;
 
-		// Mocking userService.readUserByUserSeq()
-		given(userService.readUserByUserSeq(anyLong())).willReturn(user);
+	// Setup your mock data and mock behaviors here
+	@BeforeEach
+	void setUp() {
 
-		// Mocking user.getMileage()
-		given(user.getMileage()).willReturn(1000); // or any other desired value
-
-		// Mocking orderRepository.save()
-		doNothing().when(orderRepository).save(any(Order.class));
-
-		// Mocking orderDetailService.saveOrderDetail()
-		doNothing().when(orderDetailService).saveOrderDetail(any(OrderDetail.class));
-
-		// Mocking mileageService.createMileageHistoryAndUpdateUser()
-		doNothing().when(mileageService).createMileageHistoryAndUpdateUser(anyLong(), anyInt(), anyString());
-
-		// Perform the test
-		orderService.createOrder(request);
-
-		// Verify that the required methods were called
-		verify(userService, times(1)).readUserByUserSeq(anyLong());
-		verify(orderRepository, times(1)).save(any(Order.class));
-		verify(orderDetailService, times(1)).saveOrderDetail(any(OrderDetail.class));
-		verify(mileageService, times(1)).createMileageHistoryAndUpdateUser(anyLong(), anyInt(), anyString());
 	}
 
 	// @Test
-	// void readProductDetailTest() {
-	// 	// Mock data
-	// 	List<OrderPageDetailDto> orderList = createMockOrderList(); // Implement this method based on your needs
+	// @DisplayName("주문 생성 서비스 테스트 ")
+	// void createOrderTest() {
+	// 	// given
+	// 	OrderCreateRequest request = createOrderCreateRequest();
+	// 	User mockUser = createMockUser();
 	//
-	// 	// Mocking productStockService.checkStock()
+	// 	given(mockProduct.getPrice()).willReturn(10000);
+	// 	given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
+	// 	given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
+	// 	given(mileageService.createMileageHistory(any(), any(), any(), any())).willReturn(mileageHistory);
+	// 	given(productOptionService.readProductOptionByPrdtOptionSeq(anyLong())).willReturn(
+	// 		new ProductOption(2L, "OP1", "의류 사이즈", "M"));
 	// 	doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
 	//
-	// 	// Mocking productService.readProduct()
-	// 	// Adjust the method call and return value based on your actual implementation
-	// 	given(productService.readProduct(anyLong())).willReturn(createMockProductInfo()); // Implement this method based on your needs
+	// 	// when
+	// 	orderService.createOrder(request);
 	//
-	// 	// Perform the test
-	// 	List<OrderPageDetailDto> result = orderService.readProductDetail(orderList);
-	//
-	// 	// Verify that the required methods were called
-	// 	verify(productStockService, times(orderList.size())).checkStock(anyLong(), anyLong(), anyInt());
-	// 	verify(productService, times(orderList.size())).readProduct(anyLong());
-	//
-	// 	// Verify the result
-	// 	assertEquals(orderList.size(), result.size()); // or other assertions based on your expected result
+	// 	// then
+	// 	verify(orderRepository, times(1)).save(any(Order.class));
+	// 	verify(orderDetailService, times(request.getProductSeqList().size())).saveOrderDetail(any(OrderDetail.class));
 	// }
 
-	// Helper methods for creating mock data
-	// private List<OrderPageDetailDto> createMockOrderList() {
-	// 	List<OrderPageDetailDto> mockOrderList = new ArrayList<>();
+	// @Test
+	// @DisplayName("주문시 마일리지 부족 서비스 테스트")
+	// void createOrderWithMileageLackExceptionTest() {
+	// 	// given
+	// 	OrderCreateRequest request = createOrderCreateRequest();
+	// 	User mockUser = createMockUserWithInsufficientMileage();
 	//
-	// 	// Create a few mock OrderPageDetailDto instances for testing
-	// 	mockOrderList.add(new OrderPageDetailDto(1L, 2L, 3, "Product1", 10.0, 30.0));
-	// 	mockOrderList.add(new OrderPageDetailDto(4L, 5L, 6, "Product2", 15.0, 90.0));
-	// 	// Add more entries as needed
+	// 	given(mockProduct.getPrice()).willReturn(10000);
+	// 	given(userService.readUserByUserSeq(anyLong())).willReturn(mockUser);
+	// 	given(productService.readProductByProductSeq(anyLong())).willReturn(mockProduct);
 	//
-	// 	return mockOrderList;
-	// }
-
-	// private ReadProductDetailResponse createMockProductInfo() {
-	// 	return new ReadProductDetailResponse("ProductName", "ProductDescription", 20.0);
+	// 	// when, then
+	// 	assertThrows(MileageLackException.class, () -> orderService.createOrder(request));
 	//
 	// }
 
 	@Test
-	void readOrderByUserSeq() {
+	@DisplayName("주문 상품 상세 서비스 테스트")
+	void readProductDetailTest() {
+		// given
+		List<OrderPageDetailDto> orderList = List.of(createOrderPageDetailDto(3L, 3L, 100, "집업 자켓 아이보리", 97300));
+		ReadProductDetailResponse productDetailResponse = new ReadProductDetailResponse("집업 자켓 아이보리", 97300);
+		doNothing().when(productStockService).checkStock(anyLong(), anyLong(), anyInt());
+		given(productService.readProduct(anyLong())).willReturn(productDetailResponse);
+
+		// when
+		List<OrderPageDetailDto> result = orderService.readProductDetail(orderList);
+
+		// then
+		assertNotNull(result);
+		assertEquals(orderList.size(), result.size());
+	}
+
+	@Test
+	@DisplayName("유저의 주문 목록 조회 서비스 테스트")
+	void readOrderByUserSeqTest() {
+		// given
+		Long userSeq = 1L;
+		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
+
+		List<OrderUserReadResponse> orderList = new ArrayList<>();
+		orderList.add(createOrderReadResponse());
+		orderList.add(createOrderReadResponse());
+
+		Page<OrderUserReadResponse> responsePage = new PageImpl<>(orderList, pageable, orderList.size());
+
+		when(orderService.readOrderByUserSeq(userSeq, pageable)).thenReturn(responsePage);
+
+		// when
+		Page<OrderUserReadResponse> result = orderService.readOrderByUserSeq(userSeq, pageable);
+
+		// then
+		assertNotNull(result);
+		assertEquals(orderList.size(), result.toList().size());
+
+	}
+
+	// @Test
+	// @DisplayName("주문코드로 주문 목록 조회 서비스 테스트")
+	// void readOrderByOrderSeqTest() {
+	// 	// given
+	// 	Long orderSeq = 1L;
+	// 	List<OrderDetailReadResponse> responseList = List.of(createOrderDetailReadResponse(),
+	// 		createOrderDetailReadResponse());
+	//
+	// 	when(orderService.readOrderByOrderSeq(orderSeq)).thenReturn(responseList);
+	//
+	// 	// when
+	// 	List<OrderDetailReadResponse> result = orderService.readOrderByOrderSeq(orderSeq);
+	//
+	// 	// then
+	// 	assertNotNull(result);
+	// }
+
+	@Test
+	@DisplayName("모든 주문 목록 조회 서비스 테스트")
+	void readOrderByAllTest() {
+		Pageable pageable = PageRequest.of(0, 3); // 첫 번째 페이지, 페이지 당 3개 항목
+
+		// given
+		Page<OrderAdminReadResponse> orderReadResponseList = createOrderList(); // OrderFactory를 사용
+		given(orderRepository.findAllOrderList(pageable)).willReturn(orderReadResponseList);
+
+		// when
+		Page<OrderAdminReadResponse> result = orderService.readOrderByAll(pageable);
+
+		// then
+		assertNotNull(result);
+		assertEquals(orderReadResponseList.getSize(), result.getSize());
+	}
+
+	@Test
+	@DisplayName("주문 상태 수정 서비스 테스트")
+	void updateOrderStateTest() {
+		Long orderSeq = 1L;
+		OrderStateUpdateRequest orderStateUpdateRequest = new OrderStateUpdateRequest();
+		orderStateUpdateRequest.setOrderState("11");
+
+		Order order = createOrder();
+		order.setOrderState("12");
+
+		when(orderRepository.findById(orderSeq)).thenReturn(java.util.Optional.of(order));
+		when(orderRepository.save(any(Order.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+
+		orderService.updateOrderState(orderSeq, orderStateUpdateRequest);
+		verify(orderRepository, times(1)).findById(orderSeq);
+		verify(orderRepository, times(1)).save(order);
 
 	}
 
