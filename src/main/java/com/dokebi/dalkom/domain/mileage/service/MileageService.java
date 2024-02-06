@@ -10,7 +10,6 @@ import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.repository.MileageHistoryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MileageService {
 	private final MileageHistoryRepository mileageHistoryRepository;
-	private final UserService userService;
 
 	// 유저 별 보유 마일리지 조회 서비스
 	public Integer readMileageByUserSeq(Long userSeq) {

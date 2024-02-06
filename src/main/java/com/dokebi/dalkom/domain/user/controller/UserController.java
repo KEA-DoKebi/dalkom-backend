@@ -30,7 +30,7 @@ public class UserController {
 	@PutMapping("/api/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateUser(@LoginUser Long userSeq, @Valid @RequestBody UserUpdateRequest request) {
-		userService.updateUser(userSeq, request);
+		userService.updateUserByUserSeq(userSeq, request);
 
 		return Response.success();
 	}
