@@ -19,7 +19,7 @@ jobs:
 
     - name: Set up JDK 11
       run :
-        source ./pull_config.sh
+        source /root/pull_config.sh
         find . -type d -name "src"
         exit 1
     - name: Build the Docker image
