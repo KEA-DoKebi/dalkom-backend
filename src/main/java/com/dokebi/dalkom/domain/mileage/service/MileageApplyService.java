@@ -63,10 +63,17 @@ public class MileageApplyService {
 		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING.getState()) && Objects.equals(
 			request.getApprovedState(), "Y")) {
 			mileageApply.setApprovedState(request.getApprovedState());
-			mileageService.createMileageHistory(user, amount, totalMileage,
-				MileageHistoryState.CHARGED.getState());
 
-			user.setMileage(totalMileage);
+			if (request.getApprovedState().equals(MileageApplyState.YES.getState())) {
+				mileageService.createMileageHistory(user, amount, totalMileage,
+					MileageHistoryState.CHARGED.getState());
+				user.setMileage(totalMileage);
+
+			} else if (request.getApprovedState().equals(MileageApplyState.NO.getState())) {
+				mileageService.createMileageHistory(user, 0, user.getMileage(),
+					MileageHistoryState.DENIED.getState());
+			}
+
 		}
 
 	}

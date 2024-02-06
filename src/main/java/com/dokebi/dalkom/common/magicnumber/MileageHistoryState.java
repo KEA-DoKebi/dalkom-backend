@@ -9,7 +9,8 @@ public enum MileageHistoryState {
 	USED("2", "사용"),
 	CANCELLED("3", "취소"),
 	RETURNED("4", "반품"),
-	REFUNDED("5", "환불");
+	REFUNDED("5", "환불"),
+	DENIED("6", "충전거부");
 
 	private final String state;
 	private final String name;

@@ -24,24 +24,25 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MileageHistory extends EntityDate {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long milgHistorySeq;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long milgHistorySeq;
 
 	@ManyToOne
 	@JoinColumn(name = "userSeq")
 	private User user;
 
+	// 변동금액
 	@Column(name = "amount", nullable = false)
 	private Integer amount;
 
+	// 최종금액
 	@Column(name = "balance", nullable = false)
 	private Integer balance;
 
 	@Column(name = "type", nullable = false)
 	private String type;
 
-	 
 	public MileageHistory(Integer amount, Integer balance, String type, User user) {
 		this.amount = amount;
 		this.balance = balance;
