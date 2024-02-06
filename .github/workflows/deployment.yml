@@ -17,15 +17,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up JDK 11
+    - name: Configuration Injection
       run :
         source /root/pull_config.sh
-        find . -type d -name "src"
-        exit 1
+
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile.linux --tag dokebi-was:blue 
         docker build . --file Dockerfile.linux --tag dokebi-was:green
+
     - name: Tag the Docker image
       run: |
         docker tag dokebi-was:blue ${{ secrets.BLUE_IMAGE }}
@@ -37,6 +37,7 @@ jobs:
       run: |
         docker push ${{ secrets.BLUE_IMAGE }}
         docker push ${{ secrets.GREEN_IMAGE }}
+
   Run_Blue_on_Kakao :
     runs-on: self-hosted
     needs: Push_to_Kakao
@@ -46,6 +47,8 @@ jobs:
       run: |
         source /root/credentials.sh
         ssh -A -J bastion blue 'bash -s' < /root/deploying.sh
+
+        
   Health_Check :
     runs-on: self-hosted
     needs: Run_Blue_on_Kakao
