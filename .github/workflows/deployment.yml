@@ -43,7 +43,7 @@ jobs:
     steps:
     - name: Deploy to Blue zz
       run: |
-        ssh -A -J bastion blue 'bash -s' < deploying.sh
+        ssh -A -J bastion blue 'bash -s' < /root/deploying.sh
 
   Health_Check :
     runs-on: self-hosted
