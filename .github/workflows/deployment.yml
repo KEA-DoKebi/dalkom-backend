@@ -46,23 +46,14 @@ jobs:
     - name: Deploy to Blue
       run: |
         source /root/credentials.sh
-        ssh -A -J bastion blue 'bash -s' < /root/deploying.sh
+        ssh -A -J bastion blue 'bash -s' < /root/deploying-blue.sh
 
   Run_Green_on_Kakao :
     runs-on: self-hosted
     needs: Run_Blue_on_Kakao
         
     steps:
-    - name: Deploy to Green
-      env :
-        API_URL: ${{ secrets.API_URL }}
-        TOKEN: ${{ secrets.TOKEN }}
-      run: |
-        ssh -A -J ubuntu@${{ secrets.BASTION_IP }} -p ${{ secrets.BASTION_PORT }} ubuntu@${{ secrets.WAS_GREEN_IP }}
-        docker pull ${{ secrets.GREEN_IMAGE }}
-        docker stop spring_green 2>/dev/null || true
-        export INFISICAL_API_URL= $API_URL
-        export INFISICAL_TOKEN = $TOKEN
-        infisical export --path="/DB"  --format=dotenv > .env
-        python string_to_num.py
-        docker run --name spring_green --rm -itd -p ${{ secrets.WAS_INNER_PORT }}:${{ secrets.WAS_GREEN_PORT }} --env-file .env ${{ secrets.GREEN_IMAGE }}
+      - name: Deploy to Green
+        run: |
+          source /root/credentials.sh
+          ssh -A -J bastion green 'bash -s' < /root/deploying-green.sh
