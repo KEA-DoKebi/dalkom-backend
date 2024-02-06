@@ -4,11 +4,19 @@ COPY gradle gradle
 COPY build.gradle .
 COPY settings.gradle .
 COPY src src
+COPY elastic-apm-agent-1.44.0.jar .
 RUN chmod +x ./gradlew
 RUN sed -i 's/\r$//' gradlew
 RUN chmod +x gradlew
 RUN ./gradlew bootJar
 FROM openjdk:11-slim
 COPY --from=builder build/libs/*.jar dalkom.jar
+COPY --from=builder elastic-apm-agent-1.44.0.jar elastic-apm-agent-1.44.0.jar
+ARG apm_service_name
+ENV APM_SERVICE_NAME=${apm_service_name}
+ARG apm_secret_token
+ENV APM_SECRET_TOKEN=${apm_secret_token}
+ARG apm_server_url
+ENV APM_SERVER_URL=${apm_server_url}
 VOLUME /tmp
-ENTRYPOINT ["java", "-jar", "dalkom.jar", "-Dspring.profiles.active=prod", "-Dspring.config.location=classpath:./src/main/resources/application.yml,file:./src/main/resources/application.yml"]
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "-javaagent:/elastic-apm-agent-1.44.0.jar", "-Delastic.apm.secret_token=$APM_SECRET_TOKEN", "-Delastic.apm.server_url=$APM_SERVER_URL", "-Delastic.apm.environment=dalkom", "-Delastic.apm.application_packages=com.dokebi", "dalkom.jar"]
