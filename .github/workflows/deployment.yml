@@ -41,8 +41,9 @@ jobs:
     needs: Push_to_Kakao
         
     steps:
-    - name: Deploy to Blue zz
+    - name: Deploy to Blue
       run: |
+        source /root/credentials.sh
         ssh -A -J bastion blue 'bash -s' < /root/deploying.sh
 
   Health_Check :
