@@ -24,6 +24,7 @@ public class ChatGptResponse {
 
 	@Getter
 	@Setter
+	@Generated
 	public static class Usage {
 		@JsonProperty("prompt_tokens")
 		private int promptTokens;
@@ -35,6 +36,7 @@ public class ChatGptResponse {
 
 	@Getter
 	@Setter
+	@Generated
 	public static class Choice {
 		private int index;
 		private ChatGptMessage message;

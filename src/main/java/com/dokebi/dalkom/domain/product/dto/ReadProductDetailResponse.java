@@ -5,6 +5,7 @@ import java.util.List;
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Generated
 public class ReadProductDetailResponse {
 	private Long categorySeq;
 	private String name;
@@ -24,6 +26,7 @@ public class ReadProductDetailResponse {
 	private List<StockListDto> stockList;
 	private List<String> productImageUrlList;
 
+	@Generated
 	public ReadProductDetailResponse(ReadProductDetailDto productDetailDTO,
 		List<StockListDto> stockList, List<String> productImageUrlList) {
 		this.categorySeq = productDetailDTO.getCategorySeq();
@@ -36,6 +39,7 @@ public class ReadProductDetailResponse {
 		this.productImageUrlList = productImageUrlList;
 	}
 
+	@Generated
 	public ReadProductDetailResponse(String name, Integer price) {
 		this.name = name;
 		this.price = price;
