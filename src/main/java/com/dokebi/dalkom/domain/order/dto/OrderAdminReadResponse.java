@@ -5,12 +5,14 @@ import java.time.LocalDateTime;
 import com.dokebi.dalkom.common.magicnumber.OrderState;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@Generated
 public class OrderAdminReadResponse {
 	private Long ordrSeq;
 	private LocalDateTime ordrDate;

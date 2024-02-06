@@ -10,10 +10,12 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+@Generated
 public class JwtHandler {
 	private String type = "Bearer ";
 

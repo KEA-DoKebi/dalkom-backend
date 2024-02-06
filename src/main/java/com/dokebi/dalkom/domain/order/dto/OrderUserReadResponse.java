@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.dokebi.dalkom.common.magicnumber.OrderState;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Generated
 public class OrderUserReadResponse {
 
 	//상품의 값과 개수 외
