@@ -12,7 +12,7 @@ import lombok.Setter;
 public class UserFactory {
 
 	public static User createMockUser() {
-		return new User("empId001", // empId
+		return new User("DKT123456789", // empId
 			"password", // password
 			"김철수", // name
 			"chulsu@example.com", // email
@@ -24,7 +24,7 @@ public class UserFactory {
 	}
 
 	public static User createMockUserWithInsufficientMileage() {
-		return new User("empId002", // empId
+		return new User("DKT123456788", // empId
 			"password", // password
 			"이영희", // name
 			"younghi@example.com", // email
