@@ -12,8 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
 import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
 
-import lombok.Generated;
-
 @Service
 
 public class JiraService {

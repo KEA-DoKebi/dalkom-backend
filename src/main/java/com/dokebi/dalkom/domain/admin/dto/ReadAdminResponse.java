@@ -5,7 +5,6 @@ import com.dokebi.dalkom.domain.admin.entity.Admin;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -5,7 +5,6 @@ import java.util.List;
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

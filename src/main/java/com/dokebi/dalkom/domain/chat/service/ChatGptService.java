@@ -15,10 +15,7 @@ import com.dokebi.dalkom.domain.chat.dto.ChatGptResponse;
 import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
 import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
 
-import lombok.Generated;
-
 @Service
-
 public class ChatGptService {
 
 	private static final String API_URL = "https://api.openai.com/v1/chat/completions";

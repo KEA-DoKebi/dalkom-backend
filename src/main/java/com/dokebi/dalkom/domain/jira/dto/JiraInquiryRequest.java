@@ -1,7 +1,6 @@
 package com.dokebi.dalkom.domain.jira.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

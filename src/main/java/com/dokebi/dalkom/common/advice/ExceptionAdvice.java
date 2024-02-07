@@ -43,12 +43,10 @@ import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 
-import lombok.Generated;
 import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
-
 public class ExceptionAdvice {
 
 	// 공통 권한

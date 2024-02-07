@@ -11,7 +11,6 @@ import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.OrderDetailNotFoundException;
 import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 
 @Service

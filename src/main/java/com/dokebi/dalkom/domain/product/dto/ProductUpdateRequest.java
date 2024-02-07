@@ -11,7 +11,6 @@ import javax.validation.constraints.Positive;
 import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
 
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

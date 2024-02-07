@@ -5,9 +5,6 @@ import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
-import lombok.Generated;
-
-@Generated
 public class CustomAuthenticationToken extends AbstractAuthenticationToken {
 	private CustomUserDetails principal;
 

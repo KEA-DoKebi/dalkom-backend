@@ -16,7 +16,6 @@ import com.dokebi.dalkom.domain.user.entity.User;
 
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +25,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "review")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Generated
 public class Review extends EntityDate {
 
 	@Id

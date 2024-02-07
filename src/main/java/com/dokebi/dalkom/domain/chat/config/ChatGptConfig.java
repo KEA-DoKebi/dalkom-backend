@@ -9,10 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import lombok.Generated;
-
 @Configuration
-
 public class ChatGptConfig {
 	@Bean
 	@Qualifier("openaiRestTemplate")

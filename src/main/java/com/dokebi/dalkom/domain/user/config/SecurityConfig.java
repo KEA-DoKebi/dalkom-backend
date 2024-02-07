@@ -16,12 +16,10 @@ import com.dokebi.dalkom.domain.user.config.security.CustomUserService;
 import com.dokebi.dalkom.domain.user.config.security.JwtAuthenticationFilter;
 import com.dokebi.dalkom.domain.user.service.TokenService;
 
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
-
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final TokenService tokenService;

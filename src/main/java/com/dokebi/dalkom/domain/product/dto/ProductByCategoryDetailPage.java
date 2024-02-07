@@ -3,7 +3,6 @@ package com.dokebi.dalkom.domain.product.dto;
 import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
 
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

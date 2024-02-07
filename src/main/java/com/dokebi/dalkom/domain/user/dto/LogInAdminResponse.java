@@ -3,14 +3,12 @@ package com.dokebi.dalkom.domain.user.dto;
 import com.dokebi.dalkom.common.magicnumber.AdminRole;
 
 import lombok.AllArgsConstructor;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Generated
 public class LogInAdminResponse {
 
 	private String accessToken;

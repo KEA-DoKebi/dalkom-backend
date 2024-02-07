@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import com.dokebi.dalkom.common.EntityDate;
 
 import lombok.AccessLevel;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

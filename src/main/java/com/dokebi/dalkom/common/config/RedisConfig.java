@@ -55,13 +55,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Configuration
 @EnableRedisRepositories // Redis를 사용한다고 명시해주는 어노테이션
-
 public class RedisConfig {
 	// Redis 서버와의 연결 정보를 저장하는 객체
 	private final RedisProperties redisProperties;
