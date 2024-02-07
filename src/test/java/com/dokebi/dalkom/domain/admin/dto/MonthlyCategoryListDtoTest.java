@@ -1,12 +1,14 @@
 package com.dokebi.dalkom.domain.admin.dto;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class MonthlyCategoryListDtoTest {
 	@Test
-	void MonthlyCategoryListDtoGetter() {
+	@DisplayName("monthlyCategoryListDtoGetter 테스트")
+	void monthlyCategoryListDtoGetterTest() {
 		// Test data
 		Long categorySeq = 1L;
 		String name = "CategoryName";
@@ -22,7 +24,8 @@ public class MonthlyCategoryListDtoTest {
 	}
 
 	@Test
-	void MonthlyCategoryListDtoSetter() {
+	@DisplayName("MonthlyCategoryListDtoSetter 테스트")
+	void monthlyCategoryListDtoSetter() {
 		// Test data
 		Long categorySeq = 1L;
 		String name = "CategoryName";
@@ -43,7 +46,8 @@ public class MonthlyCategoryListDtoTest {
 	}
 
 	@Test
-	void MonthlyCategoryListDtoEqualsAndHashCode() {
+	@DisplayName("monthlyCategoryListDtoEqualsAndHashCode 테스트")
+	void monthlyCategoryListDtoEqualsAndHashCode() {
 		// Test data
 		Long categorySeq = 1L;
 		String name = "CategoryName";
@@ -61,7 +65,8 @@ public class MonthlyCategoryListDtoTest {
 	}
 
 	@Test
-	void MonthlyCategoryListDtoAllArgsConstructor() {
+	@DisplayName("monthlyCategoryListDtoAllArgsConstructor 테스트")
+	void monthlyCategoryListDtoAllArgsConstructor() {
 		// Test data
 		Long categorySeq = 1L;
 		String name = "CategoryName";
@@ -77,7 +82,8 @@ public class MonthlyCategoryListDtoTest {
 	}
 
 	@Test
-	void MonthlyCategoryListDtoAllNoArgsConstructor() {
+	@DisplayName("monthlyCategoryListDtoAllNoArgsConstructor 테스트")
+	void monthlyCategoryListDtoAllNoArgsConstructor() {
 		// Create object using NoArgsConstructor
 		MonthlyCategoryListDto dto = new MonthlyCategoryListDto();
 

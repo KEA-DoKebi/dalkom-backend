@@ -72,7 +72,6 @@ class OrderServiceTest {
 	private MileageService mileageService;
 	@Mock
 	private UserService userService;
-
 	@Mock
 	private OrderCartService orderCartService;
 

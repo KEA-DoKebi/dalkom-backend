@@ -2,7 +2,6 @@ package com.dokebi.dalkom.domain.inquiry.service;
 
 import java.util.Optional;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -12,11 +11,9 @@ import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
-import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.category.entity.Category;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.category.repository.CategoryRepository;
-import com.dokebi.dalkom.domain.category.service.CategoryService;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqCreateRequest;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqReadListResponse;
 import com.dokebi.dalkom.domain.inquiry.dto.FaqReadOneResponse;
@@ -31,11 +28,10 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FaqService {
+	private static final Long FAQ_CATEGORY_SEQ = 38L;
 	private final FaqRepository faqRepository;
 	private final AdminRepository adminRepository;
 	private final CategoryRepository categoryRepository;
-
-	private static final long FAQ_CATEGORY_SEQ = 38L;
 
 	// FAQ-001 (FAQ 상세 조회)
 	public FaqReadOneResponse readFaqByInquirySeq(Long faqSeq) {

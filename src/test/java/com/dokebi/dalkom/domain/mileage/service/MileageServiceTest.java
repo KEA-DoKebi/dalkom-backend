@@ -24,21 +24,18 @@ import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.repository.MileageHistoryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.service.UserService;
+import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 class MileageServiceTest {
-
 	@InjectMocks
 	private MileageService mileageService;
-
 	@Mock
 	private MileageHistoryRepository mileageHistoryRepository;
-
 	@Mock
-	private UserService userService;
+	private UserRepository userRepository;
 
 	@BeforeEach
-	void setUp() {
+	void beforeEach() {
 		MockitoAnnotations.initMocks(this);
 	}
 
@@ -90,6 +87,7 @@ class MileageServiceTest {
 		String type = "2";
 
 		User user = createMockUser(); // 적절한 값으로 초기화
+		user.setUserSeq(userSeq);
 		user.setMileage(500); // 적절한 초기 마일리지 값으로 설정
 
 		Integer totalMileage = user.getMileage() + amount;
@@ -104,8 +102,6 @@ class MileageServiceTest {
 
 		// Then
 		verify(mileageHistoryRepository).save(any(MileageHistory.class));
-
 	}
-
 }
 

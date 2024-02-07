@@ -43,15 +43,22 @@ public class ProductOptionServiceTest {
 		assertEquals(responseList, resultList);
 	}
 
-	// @Test
-	// void readOptionDetailListTest() {
-	// 	// Given
-	// 	OptionDetailListResponse response1 = new OptionDetailListResponse(1L, "남성");
-	// 	OptionDetailListResponse response2 = new OptionDetailListResponse(2L, "여성");
-	// 	List<OptionDetailListResponse> responseList = Arrays.asList(response1, response2);
-	//
-	// 	when(productOptionRepository.findDetailByOptionCode(anyString())).thenReturn(responseList);
-	// }
+	@Test
+	void readOptionDetailListTest() {
+		// Given
+		String optionCode = "OP1";
+		OptionDetailListResponse response1 = new OptionDetailListResponse(1L, "남성");
+		OptionDetailListResponse response2 = new OptionDetailListResponse(2L, "여성");
+		List<OptionDetailListResponse> responseList = Arrays.asList(response1, response2);
+
+		when(productOptionRepository.findDetailByOptionCode(optionCode)).thenReturn(responseList);
+
+		// When
+		productOptionService.readOptionDetailList(optionCode);
+
+		// Then
+		verify(productOptionRepository).findDetailByOptionCode(optionCode);
+	}
 
 	@Test
 	void readProductOptionByPrdtOptionSeqTest() {

@@ -23,8 +23,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 
 	Optional<Admin> findByAdminSeq(Long adminSeq);
 
-	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
-		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) FROM Admin a")
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
+		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) FROM Admin a")
 	Page<ReadAdminResponse> findAllAdminList(Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
@@ -34,54 +34,45 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 		@Param("name") String name,
 		Pageable pageable);
 
-	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
-		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
-		"FROM Admin a WHERE (a.adminId LIKE CONCAT('%', :adminId, '%')) ")
-	Page<ReadAdminResponse> findAdminListByAdminId(
-		@Param("adminId") String adminId,
-		Pageable pageable);
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
+		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) "
+		+ "FROM Admin a WHERE (a.adminId LIKE CONCAT('%', :adminId, '%')) ")
+	Page<ReadAdminResponse> findAdminListByAdminId(@Param("adminId") String adminId, Pageable pageable);
 
-	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
-		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
-		"FROM Admin a WHERE (a.depart LIKE CONCAT('%', :depart, '%')) ")
-	Page<ReadAdminResponse> findAdminListByDepart(
-		@Param("depart") String depart,
-		Pageable pageable);
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
+		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) "
+		+ "FROM Admin a WHERE (a.depart LIKE CONCAT('%', :depart, '%')) ")
+	Page<ReadAdminResponse> findAdminListByDepart(@Param("depart") String depart, Pageable pageable);
 
-	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse(" +
-		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
-		"FROM Admin a WHERE (a.nickname LIKE CONCAT('%', :nickname, '%')) ")
-	Page<ReadAdminResponse> findAdminListByNickname(
-		@Param("nickname") String nickname,
-		Pageable pageable);
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
+		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) "
+		+ "FROM Admin a WHERE (a.nickname LIKE CONCAT('%', :nickname, '%')) ")
+	Page<ReadAdminResponse> findAdminListByNickname(@Param("nickname") String nickname, Pageable pageable);
 
 	@Query("SELECT sum(o.totalPrice) FROM Order o")
 	Integer findTotalPrice();
 
 	@Query("SELECT sum(o.totalPrice) FROM Order o "
-		+ "WHERE DATE_FORMAT(o.createdAt, '%Y-%m') = DATE_FORMAT(NOW() , '%Y-%m')")
+		+ "WHERE DATE_FORMAT(o.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')")
 	Integer findTotalMonthlyPrice();
 
 	@Query("SELECT sum(o.totalPrice) FROM Order o "
-		+ "WHERE DATE_FORMAT(o.createdAt, '%Y-%m-%d') = DATE_FORMAT(NOW() , '%Y-%m-%d')")
+		+ "WHERE DATE_FORMAT(o.createdAt, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')")
 	Integer findTotalDailyPrice();
 
-	@Query(
-		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto("
-			+ "DATE_FORMAT(o.createdAt, '%Y-%m'), SUM(o.totalPrice)) "
-			+ "FROM Order o "
-			+ "GROUP BY DATE_FORMAT(o.createdAt, '%Y-%m')")
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto("
+		+ "DATE_FORMAT(o.createdAt, '%Y-%m'), SUM(o.totalPrice)) "
+		+ "FROM Order o "
+		+ "GROUP BY DATE_FORMAT(o.createdAt, '%Y-%m')")
 	List<MonthlyPriceListDto> findMonthlyPriceList();
 
-	@Query(
-		"SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto("
-			+ "DATE_FORMAT(od.createdAt, '%Y-%m'), p.productSeq "
-			+ ", max(p.name), max(p.company), max(p.price), COUNT(*), sum(od.amount), (sum(od.amount) * p.price)) "
-			+ " FROM OrderDetail od "
-			+ "LEFT JOIN od.product p "
-			+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW() , '%Y-%m') "
-			+ "GROUP by DATE_FORMAT(od.createdAt, '%Y-%m') , p.productSeq "
-			+ "ORDER by sum(od.amount) DESC ")
+	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto("
+		+ " DATE_FORMAT(od.createdAt, '%Y-%m'), p.productSeq, max(p.name), max(p.company), "
+		+ " max(p.price), COUNT(*), sum(od.amount), (sum(od.amount) * p.price)) "
+		+ " FROM OrderDetail od LEFT JOIN od.product p "
+		+ " WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') "
+		+ " GROUP by DATE_FORMAT(od.createdAt, '%Y-%m') , p.productSeq "
+		+ " ORDER by sum(od.amount) DESC ")
 	Page<MonthlyProductListDto> findMonthlyProductList(Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto("
@@ -91,8 +82,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 		+ "LEFT JOIN od.product.category c "
 		+ "LEFT JOIN Category c2 "
 		+ "on c.parentSeq = c2.categorySeq "
-		+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW()  , '%Y-%m') "
+		+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') "
 		+ "GROUP by c.parentSeq")
 	List<MonthlyCategoryListDto> findMonthlyCategoryList();
-
 }

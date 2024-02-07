@@ -74,7 +74,7 @@ public class OrderCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("CART-001 (특정 유저의 장바구니 리스트 조회) 테스트")
+	@DisplayName("CART-001 (특정 유저의 장바구니 리스트 조회)")
 	void readOrderCartListTest() throws Exception {
 		// Given
 		Long userSeq = 1L;
@@ -90,7 +90,7 @@ public class OrderCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("CART-002 (특정 유저의 장바구니에 상품 담기) 테스트")
+	@DisplayName("CART-002 (특정 유저의 장바구니에 상품 담기)")
 	void createOrderCartTest() throws Exception {
 		// Given
 		Long userSeq = 1L;
@@ -106,7 +106,7 @@ public class OrderCartControllerTest {
 	}
 
 	@Test
-	@DisplayName("CART-003 (특정 유저의 장바구니에서 상품 삭제) 테스트")
+	@DisplayName("CART-003 (특정 유저의 장바구니에서 상품 삭제)")
 	void deleteOrderCartTest() throws Exception {
 		// Given
 		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();

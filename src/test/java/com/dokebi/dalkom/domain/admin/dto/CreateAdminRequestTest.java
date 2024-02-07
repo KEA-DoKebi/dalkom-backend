@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.admin.entity.Admin;
@@ -26,6 +27,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation 테스트")
 	void createAdminRequestTestValidation() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory.createCreateAdminRequest();
@@ -39,6 +41,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_adminId_NotNull 테스트")
 	void createAdminRequestTestValidation_adminId_NotNull() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -63,6 +66,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_adminId_NotBlank 테스트")
 	void createAdminRequestTestValidation_adminId_NotBlank() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -86,6 +90,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_password_NotNull 테스트")
 	void createAdminRequestTestValidation_password_NotNull() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -110,6 +115,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_password_NotBlank 테스트")
 	void createAdminRequestTestValidation_password_NotBlank() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -133,6 +139,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_nickname_NotNull 테스트")
 	void createAdminRequestTestValidation_nickname_NotNull() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -157,6 +164,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_nickname_NotBlank 테스트")
 	void createAdminRequestTestValidation_nickname_NotBlank() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -180,6 +188,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_name_NotNull 테스트")
 	void createAdminRequestTestValidation_name_NotNull() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -204,6 +213,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_name_NotBlank 테스트")
 	void createAdminRequestTestValidation_name_NotBlank() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -228,6 +238,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_depart_NotNull 테스트")
 	void createAdminRequestTestValidation_depart_NotNull() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -252,6 +263,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestTestValidation_depart_NotBlank 테스트")
 	void createAdminRequestTestValidation_depart_NotBlank() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory
@@ -276,6 +288,7 @@ public class CreateAdminRequestTest {
 	}
 
 	@Test
+	@DisplayName("createAdminRequestToEntityTest 테스트")
 	void createAdminRequestToEntityTest() {
 		// Given
 		CreateAdminRequest request = CreateAdminRequestFactory.createCreateAdminRequest(
