@@ -1,0 +1,57 @@
+name: Continuous Deployment
+
+on:
+  pull_request :
+    branches:
+      - prod
+    types: [closed]
+
+jobs:
+  Push_to_Kakao:
+    runs-on: self-hosted
+    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Configuration Injection
+      run :
+        source /root/pull_config.sh
+
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile.blue --tag dokebi-was:blue 
+        docker build . --file Dockerfile.green --tag dokebi-was:green
+
+    - name: Tag the Docker image
+      run: |
+        docker tag dokebi-was:blue ${{ secrets.BLUE_IMAGE }}
+        docker tag dokebi-was:green ${{ secrets.GREEN_IMAGE }}
+    - name: Login to Docker Registry
+      run: docker login dokebi-shop.kr-gov-central-1.kcr.dev --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+    - name: Push the Docker image
+      run: |
+        docker push ${{ secrets.BLUE_IMAGE }}
+        docker push ${{ secrets.GREEN_IMAGE }}
+
+  Run_Blue_on_Kakao :
+    runs-on: self-hosted
+    needs: Push_to_Kakao
+        
+    steps:
+    - name: Deploy to Blue
+      run: |
+        source /root/credentials.sh
+        ssh -A -J bastion blue 'bash -s' < /root/deploying-blue.sh
+
+  Run_Green_on_Kakao :
+    runs-on: self-hosted
+    needs: Run_Blue_on_Kakao
+        
+    steps:
+      - name: Deploy to Green
+        run: |
+          source /root/credentials.sh
+          ssh -A -J bastion green 'bash -s' < /root/deploying-green.sh

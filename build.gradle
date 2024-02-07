@@ -1,56 +1,89 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.6.5'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '2.6.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.sonarqube' version "4.0.0.2929"
+    id 'jacoco'
 }
 
 group = 'com.dokebi'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '11'
+    sourceCompatibility = '11'
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 ext {
-	set('springCloudVersion', "2021.0.8")
+    set('springCloudVersion', "2021.0.8")
 }
 
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    testImplementation 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
-	testImplementation 'org.mariadb.jdbc:mariadb-java-client'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
+    testImplementation 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'mysql:mysql-connector-java'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+    implementation 'io.jsonwebtoken:jjwt:0.9.1' // jwt
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
-bootJar{
-	archivesBaseName = 'dalkom'
-	archiveFileName = 'dalkom.jar'
+bootJar {
+    archivesBaseName = 'dalkom'
+    archiveFileName = 'dalkom.jar'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "KEA-DoKebi_dalkom-backend_AY0ILkkA7nQIqqNyuD-r"
+        property "sonar.host.url", "https://b3a1-203-249-127-39.ngrok-free.app"
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+test {
+    ignoreFailures = true
+    finalizedBy jacocoTestReport // 테스트 후 JaCoCo 리포트 생성
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
 }
