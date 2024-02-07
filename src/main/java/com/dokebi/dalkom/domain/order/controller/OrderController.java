@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDirectCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.service.OrderDetailService;
@@ -124,5 +125,12 @@ public class OrderController {
 	public Response readOrderListByAdminSearch(@RequestParam(required = false) String receiverName,
 		@RequestParam(required = false) String name, Pageable pageable) {
 		return Response.success(orderService.readOrderListByAdminSearch(receiverName, name, pageable));
+	}
+
+	// ORDER-014 (직접결제 하기)
+	@PostMapping("/api/order/direct")
+	@ResponseStatus(HttpStatus.OK)
+	public Response createDirectOrder(@LoginUser Long userSeq, @Valid @RequestBody OrderDirectCreateRequest request) {
+		return Response.success(orderService.createDirectOrder(userSeq, request));
 	}
 }

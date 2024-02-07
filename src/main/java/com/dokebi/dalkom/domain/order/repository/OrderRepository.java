@@ -74,7 +74,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 	// ORDER-013 (관리자 주문 목록 검색) - 주문자 이름 에서 사용하는 SQL
 	@Query("SELECT new com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse( "
 		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) "
-		+ "FROM Order o JOIN o.orderDetailList od "
+		+ "FROM Order o "
+		+ "JOIN o.orderDetailList od "
 		+ "WHERE o.user.name LIKE CONCAT('%', :name, '%')"
 		+ "GROUP BY o.ordrSeq, od.product.productSeq "
 		+ "ORDER BY o.createdAt DESC ")
