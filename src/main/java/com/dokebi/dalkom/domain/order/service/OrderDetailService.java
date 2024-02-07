@@ -14,9 +14,8 @@ import com.dokebi.dalkom.domain.order.repository.OrderDetailRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
-
 public class OrderDetailService {
 	private final OrderDetailRepository orderDetailRepository;
 
