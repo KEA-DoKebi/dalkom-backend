@@ -1,6 +1,6 @@
 name: Continuous Deployment
 
-on:
+on :
   push :
     branches :
       - prod
