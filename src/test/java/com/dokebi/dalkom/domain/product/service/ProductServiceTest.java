@@ -87,6 +87,19 @@ public class ProductServiceTest {
 	}
 
 	@Test
+	@DisplayName("상위 카테고리 상품 리스트 조회 테스트 - 결과없음")
+	void readProductListByCategoryFailTest() {
+		// Given
+		Long categorySeq = 1L;
+		given(productRepository.findProductListByCategory(eq(categorySeq), eq(pageable))).willReturn(
+			new PageImpl<>(List.of()));
+
+		// When / Then
+		assertThrows(ProductNotFoundException.class,
+			() -> productService.readProductListByCategory(categorySeq, pageable));
+	}
+
+	@Test
 	@DisplayName("상품 상세 정보 조회 테스트")
 	void readProductTest() {
 		// Given
@@ -239,7 +252,7 @@ public class ProductServiceTest {
 
 	@Test
 	@DisplayName("상품 리스트 검색")
-	void readProductListSearch_Success() {
+	void readProductListSearchByNameTest() {
 		// Given
 		given(productRepository.findProductListSearchByName(anyString(), any(Pageable.class)))
 			.willReturn(new PageImpl<>(List.of()));
