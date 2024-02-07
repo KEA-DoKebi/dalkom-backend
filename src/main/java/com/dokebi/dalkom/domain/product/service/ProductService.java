@@ -221,6 +221,14 @@ public class ProductService {
 			positiveReviewSummery, negativeReviewSummery);
 	}
 
+	// PRODUCT-011 상품 리스트 검색 메인 페이지
+	public Page<ProductMainResponse> readProductListSearchMain(String name, Pageable pageable) {
+		return productRepository.findProductListSearchUserByName(name, pageable);
+		// Page 객체에서 List 추출 후 Map에 추가
+	}
+
+	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
+
 	/** 다른 Domain Service에서 사용할 메소드 **/
 	public Product readProductByProductSeq(Long productSeq) {
 		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
