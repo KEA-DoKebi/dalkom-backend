@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ProductByCategoryDetailPage {
 	private Long productSeq;
 	private String name;

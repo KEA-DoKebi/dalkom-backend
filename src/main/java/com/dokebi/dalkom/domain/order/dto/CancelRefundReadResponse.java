@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class CancelRefundReadResponse {
 	private String productName;
 	private String imageUrl;

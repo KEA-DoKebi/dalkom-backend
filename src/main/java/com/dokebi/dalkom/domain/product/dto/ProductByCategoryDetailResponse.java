@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ProductByCategoryDetailResponse {
 	private String categoryName;
 	private Page<ProductByCategoryDetailPage> page;

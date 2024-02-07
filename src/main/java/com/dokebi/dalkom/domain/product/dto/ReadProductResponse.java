@@ -13,7 +13,6 @@ import lombok.Setter;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ReadProductResponse {
 	private Long productSeq;
 	private String name;

@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ReviewReadResponse {
 	private String productName;
 	private String imageUrl;

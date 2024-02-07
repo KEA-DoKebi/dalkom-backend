@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 // 옵션코드와 이름을 리스트의 형태로 같이 반환하기 위한 DTO
 public class OptionCodeResponse {
 	private String optionCode;

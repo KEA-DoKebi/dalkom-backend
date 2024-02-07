@@ -21,7 +21,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "prdtImage")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 public class ProductImage extends EntityDate {
 
 	@Id

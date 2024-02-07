@@ -14,7 +14,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-
 public class ReadProductDetailResponse {
 	private Long categorySeq;
 	private String name;

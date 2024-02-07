@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ReceiverDetailDto {
 	private String receiverName;
 	private String receiverMobileNum;

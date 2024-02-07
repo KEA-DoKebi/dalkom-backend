@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ProductUpdateRequest {
 	@NotNull(message = "ProductUpdateRequest categorySeq NotNull 에러")
 	@Positive(message = "ProductUpdateRequest categorySeq Positive 에러")
