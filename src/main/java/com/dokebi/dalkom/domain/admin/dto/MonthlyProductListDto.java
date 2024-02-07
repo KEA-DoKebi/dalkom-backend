@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MonthlyProductListDto {
-	public String Month;
+	public String month;
 	public Long productSeq;
 	public String name;
 	public String company;

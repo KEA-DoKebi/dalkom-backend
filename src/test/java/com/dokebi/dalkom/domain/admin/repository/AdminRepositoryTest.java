@@ -26,7 +26,7 @@ import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AdminRepositoryTest {
+class AdminRepositoryTest {
 	@Autowired
 	private AdminRepository adminRepository;
 	@Autowired
