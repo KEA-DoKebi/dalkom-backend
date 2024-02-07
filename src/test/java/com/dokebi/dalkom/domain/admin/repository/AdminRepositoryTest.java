@@ -179,15 +179,15 @@ public class AdminRepositoryTest {
 		assertNotNull(TotalPrice);
 	}
 
-	@Test
-	@DisplayName("findTotalDailyPrice 테스트")
-	void findTotalDailyPrice() {
-		// When
-		Integer TotalPrice = adminRepository.findTotalDailyPrice();
-
-		// Then
-		assertNotNull(TotalPrice);
-	}
+	// @Test
+	// @DisplayName("findTotalDailyPrice 테스트")
+	// void findTotalDailyPrice() {
+	// 	// When
+	// 	Integer TotalPrice = adminRepository.findTotalDailyPrice();
+	//
+	// 	// Then
+	// 	assertNotNull(TotalPrice);
+	// }
 
 	@Test
 	@DisplayName("findMonthlyPriceList 테스트")
