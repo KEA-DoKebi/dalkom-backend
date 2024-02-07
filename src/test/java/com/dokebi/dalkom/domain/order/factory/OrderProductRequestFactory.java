@@ -9,7 +9,15 @@ public class OrderProductRequestFactory {
 			2L,        // productOptionSeq
 			3L,
 			3         // productAmount
-			 
+
 		);
 	}
+
+	public static OrderProductRequest createOrderProductRequest(
+		Long productSeq, Long productOptionSeq, Long orderCartSeq, Integer productAmount) {
+		return new OrderProductRequest(
+			productSeq, productOptionSeq, orderCartSeq, productAmount
+		);
+	}
+
 }

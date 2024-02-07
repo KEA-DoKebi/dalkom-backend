@@ -35,7 +35,7 @@ import com.dokebi.dalkom.domain.inquiry.repository.FaqRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
 
 @ExtendWith(MockitoExtension.class)
-public class FaqServiceTest {
+class FaqServiceTest {
 	private static final Long FAQ_CATEGORY_SEQ = 38L;
 	@InjectMocks
 	private FaqService faqService;

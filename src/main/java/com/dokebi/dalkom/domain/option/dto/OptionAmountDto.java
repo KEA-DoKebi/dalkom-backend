@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-
 // 옵션과 재고를 List로 다루기 위한 DTO
 public class OptionAmountDto {
 

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class FaqReadOneResponseTest {
+class FaqReadOneResponseTest {
 	@Test
 	@DisplayName("Getter 및 Setter 테스트")
 	void FaqReadOneResponseGetterSetterTest() {

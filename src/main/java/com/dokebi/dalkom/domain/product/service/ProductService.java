@@ -142,7 +142,7 @@ public class ProductService {
 		return categoryMap;
 	}
 
-	// PRODUCT-008 (특정 상품 정보 수정)
+	// PRODUCT-007 (특정 상품 정보 수정)
 	@Transactional
 	public void updateProduct(Long productSeq, ProductUpdateRequest request) {
 		Product product = productRepository.findProductByProductSeq(productSeq)

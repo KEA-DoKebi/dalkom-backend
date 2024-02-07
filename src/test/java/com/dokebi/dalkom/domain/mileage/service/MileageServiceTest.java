@@ -55,7 +55,7 @@ class MileageServiceTest {
 	}
 
 	@Test
-	@DisplayName("유저 별 마일리지 히스토리 조회 서비스")
+	@DisplayName("유저별 마일리지 내역 조회 서비스")
 	void readMileageHistoryByUserSeqTest() {
 		// Mock 데이터 설정
 		Long userSeq = 1L;
@@ -80,7 +80,7 @@ class MileageServiceTest {
 	}
 
 	@Test
-	@DisplayName("관리자가 충전 승인하는경우 마일리지 히스토리 내역에 추가 ")
+	@DisplayName("관리자가 충전을 승인하는 경우 마일리지 내역을 추가")
 	void createMileageHistoryAndUpdateUserTest() {
 		Long userSeq = 1L;
 		Integer amount = 1000;

@@ -1,4 +1,4 @@
 package com.dokebi.dalkom.domain.order.exception;
 
-public class OrderNotFoundException extends RuntimeException{
+public class OrderNotFoundException extends RuntimeException {
 }
