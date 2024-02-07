@@ -26,7 +26,6 @@ import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
-import com.dokebi.dalkom.domain.order.dto.OrderDetailSimpleResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderDirectCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDirectProductRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
@@ -236,49 +235,6 @@ public class OrderService {
 		} else {
 			throw new MileageLackException();
 		}
-	}
-
-	// 주문하기
-	public List<OrderPageDetailDto> readProductDetail(List<OrderPageDetailDto> orderList) {
-		List<OrderPageDetailDto> result = new ArrayList<>();
-		orderList.forEach(order -> {
-			// 선택한 상품
-			Long productSeq = order.getProductSeq();
-			// 선택한 옵션
-			Long optionSeq = order.getProductOptionSeq();
-			// 선택한 개수
-			Integer productAmount = order.getProductAmount();
-			// 재고 확인
-			productStockService.checkStock(productSeq, optionSeq, productAmount);
-
-			// 사용자가 주문한 상품에 대한 정보 조회
-			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
-
-			//option detail 조회
-
-			String optionDetail = productOptionService.readOptionDetailByPdtOptionSeq(optionSeq);
-
-			// OrderPageDetailDto로 변환
-			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto(productSeq, optionSeq, productAmount,
-				productInfo.getName(), productInfo.getPrice(), optionDetail,
-				productInfo.getPrice() * order.getProductAmount());
-
-			result.add(orderPageDetailDTO);
-		});
-
-		return result;
-	}
-
-	// 사용자별 주문 전체 조회
-	public Page<OrderUserReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
-		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
-	}
-
-	 
-
-	// 주문 전체 조회
-	public Page<OrderAdminReadResponse> readOrderByAll(Pageable pageable) {
-		return orderRepository.findAllOrderList(pageable);
 	}
 
 	// 주문 상태 수정
