@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class JiraInquiryRequest {
-	private String summary;
+public class JiraInquiryAnswerRequest {
 	private String description;
 	private String nickname;
-	private Long inquirySeq;
-	private String InquiryCategory;
+	private String jiraToken;
 }
