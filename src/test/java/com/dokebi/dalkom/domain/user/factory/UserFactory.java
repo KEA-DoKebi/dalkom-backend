@@ -19,7 +19,7 @@ public class UserFactory {
 			"서울시 강남구", // address
 			LocalDate.now(), // joinedAt
 			"chulsu", // nickname
-			30000 // mileage
+			60000 // mileage
 		);
 	}
 

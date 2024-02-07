@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+
 public class SignService {
 	private final TokenService tokenService;
 	private final RedisService redisService;

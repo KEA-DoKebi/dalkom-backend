@@ -24,6 +24,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "prdtOption")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class ProductOption extends EntityDate {
 
 	@Id
