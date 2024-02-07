@@ -20,6 +20,7 @@ import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderDirectCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.service.OrderDetailService;
 import com.dokebi.dalkom.domain.order.service.OrderService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 
@@ -31,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderController {
 	private final OrderService orderService;
+	private final OrderDetailService orderDetailService;
 
 	// ORDER-001 (사용자별 전체 주문 조회)
 	@GetMapping("/api/order/user")
@@ -67,7 +69,7 @@ public class OrderController {
 		return Response.success(orderService.createOrder(userSeq, request));
 	}
 
-	//  ORDER-006 (특정 주문 상태 수정)
+	// ORDER-006 (특정 주문 상태 수정)
 	@PutMapping("/api/order/{orderSeq}/state")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateOrderState(@PathVariable("orderSeq") Long orderSeq,
@@ -76,13 +78,7 @@ public class OrderController {
 		return Response.success();
 	}
 
-	// // ORDER-007 (사용자 주문 검색)
-	// @GetMapping("/api/order/search")
-	// @ResponseStatus(HttpStatus.OK)
-	// public Response readOrderListBySearch(@RequestParam(required = false) String receiverName,
-	// 	@RequestParam(required = false) String receiverName, Pageable pageable) {
-	// 	return Response.success(orderService.readOrderListByUserSearch(receiverName, pageable));
-	// }
+	// ORDER-007 (사용자 주문 검색) 구현 안하기로 함
 
 	// ORDER-008 (주문 취소)
 	@DeleteMapping("/api/order/cancel/{orderSeq}")
@@ -113,7 +109,7 @@ public class OrderController {
 	@GetMapping("/api/order/detail/{orderDetailSeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderDetailByOrderDetailSeq(@PathVariable Long orderDetailSeq) {
-		return Response.success(orderService.readOrderDetailByOrderDetailSeq(orderDetailSeq));
+		return Response.success(orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq));
 	}
 
 	// ORDER-012 (취소/환불 목록 조회)
@@ -123,7 +119,7 @@ public class OrderController {
 		return Response.success(orderService.readOrderCancelListByUserSeq(userSeq, pageable));
 	}
 
-	// ORDER-013 (관리자 주문 목록 검색 )
+	// ORDER-013 (관리자 주문 목록 검색)
 	@GetMapping("/api/order/admin/search")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readOrderListByAdminSearch(@RequestParam(required = false) String receiverName,

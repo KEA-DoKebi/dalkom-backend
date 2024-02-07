@@ -31,6 +31,7 @@ import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.service.OrderDetailService;
 import com.dokebi.dalkom.domain.order.service.OrderService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +42,9 @@ public class OrderControllerTest {
 	OrderController orderController;
 	@Mock
 	OrderService orderService;
+	@Mock
+	OrderDetailService orderDetailService;
+
 	MockMvc mockMvc;
 
 	@BeforeEach
@@ -191,7 +195,7 @@ public class OrderControllerTest {
 		mockMvc.perform(get("/api/order/detail/{orderDetailSeq}", orderDetailSeq))
 			.andExpect(status().isOk());
 
-		verify(orderService).readOrderDetailByOrderDetailSeq(eq(orderDetailSeq));
+		verify(orderDetailService).readOrderDetailSimpleResponseByOrderDetailSeq(eq(orderDetailSeq));
 	}
 
 	@Test

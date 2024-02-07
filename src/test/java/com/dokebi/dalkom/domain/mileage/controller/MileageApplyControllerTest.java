@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -65,7 +66,7 @@ class MileageApplyControllerTest {
 
 	@Test
 	@DisplayName("마일리지 승인 여부 변경")
-	void updateMileageAskStateTest() throws Exception {
+	void updateMileageApplyStateTest() throws Exception {
 		Long milgApplySeq = 1L;
 		MileageStateRequest request = createMileageUpdateRequestFactory("W");
 
@@ -79,7 +80,7 @@ class MileageApplyControllerTest {
 
 	@Test
 	@DisplayName("마일리지 신청 조회(관리자)")
-	void readMileageAskTest() throws Exception {
+	void readMileageApplyTest() throws Exception {
 		mockMvc.perform(get("/api/mileage/apply")
 				.param("page", "0")
 				.param("size", "5"))
@@ -90,7 +91,7 @@ class MileageApplyControllerTest {
 
 	@Test
 	@DisplayName("마일리지 충전 신청")
-	void createMileageAsk() throws Exception {
+	void createMileageApplyByUserSeqTest() throws Exception {
 		int amount = 5000;
 		Long userSeq = 1L;
 		MileageApplyRequest request = createMileageApplyRequestFactory(amount);
@@ -100,6 +101,69 @@ class MileageApplyControllerTest {
 			.andExpect(status().isOk());
 
 		verify(mileageApplyService).createMileageApply(eq(userSeq), eq(request));
+	}
+
+	@Test
+	@DisplayName("마일리지 신청 조회 내역 검색 (관리자)")
+	void readMileageApplyHistorySearchTest() throws Exception {
+		String email = "email";
+		String nickname = "nickname";
+		String name = "name";
+
+		PageRequest pageable = PageRequest.of(0, 8);
+		mockMvc.perform(get("/api/mileage/apply/search")
+				.param("email", email)
+				.param("nickname", nickname)
+				.param("name", name)
+				.param("page", "0")
+				.param("size", "8"))
+			.andExpect(status().isOk());
+		verify(mileageApplyService).readMileageApplyHistoryListSearch(email, nickname, name, pageable);
+	}
+
+	@Test
+	@DisplayName("마일리지 신청 조회 - 대기중(W)인 값 조회 (사용자)")
+	void readMileageApplyByUserSeqTest() throws Exception {
+		Long userSeq = 1L;
+		PageRequest pageable = PageRequest.of(0, 8);
+		mockMvc.perform(get("/api/mileage/apply/user")
+				.param("page", "0")
+				.param("size", "8"))
+			.andExpect(status().isOk());
+
+		verify(mileageApplyService).readMileageApplyListByUserSeq(userSeq, pageable);
+
+	}
+
+	@Test
+	@DisplayName("마일리지 신청 조회 - 대기중(W)인 값 조회 (관리자)")
+	void readMileageApplyWaitState() throws Exception {
+		PageRequest pageable = PageRequest.of(0, 8);
+		mockMvc.perform(get("/api/mileage/apply/wait")
+				.param("page", "0")
+				.param("size", "8"))
+			.andExpect(status().isOk());
+		verify(mileageApplyService).readMileageApplyWaitStateList(pageable);
+	}
+
+	@Test
+	@DisplayName("마일리지 신청 검색 - 대기중(W)인 값 조회 (관리자)")
+	void readMileageApplyWaitStateSearch() throws Exception {
+
+		String email = "email";
+		String nickname = "nickname";
+		String name = "name";
+
+		PageRequest pageable = PageRequest.of(0, 8);
+		mockMvc.perform(get("/api/mileage/apply/wait/search")
+				.param("email", email)
+				.param("nickname", nickname)
+				.param("name", name)
+				.param("page", "0")
+				.param("size", "8"))
+			.andExpect(status().isOk());
+		verify(mileageApplyService).readMileageApplyWaitStateSearch(email, nickname, name, pageable);
+
 	}
 
 }

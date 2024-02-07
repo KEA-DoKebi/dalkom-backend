@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
+import com.dokebi.dalkom.common.magicnumber.InquiryCategory;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
@@ -22,6 +23,7 @@ import com.dokebi.dalkom.domain.inquiry.dto.InquiryOneResponse;
 import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 import com.dokebi.dalkom.domain.inquiry.exception.InquiryNotFoundException;
 import com.dokebi.dalkom.domain.inquiry.repository.InquiryRepository;
+import com.dokebi.dalkom.domain.jira.dto.JiraInquiryAnswerRequest;
 import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
 import com.dokebi.dalkom.domain.jira.service.JiraService;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -54,9 +56,12 @@ public class InquiryService {
 
 		// 문의 내용 Jira로 보내기
 		try {
+			System.out.println(InquiryCategory.getNameByState(request.getCategorySeq()));
 			JiraInquiryRequest jiraInquiryRequest = new JiraInquiryRequest(request.getTitle(), request.getContent(),
-				user.getNickname(), inquiry.getInquirySeq());
-			jiraService.createIssueInquiry(jiraInquiryRequest);
+				user.getNickname(), inquiry.getInquirySeq(), InquiryCategory.getNameByState(request.getCategorySeq()));
+			String jiraToken = jiraService.createIssueInquiry(jiraInquiryRequest);
+			inquiry.setJiraToken(jiraToken);
+			System.out.println(inquiry.getJiraToken());
 		} catch (Exception e) {
 			// Jira 연동 실패 로그 기록
 			log.error("Jira 이슈 생성 중 오류 발생", e);
@@ -115,6 +120,18 @@ public class InquiryService {
 		inquiry.setAdmin(admin);
 		inquiry.setAnswerState(InquiryAnswerState.YES.getState());
 		inquiry.setAnsweredAt(LocalDateTime.now());
+
+		// 답변 내용 Jira로 보내기
+		try {
+			if (inquiry.getJiraToken() != null && admin.getNickname() != null && request.getAnswerContent() != null) {
+				JiraInquiryAnswerRequest jiraAnswerRequest = new JiraInquiryAnswerRequest(request.getAnswerContent(),
+					admin.getNickname(), inquiry.getJiraToken());
+				jiraService.updateIssueInquiry(jiraAnswerRequest);
+			}
+		} catch (Exception e) {
+			// Jira 연동 실패 로그 기록
+			log.error("Jira 이슈 수정 중 오류 발생", e);
+		}
 	}
 
 	// INQUIRY-007 (문의 카테고리 별 문의 검색)
