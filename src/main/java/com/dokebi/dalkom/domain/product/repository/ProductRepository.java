@@ -32,7 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	// PRODUCT-002 - 상품 상세 정보 조회
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto(p.category.categorySeq, "
-		+ "p.name, p.price, p.info, p.imageUrl, p.company) "
+		+ "p.name, p.price, p.info, p.imageUrl, p.company, p.state) "
 		+ "FROM Product p "
 		+ "WHERE p.productSeq = :productSeq ")
 	ReadProductDetailDto findProductDetailByProductSeq(@Param("productSeq") Long productSeq);

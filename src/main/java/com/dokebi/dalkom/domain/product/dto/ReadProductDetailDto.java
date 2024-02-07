@@ -15,4 +15,5 @@ public class ReadProductDetailDto {
 	private String info;
 	private String imageUrl;
 	private String company;
+	private String state;
 }
