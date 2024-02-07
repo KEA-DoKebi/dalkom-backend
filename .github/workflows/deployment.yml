@@ -1,15 +1,15 @@
 name: Continuous Deployment
 
 on:
-  pull_request :
+  push :
     branches:
-      - prod
-    types: [closed]
+      - workflow
+#    types: [closed]
 
 jobs:
   Push_to_Kakao:
     runs-on: self-hosted
-    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
+#    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
     
     steps:
     - name: Checkout code
