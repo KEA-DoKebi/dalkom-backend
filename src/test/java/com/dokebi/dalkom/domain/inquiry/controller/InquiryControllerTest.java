@@ -71,7 +71,7 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("INQUIRY-001 (문의 등록) 테스트")
+	@DisplayName("INQUIRY-001 (문의 등록)")
 	void createInquiryTest() throws Exception {
 		// Given
 		Long userSeq = 1L;
@@ -87,7 +87,7 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("INQUIRY-002 (유저별 문의 조회) 테스트")
+	@DisplayName("INQUIRY-002 (유저별 문의 조회)")
 	void readInquiryByUserTest() throws Exception {
 		//Given
 		Long userSeq = 1L;
@@ -105,7 +105,7 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("INQUIRY-003 (문의 카테고리 별 문의 조회) 테스트")
+	@DisplayName("INQUIRY-003 (문의 카테고리 별 문의 조회)")
 	void readInquiryByCategoryTest() throws Exception {
 		// Given
 		Long categorySeq = 1L;
@@ -123,7 +123,7 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("INQUIRY-005 (특정 문의 조회) 테스트")
+	@DisplayName("INQUIRY-005 (특정 문의 조회)")
 	void readInquiryOneTest() throws Exception {
 		// Given
 		Long inquirySeq = 1L;
@@ -136,7 +136,7 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("INQUIRY-006 (문의 답변) 테스트")
+	@DisplayName("INQUIRY-006 (문의 답변)")
 	void answerInquiryTest() throws Exception {
 		// Given
 		Long inquirySeq = 1L;
@@ -153,7 +153,7 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("INQUIRY-007 (문의 카테고리 별 문의 검색) 테스트")
+	@DisplayName("INQUIRY-007 (문의 카테고리 별 문의 검색)")
 	void readInquiryByCategorySearchTest() throws Exception {
 		// Given
 		Long categorySeq = 1L;
@@ -173,7 +173,7 @@ public class InquiryControllerTest {
 	}
 
 	@Test
-	@DisplayName("INQUIRY-008 (문의 삭제) 테스트")
+	@DisplayName("INQUIRY-008 (문의 삭제)")
 	void deleteInquiryTest() throws Exception {
 		// Given
 		Long inquirySeq = 1L;
