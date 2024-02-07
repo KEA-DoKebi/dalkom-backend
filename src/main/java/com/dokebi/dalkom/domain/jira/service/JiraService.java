@@ -13,7 +13,6 @@ import com.dokebi.dalkom.domain.jira.dto.JiraInquiryRequest;
 import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
 
 @Service
-
 public class JiraService {
 
 	private final RestTemplate restTemplate;
