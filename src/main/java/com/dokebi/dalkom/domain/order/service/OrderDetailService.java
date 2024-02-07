@@ -55,9 +55,7 @@ public class OrderDetailService {
 	}
 
 	public OrderDetail readFirstOrderDetailByOrderSeq(Long orderSeq) {
-		OrderDetail orderDetail = orderDetailRepository.readFirstByOrder_OrdrSeq(orderSeq)
+		return orderDetailRepository.readFirstByOrder_OrdrSeq(orderSeq)
 			.orElseThrow(OrderDetailNotFoundException::new);
-
-		return orderDetail;
 	}
 }

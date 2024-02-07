@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.inquiry.factory.FaqCreateRequestFactory;
 
-public class FaqCreateRequestTest {
+class FaqCreateRequestTest {
 	private Validator validator;
 
 	@BeforeEach
