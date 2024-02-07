@@ -67,10 +67,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 		+ "o.ordrSeq, o.createdAt, COUNT(*), o.user.name ,o.receiverName,o.totalPrice, o.orderState) "
 		+ "FROM Order o "
 		+ "JOIN o.orderDetailList od "
-		+ "WHERE o.user.name LIKE CONCAT('%', :receiverName, '%')"
+		+ "WHERE o.user.name LIKE CONCAT('%', :name, '%')"
 		+ "GROUP BY o.ordrSeq, od.product.productSeq "
 		+ "ORDER BY o.createdAt DESC ")
-	Page<OrderAdminReadResponse> findOrderListByAdminWithName(@Param("receiverName") String name,
+	Page<OrderAdminReadResponse> findOrderListByAdminWithName(@Param("name") String name,
 		Pageable pageable);
 
 	Optional<Order> findOrderByOrdrSeq(Long orderSeq);
