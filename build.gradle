@@ -108,6 +108,7 @@ jacocoTestReport {
                     "com/dokebi/dalkom/domain/jira/**",
                     "com/dokebi/dalkom/domain/**/exception",
                     "com/dokebi/dalkom/domain/chat/**",
+                    "com/dokebi/dalkom/domain/user/handler",
             ])
         }))
     }
