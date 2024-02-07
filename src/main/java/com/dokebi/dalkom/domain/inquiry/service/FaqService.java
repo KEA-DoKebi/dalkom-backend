@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FaqService {
-	private static final long FAQ_CATEGORY_SEQ = 38L;
+	private static final Long FAQ_CATEGORY_SEQ = 38L;
 	private final FaqRepository faqRepository;
 	private final AdminRepository adminRepository;
 	private final CategoryRepository categoryRepository;
