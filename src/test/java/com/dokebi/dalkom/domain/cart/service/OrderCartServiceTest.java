@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -49,6 +50,7 @@ public class OrderCartServiceTest {
 
 	// CART-001 (특정 유저의 장바구니 리스트 조회)
 	@Test
+	@DisplayName("CART-001 (특정 유저의 장바구니 리스트 조회)")
 	void createOrderCartTest() {
 		// Given
 		Long userSeq = 1L;
@@ -81,6 +83,7 @@ public class OrderCartServiceTest {
 
 	// CART-002 (특정 유저의 장바구니에 상품 담기)
 	@Test
+	@DisplayName("CART-002 (특정 유저의 장바구니에 상품 담기)")
 	void readOrderCartListTest() {
 		// Given
 		Long userSeq = 1L;
@@ -104,6 +107,7 @@ public class OrderCartServiceTest {
 
 	// CART-003 (특정 유저의 장바구니에서 상품 삭제)
 	@Test
+	@DisplayName("CART-003 (특정 유저의 장바구니에서 상품 삭제)")
 	void deleteOrderCartTest() {
 		// Given
 		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();
@@ -124,6 +128,7 @@ public class OrderCartServiceTest {
 
 	// CART-003 (특정 유저의 장바구니에서 상품 삭제) - 예외 처리 확인
 	@Test
+	@DisplayName("CART-003 (특정 유저의 장바구니에서 상품 삭제) - 예외 처리 확인")
 	void deleteOrderCartWithEmptyResultTest() {
 		// Given
 		OrderCartDeleteRequest request = OrderCartDeleteRequestFactory.createOrderCartDeleteRequest();

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 
-public class AdminDashboardResponseTest {
+class AdminDashboardResponseTest {
 
 	@Test
 	@SuppressWarnings("unchecked")

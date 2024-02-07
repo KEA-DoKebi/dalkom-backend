@@ -35,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SignService {
 	private final TokenService tokenService;
 	private final RedisService redisService;
@@ -43,7 +44,7 @@ public class SignService {
 	private final EmployeeRepository employeeRepository;
 	private final PasswordEncoder passwordEncoder;
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public LogInUserResponse signInUser(LogInRequest request) {
 		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(UserNotFoundException::new);
 		validatePassword(request, user);
@@ -58,7 +59,7 @@ public class SignService {
 		return new LogInUserResponse(accessToken, mileage);
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public LogInAdminResponse signInAdmin(LogInAdminRequest request) {
 		Admin admin = adminService.readAdminByAdminId(request.getAdminId());
 		if (admin == null)

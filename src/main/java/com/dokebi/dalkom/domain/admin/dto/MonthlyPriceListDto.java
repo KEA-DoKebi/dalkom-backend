@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MonthlyPriceListDto {
-	public String Month;
+	public String month;
 	public Long monthlyPrice;
 }

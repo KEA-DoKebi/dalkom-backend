@@ -2,12 +2,14 @@ package com.dokebi.dalkom.domain.cart.dto;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class OrderCartReadResponseTest {
+class OrderCartReadResponseTest {
 
 	@Test
-	public void createOrderCartReadResponseInstance() {
+	@DisplayName("orderCartReadResponse 테스트")
+	void orderCartReadResponseTest() {
 		// Given
 		Long orderCartSeq = 1L;
 		Long productSeq = 2L;
