@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.dokebi.dalkom.common.magicnumber.UserState;
 import com.dokebi.dalkom.domain.admin.dto.AdminDashboardResponse;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto;
@@ -60,7 +61,7 @@ public class AdminServiceTest {
 		// Given
 		Long userSeq = 1L;
 		User user = UserFactory.createMockUser();
-		user.setState("Y");
+		user.setState(UserState.ACTIVE.getState());
 
 		when(userRepository.findById(userSeq)).thenReturn(Optional.of(user));
 
@@ -68,7 +69,7 @@ public class AdminServiceTest {
 		adminService.updateUser(userSeq);
 
 		// Then
-		assertEquals(user.getState(), "N");
+		assertEquals(UserState.INACTIVE.getState(), user.getState());
 	}
 
 	// ADMIN-006 (관리자 생성)

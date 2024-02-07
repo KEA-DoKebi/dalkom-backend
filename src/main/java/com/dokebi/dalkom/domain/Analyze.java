@@ -1,5 +1,5 @@
 package com.dokebi.dalkom.domain;
 
-public class analyze {
+public class Analyze {
 
 }

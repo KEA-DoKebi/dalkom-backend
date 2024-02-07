@@ -21,7 +21,7 @@ import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class InquiryRepositoryTest {
+class InquiryRepositoryTest {
 	@Autowired
 	private InquiryRepository inquiryRepository;
 

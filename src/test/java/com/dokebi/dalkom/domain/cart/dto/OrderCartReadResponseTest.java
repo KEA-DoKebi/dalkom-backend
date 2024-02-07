@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class OrderCartReadResponseTest {
+class OrderCartReadResponseTest {
 
 	@Test
 	@DisplayName("orderCartReadResponse 테스트")
-	public void orderCartReadResponseTest() {
+	void orderCartReadResponseTest() {
 		// Given
 		Long orderCartSeq = 1L;
 		Long productSeq = 2L;

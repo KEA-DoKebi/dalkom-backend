@@ -30,7 +30,7 @@ import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;

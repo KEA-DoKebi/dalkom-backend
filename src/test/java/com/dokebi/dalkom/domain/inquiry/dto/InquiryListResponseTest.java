@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
 
-public class InquiryListResponseTest {
+class InquiryListResponseTest {
 	@Test
 	@DisplayName("Getter 테스트")
 	void inquiryListResponseGetterTest() {
