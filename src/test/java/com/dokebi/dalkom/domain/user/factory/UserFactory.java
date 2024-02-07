@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.user.factory;
 
+import java.time.LocalDate;
+
 import com.dokebi.dalkom.domain.user.entity.User;
 
 import lombok.EqualsAndHashCode;
@@ -9,27 +11,25 @@ import lombok.Setter;
 @Setter
 public class UserFactory {
 
-
-
 	public static User createMockUser() {
-		return new User("empId001", // empId
+		return new User("DKT123456789", // empId
 			"password", // password
 			"김철수", // name
 			"chulsu@example.com", // email
 			"서울시 강남구", // address
-			"2023-01-01", // joinedAt
+			LocalDate.now(), // joinedAt
 			"chulsu", // nickname
-			30000 // mileage
+			60000 // mileage
 		);
 	}
 
 	public static User createMockUserWithInsufficientMileage() {
-		return new User("empId002", // empId
+		return new User("DKT123456788", // empId
 			"password", // password
 			"이영희", // name
 			"younghi@example.com", // email
 			"서울시 마포구", // address
-			"2023-02-01", // joinedAt
+			LocalDate.now(), // joinedAt
 			"younghi", // nickname
 			500 // mileage
 		);

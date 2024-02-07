@@ -1,6 +1,5 @@
 package com.dokebi.dalkom.domain.cart.service;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,17 +17,21 @@ import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Slf4j
 public class OrderCartService {
 	private final OrderCartRepository orderCartRepository;
 	private final UserService userService;
 	private final ProductService productService;
 
+	// CART-001 (특정 유저의 장바구니 리스트 조회)
+	public Page<OrderCartReadResponse> readOrderCartList(Long userSeq, Pageable pageable) {
+		return orderCartRepository.findOrderCartList(userSeq, pageable);
+	}
+
+	// CART-002 (특정 유저의 장바구니에 상품 담기)
 	@Transactional
 	public void createOrderCart(Long userSeq, OrderCartCreateRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
@@ -38,19 +41,15 @@ public class OrderCartService {
 		orderCartRepository.save(orderCart);
 	}
 
-	public Page<OrderCartReadResponse> readOrderCartList(Long userSeq, Pageable pageable) {
-		return orderCartRepository.findOrderCartList(userSeq, pageable);
-	}
-
+	// CART-003 (특정 유저의 장바구니에서 상품 삭제)
 	@Transactional
 	public void deleteOrderCart(OrderCartDeleteRequest request) {
-		log.info(request.toString());
-		try {
-			for (Long orderCartSeq : request.getOrderCartSeqList()) {
-				orderCartRepository.deleteById(orderCartSeq);
+		for (Long orderCartSeq : request.getOrderCartSeqList()) {
+			// 테스트 구문에서 existsById 검사를 안하면 EmptyResultDataAccessException이 일어나지가 않아서 이렇게 다시 수정
+			if (!orderCartRepository.existsById(orderCartSeq)) {
+				throw new OrderCartNotFoundException();
 			}
-		} catch (EmptyResultDataAccessException e) {
-			throw new OrderCartNotFoundException();
+			orderCartRepository.deleteById(orderCartSeq);
 		}
 	}
 }

@@ -15,12 +15,12 @@ import lombok.ToString;
 public class ProductFactory {
 	public static Product createProductFactory(Category category, String name, Integer price,
 		String info, String imageUrl, String company, String state) {
-		return new Product(category,name,price,info,imageUrl,company,state);
+		return new Product(category, name, price, info, imageUrl, company, state);
 	}
 
 	public static Product createMockProduct() {
 		// 여기에서 적절한 값으로 Product 객체를 생성하고 초기화
-		Category category = new Category("name",1l,"image");
+		Category category = new Category("name", 1L, "image");
 		String name = "Example Product";
 		Integer price = 10000;
 		String info = "This is an example product.";

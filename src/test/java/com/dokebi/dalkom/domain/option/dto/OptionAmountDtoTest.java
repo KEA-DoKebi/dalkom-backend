@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
-
 public class OptionAmountDtoTest {
 
 	@Test

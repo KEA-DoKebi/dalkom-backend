@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.cart.factory.OrderCartCreateRequestFactory;
@@ -25,6 +26,7 @@ public class OrderCartCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartCreateRequestValidation 테스트")
 	void orderCartCreateRequestValidation() {
 		// Given
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory.createOrderCartCreateRequest();
@@ -38,6 +40,7 @@ public class OrderCartCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartCreateRequestValidation_productSeq_NotNull 테스트")
 	void orderCartCreateRequestValidation_productSeq_NotNull() {
 		// Given
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory
@@ -55,6 +58,7 @@ public class OrderCartCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartCreateRequestValidation_productSeq_PositiveOrZero 테스트")
 	void orderCartCreateRequestValidation_productSeq_PositiveOrZero() {
 		// Given
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory
@@ -71,6 +75,7 @@ public class OrderCartCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartCreateRequestValidation_prdtOptionSeq_NotNull 테스트")
 	void orderCartCreateRequestValidation_prdtOptionSeq_NotNull() {
 		// Given
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory
@@ -87,6 +92,7 @@ public class OrderCartCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartCreateRequestValidation_prdtOptionSeq_PositiveOrZero 테스트")
 	void orderCartCreateRequestValidation_prdtOptionSeq_PositiveOrZero() {
 		// Given
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory
@@ -103,6 +109,7 @@ public class OrderCartCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartCreateRequestValidation_amount_NotNull 테스트")
 	void orderCartCreateRequestValidation_amount_NotNull() {
 		// Given
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory
@@ -119,6 +126,7 @@ public class OrderCartCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("orderCartCreateRequestValidation_amount_Positive 테스트")
 	void orderCartCreateRequestValidation_amount_Positive() {
 		// Given
 		OrderCartCreateRequest request = OrderCartCreateRequestFactory

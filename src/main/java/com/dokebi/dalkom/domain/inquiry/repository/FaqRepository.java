@@ -1,5 +1,7 @@
 package com.dokebi.dalkom.domain.inquiry.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,15 +14,23 @@ import com.dokebi.dalkom.domain.inquiry.entity.Inquiry;
 
 public interface FaqRepository extends JpaRepository<Inquiry, Long> {
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.FaqReadOneResponse("
-		+ "i.title,i.createdAt,i.admin.name,i.category.name, i.content) "
+		+ "i.title,i.createdAt,i.admin.nickname,i.category.name, i.content) "
 		+ "FROM Inquiry i "
-		+ "WHERE i.inquirySeq = :inquirySeq")
-	FaqReadOneResponse findFaqOne(@Param("inquirySeq") Long inquirySeq);
+		+ "WHERE i.inquirySeq = :inquirySeq "
+		+ "AND i.category.categorySeq = 38")
+	Optional<FaqReadOneResponse> findFaqOne(@Param("inquirySeq") Long inquirySeq);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.FaqReadListResponse("
 		+ "i.inquirySeq,i.createdAt, i.title) "
 		+ "FROM Inquiry i "
 		+ "WHERE i.category.name = 'FAQ'")
 	Page<FaqReadListResponse> findFaqList(Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.inquiry.dto.FaqReadListResponse("
+		+ "i.inquirySeq, i.createdAt, i.title) "
+		+ "FROM Inquiry i "
+		+ "WHERE i.category.name = 'FAQ' "
+		+ "AND i.title LIKE CONCAT('%', :title, '%')")
+	Page<FaqReadListResponse> findFaqListSearch(@Param("title") String title, Pageable pageable);
 
 }

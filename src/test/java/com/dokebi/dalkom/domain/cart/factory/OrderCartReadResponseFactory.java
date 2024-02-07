@@ -12,16 +12,17 @@ public class OrderCartReadResponseFactory {
 			"prdtOptionName",
 			"imageUrl",
 			1000,
-			2
+			2,
+			80
 		);
 	}
 
 	public static OrderCartReadResponse createOrderCartReadResponse(
 		Long orderCartSeq, Long productSeq, Long prdtOptionSeq,
 		String productName, String prdtOptionName, String imageUrl,
-		Integer price, Integer amount
+		Integer price, Integer amount, Integer stock
 	) {
 		return new OrderCartReadResponse(orderCartSeq, productSeq, prdtOptionSeq,
-			productName, prdtOptionName, imageUrl, price, amount);
+			productName, prdtOptionName, imageUrl, price, amount, stock);
 	}
 }

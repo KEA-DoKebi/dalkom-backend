@@ -18,6 +18,7 @@ htmlReport/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+htmlReport/
 
 ### IntelliJ IDEA ###
 .idea

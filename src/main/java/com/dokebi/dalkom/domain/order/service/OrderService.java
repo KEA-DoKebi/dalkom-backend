@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.order.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -13,18 +14,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.common.magicnumber.OrderState;
+import com.dokebi.dalkom.domain.cart.dto.OrderCartDeleteRequest;
+import com.dokebi.dalkom.domain.cart.service.OrderCartService;
 import com.dokebi.dalkom.domain.mileage.exception.MileageLackException;
 import com.dokebi.dalkom.domain.mileage.service.MileageService;
 import com.dokebi.dalkom.domain.option.entity.ProductOption;
 import com.dokebi.dalkom.domain.option.service.ProductOptionService;
 import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
+import com.dokebi.dalkom.domain.order.dto.CancelRefundReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderAdminReadResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderDetailReadResponse;
+import com.dokebi.dalkom.domain.order.dto.OrderDetailSimpleResponse;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDetailDto;
 import com.dokebi.dalkom.domain.order.dto.OrderProductRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderUserReadResponse;
+import com.dokebi.dalkom.domain.order.dto.ReceiverDetailDto;
 import com.dokebi.dalkom.domain.order.entity.Order;
 import com.dokebi.dalkom.domain.order.entity.OrderDetail;
 import com.dokebi.dalkom.domain.order.exception.InvalidOrderStateException;
@@ -34,8 +41,6 @@ import com.dokebi.dalkom.domain.order.repository.OrderRepository;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.service.ProductService;
-import com.dokebi.dalkom.domain.review.entity.Review;
-import com.dokebi.dalkom.domain.review.service.ReviewService;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.service.UserService;
@@ -53,22 +58,26 @@ public class OrderService {
 	private final ProductStockService productStockService;
 	private final MileageService mileageService;
 	private final UserService userService;
-	private final ReviewService reviewService;
 	private final PasswordEncoder passwordEncoder;
+	private final OrderCartService orderCartService;
 
 	// 결제 하기
 	@Transactional
-	public void createOrder(OrderCreateRequest request) {
+	public Integer createOrder(Long userSeq, OrderCreateRequest request) {
 
 		int orderTotalPrice = 0;
-
+		OrderCartDeleteRequest orderCartDeleteRequest = new OrderCartDeleteRequest(new ArrayList<>());
 		// orderTotalPrice를 먼저 계산해준다.
 		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
 			orderTotalPrice += calculateProductPrice(orderProduct);
 		}
+		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
+			Long orderCartSeq = orderProduct.getOrderCartSeq();
+			orderCartDeleteRequest.getOrderCartSeqList().add(orderCartSeq);
+		}
 
-		// 어떤 사용자인지 조회
-		User user = userService.readUserByUserSeq(request.getReceiverInfoRequest().getUserSeq());
+		// 사용자 정보 조회
+		User user = userService.readUserByUserSeq(userSeq);
 
 		// 해당 사용자가 보유한 마일리지와 주문의 총 가격과 비교
 		if (orderTotalPrice <= user.getMileage()) {
@@ -79,7 +88,7 @@ public class OrderService {
 				request.getReceiverInfoRequest().getReceiverMobileNum(),
 				request.getReceiverInfoRequest().getReceiverMemo(),
 				orderTotalPrice);
-			order.setOrderState(OrderState.CONFIRMED);
+			order.setOrderState(OrderState.CONFIRMED.getState());
 			orderRepository.save(order);
 
 			// 주문에 속한 세부 주문( 주문에 속한 각 상품별 데이터 ) entity 생성 후 저장
@@ -95,10 +104,15 @@ public class OrderService {
 			// 사용한 마일리지 감소 후 변경된 사용자 정보 업데이트
 			Integer totalMileage = (user.getMileage() - orderTotalPrice);
 
-			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage, MileageHistoryState.USED);
+			mileageService.createMileageHistory(user, orderTotalPrice, totalMileage,
+				MileageHistoryState.USED.getState());
+
+			//장바구니의 상품 삭제
+			orderCartService.deleteOrderCart(orderCartDeleteRequest);
 
 			// 사용자의 마일리지 업데이트
 			user.setMileage(totalMileage);
+			return user.getMileage();
 
 		} else {
 			throw new MileageLackException();
@@ -121,9 +135,14 @@ public class OrderService {
 			// 사용자가 주문한 상품에 대한 정보 조회
 			ReadProductDetailResponse productInfo = productService.readProduct(order.getProductSeq());
 
+			//option detail 조회
+
+			String optionDetail = productOptionService.readOptionDetailByPdtOptionSeq(optionSeq);
+
 			// OrderPageDetailDto로 변환
 			OrderPageDetailDto orderPageDetailDTO = new OrderPageDetailDto(productSeq, optionSeq, productAmount,
-				productInfo.getName(), productInfo.getPrice(), productInfo.getPrice() * order.getProductAmount());
+				productInfo.getName(), productInfo.getPrice(), optionDetail,
+				productInfo.getPrice() * order.getProductAmount());
 
 			result.add(orderPageDetailDTO);
 		});
@@ -133,21 +152,22 @@ public class OrderService {
 
 	// 사용자별 주문 전체 조회
 	public Page<OrderUserReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
-
-		Page<OrderUserReadResponse> orderPage = orderRepository.findOrderListByUserSeq(userSeq, pageable);
-
-		List<OrderUserReadResponse> modifiedList = orderPage.getContent().stream()
-			.peek(orderResponse -> orderResponse.makeOrderTitle(orderResponse.getOrderTitle(),
-				orderResponse.getProductCnt()))
-			.collect(Collectors.toList());
-
-		return new PageImpl<>(modifiedList, pageable, orderPage.getTotalElements());
-
+		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
 	}
 
 	// 주문별 상세 조회
 	public OrderDetailReadResponse readOrderByOrderSeq(Long orderSeq) {
-		return orderRepository.findOrderDetailByOrdrSeq(orderSeq).orElseThrow(OrderNotFoundException::new);
+		List<OrderDetailDto> orderDetailDtoList = orderDetailService.readOrderDetailDtoByOrderSeq(orderSeq);
+		ReceiverDetailDto receiverDetailDto = orderRepository.findReceiverDetailDtoByOrdrSeq(orderSeq)
+			.orElseThrow(OrderNotFoundException::new);
+		int totalPrice = 0;
+
+		for (OrderDetailDto orderDetail : orderDetailDtoList) {
+			totalPrice += orderDetail.getTotalPrice();
+		}
+
+		return new OrderDetailReadResponse(orderDetailDtoList,
+			receiverDetailDto, totalPrice);
 	}
 
 	// 주문 전체 조회
@@ -156,6 +176,7 @@ public class OrderService {
 	}
 
 	// 주문 상태 수정
+	@Transactional
 	public void updateOrderState(Long orderSeq, OrderStateUpdateRequest request) {
 		Order order = orderRepository.findById(orderSeq).orElseThrow(OrderNotFoundException::new);
 
@@ -166,9 +187,55 @@ public class OrderService {
 		orderRepository.save(order);
 	}
 
+	// 주문 상세 seq 로 조회
+	public OrderDetailSimpleResponse readOrderDetailByOrderDetailSeq(Long orderDetailSeq) {
+		return orderDetailService.readOrderDetailSimpleResponseByOrderDetailSeq(orderDetailSeq);
+	}
+
+	// 취소 / 환불 리스트 조회
+	public Page<CancelRefundReadResponse> readOrderCancelListByUserSeq(Long userSeq, Pageable pageable) {
+		Page<Order> orderPage = orderRepository.findCancelRefundListByUserSeq(userSeq, pageable);
+
+		List<CancelRefundReadResponse> responseList = orderPage.stream().map(order -> {
+			OrderDetail orderDetail = orderDetailService.readFirstOrderDetailByOrderSeq(order.getOrdrSeq());
+			Product product = orderDetail.getProduct();
+			String requestState = OrderState.getNameByState(order.getOrderState());
+			String requestType;
+
+			if (Objects.equals(requestState, OrderState.CANCELED.getName())) {
+				requestType = "취소";
+			} else if (Objects.equals(requestState, OrderState.REFUND_CONFIRMED.getName())
+				|| Objects.equals(requestState, OrderState.RETURNED.getName())
+				|| Objects.equals(requestState, OrderState.REFUNDED.getName())) {
+				requestType = "환불";
+			} else {
+				throw new InvalidOrderStateException();
+			}
+
+			return new CancelRefundReadResponse(product.getName(), product.getImageUrl(),
+				orderDetail.getProductOption().getDetail(), order.getModifiedAt(), order.getOrderState(),
+				requestType, requestState);
+		}).collect(Collectors.toList());
+
+		return new PageImpl<>(responseList, pageable, orderPage.getTotalElements());
+	}
+
 	// 주문 검색 조회 서비스
-	public Page<OrderUserReadResponse> readOrderListBySearch(String receiverName, Pageable pageable) {
+	public Page<OrderUserReadResponse> readOrderListByUserSearch(String receiverName, Pageable pageable) {
 		return orderRepository.findAllOrderListByReceiverName(receiverName, pageable);
+	}
+
+	// 관리자 주문 검색
+	public Page<OrderAdminReadResponse> readOrderListByAdminSearch(String receiverName, String name,
+		Pageable pageable) {
+		if (receiverName != null) {
+			return orderRepository.findOrderListByAdminWithReceiverName(receiverName, pageable);
+		} else if (name != null) {
+			return orderRepository.findOrderListByAdminWithName(name, pageable);
+		} else {
+			return orderRepository.findAllOrderList(pageable);
+
+		}
 	}
 
 	// 주문 취소
@@ -177,16 +244,15 @@ public class OrderService {
 		Order order = orderRepository.findOrderByOrdrSeq(orderSeq)
 			.orElseThrow(OrderNotFoundException::new);
 		User user = order.getUser();
-		List<OrderDetail> orderDetailList = orderDetailService.readOrderDetailByOrderSeq(orderSeq);
-		List<Review> reviewList = reviewService.readReviewByOrderDetailList(orderDetailList);
 
-		List<String> whenCancel = List.of(OrderState.CONFIRMED, OrderState.PREPARING);
-		List<String> whenRefund = List.of(OrderState.SHIPPED, OrderState.DELIVERED, OrderState.FINALIZED);
+		List<String> whenCancel = List.of(OrderState.CONFIRMED.getState(), OrderState.PREPARING.getState());
+		List<String> whenRefund = List.of(OrderState.SHIPPED.getState(), OrderState.DELIVERED.getState(),
+			OrderState.FINALIZED.getState());
 
 		if (whenCancel.contains(order.getOrderState())) {
-			cancelOrder(reviewList, user, order);
+			cancelOrder(user, order);
 		} else if (whenRefund.contains(order.getOrderState())) {
-			refundOrder(reviewList, order);
+			order.setOrderState(OrderState.REFUND_CONFIRMED.getState());
 		} else {
 			throw new InvalidOrderStateException();
 		}
@@ -201,24 +267,23 @@ public class OrderService {
 		User user = order.getUser();
 
 		//반송이 완료되었다면
-		if (order.getOrderState().equals(OrderState.RETURNED)) {
+		if (order.getOrderState().equals(OrderState.RETURNED.getState())) {
 			// 환불 후 금액
 			Integer amountChanged = user.getMileage() + order.getTotalPrice();
 
 			// 마일리지 복구
 			mileageService.createMileageHistory(
-				order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
+				order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED.getState());
 
 			user.setMileage(amountChanged);
 
-			order.setOrderState(OrderState.REFUNDED);
+			order.setOrderState(OrderState.REFUNDED.getState());
 		} else {
 			throw new InvalidOrderStateException();
 		}
 	}
 
 	// 결제시 비밀번호 인증
-	@Transactional
 	public void authorizeOrderByPassword(Long userSeq, AuthorizeOrderRequest request) {
 		User user = userService.readUserByUserSeq(userSeq);
 
@@ -230,9 +295,10 @@ public class OrderService {
 	/** private **/
 
 	private Integer calculateProductPrice(OrderProductRequest orderProduct) {
+		Product product = productService.readProductByProductSeq(orderProduct.getProductSeq());
 		int amount = orderProduct.getProductAmount();
 		productStockService.checkStock(orderProduct.getProductSeq(), orderProduct.getProductOptionSeq(), amount);
-		return amount * orderProduct.getProductPrice();
+		return amount * product.getPrice();
 	}
 
 	// 주문 상세 만들기
@@ -243,7 +309,7 @@ public class OrderService {
 		Integer amount = orderProduct.getProductAmount();
 
 		OrderDetail orderDetail = new OrderDetail(order, product, productOption, amount,
-			orderProduct.getProductPrice());
+			product.getPrice() * amount);
 		// 상품 재고 변경
 		productStockService.updateStockByProductSeqAndOptionSeq(orderProduct.getProductSeq(),
 			orderProduct.getProductOptionSeq(), amount);
@@ -252,48 +318,18 @@ public class OrderService {
 	}
 
 	// 주문 취소 - 주문 취소 처리
-	private void cancelOrder(List<Review> reviewList, User user, Order order) {
-
-		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
-		for (Review review : reviewList) {
-			reviewService.deleteReview(review.getReviewSeq());
-		}
-
+	private void cancelOrder(User user, Order order) {
 		// 환불 후 금액
 		Integer amountChanged = user.getMileage() + order.getTotalPrice();
 
 		// 마일리지 복구
 		mileageService.createMileageHistory(
-			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.CANCELLED);
+			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.CANCELLED.getState());
 
 		user.setMileage(amountChanged);
 
 		// 주문 상태 변경
-		order.setOrderState(OrderState.CANCELED);
-	}
-
-	// 주문 취소 - 환불 처리
-	private void refundOrder(List<Review> reviewList, Order order) {
-
-		// 만약, 리뷰가 존재한다면 리뷰를 전부 지운다. (조건문 불필요)
-		// TODO 환불의 경우 일단 상품을 받았으니 리뷰를 남겨둘지 고려
-		for (Review review : reviewList) {
-			reviewService.deleteReview(review.getReviewSeq());
-		}
-
-		/*
-		// 환불 후 금액
-		Integer amountChanged = user.getMileage() + order.getTotalPrice();
-
-		// 마일리지 복구
-		mileageService.createMileageHistory(
-			order.getUser(), order.getTotalPrice(), amountChanged, MileageHistoryState.REFUNDED);
-
-		user.setMileage(amountChanged);
-		*/
-
-		// 주문 상태 변경
-		order.setOrderState(OrderState.REFUND_CONFIRMED);
+		order.setOrderState(OrderState.CANCELED.getState());
 	}
 }
 

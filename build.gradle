@@ -29,6 +29,7 @@ ext {
 
 
 dependencies {
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -78,11 +79,40 @@ jacoco {
 
 test {
     ignoreFailures = true
-    finalizedBy jacocoTestReport // 테스트 후 JaCoCo 리포트 생성
+    finalizedBy 'jacocoTestReport'
+    useJUnitPlatform()
+
+//    jacoco {
+//        excludes += ["com/dokebi/dalkom/domain/.class",
+//                     "com/example/thandbag/exceptionHandler/**",
+//                     "com/example/thandbag/repository/**",
+//                     "com/example/thandbag/service/KakaoUserService.class"]
+//    }
 }
 
 jacocoTestReport {
     reports {
-        xml.required = true
+        xml.required = false
+        csv.required = false
+        html.required = true
+    }
+
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/dokebi/dalkom/domain/**/config",
+                    "com/dokebi/dalkom/common/**/",
+                    "com/dokebi/dalkom/domain/**/dto",
+                    "com/dokebi/dalkom/domain/**/entity",
+                    "com/dokebi/dalkom/domain/jira/**",
+                    "com/dokebi/dalkom/domain/**/exception",
+                    "com/dokebi/dalkom/domain/chat/**",
+            ])
+        }))
     }
 }
+
+
+
+
