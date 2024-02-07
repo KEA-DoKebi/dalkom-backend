@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Generated
+
 public class MileageApplyResponse {
 	private Long milgApplySeq;
 	private Long userSeq;

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class ReviewSimpleDto {
 	private Integer rating;
 	private String content;

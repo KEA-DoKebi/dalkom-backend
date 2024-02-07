@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
 @Slf4j
-@Generated
+
 public class ExceptionAdvice {
 
 	// 공통 권한

@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import lombok.Generated;
 
 @Configuration
-@Generated
+
 public class ChatGptConfig {
 	@Bean
 	@Qualifier("openaiRestTemplate")

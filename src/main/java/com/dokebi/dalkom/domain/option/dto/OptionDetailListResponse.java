@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 // OP-002에 해당하는 response
 public class OptionDetailListResponse {
 	private Long prdtOptionSeq;

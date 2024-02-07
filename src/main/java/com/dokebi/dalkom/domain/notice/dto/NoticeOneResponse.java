@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class NoticeOneResponse {
 
 	private String title;

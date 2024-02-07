@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class ProductByCategoryDetailPage {
 	private Long productSeq;
 	private String name;

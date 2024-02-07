@@ -14,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Generated
+
 public class MileageHistoryResponse {
 
 	private String type;

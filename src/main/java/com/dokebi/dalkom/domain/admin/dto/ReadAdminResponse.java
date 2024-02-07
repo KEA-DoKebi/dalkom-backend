@@ -15,7 +15,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-@Generated
+
 public class ReadAdminResponse {
 	public Long adminSeq;
 	public String adminId;

@@ -30,7 +30,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Generated
+
 public class Product extends EntityDate {
 
 	@Id

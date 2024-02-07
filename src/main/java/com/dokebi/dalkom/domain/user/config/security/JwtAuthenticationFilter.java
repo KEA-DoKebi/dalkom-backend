@@ -16,11 +16,13 @@ import com.dokebi.dalkom.domain.user.dto.AuthResponse;
 import com.dokebi.dalkom.domain.user.service.TokenService;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Slf4j
+@Generated
 public class JwtAuthenticationFilter extends GenericFilterBean {
 	private final TokenService tokenService;
 	private final CustomUserService userService;

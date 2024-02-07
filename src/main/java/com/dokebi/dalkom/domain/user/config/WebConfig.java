@@ -6,10 +6,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
+@Generated
 public class WebConfig implements WebMvcConfigurer {
 	private final LoginUserArgumentResolver loginUserArgumentResolver;
 

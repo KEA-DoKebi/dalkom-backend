@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-@Generated
+
 public class SubCategoryResponse {
 	private Long categorySeq;
 	private String name;

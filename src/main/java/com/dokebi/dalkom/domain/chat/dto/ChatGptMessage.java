@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Generated
+
 public class ChatGptMessage {
 
 	private String role;

@@ -15,7 +15,7 @@ import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException
 import lombok.Generated;
 
 @Service
-@Generated
+
 public class JiraService {
 
 	private final RestTemplate restTemplate;

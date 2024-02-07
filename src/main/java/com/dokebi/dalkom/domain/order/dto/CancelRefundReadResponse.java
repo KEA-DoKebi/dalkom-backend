@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class CancelRefundReadResponse {
 	private String productName;
 	private String imageUrl;

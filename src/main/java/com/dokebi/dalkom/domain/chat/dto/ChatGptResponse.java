@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Generated
+
 public class ChatGptResponse {
 	private String id;
 	private String object;
@@ -24,7 +24,7 @@ public class ChatGptResponse {
 
 	@Getter
 	@Setter
-	@Generated
+
 	public static class Usage {
 		@JsonProperty("prompt_tokens")
 		private int promptTokens;
@@ -36,7 +36,7 @@ public class ChatGptResponse {
 
 	@Getter
 	@Setter
-	@Generated
+
 	public static class Choice {
 		private int index;
 		private ChatGptMessage message;

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @AllArgsConstructor
-@Generated
+
 public class OrderAdminReadResponse {
 	private Long ordrSeq;
 	private LocalDateTime ordrDate;

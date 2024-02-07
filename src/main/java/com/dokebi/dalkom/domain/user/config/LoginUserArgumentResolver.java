@@ -9,10 +9,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
+
 public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver {
 
 	private final HttpServletRequest request;

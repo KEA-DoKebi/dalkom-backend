@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "inquiry")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Generated
+
 public class Inquiry extends EntityDate {
 
 	@Id

@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "category")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Generated
+
 public class Category extends EntityDate {
 
 	@Id

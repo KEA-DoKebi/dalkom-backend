@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class OrderDetailSimpleResponse {
 	private String productName;
 	private String imageUrl;

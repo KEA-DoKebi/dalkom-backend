@@ -10,13 +10,11 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import lombok.Generated;
 import lombok.Getter;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-@Generated
 public abstract class EntityDate {
 	@CreatedDate
 	@Column(nullable = false, updatable = false)

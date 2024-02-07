@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class ReceiverDetailDto {
 	private String receiverName;
 	private String receiverMobileNum;

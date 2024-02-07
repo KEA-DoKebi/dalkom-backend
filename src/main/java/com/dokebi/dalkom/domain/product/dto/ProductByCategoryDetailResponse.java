@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class ProductByCategoryDetailResponse {
 	private String categoryName;
 	private Page<ProductByCategoryDetailPage> page;

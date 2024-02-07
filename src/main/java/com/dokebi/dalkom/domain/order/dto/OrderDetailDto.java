@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class OrderDetailDto {
 	private Long ordrDetailSeq;
 	private String productName;

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Generated
+
 public class ProductCompareDetailResponse {
 	private ProductCompareDetailDto productCompareDetailDto;
 	private Double rating;

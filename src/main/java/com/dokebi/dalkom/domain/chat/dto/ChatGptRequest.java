@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Generated
+
 public class ChatGptRequest {
 	private String model;
 	@JsonProperty("max_tokens")

@@ -61,7 +61,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Configuration
 @EnableRedisRepositories // Redis를 사용한다고 명시해주는 어노테이션
-@Generated
+
 public class RedisConfig {
 	// Redis 서버와의 연결 정보를 저장하는 객체
 	private final RedisProperties redisProperties;

@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@Generated
+
 public class OrderDetailService {
 
 	private final OrderDetailRepository orderDetailRepository;

@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Generated
+
 public class OrderUserReadResponse {
 
 	//상품의 값과 개수 외
