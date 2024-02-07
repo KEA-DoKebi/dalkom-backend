@@ -9,4 +9,10 @@ public class AuthorizeOrderRequestFactory {
 			"123456a!"
 		);
 	}
+
+	public static AuthorizeOrderRequest createAuthorizeOrderRequest(String password) {
+		return new AuthorizeOrderRequest(
+			password
+		);
+	}
 }

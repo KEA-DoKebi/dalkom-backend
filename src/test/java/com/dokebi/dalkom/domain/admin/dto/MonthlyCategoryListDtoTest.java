@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class MonthlyCategoryListDtoTest {
+class MonthlyCategoryListDtoTest {
 	@Test
 	@DisplayName("monthlyCategoryListDtoGetter 테스트")
 	void monthlyCategoryListDtoGetterTest() {

@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @ExtendWith(MockitoExtension.class)
-public class SignControllerTest {
+class SignControllerTest {
 
 	@InjectMocks
 	private SignController signController;
