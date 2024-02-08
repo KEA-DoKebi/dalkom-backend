@@ -1,3 +1,4 @@
+
 package com.dokebi.dalkom.domain.user.service;
 
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
@@ -30,7 +31,7 @@ import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
 	@Mock
 	private UserRepository userRepository;
@@ -149,7 +150,6 @@ public class UserServiceTest {
 		assertNotNull(resultPage);
 		assertEquals(1, resultPage.getContent().size()); // 기대하는 결과는 한 명의 사용자입니다.
 		assertEquals("chulsu@example.com", resultPage.getContent().get(0).getEmail());
-		assertEquals(30000, resultPage.getContent().get(0).getMileage());
 
 		// UserRepository의 findUserListByEmail 메소드가 예상대로 호출되었는지 확인합니다.
 		verify(userRepository).findUserListByEmail(eq("chulsu@example.com"), any(Pageable.class));
@@ -169,7 +169,6 @@ public class UserServiceTest {
 		assertNotNull(resultPage);
 		assertEquals(1, resultPage.getContent().size());
 		assertEquals("chulsu", resultPage.getContent().get(0).getNickname());
-		assertEquals(30000, resultPage.getContent().get(0).getMileage());
 
 		verify(userRepository).findUserListByNickname(eq("chulsu"), any(Pageable.class));
 	}

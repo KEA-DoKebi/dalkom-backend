@@ -1,9 +1,9 @@
 package com.dokebi.dalkom.domain.order.controller;
 
-import static com.dokebi.dalkom.domain.order.factory.OrderStateUpdateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.AuthorizeOrderRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderCreateRequestFactory.*;
 import static com.dokebi.dalkom.domain.order.factory.OrderPageDtoFactory.*;
+import static com.dokebi.dalkom.domain.order.factory.OrderStateUpdateRequestFactory.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -31,6 +31,7 @@ import com.dokebi.dalkom.domain.order.dto.AuthorizeOrderRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderCreateRequest;
 import com.dokebi.dalkom.domain.order.dto.OrderPageDto;
 import com.dokebi.dalkom.domain.order.dto.OrderStateUpdateRequest;
+import com.dokebi.dalkom.domain.order.service.OrderDetailService;
 import com.dokebi.dalkom.domain.order.service.OrderService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +42,9 @@ public class OrderControllerTest {
 	OrderController orderController;
 	@Mock
 	OrderService orderService;
+	@Mock
+	OrderDetailService orderDetailService;
+
 	MockMvc mockMvc;
 
 	@BeforeEach
@@ -138,7 +142,7 @@ public class OrderControllerTest {
 	void updateOrderStateTest() throws Exception {
 		String orderState = "51";
 		Long orderSeq = 13L;
-		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequestFactory(orderState);
+		OrderStateUpdateRequest orderStateUpdateRequest = createOrderStateUpdateRequest(orderState);
 
 		mockMvc.perform(put("/api/order/{orderSeq}/state", orderSeq)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -191,7 +195,7 @@ public class OrderControllerTest {
 		mockMvc.perform(get("/api/order/detail/{orderDetailSeq}", orderDetailSeq))
 			.andExpect(status().isOk());
 
-		verify(orderService).readOrderDetailByOrderDetailSeq(eq(orderDetailSeq));
+		verify(orderDetailService).readOrderDetailSimpleResponseByOrderDetailSeq(eq(orderDetailSeq));
 	}
 
 	@Test

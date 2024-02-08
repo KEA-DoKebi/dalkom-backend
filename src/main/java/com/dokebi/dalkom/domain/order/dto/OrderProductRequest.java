@@ -17,11 +17,11 @@ import lombok.ToString;
 public class OrderProductRequest {
 	@NotNull(message = "OrderProductRequest productSeq NotNull 에러")
 	@Positive(message = "OrderProductRequest productSeq Positive 에러")
-	private long productSeq;
+	private Long productSeq;
 
 	@NotNull(message = "OrderProductRequest productOptionSeq NotNull 에러")
 	@Positive(message = "OrderProductRequest productOptionSeq Positive 에러")
-	private long productOptionSeq;
+	private Long productOptionSeq;
 
 	@NotNull(message = "OrderProductRequest orderCartSeq NotNull 에러")
 	@Positive(message = "OrderProductRequest orderCartSeq Positive 에러")
@@ -31,14 +31,4 @@ public class OrderProductRequest {
 	@Positive(message = "OrderProductRequest productAmount Positive 에러")
 	private int productAmount;
 
-	// @NotBlank(message = "OrderProductRequest productName NotBlank 에러")
-	// private String productName;
-	//
-	// @NotNull(message = "OrderProductRequest productPrice NotNull 에러")
-	// @Positive(message = "OrderProductRequest productPrice Positive 에러")
-	// private int productPrice;
-	//
-	// @NotNull(message = "OrderProductRequest totalPrice NotNull 에러")
-	// @Positive(message = "OrderProductRequest totalPrice Positive 에러")
-	// private int totalPrice;
 }

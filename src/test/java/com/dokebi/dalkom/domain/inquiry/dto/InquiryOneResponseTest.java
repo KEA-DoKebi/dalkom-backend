@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class InquiryOneResponseTest {
+class InquiryOneResponseTest {
 	@Test
 	@DisplayName("Getter 테스트")
 	void inquiryOneResponseGetterTest() {

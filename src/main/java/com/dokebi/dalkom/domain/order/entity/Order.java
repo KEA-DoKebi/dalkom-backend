@@ -27,7 +27,6 @@ import lombok.Setter;
 @Table(name = "ordr")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends EntityDate {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long ordrSeq;

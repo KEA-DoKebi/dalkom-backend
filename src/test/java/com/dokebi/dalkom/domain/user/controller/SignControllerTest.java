@@ -1,3 +1,4 @@
+
 package com.dokebi.dalkom.domain.user.controller;
 
 import static com.dokebi.dalkom.domain.user.factory.SignUpRequestFactory.*;
@@ -31,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @ExtendWith(MockitoExtension.class)
-public class SignControllerTest {
+class SignControllerTest {
 
 	@InjectMocks
 	private SignController signController;

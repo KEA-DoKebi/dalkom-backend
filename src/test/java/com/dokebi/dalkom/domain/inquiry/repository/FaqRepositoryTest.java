@@ -20,7 +20,7 @@ import com.dokebi.dalkom.domain.inquiry.dto.FaqReadOneResponse;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class FaqRepositoryTest {
+class FaqRepositoryTest {
 	@Autowired
 	private FaqRepository faqRepository;
 	private static final Long FAQ_CATEGORY_SEQ = 38L;
