@@ -102,4 +102,12 @@ public class ProductController {
 		return Response.success(productService.readProductCompareDetailByProductSeq(productSeq));
 	}
 
+	// PRODUCT-011 상품 리스트 검색 메인 페이지
+	@GetMapping("/api/product/search/main")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductListSearchMain(
+		@RequestParam(required = false) String name, Pageable pageable) {
+		return Response.success(productService.readProductListSearchMain(name, pageable));
+	}
+
 }

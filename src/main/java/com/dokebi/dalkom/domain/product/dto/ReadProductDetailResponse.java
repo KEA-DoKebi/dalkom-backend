@@ -21,6 +21,7 @@ public class ReadProductDetailResponse {
 	private String info;
 	private String imageUrl;
 	private String company;
+	private String state;
 	private List<StockListDto> stockList;
 	private List<String> productImageUrlList;
 
@@ -32,6 +33,7 @@ public class ReadProductDetailResponse {
 		this.info = productDetailDTO.getInfo();
 		this.imageUrl = productDetailDTO.getImageUrl();
 		this.company = productDetailDTO.getCompany();
+		this.state = productDetailDTO.getState();
 		this.stockList = stockList;
 		this.productImageUrlList = productImageUrlList;
 	}

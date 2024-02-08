@@ -14,21 +14,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class OrderProductRequest {
+public class OrderDirectProductRequest {
 	@NotNull(message = "OrderProductRequest productSeq NotNull 에러")
 	@Positive(message = "OrderProductRequest productSeq Positive 에러")
-	private Long productSeq;
+	private long productSeq;
 
 	@NotNull(message = "OrderProductRequest productOptionSeq NotNull 에러")
 	@Positive(message = "OrderProductRequest productOptionSeq Positive 에러")
-	private Long productOptionSeq;
-
-	@NotNull(message = "OrderProductRequest orderCartSeq NotNull 에러")
-	@Positive(message = "OrderProductRequest orderCartSeq Positive 에러")
-	private Long orderCartSeq;
+	private long productOptionSeq;
 
 	@NotNull(message = "OrderProductRequest productAmount NotNull 에러")
 	@Positive(message = "OrderProductRequest productAmount Positive 에러")
 	private int productAmount;
-
 }

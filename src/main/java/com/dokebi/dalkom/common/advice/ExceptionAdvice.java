@@ -36,6 +36,7 @@ import com.dokebi.dalkom.domain.stock.exception.InvalidAmountException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
+import com.dokebi.dalkom.domain.user.exception.InvalidJoinedAtException;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
@@ -48,7 +49,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionAdvice {
 
 	// 공통 권한
-
 	@ExceptionHandler(Exception.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
 	public Response unKnownException() {
@@ -113,6 +113,12 @@ public class ExceptionAdvice {
 		return Response.failure(-1102, e.getMessage() + "은 중복된 닉네임 입니다.");
 	}
 
+	@ExceptionHandler(InvalidJoinedAtException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response invalidJoinedAtException() {
+		return Response.failure(-1103, "잘못된 입사일입니다.");
+	}
+
 	// 상품
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
@@ -168,7 +174,7 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderCartNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderCartEmptyResultDataAccessException() {
-		return Response.failure(-1500, " 장바구니 정보를 찾을 수 없습니다.");
+		return Response.failure(-1500, "장바구니 정보를 찾을 수 없습니다.");
 	}
 
 	// 재고

@@ -23,6 +23,7 @@ import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
 import com.dokebi.dalkom.domain.user.entity.User;
 import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
+import com.dokebi.dalkom.domain.user.exception.InvalidJoinedAtException;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
@@ -85,30 +86,6 @@ public class SignService {
 		return Response.success();
 	}
 
-	private String createSubject(User user) {
-		return String.valueOf(user.getUserSeq());
-	}
-
-	private String createSubject(Admin admin) {
-		return admin.getAdminSeq() + ",Admin";
-	}
-
-	private void validatePassword(LogInRequest request, User user) {
-		try {
-			if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-				throw new LoginFailureException();
-			}
-		} catch (IllegalArgumentException e) {
-			throw new LoginFailureException();
-		}
-	}
-
-	private void validatePassword(LogInAdminRequest request, Admin admin) {
-		if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
-			throw new LoginFailureException();
-		}
-	}
-
 	@Transactional
 	public SignUpResponse signUp(SignUpRequest request) {
 		SignUpResponse signUpResponse = new SignUpResponse();
@@ -141,6 +118,10 @@ public class SignService {
 		LocalDateTime currentDateTime = LocalDateTime.now();
 		LocalDate startOfYear = LocalDate.of(currentDateTime.getYear(), 1, 1);
 
+		if (currentDateTime.toLocalDate().isBefore(startOfYear)) {
+			throw new InvalidJoinedAtException();
+		}
+
 		// 15일 구분용
 		LocalDate midDate = LocalDate.of(joinedAt.getYear(), joinedAt.getMonth(), 15);
 		if (joinedAt.isBefore(midDate)) {
@@ -160,8 +141,32 @@ public class SignService {
 			return Math.min(totalMileage, mileagePerYear);
 
 		} else {
-			monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(startOfYear, joinedAt));
+			monthWorked = Math.toIntExact(ChronoUnit.MONTHS.between(joinedAt, currentDateTime.toLocalDate()));
 			return monthWorked * mileagePerMonth;
+		}
+	}
+
+	private String createSubject(User user) {
+		return String.valueOf(user.getUserSeq());
+	}
+
+	private String createSubject(Admin admin) {
+		return admin.getAdminSeq() + ",Admin";
+	}
+
+	private void validatePassword(LogInRequest request, User user) {
+		try {
+			if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+				throw new LoginFailureException();
+			}
+		} catch (IllegalArgumentException e) {
+			throw new LoginFailureException();
+		}
+	}
+
+	private void validatePassword(LogInAdminRequest request, Admin admin) {
+		if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
+			throw new LoginFailureException();
 		}
 	}
 

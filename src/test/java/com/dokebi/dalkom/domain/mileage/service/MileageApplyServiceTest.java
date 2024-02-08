@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.mileage.service;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyFactory.*;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyRequestFactory.*;
 import static com.dokebi.dalkom.domain.mileage.factory.MileageApplyResponseFactory.*;
+import static com.dokebi.dalkom.domain.mileage.factory.MileageStateRequestFactory.*;
 import static com.dokebi.dalkom.domain.user.factory.UserFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyResponse;
+import com.dokebi.dalkom.domain.mileage.dto.MileageStateRequest;
 import com.dokebi.dalkom.domain.mileage.entity.MileageApply;
 import com.dokebi.dalkom.domain.mileage.repository.MileageApplyRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
@@ -115,27 +117,29 @@ class MileageApplyServiceTest {
 		assertEquals(mileageApply, result);
 	}
 
-	// @Test
-	// @DisplayName("마일리지 신청 승인 및 사용자 마일리지 및 히스토리 업데이트")
-	// void updateMileageApplyApprovalTest() {
-	// 	// given
-	// 	Long milgApplySeq = 1L;
-	// 	String approvedState = "2";
-	// 	MileageStateRequest request = createMileageStateRequestFactory(approvedState);
-	//
-	// 	User mockUser = createMockUser();
-	// 	MileageApply mileageApply = createMileageApplyResponse(mockUser);
-	//
-	// 	// Optional.ofNullable 대신 Optional.of를 사용하여 mileageApply가 null이 아니라고 확실하게 표현합니다.
-	// 	given(mileageApplyRepository.findByMilgApplySeq(milgApplySeq)).willReturn(Optional.of(mileageApply));
-	//
-	// 	// when
-	// 	mileageApplyService.updateMileageApply(milgApplySeq, request);
-	//
-	// 	// then
-	// 	assertEquals(request.getApprovedState(), mileageApply.getApprovedState());
-	//
-	// }
+	@Test
+	@DisplayName("마일리지 신청 승인 및 사용자 마일리지 및 히스토리 업데이트")
+	void updateMileageApplyApprovalTest() {
+		// given
+
+		String approvedState = "2";
+		MileageStateRequest request = createMileageStateRequestFactory(approvedState);
+
+		User mockUser = createMockUser();
+		MileageApply mileageApply = createMileageApplyResponse(mockUser);
+		mileageApply.setApprovedState("W");
+		Long milgApplySeq = mileageApply.getMilgApplySeq();
+
+		// Optional.ofNullable 대신 Optional.of를 사용하여 mileageApply가 null이 아니라고 확실하게 표현합니다.
+		given(mileageApplyRepository.findByMilgApplySeq(milgApplySeq)).willReturn(Optional.of(mileageApply));
+
+		// when
+		mileageApplyService.updateMileageApply(milgApplySeq, request);
+
+		// then
+		assertEquals(request.getApprovedState(), mileageApply.getApprovedState());
+
+	}
 
 	@Test
 	@DisplayName("마일리지 신청하기")
