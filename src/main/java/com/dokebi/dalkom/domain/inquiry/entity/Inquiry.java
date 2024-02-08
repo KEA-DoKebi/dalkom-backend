@@ -59,6 +59,9 @@ public class Inquiry extends EntityDate {
 	@Column(name = "answeredAt")
 	private LocalDateTime answeredAt;
 
+	@Column(name = "jiraToken")
+	private String jiraToken;
+
 	public Inquiry(Category category, User user, String title, String content, String answerState) {
 		this.category = category;
 		this.user = user;

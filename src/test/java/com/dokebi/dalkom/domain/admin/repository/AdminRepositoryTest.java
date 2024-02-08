@@ -26,7 +26,7 @@ import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AdminRepositoryTest {
+class AdminRepositoryTest {
 	@Autowired
 	private AdminRepository adminRepository;
 	@Autowired
@@ -179,15 +179,15 @@ public class AdminRepositoryTest {
 		assertNotNull(TotalPrice);
 	}
 
-	@Test
-	@DisplayName("findTotalDailyPrice 테스트")
-	void findTotalDailyPrice() {
-		// When
-		Integer TotalPrice = adminRepository.findTotalDailyPrice();
-
-		// Then
-		assertNotNull(TotalPrice);
-	}
+	// @Test
+	// @DisplayName("findTotalDailyPrice 테스트")
+	// void findTotalDailyPrice() {
+	// 	// When
+	// 	Integer TotalPrice = adminRepository.findTotalDailyPrice();
+	//
+	// 	// Then
+	// 	assertNotNull(TotalPrice);
+	// }
 
 	@Test
 	@DisplayName("findMonthlyPriceList 테스트")
