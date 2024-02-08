@@ -137,7 +137,6 @@ public class OrderService {
 		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
 			orderTotalPrice += calculateProductPrice(orderProduct);
 		}
-
 		for (OrderProductRequest orderProduct : request.getOrderProductRequestList()) {
 			Long orderCartSeq = orderProduct.getOrderCartSeq();
 			orderCartDeleteRequest.getOrderCartSeqList().add(orderCartSeq);
