@@ -32,11 +32,7 @@ import com.dokebi.dalkom.domain.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
-<<<<<<< HEAD
 class UserControllerTest {
-=======
-public class UserControllerTest {
->>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 
 	@InjectMocks
 	private UserController userController;

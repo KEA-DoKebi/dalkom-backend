@@ -12,8 +12,5 @@ public class JiraInquiryRequest {
 	private String description;
 	private String nickname;
 	private Long inquirySeq;
-<<<<<<< HEAD
 	private String InquiryCategory;
-=======
->>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 }

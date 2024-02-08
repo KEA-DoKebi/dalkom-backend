@@ -38,10 +38,7 @@ import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
-<<<<<<< HEAD
 import com.dokebi.dalkom.domain.user.exception.InvalidJoinedAtException;
-=======
->>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
@@ -112,15 +109,12 @@ public class ExceptionAdvice {
 	public Response userNicknameAlreadyExistsException(UserNicknameAlreadyExistsException e) {
 		return Response.failure(-1102, e.getMessage() + "은 중복된 닉네임 입니다.");
 	}
-<<<<<<< HEAD
 
 	@ExceptionHandler(InvalidJoinedAtException.class)
 	@ResponseStatus(HttpStatus.CONFLICT) // 409
 	public Response invalidJoinedAtException() {
 		return Response.failure(-1103, "잘못된 입사일입니다.");
 	}
-=======
->>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	//
 	// @ExceptionHandler (UserNotFoundException.class)
 	// @ResponseStatus(HttpStatus.NOT_FOUND) // 404
