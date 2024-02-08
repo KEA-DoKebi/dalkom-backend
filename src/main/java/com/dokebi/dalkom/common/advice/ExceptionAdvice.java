@@ -2,8 +2,6 @@ package com.dokebi.dalkom.common.advice;
 
 import java.util.List;
 
-import javax.management.InvalidApplicationException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
-import com.dokebi.dalkom.domain.admin.exception.CreateUserFailureException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
 import com.dokebi.dalkom.domain.category.exception.CategoryNotFoundException;
 import com.dokebi.dalkom.domain.chat.exception.GptResponseFailException;
@@ -35,6 +32,7 @@ import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.review.exception.ReviewAlreadyExistsException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
+import com.dokebi.dalkom.domain.stock.exception.InvalidAmountException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
@@ -51,16 +49,22 @@ public class ExceptionAdvice {
 
 	// 공통 권한
 
+	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
+	public Response unKnownException() {
+		return Response.failure(-1000, "오류가 발생하였습니다.");
+	}
+
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response memberNotFoundException() {
-		return Response.failure(-1001, "요청한 회원을 찾을 수 없습니다.");
+		return Response.failure(-1001, "회원 정보를 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(EmployeeNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response employeeNotFoundException() {
-		return Response.failure(-1002, "임직원 정보가 존재하지 않습니다.");
+		return Response.failure(-1002, "임직원 정보를 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(MissingRequestHeaderException.class)
@@ -108,35 +112,18 @@ public class ExceptionAdvice {
 	public Response userNicknameAlreadyExistsException(UserNicknameAlreadyExistsException e) {
 		return Response.failure(-1102, e.getMessage() + "은 중복된 닉네임 입니다.");
 	}
-	//
-	// @ExceptionHandler (UserNotFoundException.class)
-	// @ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	// public Response memberNotFoundException() {
-	// 	return Response.failure(-1007,"요청한 회원을 찾을 수 없습니다.");
-	// }
-	//
-	// @ExceptionHandler (RoleNotFoundException.class)
-	// @ResponseStatus (HttpStatus.NOT_FOUND) // 404
-	// public Response roleNotFoundException(){
-	// 	return Response.failure(-1008,"요청한 권한 등급을 찾을 수 없습니다. ");
-	// }
-	//
-	// @ExceptionHandler(MissingRequestHeaderException.class)
-	// @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
-	// 	return Response.failure(-1009,e.getHeaderName()+"요청 헤더가 누락되었습니다.");
 
 	// 상품
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response productNotFoundException() {
-		return Response.failure(-1200, "해당 상품을 찾을 수 없습니다.");
+		return Response.failure(-1200, "상품을 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(InvalidProductInputException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response invalidProductInputException() {
-		return Response.failure(-1201, "입력값이 잘못되었습니다.");
+		return Response.failure(-1201, "입력된 상품 정보가 잘못되었습니다.");
 	}
 
 	// 주문
@@ -166,13 +153,13 @@ public class ExceptionAdvice {
 	}
 
 	@ExceptionHandler(MileageApplyNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response mileageApplyNotFoundException() {
 		return Response.failure(-1401, "찾고자 하는 마일리지 신청 정보를 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(MileageAlreadyApplyException.class)
-	@ResponseStatus(HttpStatus.CONFLICT)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
 	public Response mileageAlreadyApplyException() {
 		return Response.failure(-1402, "이미 진행중인 마일리지 신청 내역이 존재합니다.");
 	}
@@ -181,12 +168,12 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderCartNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderCartEmptyResultDataAccessException() {
-		return Response.failure(-1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
+		return Response.failure(-1500, " 장바구니 정보를 찾을 수 없습니다.");
 	}
 
 	// 재고
-	@ExceptionHandler(InvalidApplicationException.class)
-	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
+	@ExceptionHandler(InvalidAmountException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response invalidAmountException() {
 		return Response.failure(-1600, "잘못된 입력값입니다.");
 	}
@@ -236,17 +223,11 @@ public class ExceptionAdvice {
 		return Response.failure(-1900, "카테고리를 찾을 수 없습니다.");
 	}
 
-	// 관리자 + 로그인
+	// 관리자
 	@ExceptionHandler(AdminNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response adminNotFoundException() {
 		return Response.failure(-2000, "해당 관리자를 찾을 수 없습니다.");
-	}
-
-	@ExceptionHandler(CreateUserFailureException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public Response createUserFailureException() {
-		return Response.failure(-2001, "임직원 데이터가 존재하지 않습니다.");
 	}
 
 	// 문의

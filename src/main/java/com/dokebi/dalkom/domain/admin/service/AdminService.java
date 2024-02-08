@@ -15,7 +15,6 @@ import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
-import com.dokebi.dalkom.domain.admin.exception.CreateUserFailureException;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.entity.Employee;
@@ -75,22 +74,20 @@ public class AdminService {
 	@Transactional
 	public void createUser(SignUpRequest request) {
 		// 임직원 테이블에 입력한 정보가 있는지 확인
-		if (checkEmployee(request)) {
-			// 이메일, 닉네임 중복성 검사
-			validateSignUpInfo(request);
+		checkEmployee(request);
 
-			// 비밀번호 암호화
-			String password = passwordEncoder.encode(request.getPassword());
-			request.setPassword(password);
+		// 이메일, 닉네임 중복성 검사
+		validateSignUpInfo(request);
 
-			//마일리지 추가
-			request.setMileage(signService.calculateMileage(request.getJoinedAt()));
+		// 비밀번호 암호화
+		String password = passwordEncoder.encode(request.getPassword());
+		request.setPassword(password);
 
-			// 회원 정보 저장
-			userRepository.save(SignUpRequest.toEntity(request));
-		} else {
-			throw new CreateUserFailureException();
-		}
+		//마일리지 추가
+		request.setMileage(signService.calculateMileage(request.getJoinedAt()));
+
+		// 회원 정보 저장
+		userRepository.save(SignUpRequest.toEntity(request));
 	}
 
 	// ADMIN-009 (관리자 대시보드)
@@ -138,14 +135,13 @@ public class AdminService {
 		}
 	}
 
-	protected boolean checkEmployee(SignUpRequest request) {
+	protected void checkEmployee(SignUpRequest request) {
 		Employee employee = employeeRepository.findByEmpId(request.getEmpId())
 			.orElseThrow(EmployeeNotFoundException::new);
-		if (employee.getName().equals(request.getName()) &&
-			employee.getEmail().equals(request.getEmail()) &&
-			employee.getJoinedAt().equals(request.getJoinedAt())) {
-			return true;
-		} else {
+
+		if (!employee.getName().equals(request.getName()) ||
+			!employee.getEmail().equals(request.getEmail()) ||
+			!employee.getJoinedAt().equals(request.getJoinedAt())) {
 			throw new EmployeeNotFoundException();
 		}
 	}
