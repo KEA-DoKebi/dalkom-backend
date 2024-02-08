@@ -47,14 +47,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionAdvice {
-
-	// 공통 권한
-	@ExceptionHandler(Exception.class)
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) // 500
-	public Response unKnownException() {
-		return Response.failure(-1000, "오류가 발생하였습니다.");
-	}
-
+	
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response memberNotFoundException() {
