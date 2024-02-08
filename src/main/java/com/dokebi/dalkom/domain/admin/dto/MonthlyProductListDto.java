@@ -12,7 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MonthlyProductListDto {
+<<<<<<< HEAD
 	public String month;
+=======
+	public String Month;
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	public Long productSeq;
 	public String name;
 	public String company;

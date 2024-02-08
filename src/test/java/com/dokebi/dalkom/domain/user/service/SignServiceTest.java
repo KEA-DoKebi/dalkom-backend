@@ -1,13 +1,19 @@
 package com.dokebi.dalkom.domain.user.service;
 
+<<<<<<< HEAD
 import static com.dokebi.dalkom.domain.admin.factory.AdminFactory.*;
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import static com.dokebi.dalkom.domain.user.factory.SignUpRequestFactory.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
+<<<<<<< HEAD
 import java.time.temporal.ChronoUnit;
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,18 +27,25 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.dokebi.dalkom.common.response.Response;
+<<<<<<< HEAD
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
 import com.dokebi.dalkom.domain.user.dto.LogInAdminRequest;
 import com.dokebi.dalkom.domain.user.dto.LogInAdminResponse;
+=======
+import com.dokebi.dalkom.domain.jira.exception.MissingJiraRequestHeaderException;
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import com.dokebi.dalkom.domain.user.dto.LogInRequest;
 import com.dokebi.dalkom.domain.user.dto.LogInUserResponse;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.dto.SignUpResponse;
 import com.dokebi.dalkom.domain.user.entity.Employee;
 import com.dokebi.dalkom.domain.user.entity.User;
+<<<<<<< HEAD
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNotFoundException;
 import com.dokebi.dalkom.domain.user.repository.EmployeeRepository;
@@ -40,10 +53,14 @@ import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class SignServiceTest {
+<<<<<<< HEAD
 	@Mock
 	AdminService adminService;
 	@InjectMocks
 	private SignService signService;
+=======
+
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	@Mock
 	private TokenService tokenService;
 
@@ -62,6 +79,12 @@ class SignServiceTest {
 	@Mock
 	private HttpServletRequest request;
 
+<<<<<<< HEAD
+=======
+	@InjectMocks
+	private SignService signService;
+
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	@Test
 	@DisplayName("사용자 로그인 성공")
 	void signInUser_Success() {
@@ -92,6 +115,7 @@ class SignServiceTest {
 	}
 
 	@Test
+<<<<<<< HEAD
 	@DisplayName("관리자 로그인 성공")
 	void signInAdmin_Success() {
 		// Given
@@ -166,6 +190,8 @@ class SignServiceTest {
 	}
 
 	@Test
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	@DisplayName("회원가입 성공")
 	void signUp_Success() {
 		SignUpRequest signUpRequest = createSignUpRequest();
@@ -191,8 +217,13 @@ class SignServiceTest {
 		request.setJoinedAt(LocalDate.now());
 
 		// EmployeeRepository의 findByEmpId 호출 결과를 모킹하여 EmployeeNotFoundException을 방지
+<<<<<<< HEAD
 		when(employeeRepository.findByEmpId(anyString())).thenReturn(
 			Optional.of(new Employee("emp123", "existing@example.com", "Existing User", LocalDate.now())));
+=======
+		when(employeeRepository.findByEmpId(anyString()))
+			.thenReturn(Optional.of(new Employee("emp123", "existing@example.com", "Existing User", LocalDate.now())));
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 		// UserRepository의 existsByEmail 호출 결과를 모킹하여 이메일 중복 상황을 시뮬레이션
 		when(userRepository.existsByEmail("existing@example.com")).thenReturn(true);
 
@@ -204,6 +235,7 @@ class SignServiceTest {
 	}
 
 	@Test
+<<<<<<< HEAD
 	@DisplayName("마일리지 지급 - 최대 한도")
 	void calculateMaximumMileageTest() {
 		// Given
@@ -255,5 +287,26 @@ class SignServiceTest {
 		long monthsWorked = ChronoUnit.MONTHS.between(joinedAt.withDayOfMonth(1).plusMonths(1), startOfYear);
 		int expectedMileage = Math.min((int)monthsWorked * mileagePerMonth + mileagePerYear, mileagePerYear);
 		assertEquals(expectedMileage, mileage);
+=======
+	@DisplayName("로그아웃 성공")
+	void signOut_Success() {
+		when(request.getHeader("AccessToken")).thenReturn("validToken");
+		doNothing().when(redisService).deleteValues("validToken");
+
+		Response response = signService.signOut(request);
+
+		assertNotNull(response);
+		assertTrue(response.isSuccess());
+	}
+
+	@Test
+	@DisplayName("로그아웃 실패 - 토큰 누락")
+	void signOut_MissingToken_Failure() {
+		when(request.getHeader("AccessToken")).thenReturn(null);
+
+		assertThrows(MissingJiraRequestHeaderException.class, () -> {
+			signService.signOut(request);
+		});
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	}
 }

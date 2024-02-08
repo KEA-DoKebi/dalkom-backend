@@ -1,16 +1,22 @@
 package com.dokebi.dalkom.domain.product.service;
 
+<<<<<<< HEAD
 import static com.dokebi.dalkom.domain.category.factory.CategoryFactory.*;
 import static com.dokebi.dalkom.domain.category.factory.CategoryResponseFactory.*;
 import static com.dokebi.dalkom.domain.product.factory.ProductByCategoryDetailResponseFactory.*;
 import static com.dokebi.dalkom.domain.product.factory.ProductFactory.*;
 import static com.dokebi.dalkom.domain.product.factory.ProductUpdateRequestFactory.*;
 import static com.dokebi.dalkom.domain.stock.factory.StockFactory.*;
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.List;
+<<<<<<< HEAD
 import java.util.Optional;
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+<<<<<<< HEAD
 import org.springframework.data.domain.Pageable;
 
 import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
@@ -37,6 +44,16 @@ import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
+=======
+
+import com.dokebi.dalkom.domain.category.entity.Category;
+import com.dokebi.dalkom.domain.category.service.CategoryService;
+import com.dokebi.dalkom.domain.option.dto.OptionAmountDto;
+import com.dokebi.dalkom.domain.option.entity.ProductOption;
+import com.dokebi.dalkom.domain.option.service.ProductOptionService;
+import com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
@@ -44,17 +61,26 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
 import com.dokebi.dalkom.domain.product.factory.OptionAmountDtoListFactory;
 import com.dokebi.dalkom.domain.product.repository.ProductRepository;
+<<<<<<< HEAD
 import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
 import com.dokebi.dalkom.domain.review.service.ReviewService;
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 import com.dokebi.dalkom.domain.stock.dto.StockListDto;
 import com.dokebi.dalkom.domain.stock.service.ProductStockService;
 
 @ExtendWith(MockitoExtension.class)
 public class ProductServiceTest {
+<<<<<<< HEAD
 	@Mock
 	Pageable pageable;
 	@InjectMocks
 	private ProductService productService;
+=======
+	@InjectMocks
+	private ProductService productService;
+
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	@Mock
 	private ProductRepository productRepository;
 	@Mock
@@ -63,10 +89,13 @@ public class ProductServiceTest {
 	private CategoryService categoryService;
 	@Mock
 	private ProductOptionService optionService;
+<<<<<<< HEAD
 	@Mock
 	private ReviewService reviewService;
 	@Mock
 	private ChatGptService chatGptService;
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 
 	@Test
 	@DisplayName("상위 카테고리 상품 리스트 조회 테스트")
@@ -87,6 +116,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
+<<<<<<< HEAD
 	@DisplayName("상위 카테고리 상품 리스트 조회 테스트 - 결과없음")
 	void readProductListByCategoryFailTest() {
 		// Given
@@ -100,6 +130,8 @@ public class ProductServiceTest {
 	}
 
 	@Test
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	@DisplayName("상품 상세 정보 조회 테스트")
 	void readProductTest() {
 		// Given
@@ -119,6 +151,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
+<<<<<<< HEAD
 	@DisplayName("상품 상세 정보 조회 - 예외 발생 테스트")
 	void readProductNotFoundExceptionTest() {
 		// Given
@@ -130,6 +163,8 @@ public class ProductServiceTest {
 	}
 
 	@Test
+=======
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	@DisplayName("상품 정보 추가 테스트")
 	void createProductTest() {
 		// Given
@@ -169,6 +204,7 @@ public class ProductServiceTest {
 	}
 
 	@Test
+<<<<<<< HEAD
 	@DisplayName("하위 카테고리 별 상품 목록 조회")
 	void readProductListByDetailCategory_Success() {
 		// Given
@@ -361,5 +397,15 @@ public class ProductServiceTest {
 
 		// When & Then
 		assertThrows(ProductNotFoundException.class, () -> productService.readProductByProductSeq(productSeq));
+=======
+	@DisplayName("상품 상세 정보 조회 - 예외 발생 테스트")
+	void readProductNotFoundExceptionTest() {
+		// Given
+		Long productSeq = 1L;
+		given(productRepository.findProductDetailByProductSeq(eq(productSeq))).willReturn(null);
+
+		// When & Then
+		assertThrows(ProductNotFoundException.class, () -> productService.readProduct(productSeq));
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 	}
 }

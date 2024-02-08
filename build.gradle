@@ -79,6 +79,7 @@ jacoco {
 
 test {
     ignoreFailures = true
+<<<<<<< HEAD
     finalizedBy 'jacocoTestReport'
     useJUnitPlatform()
 
@@ -88,10 +89,14 @@ test {
 //                     "com/example/thandbag/repository/**",
 //                     "com/example/thandbag/service/KakaoUserService.class"]
 //    }
+=======
+    finalizedBy jacocoTestReport // 테스트 후 JaCoCo 리포트 생성
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 }
 
 jacocoTestReport {
     reports {
+<<<<<<< HEAD
         xml.required = false
         csv.required = false
         html.required = true
@@ -117,3 +122,8 @@ jacocoTestReport {
 
 
 
+=======
+        xml.required = true
+    }
+}
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043

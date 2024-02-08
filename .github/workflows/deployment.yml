@@ -1,10 +1,17 @@
 name: Continuous Deployment
 
+<<<<<<< HEAD
 on:
   pull_request :
     branches:
       - prod
     types: [closed]
+=======
+on :
+  push :
+    branches :
+      - prod
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 
 jobs:
   Push_to_Kakao:
@@ -16,11 +23,32 @@ jobs:
 
     - name: Configuration Injection
       run :
+<<<<<<< HEAD
         source /root/workflow_helper/Bash_files/pull_config.sh
 
     - name: Build and Push Images
       run: |
         source /root/workflow_helper/Bash_files/build_and_push.sh
+=======
+        source /root/pull_config.sh
+
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile.blue --tag dokebi-was:blue 
+        docker build . --file Dockerfile.green --tag dokebi-was:green
+
+    - name: Tag the Docker image
+      run: |
+        docker tag dokebi-was:blue ${{ secrets.BLUE_IMAGE }}
+        docker tag dokebi-was:green ${{ secrets.GREEN_IMAGE }}
+    - name: Login to Docker Registry
+      run: docker login dokebi-shop.kr-gov-central-1.kcr.dev --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+    - name: Push the Docker image
+      run: |
+        docker push ${{ secrets.BLUE_IMAGE }}
+        docker push ${{ secrets.GREEN_IMAGE }}
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
 
   Run_Blue_on_Kakao :
     runs-on: self-hosted
@@ -29,5 +57,20 @@ jobs:
     steps:
     - name: Deploy to Blue
       run: |
+<<<<<<< HEAD
         source /root/workflow_helper/Bash_files/credentials.sh
         source /root/workflow_helper/Bash_files/deploying.sh
+=======
+        source /root/credentials.sh
+        ssh -A -J bastion blue 'bash -s' < /root/deploying-blue.sh
+
+  Run_Green_on_Kakao :
+    runs-on: self-hosted
+    needs: Run_Blue_on_Kakao
+        
+    steps:
+      - name: Deploy to Green
+        run: |
+          source /root/credentials.sh
+          ssh -A -J bastion green 'bash -s' < /root/deploying-green.sh
+>>>>>>> 4b8f81afc49e6512730462d214f424d2bb7b2043
