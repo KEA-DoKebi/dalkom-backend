@@ -16,7 +16,7 @@ import com.dokebi.dalkom.domain.admin.entity.Admin;
 
 import io.lettuce.core.dynamic.annotation.Param;
 
-public interface AdminRepository extends JpaRepository<Admin, Long> {
+public interface AdminRepository extends JpaRepository<Admin, Long>, AdminRepositoryCustom {
 	boolean existsByNickname(String nickname);
 
 	Optional<Admin> findByAdminId(String adminId);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.admin.dto.AdminDashboardResponse;
+import com.dokebi.dalkom.domain.admin.dto.AdminSearchCondition;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
@@ -127,6 +128,11 @@ public class AdminService {
 			// 다른 조건이 없는 경우 기본적인 조회 수행
 			return adminRepository.findAllAdminList(pageable);
 		}
+	}
+
+	//ADMIN-011 (관리자 목록 조회 검색 Querydsl)
+	public Page<ReadAdminResponse> readAdminListSearch2(AdminSearchCondition condition, Pageable pageable) {
+		return adminRepository.searchAdmin(condition, pageable);
 	}
 
 	private void validateNickname(String nickname) {
