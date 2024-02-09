@@ -83,6 +83,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 		+ "LEFT JOIN Category c2 "
 		+ "ON c.parentSeq = c2.categorySeq "
 		+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') "
-		+ "GROUP by c.parentSeq")
+		+ "GROUP by c.parentSeq "
+		+ "ORDER BY c.parentSeq")
 	List<MonthlyCategoryListDto> findMonthlyCategoryList();
 }
