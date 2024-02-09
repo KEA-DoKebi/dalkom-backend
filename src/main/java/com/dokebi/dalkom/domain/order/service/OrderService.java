@@ -74,7 +74,16 @@ public class OrderService {
 
 	// ORDER-001 (사용자별 전체 주문 조회)
 	public Page<OrderUserReadResponse> readOrderByUserSeq(Long userSeq, Pageable pageable) {
-		return orderRepository.findOrderListByUserSeq(userSeq, pageable);
+		Page<OrderUserReadResponse> orderPage = orderRepository.findOrderListByUserSeq(userSeq, pageable);
+
+		List<OrderUserReadResponse> modifiedList = orderPage.getContent().stream()
+			.map(orderResponse -> {
+				orderResponse.makeOrderTitle(orderResponse.getOrderTitle(), orderResponse.getProductCnt());
+				return orderResponse;
+			})
+			.collect(Collectors.toList());
+
+		return new PageImpl<>(modifiedList, pageable, orderPage.getTotalElements());
 	}
 
 	// ORDER-002 (주문 확인하기)
