@@ -72,17 +72,18 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 		+ " FROM OrderDetail od LEFT JOIN od.product p "
 		+ " WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') "
 		+ " GROUP by DATE_FORMAT(od.createdAt, '%Y-%m') , p.productSeq "
-		+ " ORDER by sum(od.amount) DESC ")
+		+ " ORDER by sum(od.amount) DESC, p.price DESC ")
 	Page<MonthlyProductListDto> findMonthlyProductList(Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto("
 		+ "c.parentSeq, MAX(c2.name),  SUM(od.amount)) "
-		+ "from OrderDetail od "
-		+ "left join od.product p"
+		+ "FROM OrderDetail od "
+		+ "LEFT JOIN od.product p"
 		+ "LEFT JOIN od.product.category c "
 		+ "LEFT JOIN Category c2 "
-		+ "on c.parentSeq = c2.categorySeq "
+		+ "ON c.parentSeq = c2.categorySeq "
 		+ "WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') "
-		+ "GROUP by c.parentSeq")
+		+ "GROUP by c.parentSeq "
+		+ "ORDER BY c.parentSeq")
 	List<MonthlyCategoryListDto> findMonthlyCategoryList();
 }
