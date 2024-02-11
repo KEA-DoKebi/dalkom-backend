@@ -2,7 +2,6 @@ package com.dokebi.dalkom.domain.admin.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,9 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto;
-import com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto;
-import com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
@@ -157,71 +153,5 @@ class AdminRepositoryTest {
 		// Then
 		assertNotNull(adminListPage);
 		assertFalse(adminListPage.isEmpty());
-	}
-
-	@Test
-	@DisplayName("findTotalPrice 테스트")
-	void findTotalPrice() {
-		// When
-		Integer TotalPrice = adminRepository.findTotalPrice();
-
-		// Then
-		assertNotNull(TotalPrice);
-	}
-
-	@Test
-	@DisplayName("findTotalMonthlyPrice 테스트")
-	void findTotalMonthlyPrice() {
-		// When
-		Integer TotalPrice = adminRepository.findTotalMonthlyPrice();
-
-		// Then
-		assertNotNull(TotalPrice);
-	}
-
-	// @Test
-	// @DisplayName("findTotalDailyPrice 테스트")
-	// void findTotalDailyPrice() {
-	// 	// When
-	// 	Integer TotalPrice = adminRepository.findTotalDailyPrice();
-	//
-	// 	// Then
-	// 	assertNotNull(TotalPrice);
-	// }
-
-	@Test
-	@DisplayName("findMonthlyPriceList 테스트")
-	void findMonthlyPriceList() {
-		// When
-		List<MonthlyPriceListDto> priceList = adminRepository.findMonthlyPriceList();
-
-		// Then
-		assertNotNull(priceList);
-		assertFalse(priceList.isEmpty());
-	}
-
-	@Test
-	@DisplayName("findMonthlyProductList 테스트")
-	void findMonthlyProductList() {
-		// Given
-		Pageable pageable = PageRequest.of(0, 10);
-
-		// When
-		Page<MonthlyProductListDto> pricePage = adminRepository.findMonthlyProductList(pageable);
-
-		// Then
-		assertNotNull(pricePage);
-		assertFalse(pricePage.isEmpty());
-	}
-
-	@Test
-	@DisplayName("findMonthlyCategoryList 테스트")
-	void findMonthlyCategoryList() {
-		// When
-		List<MonthlyCategoryListDto> categoryList = adminRepository.findMonthlyCategoryList();
-
-		// Then
-		assertNotNull(categoryList);
-		assertFalse(categoryList.isEmpty());
 	}
 }

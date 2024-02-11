@@ -30,6 +30,7 @@ import com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.factory.CreateAdminRequestFactory;
+import com.dokebi.dalkom.domain.admin.mapper.AdminMapper;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.entity.Employee;
@@ -47,6 +48,8 @@ public class AdminServiceTest {
 	private SignService signService;
 	@Mock
 	private AdminRepository adminRepository;
+	@Mock
+	private AdminMapper adminMapper;
 	@Mock
 	private UserRepository userRepository;
 	@Mock
@@ -156,20 +159,18 @@ public class AdminServiceTest {
 	@DisplayName("ADMIN-009 (관리자 대시보드)")
 	void readDashboardTest() {
 		// Given
-		when(adminRepository.findTotalPrice()).thenReturn(1000);
-		when(adminRepository.findTotalMonthlyPrice()).thenReturn(500);
-		when(adminRepository.findTotalDailyPrice()).thenReturn(100);
+		when(adminMapper.findTotalPrice()).thenReturn(1000);
+		when(adminMapper.findTotalMonthlyPrice()).thenReturn(500);
+		when(adminMapper.findTotalDailyPrice()).thenReturn(100);
 
-		when(adminRepository.findMonthlyPriceList()).thenReturn(
+		when(adminMapper.findMonthlyPriceList()).thenReturn(
 			Arrays.asList(new MonthlyPriceListDto(), new MonthlyPriceListDto()));
-		when(adminRepository.findMonthlyCategoryList()).thenReturn(
+		when(adminMapper.findMonthlyCategoryList()).thenReturn(
 			Arrays.asList(new MonthlyCategoryListDto(), new MonthlyCategoryListDto()));
 
 		List<MonthlyProductListDto> monthlyProductListContent = Arrays.asList(new MonthlyProductListDto(),
 			new MonthlyProductListDto());
-		Page<MonthlyProductListDto> monthlyProductListPage = new PageImpl<>(monthlyProductListContent);
-		Pageable topFive = PageRequest.of(0, 5);
-		when(adminRepository.findMonthlyProductList(topFive)).thenReturn(monthlyProductListPage);
+		when(adminMapper.findMonthlyProductList(anyInt(), anyInt())).thenReturn(monthlyProductListContent);
 
 		// When
 		AdminDashboardResponse actualResponse = adminService.readDashboard();
