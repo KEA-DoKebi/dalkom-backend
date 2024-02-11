@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.notice.dto.NoticeCreateRequest;
+import com.dokebi.dalkom.domain.notice.dto.NoticeSearchCondition;
 import com.dokebi.dalkom.domain.notice.dto.NoticeUpdateRequest;
 import com.dokebi.dalkom.domain.notice.service.NoticeService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
@@ -72,5 +73,12 @@ public class NoticeController {
 	public Response readNoticeListBySearch(@RequestParam(required = false) String nickname,
 		@RequestParam(required = false) String title, Pageable pageable) {
 		return Response.success(noticeService.readNoticeListBySearch(nickname, title, pageable));
+	}
+
+	// NOTICE-007 (공지 검색 querydsl)
+	@GetMapping("/api/notice/search/querydsl")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readNoticeListQueryDslBySearch(NoticeSearchCondition noticeSearchCondition, Pageable pageable) {
+		return Response.success(noticeService.readNoticeListQuerydslBySearch(noticeSearchCondition, pageable));
 	}
 }

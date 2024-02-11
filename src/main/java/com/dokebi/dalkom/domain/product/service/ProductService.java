@@ -26,6 +26,7 @@ import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ProductCompareDetailResponse;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductSearchCondition;
 import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductDetailResponse;
@@ -232,6 +233,11 @@ public class ProductService {
 	/** 다른 Domain Service에서 사용할 메소드 **/
 	public Product readProductByProductSeq(Long productSeq) {
 		return productRepository.findProductByProductSeq(productSeq).orElseThrow(ProductNotFoundException::new);
+	}
+
+	public Page<ReadProductResponse> readProductListSearchQueryDsl(ProductSearchCondition condition,
+		Pageable pageable) {
+		return productRepository.searchProduct(condition, pageable);
 	}
 
 	public String checkProductActiveState(Long productSeq) {

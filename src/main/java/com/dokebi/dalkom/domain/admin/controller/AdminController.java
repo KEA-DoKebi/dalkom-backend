@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
+import com.dokebi.dalkom.domain.admin.dto.AdminSearchCondition;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
 import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
@@ -72,6 +73,14 @@ public class AdminController {
 		@RequestParam(required = false) String depart,
 		@RequestParam(required = false) String nickname, Pageable pageable) {
 		return Response.success(adminService.readAdminListSearch(name, adminId, depart, nickname, pageable));
+	}
+
+	// ADMIN-011 (관리자 목록 조회 검색 querydsl)
+	@GetMapping("/api/admin/search/querydsl")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readAdminListQueryDslSearch(
+		AdminSearchCondition adminSearchCondition, Pageable pageable) {
+		return Response.success(adminService.readAdminListSearch2(adminSearchCondition, pageable));
 	}
 
 }

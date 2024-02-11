@@ -45,8 +45,10 @@ public class UserController {
 	// USER-006 (사용자 정보 조회 검색)
 	@GetMapping("/api/user/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readUserListSearch(@RequestParam(required = false) String email
-		, @RequestParam(required = false) String nickname, Pageable pageable) {
+	public Response readUserListSearch(
+		@RequestParam(required = false) String email,
+		@RequestParam(required = false) String nickname,
+		Pageable pageable) {
 		return Response.success(userService.readUserListSearch(email, nickname, pageable));
 	}
 

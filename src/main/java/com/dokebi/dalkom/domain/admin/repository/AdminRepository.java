@@ -31,13 +31,12 @@ public interface AdminRepository extends JpaRepository<Admin, Long>, AdminReposi
 		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
 		"FROM Admin a WHERE a.name LIKE CONCAT('%', :name, '%')")
 	Page<ReadAdminResponse> findAdminListByName(
-		@Param("name") String name,
-		Pageable pageable);
+		@Param("name") String name, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
 		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) "
 		+ "FROM Admin a WHERE (a.adminId LIKE CONCAT('%', :adminId, '%')) ")
-	Page<ReadAdminResponse> findAdminListByAdminId(@Param("adminId") String adminId, Pageable pageable);
+	Page<ReadAdminResponse> findAdminListByAdminId(String adminId, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
 		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) "

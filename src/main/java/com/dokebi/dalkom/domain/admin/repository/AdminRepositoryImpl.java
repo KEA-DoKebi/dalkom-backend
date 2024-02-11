@@ -19,10 +19,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-
 public class AdminRepositoryImpl implements AdminRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
@@ -46,7 +42,7 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
 			.where(
 				adminIdEq(condition.getAdminId()),
 				nicknameEq(condition.getNickname()),
-				nicknameEq(condition.getName()),
+				nameEq(condition.getName()),
 				departEq(condition.getDepart())
 			)
 			.offset(pageable.getOffset())
@@ -67,18 +63,18 @@ public class AdminRepositoryImpl implements AdminRepositoryCustom {
 	}
 
 	private BooleanExpression adminIdEq(String adminId) {
-		return hasText(adminId) ? admin.adminId.eq(adminId) : null;
+		return hasText(adminId) ? admin.adminId.contains(adminId) : null;
 	}
 
 	private BooleanExpression nameEq(String name) {
-		return hasText(name) ? admin.name.eq(name) : null;
+		return hasText(name) ? admin.name.contains(name) : null;
 	}
 
 	private BooleanExpression departEq(String depart) {
-		return hasText(depart) ? admin.depart.eq(depart) : null;
+		return hasText(depart) ? admin.depart.contains(depart) : null;
 	}
 
 	private BooleanExpression nicknameEq(String nickname) {
-		return hasText(nickname) ? admin.nickname.eq(nickname) : null;
+		return hasText(nickname) ? admin.nickname.contains(nickname) : null;
 	}
 }

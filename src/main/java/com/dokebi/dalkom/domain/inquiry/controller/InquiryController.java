@@ -84,4 +84,12 @@ public class InquiryController {
 		inquiryService.deleteInquiry(inquirySeq);
 		return Response.success();
 	}
+
+	// INQUIRY-007 (문의 카테고리 별 문의 검색)
+	@GetMapping("/api/inquiry/category/{categorySeq}/search/querydsl")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readInquiryByCategoryQuerydslSearch(@PathVariable Long categorySeq,
+		@RequestParam(required = false) String title, Pageable pageable) {
+		return Response.success(inquiryService.readInquiryListByCategorySearchQuerydsl(categorySeq, title, pageable));
+	}
 }
