@@ -28,6 +28,10 @@ spring:
     level:
       org.hibernate.SQL: debug
       org.hibernate.type: trace
+      hello:
+        board:
+          repository:
+            mybatis: trace
 
   # 서버 포트 설정
 server:
@@ -50,3 +54,7 @@ jira:
     email: ${JIRA_USER_EMAIL} # Jira API를 사용할 사용자의 이메일
   api:
     token: ${JIRA_API_TOKEN} # Jira API 토큰
+
+mybatis:
+  type-aliases-package: hello.board.domain
+  config-location: classpath:mybatis-config.xml
