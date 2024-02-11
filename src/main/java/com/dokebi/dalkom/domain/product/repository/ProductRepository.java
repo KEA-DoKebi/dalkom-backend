@@ -130,7 +130,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
 		+ "WHERE p.state != 'N' AND p.productSeq IN :productSeqList "
 		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company "
-		+ "ORDER BY p.productSeq DESC ")
+		+ "ORDER BY FIELD(p.productSeq, :productSeqList)")
 	Page<ProductMainResponse> findProductListSearchBySearchValue(
 		@Param("productSeqList") List<Long> productSeqList, Pageable pageable);
 
