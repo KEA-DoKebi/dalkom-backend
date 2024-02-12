@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.email.dto.EmailMessage;
+import com.dokebi.dalkom.common.email.service.EmailService;
 import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
 import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
@@ -29,6 +31,7 @@ public class MileageApplyService {
 	private final MileageApplyRepository mileageApplyRepository;
 	private final UserService userService;
 	private final MileageService mileageService;
+	private final EmailService emailService;
 
 	public Page<MileageApplyResponse> readMileageApply(Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApply(pageable);
@@ -48,7 +51,7 @@ public class MileageApplyService {
 	}
 
 	@Transactional
-	public void updateMileageApply(Long milgApplySeq, MileageStateRequest request) {
+	public void updateMileageApply(Long milgApplySeq, MileageStateRequest request) throws Exception {
 
 		MileageApply mileageApply = readByMilgApplySeq(milgApplySeq);
 		User user = mileageApply.getUser();
@@ -69,11 +72,17 @@ public class MileageApplyService {
 					MileageHistoryState.CHARGED.getState());
 				user.setMileage(totalMileage);
 
+				// 메일 전송
+				EmailMessage emailMessage = new EmailMessage(user.getEmail(), "마일리지 신청이 승인되었습니다.");
+				emailService.sendMailMileage(emailMessage, "승인", mileageApply.getCreatedAt(), mileageApply.getAmount());
 			} else if (request.getApprovedState().equals(MileageApplyState.NO.getState())) {
 				mileageService.createMileageHistory(user, 0, user.getMileage(),
 					MileageHistoryState.DENIED.getState());
-			}
 
+				// 메일 전송
+				EmailMessage emailMessage = new EmailMessage(user.getEmail(), "마일리지 신청이 거부되었습니다.");
+				emailService.sendMailMileage(emailMessage, "거부", mileageApply.getCreatedAt(), mileageApply.getAmount());
+			}
 		} else {
 			throw new MileageAlreadyApplyException();
 		}

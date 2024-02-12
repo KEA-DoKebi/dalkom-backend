@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.dokebi.dalkom.common.email.exception.MailSendFailException;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
@@ -47,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionAdvice {
-	
+
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response memberNotFoundException() {
@@ -254,5 +255,12 @@ public class ExceptionAdvice {
 	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) //503
 	public Response gptNoResponseException(GptResponseFailException e) {
 		return Response.failure(-2300, e.getMessage());
+	}
+
+	// Email
+	@ExceptionHandler(MailSendFailException.class)
+	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) // 503
+	public Response mailSendException(MailSendFailException e) {
+		return Response.failure(-2400, e.getMessage());
 	}
 }
