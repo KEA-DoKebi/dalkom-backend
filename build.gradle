@@ -69,6 +69,7 @@ dependencies {
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     // java.lang.NoClassDefFoundError (javax.annotation.Generated) 발생 대응
 
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0' // MyBatis
 }
 
 tasks.named('test') {
