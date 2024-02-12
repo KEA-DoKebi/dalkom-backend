@@ -1,9 +1,11 @@
 package com.dokebi.dalkom.domain.user.controller;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,14 +36,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
+	private final ObjectMapper objectMapper = new ObjectMapper();
 	@InjectMocks
 	private UserController userController;
-
 	@Mock
 	private UserService userService;
-
 	private MockMvc mockMvc;
-	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@BeforeEach
 	void beforeEach() {
@@ -66,11 +66,13 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("사용자 정보 수정")
+	@DisplayName("USER-003 (사용자 정보 수정)")
 	void updateUser() throws Exception {
 		// Given
+		Long userSeq = 1L;
 		UserUpdateRequest updateRequest = new UserUpdateRequest("newEmail@example.com", "New Name", "New Nickname");
-		doNothing().when(userService).updateUserByUserSeq(anyLong(), any(UserUpdateRequest.class));
+		// doNothing().when(userService).updateUserByUserSeq(anyLong(), any(UserUpdateRequest.class),
+		// 	any(HttpServletRequest.class));
 
 		// When & Then
 		mockMvc.perform(put("/api/user")
@@ -79,58 +81,60 @@ class UserControllerTest {
 			.andExpect(status().isOk());
 
 		// userService의 updateUser가 호출되었는지 확인
-		verify(userService).updateUserByUserSeq(eq(1L), any(UserUpdateRequest.class));
+		verify(userService).updateUserByUserSeq(eq(userSeq), eq(updateRequest), any(HttpServletRequest.class));
 	}
 
 	@Test
-	@DisplayName("사용자 정보 조회")
+	@DisplayName("USER-004 (사용자 정보 목록 조회)")
 	void readUserList() throws Exception {
 		// Given
 		Pageable pageable = PageRequest.of(0, 5);
-		when(userService.readUserList(any(Pageable.class))).thenReturn(
+		when(userService.readUserList(pageable)).thenReturn(
 			new PageImpl<>(java.util.Collections.emptyList()));
 
 		// When & Then
 		mockMvc.perform(get("/api/user").param("page", "0").param("size", "5"))
 			.andExpect(status().isOk());
 
-		verify(userService).readUserList(any(Pageable.class));
+		verify(userService).readUserList(pageable);
 	}
 
 	@Test
-	@DisplayName("사용자 정보 조회 검색")
+	@DisplayName("USER-006 (사용자 정보 목록 조회 검색)")
 	void readUserListSearch() throws Exception {
 		// Given
 		String email = "user@example.com";
 		String nickname = "UserNickname";
 		Pageable pageable = PageRequest.of(0, 5);
-		when(userService.readUserListSearch(any(String.class), any(String.class), any(Pageable.class))).thenReturn(
+		when(userService.readUserListSearch(email, nickname, pageable)).thenReturn(
 			new PageImpl<>(java.util.Collections.emptyList()));
 
 		// When & Then
-		mockMvc.perform(get("/api/user/search").param("email", email)
+		mockMvc.perform(get("/api/user/search")
+				.param("email", email)
 				.param("nickname", nickname)
 				.param("page", "0")
 				.param("size", "5"))
 			.andExpect(status().isOk());
 
-		verify(userService).readUserListSearch(any(String.class), any(String.class), any(Pageable.class));
+		verify(userService).readUserListSearch(email, nickname, pageable);
 	}
 
 	@Test
-	@DisplayName("사용자 정보 조회(자신)")
+	@DisplayName("USER-007 (사용자 본인 정보 조회)")
 	void readUserSelfDetail() throws Exception {
 		// Given
 		Long userSeq = 1L; // @LoginUser에 의해 제공될 사용자 식별자 가정
 		ReadUserSelfDetailResponse response = new ReadUserSelfDetailResponse(
 			"user@example.com", "User Name", "UserNickname", "User Address");
-		when(userService.readUserSelfDetail(userSeq)).thenReturn(response);
+		given(userService.readUserSelfDetail(eq(userSeq), any(HttpServletRequest.class)))
+			.willReturn(response);
 
 		// When & Then
-		mockMvc.perform(get("/api/user/self"))
+		mockMvc.perform(get("/api/user/self")
+				.param("userSeq", String.valueOf(userSeq)))
 			.andExpect(status().isOk());
 
-		verify(userService).readUserSelfDetail(userSeq);
+		verify(userService).readUserSelfDetail(eq(userSeq), any(HttpServletRequest.class));
 	}
-
 }
