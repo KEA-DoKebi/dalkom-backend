@@ -51,6 +51,10 @@ dependencies {
     implementation 'org.json:json:20210307'
 
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0' // MyBatis
+
+    implementation 'org.springframework.boot:spring-boot-starter-mail' // Email
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // html 동적생성
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 tasks.named('test') {

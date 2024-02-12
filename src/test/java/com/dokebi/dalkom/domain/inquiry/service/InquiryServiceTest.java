@@ -224,7 +224,11 @@ public class InquiryServiceTest {
 		when(adminRepository.findByAdminSeq(adminSeq)).thenReturn(Optional.of(admin));
 
 		// When
-		inquiryService.answerInquiry(inquirySeq, adminSeq, request);
+		try {
+			inquiryService.answerInquiry(inquirySeq, adminSeq, request);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 
 		// Then
 		assertEquals(request.getAnswerContent(), inquiry.getAnswerContent());
