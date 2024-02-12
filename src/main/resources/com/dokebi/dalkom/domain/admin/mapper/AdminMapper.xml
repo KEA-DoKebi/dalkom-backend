@@ -20,13 +20,13 @@
     </select>
 
     <select id="findMonthlyPriceList" resultType="MonthlyPriceListDto">
-        SELECT DATE_FORMAT(o.createdAt, '%Y-%m') as month, SUM(o.totalPrice) as totalPrice
+        SELECT DATE_FORMAT(o.createdAt, '%Y-%m') as month, SUM(o.totalPrice) as monthlyPrice
         FROM ordr o
         GROUP BY month
     </select>
     <resultMap id="MonthlyPriceListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto">
         <result column="month" property="month"/>
-        <result column="totalPrice" property="monthlyPrice"/>
+        <result column="monthlyPrice" property="monthlyPrice"/>
     </resultMap>
 
     <select id="findMonthlyProductList" resultMap="MonthlyProductListDto">
@@ -35,14 +35,14 @@
                MAX(p.name)                        as name,
                MAX(p.company)                     as company,
                MAX(p.price)                       as price,
-               COUNT(*)                           as count,
-               SUM(od.amount)                     as totalAmount,
+               COUNT(*)                           as cnt,
+               SUM(od.amount)                     as amount,
                (SUM(od.amount) * MAX(p.price))    as totalPrice
         FROM ordrDetail od
                  LEFT JOIN product p ON od.productSeq = p.productSeq
         WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
         GROUP BY month, p.productSeq
-        ORDER BY totalAmount DESC, price DESC
+        ORDER BY amount DESC, price DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
     <resultMap id="MonthlyProductListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto">
@@ -51,13 +51,13 @@
         <result column="name" property="name"/>
         <result column="company" property="company"/>
         <result column="price" property="price"/>
-        <result column="count" property="cnt"/>
-        <result column="totalAmount" property="amount"/>
+        <result column="cnt" property="cnt"/>
+        <result column="amount" property="amount"/>
         <result column="totalPrice" property="totalPrice"/>
     </resultMap>
 
     <select id="findMonthlyCategoryList" resultType="MonthlyCategoryListDto">
-        SELECT c.parentSeq, MAX(c2.name) as categoryName, SUM(od.amount) as totalAmount
+        SELECT c.parentSeq, MAX(c2.name) as name, SUM(od.amount) as cnt
         FROM ordrDetail od
                  LEFT JOIN product p ON od.productSeq = p.productSeq
                  LEFT JOIN category c ON p.categorySeq = c.categorySeq
@@ -68,8 +68,8 @@
     </select>
     <resultMap id="MonthlyCategoryListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto">
         <result column="categorySeq" property="categorySeq"/>
-        <result column="categoryName" property="name"/>
-        <result column="totalAmount" property="cnt"/>
+        <result column="name" property="name"/>
+        <result column="cnt" property="cnt"/>
     </resultMap>
 
     <select id="countMonthlyProductList" resultType="int">
