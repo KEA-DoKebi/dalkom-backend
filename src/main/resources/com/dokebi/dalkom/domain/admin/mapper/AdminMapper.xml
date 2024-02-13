@@ -75,7 +75,7 @@
     <select id="countMonthlyProductList" resultType="int">
         SELECT COUNT(DISTINCT p.productSeq)
         FROM ordrDetail od
-                 JOIN test.product p ON od.productSeq = p.productSeq
+                 JOIN product p ON od.productSeq = p.productSeq
         WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')
     </select>
 </mapper>
