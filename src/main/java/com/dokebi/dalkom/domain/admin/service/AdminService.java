@@ -1,9 +1,11 @@
 package com.dokebi.dalkom.domain.admin.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dokebi.dalkom.domain.admin.dto.AdminDashboardResponse;
 import com.dokebi.dalkom.domain.admin.dto.CreateAdminRequest;
+import com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto;
 import com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
+import com.dokebi.dalkom.domain.admin.mapper.AdminMapper;
 import com.dokebi.dalkom.domain.admin.repository.AdminRepository;
 import com.dokebi.dalkom.domain.user.dto.SignUpRequest;
 import com.dokebi.dalkom.domain.user.entity.Employee;
@@ -30,14 +34,17 @@ import com.dokebi.dalkom.domain.user.service.SignService;
 @Transactional(readOnly = true)
 public class AdminService {
 	private final AdminRepository adminRepository;
+	private final AdminMapper adminMapper;
 	private final PasswordEncoder passwordEncoder;
 	private final UserRepository userRepository;
 	private final EmployeeRepository employeeRepository;
 	private final SignService signService;
 
-	public AdminService(AdminRepository adminRepository, PasswordEncoder passwordEncoder, UserRepository userRepository,
+	public AdminService(AdminRepository adminRepository, AdminMapper adminMapper, PasswordEncoder passwordEncoder,
+		UserRepository userRepository,
 		EmployeeRepository employeeRepository, @Lazy SignService signService) {
 		this.adminRepository = adminRepository;
+		this.adminMapper = adminMapper;
 		this.passwordEncoder = passwordEncoder;
 		this.userRepository = userRepository;
 		this.employeeRepository = employeeRepository;
@@ -92,15 +99,23 @@ public class AdminService {
 
 	// ADMIN-009 (관리자 대시보드)
 	public AdminDashboardResponse readDashboard() {
-		AdminDashboardResponse response = new AdminDashboardResponse();
-		response.setTotalMileage(adminRepository.findTotalPrice());
-		response.setTotalMonthlyMileage(adminRepository.findTotalMonthlyPrice());
-		response.setTotalDailyMileage(adminRepository.findTotalDailyPrice());
-		response.setMonthlyPriceList(adminRepository.findMonthlyPriceList());
-		response.setMonthlyCategoryList(adminRepository.findMonthlyCategoryList());
 
-		Pageable topFive = PageRequest.of(0, 5);
-		response.setMonthlyProductList(adminRepository.findMonthlyProductList(topFive));
+		AdminDashboardResponse response = new AdminDashboardResponse();
+		response.setTotalMileage(adminMapper.findTotalPrice());
+		response.setTotalMonthlyMileage(adminMapper.findTotalMonthlyPrice());
+		response.setTotalDailyMileage(adminMapper.findTotalDailyPrice());
+		response.setMonthlyPriceList(adminMapper.findMonthlyPriceList());
+		response.setMonthlyCategoryList(adminMapper.findMonthlyCategoryList());
+
+		int offset = 0;
+		int limit = 5;
+		List<MonthlyProductListDto> monthlyProductList = adminMapper.findMonthlyProductList(offset, limit);
+
+		int total = adminMapper.countMonthlyProductList();
+		Page<MonthlyProductListDto> page = new PageImpl<>(monthlyProductList, PageRequest.of(0, 5), total);
+
+		response.setMonthlyProductList(page);
+
 		return response;
 	}
 
