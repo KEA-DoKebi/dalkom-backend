@@ -81,7 +81,6 @@ sonarqube {
 
 jacoco {
     toolVersion = "0.8.7"
-    excludes = ['**/*Test.class']
 }
 
 test {
@@ -108,7 +107,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    "com/dokebi/dalkom/domain/**/config",
+                    "com/dokebi/dalkom/domain/**/co1nfig",
                     "com/dokebi/dalkom/common/**/",
                     "com/dokebi/dalkom/domain/**/dto",
                     "com/dokebi/dalkom/domain/**/entity",
@@ -116,6 +115,7 @@ jacocoTestReport {
                     "com/dokebi/dalkom/domain/**/exception",
                     "com/dokebi/dalkom/domain/chat/**",
                     "com/dokebi/dalkom/domain/user/handler",
+                    "test/**"
             ])
         }))
     }
