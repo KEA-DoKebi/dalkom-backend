@@ -79,7 +79,7 @@ sonarqube {
     properties {
         property "sonar.projectKey", "KEA-DoKebi_dalkom-backend_AY0ILkkA7nQIqqNyuD-r"
         property "sonar.host.url", "https://b3a1-203-249-127-39.ngrok-free.app"
-        property "sonar.exclusions", "**/com/dokebi/dalkom/domain/config/**, **/com/dokebi/dalkom/common/**/, **/com/dokebi/dalkom/domain/**/dto, **/com/dokebi/dalkom/domain/**/entity, **/com/dokebi/dalkom/domain/jira/**, **/com/dokebi/dalkom/domain/**/exception, **/com/dokebi/dalkom/domain/chat/**, **/com/dokebi/dalkom/domain/user/handler/**, **/test/**"
+        property "sonar.exclusions", "src/main/java/com/dokebi/dalkom/domain/config/**, src/main/java/com/dokebi/dalkom/common/**/, src/main/java/com/dokebi/dalkom/domain/**/dto, src/main/java/com/dokebi/dalkom/domain/**/entity, src/main/java/com/dokebi/dalkom/domain/jira/**, src/main/java/com/dokebi/dalkom/domain/**/exception, src/main/java/com/dokebi/dalkom/domain/chat/**, src/main/java/com/dokebi/dalkom/domain/user/handler/**, src/test/**"
     }
 }
 
