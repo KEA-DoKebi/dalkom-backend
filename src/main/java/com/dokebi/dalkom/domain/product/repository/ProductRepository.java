@@ -123,6 +123,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<ProductMainResponse> findProductListSearchUserByName(
 		@Param("name") String name, Pageable pageable);
 
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductMainResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "FROM Product p "
+		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "WHERE p.state != 'N' AND p.productSeq IN :productSeqList "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company "
+		+ "ORDER BY FIELD(p.productSeq, :productSeqList)")
+	Page<ProductMainResponse> findProductListSearchBySearchValue(
+		@Param("productSeqList") List<Long> productSeqList, Pageable pageable);
+
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto( "
 		+ "p.name, p.imageUrl, p.price) "
 		+ "FROM Product p WHERE p.productSeq = :productSeq")
