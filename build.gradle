@@ -81,6 +81,7 @@ sonarqube {
 
 jacoco {
     toolVersion = "0.8.7"
+    excludes = ['**/*Test.class']
 }
 
 test {
@@ -118,17 +119,4 @@ jacocoTestReport {
             ])
         }))
     }
-}
-
-jacocoTestCoverageVerification {
-  violationRules {
-    rule {
-      element = 'METHOD'
-
-      // 커버리지 체크를 제외할 클래스들
-      excludes = [
-      '*Test.java'
-      ]
-    }
-  }
 }
