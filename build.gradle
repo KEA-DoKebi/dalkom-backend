@@ -122,4 +122,29 @@ jacocoTestReport {
             ])
         }))
     }
+
+    finalizedBy 'jacocoTestCoverageVerification'
 }
+
+jacocoTestCoverageVerification {
+
+    violationRules {
+        rule {
+            element = 'CLASS'
+            enabled = true
+        }
+
+            excludes = [
+                "com/dokebi/dalkom/domain/*/config/**",
+                "com/dokebi/dalkom/common/**",
+                "com/dokebi/dalkom/domain/*/dto/**",
+                "com/dokebi/dalkom/domain/*/entity/**",
+                "com/dokebi/dalkom/domain/jira/**",
+                "com/dokebi/dalkom/domain/*/exception/**",
+                "com/dokebi/dalkom/domain/chat/**",
+                "com/dokebi/dalkom/domain/user/handler/**",
+                "test/**"
+                ]
+
+        }
+    }
