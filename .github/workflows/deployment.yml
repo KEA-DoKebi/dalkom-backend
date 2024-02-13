@@ -21,7 +21,7 @@ jobs:
       run: |
         source /root/workflow_helper/Bash_files/build_and_push.sh
 
-  Run_Blue_on_Kakao :
+  Run_on_Kakao :
     runs-on: self-hosted
     needs: Push_to_Kakao
         
