@@ -77,9 +77,10 @@ bootJar {
 
 sonarqube {
     properties {
+        property "sonar.projectName", "dalkom-backend"
         property "sonar.projectKey", "KEA-DoKebi_dalkom-backend_AY0ILkkA7nQIqqNyuD-r"
-        property "sonar.host.url", "https://b3a1-203-249-127-39.ngrok-free.app"
-        property "sonar.exclusions", "src/main/java/com/dokebi/dalkom/domain/config/**, src/main/java/com/dokebi/dalkom/common/**/, src/main/java/com/dokebi/dalkom/domain/**/dto, src/main/java/com/dokebi/dalkom/domain/**/entity, src/main/java/com/dokebi/dalkom/domain/jira/**, src/main/java/com/dokebi/dalkom/domain/**/exception, src/main/java/com/dokebi/dalkom/domain/chat/**, src/main/java/com/dokebi/dalkom/domain/user/handler/**, src/test/**"
+        property "sonar.host.url", "http://61.109.214.94:32769"
+        property "sonar.exclusions", "src/main/java/com/dokebi/dalkom/domain/**/config/**, src/main/java/com/dokebi/dalkom/common/**, src/main/java/com/dokebi/dalkom/domain/**/dto/**, src/main/java/com/dokebi/dalkom/domain/**/entity/**, src/main/java/com/dokebi/dalkom/domain/jira/**, src/main/java/com/dokebi/dalkom/domain/**/exception/**, src/main/java/com/dokebi/dalkom/domain/chat/**, src/main/java/com/dokebi/dalkom/domain/user/handler/**, src/test/**"
     }
 }
 
