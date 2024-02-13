@@ -30,7 +30,7 @@ public class MileageApplyController {
 	@PutMapping("/api/mileage/apply/{milgApplySeq}")
 	@ResponseStatus(HttpStatus.OK)
 	public Response updateMileageApplyState(@PathVariable("milgApplySeq") Long milgApplySeq,
-		@Valid @RequestBody MileageStateRequest request) {
+		@Valid @RequestBody MileageStateRequest request) throws Exception {
 		mileageApplyService.updateMileageApply(milgApplySeq, request);
 		return Response.success();
 	}

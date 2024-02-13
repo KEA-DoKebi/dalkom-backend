@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.email.dto.EmailMessage;
+import com.dokebi.dalkom.common.email.service.EmailService;
 import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
 import com.dokebi.dalkom.common.magicnumber.InquiryCategory;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
@@ -43,6 +45,7 @@ public class InquiryService {
 	private final CategoryRepository categoryRepository;
 	private final AdminRepository adminRepository;
 	private final JiraService jiraService;
+	private final EmailService emailService;
 
 	// INQUIRY-001 (문의 등록)
 	@Transactional
@@ -111,7 +114,7 @@ public class InquiryService {
 
 	// INQUIRY-006 (문의 답변)
 	@Transactional
-	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) {
+	public void answerInquiry(Long inquirySeq, Long adminSeq, InquiryAnswerRequest request) throws Exception {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
 		Admin admin = adminRepository.findByAdminSeq(adminSeq).orElseThrow(AdminNotFoundException::new);
 
@@ -120,6 +123,10 @@ public class InquiryService {
 		inquiry.setAdmin(admin);
 		inquiry.setAnswerState(InquiryAnswerState.YES.getState());
 		inquiry.setAnsweredAt(LocalDateTime.now());
+
+		// 메일 전송
+		EmailMessage emailMessage = new EmailMessage(inquiry.getUser().getEmail(), "문의에 답변이 등록되었습니다.");
+		emailService.sendMailInquiry(emailMessage, inquiry.getCreatedAt());
 
 		// 답변 내용 Jira로 보내기
 		try {
