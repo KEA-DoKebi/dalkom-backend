@@ -5,6 +5,10 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.domain.user.dto.ReadUserSelfDetailResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Generated
 public class RedisService {
 	private final RedisTemplate<String, Object> redisTemplate;
+	private final ObjectMapper objectMapper;
 
 	// accessToken으로 refreshToken 가져오는 역할
 	@Transactional(readOnly = true)
@@ -32,11 +37,22 @@ public class RedisService {
 		values.set(accessToken, refreshToken);
 	}
 
-	// key : value 형식으로 accessToken : refreshToken 저장, 레디스 기간도 설정
-	// public void setValues(String accessToken, String refreshToken, Duration duration) {
-	// 	ValueOperations<String, Object> values = redisTemplate.opsForValue();
-	// 	values.set(accessToken, refreshToken, duration);
-	// }
+	// 사용자의 개인 정보를 redis에 저장
+	public void createUserDetail(String key, ReadUserSelfDetailResponse value) throws JsonProcessingException {
+		String jsonValue = objectMapper.writeValueAsString(value);
+		redisTemplate.opsForValue().set(key, jsonValue);
+	}
+
+	// redis에 입력받은 key값에 해당하는 사용자의 개인 정보가 있을 경우 이를 반환
+	@Transactional(readOnly = true)
+	public ReadUserSelfDetailResponse getUserDetail(String key) throws JsonProcessingException {
+		String jsonValue = (String)redisTemplate.opsForValue().get(key);
+		if (jsonValue != null) {
+			return objectMapper.readValue(jsonValue, ReadUserSelfDetailResponse.class);
+		} else {
+			return null;
+		}
+	}
 
 	// 토큰 탈취당했을 때 어떤 방법 통해 삭제해서 해커 공격 방지하는 기능 구현하면 필요할 것 같습니다.
 	public void deleteValues(String key) {
