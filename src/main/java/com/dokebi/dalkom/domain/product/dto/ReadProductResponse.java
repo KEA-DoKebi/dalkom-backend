@@ -1,6 +1,7 @@
 package com.dokebi.dalkom.domain.product.dto;
 
 import com.dokebi.dalkom.common.magicnumber.ProductActiveState;
+import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -29,6 +30,7 @@ public class ReadProductResponse {
 		this.price = price;
 	}
 
+	@QueryProjection
 	public ReadProductResponse(Long productSeq, String name, Integer price, String state, String imageUrl,
 		String company,
 		String optionDetail, Integer amount) {

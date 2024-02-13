@@ -10,7 +10,7 @@ import com.dokebi.dalkom.domain.notice.dto.NoticeListResponse;
 import com.dokebi.dalkom.domain.notice.dto.NoticeOneResponse;
 import com.dokebi.dalkom.domain.notice.entity.Notice;
 
-public interface NoticeRepository extends JpaRepository<Notice, Long> {
+public interface NoticeRepository extends JpaRepository<Notice, Long>, NoticeRepositoryCustom {
 
 	Notice findByNoticeSeq(Long noticeSeq);
 
