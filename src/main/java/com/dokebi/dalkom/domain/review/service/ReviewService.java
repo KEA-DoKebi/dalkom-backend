@@ -62,9 +62,13 @@ public class ReviewService {
 	public void updateReview(Long reviewSeq, ReviewUpdateRequest request) {
 
 		Review review = reviewRepository.findByReviewSeq(reviewSeq);
-		review.setContent(request.getContent());
-		review.setRating(request.getRating());
-		reviewRepository.save(review);
+
+		if (request.getContent() != null && !request.getContent().isBlank()) {
+			review.setContent(request.getContent());
+		}
+		if (request.getRating() != null) {
+			review.setRating(request.getRating());
+		}
 	}
 
 	@Transactional
