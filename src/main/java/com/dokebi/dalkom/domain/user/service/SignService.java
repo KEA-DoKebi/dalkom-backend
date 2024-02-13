@@ -83,6 +83,7 @@ public class SignService {
 			throw new MissingJiraRequestHeaderException();
 		}
 		redisService.deleteValues(token);
+		redisService.deleteValues(token + "self");
 		return Response.success();
 	}
 
