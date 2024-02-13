@@ -127,12 +127,10 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
-
     violationRules {
         rule {
             element = 'CLASS'
             enabled = true
-        }
 
             excludes = [
                 "com/dokebi/dalkom/domain/*/config/**",
@@ -144,7 +142,7 @@ jacocoTestCoverageVerification {
                 "com/dokebi/dalkom/domain/chat/**",
                 "com/dokebi/dalkom/domain/user/handler/**",
                 "test/**"
-                ]
-
+            ]
         }
     }
+}
