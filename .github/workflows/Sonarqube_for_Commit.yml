@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'DOK-*/**'
+      - 'workflow'
 
 jobs:
   Gradle_Build :
