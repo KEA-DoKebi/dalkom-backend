@@ -21,7 +21,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 public class AdminRepositoryImpl implements AdminRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
-	
+
 	public AdminRepositoryImpl(EntityManager em) {
 		this.queryFactory = new JPAQueryFactory(em);
 	}
