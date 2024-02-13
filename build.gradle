@@ -117,7 +117,7 @@ jacocoTestReport {
 jacocoTestCoverageVerification {
   violationRules {
     rule {
-      element = 'SOURCEFILE'
+      element = 'METHOD'
 
       // 커버리지 체크를 제외할 클래스들
       excludes = [
