@@ -1,5 +1,5 @@
 spring:
-  application :
+  application:
   redis:
     host: ${PROD_REDIS_IP}
     port: ${PROD_REDIS_PORT}
@@ -48,3 +48,7 @@ jira:
     email: ${JIRA_USER_EMAIL} # Jira API를 사용할 사용자의 이메일
   api:
     token: ${JIRA_API_TOKEN} # Jira API 토큰
+
+elastic:
+  url: ${ELASTIC_URL} # Elastic cloud의 elasticsearch endpoint
+  key: ${ELASTIC_API_KEY} # Elastic API KEY

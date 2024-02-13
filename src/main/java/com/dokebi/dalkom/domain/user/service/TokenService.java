@@ -76,10 +76,12 @@ public class TokenService {
 		}
 	}
 
-	//리프레시를 통해 다시 토큰 만들기
+	// 리프레시를 통해 다시 토큰 만들기
 	private Jws<Claims> createNewToken(String key, String token) {
 		//1. refreshToken 찾기
 		String refreshToken = readRefreshToken(token);
+		redisService.deleteValues(token);
+		redisService.deleteValues(token + "detail");
 
 		//2. refreshToken 해석해서 userSeq 찾기, refreshToken 유효검사
 		String userSeq;
@@ -99,6 +101,7 @@ public class TokenService {
 
 		//3. 새로운 accessToken 생성
 		String accessToken = createAccessToken(userSeq);
+		redisService.createValues(accessToken, refreshToken);
 
 		//4. 새로운 accessToken으로 요청
 		return jwtHandler.parse(key, accessToken);
