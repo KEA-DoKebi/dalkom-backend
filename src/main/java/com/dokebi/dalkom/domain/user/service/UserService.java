@@ -87,18 +87,18 @@ public class UserService {
 
 	public ReadUserSelfDetailResponse readUserSelfDetail(Long userSeq, HttpServletRequest request) throws
 		JsonProcessingException {
-		String key = (request.getHeader("AccessToken"));
-		ReadUserSelfDetailResponse response = redisService.getUserDetail(key + "self");
+		String accessToken = request.getHeader("AccessToken");
+		String cacheKey = accessToken + "self";
+
+		ReadUserSelfDetailResponse response = redisService.getUserDetail(cacheKey);
 
 		if (response == null) {
 			User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 			response = new ReadUserSelfDetailResponse(user.getEmail(), user.getName(), user.getNickname(),
 				user.getAddress());
-			redisService.createUserDetail(key + "self", response);
-
-			return response;
-		} else {
-			return response;
+			redisService.createUserDetail(cacheKey, response);
 		}
+
+		return response;
 	}
 }
