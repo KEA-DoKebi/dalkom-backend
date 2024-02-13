@@ -14,6 +14,7 @@ import lombok.Setter;
 public class ProductByCategoryResponse {
 
 	private Long productSeq;
+	private Long subCategorySeq;
 	private String name;
 	private Integer price;
 	private String state;
@@ -23,9 +24,10 @@ public class ProductByCategoryResponse {
 	private Double rating; // 리뷰 테이블에서 입력 받은 productSeq와 같은 데이터의 평점의 평균
 	private Long reviewAmount; // 리뷰 테이블에서 입력받은 productSeq와 같은 데이터의 개수
 
-	public ProductByCategoryResponse(Long productSeq, String name, Integer price, String state, String imageUrl,
+	public ProductByCategoryResponse(Long productSeq, Long subCategorySeq, String name, Integer price, String state, String imageUrl,
 		String company, Double rating, Long reviewAmount) {
 		this.productSeq = productSeq;
+		this.subCategorySeq = subCategorySeq;
 		this.name = name;
 		this.price = price;
 		this.state = state;

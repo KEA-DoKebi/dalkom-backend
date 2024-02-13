@@ -20,7 +20,7 @@ import com.dokebi.dalkom.domain.product.entity.Product;
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse( "
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "p.productSeq, p.category.categorySeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
@@ -55,7 +55,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, Product
 
 	// PRODUCT-005 - 하위 카테고리 별 상품 목록 조회
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailPage( "
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "p.productSeq, p.category.categorySeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
 		+ "LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
