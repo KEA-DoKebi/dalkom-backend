@@ -44,7 +44,6 @@ public class RedisService {
 	}
 
 	// redis에 입력받은 key값에 해당하는 사용자의 개인 정보가 있을 경우 이를 반환
-	@Transactional(readOnly = true)
 	public ReadUserSelfDetailResponse getUserDetail(String key) throws JsonProcessingException {
 		String jsonValue = (String)redisTemplate.opsForValue().get(key);
 		if (jsonValue != null) {

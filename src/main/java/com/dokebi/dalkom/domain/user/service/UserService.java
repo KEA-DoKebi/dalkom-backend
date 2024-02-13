@@ -91,7 +91,6 @@ public class UserService {
 		ReadUserSelfDetailResponse response = redisService.getUserDetail(key + "self");
 
 		if (response == null) {
-			System.out.println("redis에 내용물 없음");
 			User user = userRepository.findByUserSeq(userSeq).orElseThrow(UserNotFoundException::new);
 			response = new ReadUserSelfDetailResponse(user.getEmail(), user.getName(), user.getNickname(),
 				user.getAddress());
@@ -99,7 +98,6 @@ public class UserService {
 
 			return response;
 		} else {
-			System.out.println("redis에 내용물 있었음");
 			return response;
 		}
 	}
