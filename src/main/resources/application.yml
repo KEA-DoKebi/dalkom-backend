@@ -22,6 +22,19 @@ spring:
       properties:
         hibernate:
           format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+            required: true
 
   # 로깅 설정
   logging:
@@ -58,3 +71,7 @@ jira:
 mybatis:
   type-aliases-package: hello.board.domain
   config-location: classpath:mybatis-config.xml
+
+elastic:
+  url: ${ELASTIC_URL} # Elastic cloud의 elasticsearch endpoint
+  key: ${ELASTIC_API_KEY} # Elastic API KEY

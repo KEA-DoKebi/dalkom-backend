@@ -119,7 +119,7 @@ class MileageApplyServiceTest {
 
 	@Test
 	@DisplayName("마일리지 신청 승인 및 사용자 마일리지 및 히스토리 업데이트")
-	void updateMileageApplyApprovalTest() {
+	void updateMileageApplyApprovalTest() throws Exception {
 		// given
 
 		String approvedState = "2";

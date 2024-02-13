@@ -52,6 +52,7 @@ public class ProductService {
 	private final ProductOptionService productOptionService;
 	private final ReviewService reviewService;
 	private final ChatGptService chatGptService;
+	private final ProductElasticService productElasticService;
 
 	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	public Page<ProductByCategoryResponse> readProductListByCategory(Long categorySeq, Pageable pageable) {
@@ -223,9 +224,10 @@ public class ProductService {
 	}
 
 	// PRODUCT-011 상품 리스트 검색 메인 페이지
-	public Page<ProductMainResponse> readProductListSearchMain(String name, Pageable pageable) {
-		return productRepository.findProductListSearchUserByName(name, pageable);
-		// Page 객체에서 List 추출 후 Map에 추가
+	public Page<ProductMainResponse> readProductListSearchMain(String searchValue, Pageable pageable) {
+		//return productRepository.findProductListSearchUserByName(searchValue, pageable);
+		List<Long> productSeqList = productElasticService.findProductBySearchValue(searchValue);
+		return productRepository.findProductListSearchBySearchValue(productSeqList, pageable);
 	}
 
 	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
