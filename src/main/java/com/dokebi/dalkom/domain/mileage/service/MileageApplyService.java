@@ -64,7 +64,7 @@ public class MileageApplyService {
 			throw new MileageApplyNotFoundException();
 		}
 
-		if (approvedState.equals(MileageApplyState.WAIT.getState())) {
+		if (approvedState.equals(MileageApplyState.WAITING.getState())) {
 			mileageApply.setApprovedState(request.getApprovedState());
 
 			if (request.getApprovedState().equals(MileageApplyState.YES.getState())) {
@@ -94,7 +94,7 @@ public class MileageApplyService {
 		User user = userService.readUserByUserSeq(userSeq);
 		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
 		isApprovedStateIsWaitByUserSeq(userSeq);
-		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT.getState());
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING.getState());
 		mileageApplyRepository.save(mileageApply);
 
 	}

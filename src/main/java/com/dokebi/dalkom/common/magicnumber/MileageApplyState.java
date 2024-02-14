@@ -7,7 +7,7 @@ public enum MileageApplyState {
 
 	YES("Y", "승인"),
 	NO("N", "미승인"),
-	WAIT("W", "대기중");
+	WAITING("W", "대기중");
 
 	private final String state;
 	private final String name;
