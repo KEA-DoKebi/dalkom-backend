@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dokebi.dalkom.domain.admin.mapper.AdminMapper">
+    <select id="findTotalPrice" resultType="Integer">
+        SELECT SUM(o.totalPrice)
+        FROM ordr o
+    </select>
+
+    <select id="findTotalMonthlyPrice" resultType="Integer">
+        SELECT SUM(o.totalPrice)
+        FROM ordr o
+        WHERE DATE_FORMAT(o.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+    </select>
+
+    <select id="findTotalDailyPrice" resultType="Integer">
+        SELECT SUM(o.totalPrice)
+        FROM ordr o
+        WHERE DATE_FORMAT(o.createdAt, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+    </select>
+
+    <select id="findMonthlyPriceList" resultType="MonthlyPriceListDto">
+        SELECT DATE_FORMAT(o.createdAt, '%Y-%m') as month, SUM(o.totalPrice) as monthlyPrice
+        FROM ordr o
+        GROUP BY month
+    </select>
+    <resultMap id="MonthlyPriceListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto">
+        <result column="month" property="month"/>
+        <result column="monthlyPrice" property="monthlyPrice"/>
+    </resultMap>
+
+    <select id="findMonthlyProductList" resultMap="MonthlyProductListDto">
+        SELECT DATE_FORMAT(od.createdAt, '%Y-%m') as month,
+               p.productSeq,
+               MAX(p.name)                        as name,
+               MAX(p.company)                     as company,
+               MAX(p.price)                       as price,
+               COUNT(*)                           as cnt,
+               SUM(od.amount)                     as amount,
+               (SUM(od.amount) * MAX(p.price))    as totalPrice
+        FROM ordrDetail od
+                 LEFT JOIN product p ON od.productSeq = p.productSeq
+        WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+        GROUP BY month, p.productSeq
+        ORDER BY amount DESC, price DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <resultMap id="MonthlyProductListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto">
+        <result column="month" property="month"/>
+        <result column="productSeq" property="productSeq"/>
+        <result column="name" property="name"/>
+        <result column="company" property="company"/>
+        <result column="price" property="price"/>
+        <result column="cnt" property="cnt"/>
+        <result column="amount" property="amount"/>
+        <result column="totalPrice" property="totalPrice"/>
+    </resultMap>
+
+    <select id="findMonthlyCategoryList" resultType="MonthlyCategoryListDto">
+        SELECT c.parentSeq, MAX(c2.name) as name, SUM(od.amount) as cnt
+        FROM ordrDetail od
+                 LEFT JOIN product p ON od.productSeq = p.productSeq
+                 LEFT JOIN category c ON p.categorySeq = c.categorySeq
+                 LEFT JOIN category c2 ON c.parentSeq = c2.categorySeq
+        WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+        GROUP BY c.parentSeq
+        ORDER BY c.parentSeq
+    </select>
+    <resultMap id="MonthlyCategoryListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto">
+        <result column="categorySeq" property="categorySeq"/>
+        <result column="name" property="name"/>
+        <result column="cnt" property="cnt"/>
+    </resultMap>
+
+    <select id="countMonthlyProductList" resultType="int">
+        SELECT COUNT(DISTINCT p.productSeq)
+        FROM ordrDetail od
+                 JOIN product p ON od.productSeq = p.productSeq
+        WHERE DATE_FORMAT(od.createdAt, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')
+    </select>
+</mapper>

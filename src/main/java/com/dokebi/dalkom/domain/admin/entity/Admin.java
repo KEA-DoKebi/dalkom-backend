@@ -62,6 +62,6 @@ public class Admin extends EntityDate {
 		this.nickname = nickname;
 		this.name = name;
 		this.depart = depart;
-		this.role = AdminRole.NORMAL_ADMIN;    //시스템에서 등록되는 관리자는 모두 일반관리자(2)이다.
+		this.role = AdminRole.NORMAL_ADMIN.getState();    //시스템에서 등록되는 관리자는 모두 일반관리자(2)이다.
 	}
 }

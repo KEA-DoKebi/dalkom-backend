@@ -1,28 +1,32 @@
 name: Continuous Deployment
 
-on:
-  pull_request:
-    branches:
-      - release
-    types: [closed]
+on :
+  push :
+    branches :
+      - prod
 
 jobs:
-  deploy_to_Kakao:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && github.base_ref == 'dev'
+  Push_to_Kakao:
+    runs-on: self-hosted
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile.linux --tag dokebi-was:latest
+    - name: Configuration Injection
+      run :
+        source /root/workflow_helper/Bash_files/pull_config.sh
 
-    - name: Tag the Docker image
-      run: docker tag dokebi-was:latest dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/dokebi-was:latest
+    - name: Build and Push Images
+      run: |
+        source /root/workflow_helper/Bash_files/build_and_push.sh
 
-    - name: Login to Docker Registry
-      run: docker login dokebi-shop.kr-gov-central-1.kcr.dev --username ${{ secrets.DOCKER_REGISTRY_USERNAME }} --password ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
-
-    - name: Push the Docker image
-      run: docker push dokebi-shop.kr-gov-central-1.kcr.dev/dokebi-repo/dokebi-was:latest
+  Run_on_Kakao :
+    runs-on: self-hosted
+    needs: Push_to_Kakao
+        
+    steps:
+    - name: Deploy to Blue
+      run: |
+        source /root/workflow_helper/Bash_files/credentials.sh
+        source /root/workflow_helper/Bash_files/deploying.sh

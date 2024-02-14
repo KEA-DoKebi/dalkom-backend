@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dokebi.dalkom.common.email.dto.EmailMessage;
+import com.dokebi.dalkom.common.email.service.EmailService;
 import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
 import com.dokebi.dalkom.common.magicnumber.MileageHistoryState;
 import com.dokebi.dalkom.domain.mileage.dto.MileageApplyRequest;
@@ -23,23 +25,23 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class MileageApplyService {
 
 	private final MileageApplyRepository mileageApplyRepository;
 	private final UserService userService;
 	private final MileageService mileageService;
+	private final EmailService emailService;
 
-	@Transactional(readOnly = true)
 	public Page<MileageApplyResponse> readMileageApply(Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApply(pageable);
 	}
 
-	@Transactional(readOnly = true)
-	public Page<MileageApplyResponse> readMileageApplyWaitState(Pageable pageable) {
+	public Page<MileageApplyResponse> readMileageApplyWaitStateList(Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApplyWaitState(pageable);
 	}
 
-	public Page<MileageApplyResponse> readMileageApplyByUserSeq(Long userSeq, Pageable pageable) {
+	public Page<MileageApplyResponse> readMileageApplyListByUserSeq(Long userSeq, Pageable pageable) {
 		return mileageApplyRepository.findAllMileageApplyByUserSeq(userSeq, pageable);
 	}
 
@@ -49,7 +51,7 @@ public class MileageApplyService {
 	}
 
 	@Transactional
-	public void updateMileageApply(Long milgApplySeq, MileageStateRequest request) {
+	public void updateMileageApply(Long milgApplySeq, MileageStateRequest request) throws Exception {
 
 		MileageApply mileageApply = readByMilgApplySeq(milgApplySeq);
 		User user = mileageApply.getUser();
@@ -58,13 +60,31 @@ public class MileageApplyService {
 		Integer amount = mileageApply.getAmount();
 		Integer totalMileage = user.getMileage() + amount;
 
-		if (approvedState != null && approvedState.equals(MileageApplyState.WAITING)) {
+		if (approvedState == null) {
+			throw new MileageApplyNotFoundException();
+		}
+
+		if (approvedState.equals(MileageApplyState.WAITING.getState())) {
 			mileageApply.setApprovedState(request.getApprovedState());
 
-			mileageService.createMileageHistory(user, amount, totalMileage,
-				MileageHistoryState.CHARGED);
+			if (request.getApprovedState().equals(MileageApplyState.YES.getState())) {
+				mileageService.createMileageHistory(user, amount, totalMileage,
+					MileageHistoryState.CHARGED.getState());
+				user.setMileage(totalMileage);
 
-			user.setMileage(totalMileage);
+				// 메일 전송
+				EmailMessage emailMessage = new EmailMessage(user.getEmail(), "마일리지 신청이 승인되었습니다.");
+				emailService.sendMailMileage(emailMessage, "승인", mileageApply.getCreatedAt(), mileageApply.getAmount());
+			} else if (request.getApprovedState().equals(MileageApplyState.NO.getState())) {
+				mileageService.createMileageHistory(user, 0, user.getMileage(),
+					MileageHistoryState.DENIED.getState());
+
+				// 메일 전송
+				EmailMessage emailMessage = new EmailMessage(user.getEmail(), "마일리지 신청이 거부되었습니다.");
+				emailService.sendMailMileage(emailMessage, "거부", mileageApply.getCreatedAt(), mileageApply.getAmount());
+			}
+		} else {
+			throw new MileageAlreadyApplyException();
 		}
 
 	}
@@ -74,7 +94,7 @@ public class MileageApplyService {
 		User user = userService.readUserByUserSeq(userSeq);
 		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
 		isApprovedStateIsWaitByUserSeq(userSeq);
-		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING);
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING.getState());
 		mileageApplyRepository.save(mileageApply);
 
 	}
@@ -85,9 +105,32 @@ public class MileageApplyService {
 			throw new MileageAlreadyApplyException();
 	}
 
-	public Page<MileageApplyResponse> readMileageAskSearch(String email, String nickname, String name,
+	public Page<MileageApplyResponse> readMileageApplyHistoryListSearch(String email, String nickname, String name,
 		Pageable pageable) {
-		return mileageApplyRepository.findAllMileageAskSearch(email, nickname, name, pageable);
+		if (email != null) {
+			return mileageApplyRepository.findMileageApplyHistoryListByEmail(email, pageable);
+		} else if (nickname != null) {
+			return mileageApplyRepository.findMileageApplyHistoryListByNickname(nickname, pageable);
+		} else if (name != null) {
+			return mileageApplyRepository.findMileageApplyHistoryListByName(name, pageable);
+		} else {
+			// 다른 조건이 없는 경우 기본적인 조회 수행
+			return mileageApplyRepository.findMileageHistoryApplyList(pageable);
+		}
+	}
+
+	public Page<MileageApplyResponse> readMileageApplyWaitStateSearch(String email, String nickname, String name,
+		Pageable pageable) {
+		if (email != null) {
+			return mileageApplyRepository.findAllMileageApplyWaitStateListByEmail(email, pageable);
+		} else if (nickname != null) {
+			return mileageApplyRepository.findAllMileageApplyWaitStateListByNickname(nickname, pageable);
+		} else if (name != null) {
+			return mileageApplyRepository.findAllMileageApplyWaitStateListByName(name, pageable);
+		} else {
+			// 다른 조건이 없는 경우 기본적인 조회 수행
+			return mileageApplyRepository.findMileageHistoryApplyList(pageable);
+		}
 	}
 
 }

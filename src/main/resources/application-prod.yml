@@ -1,47 +1,71 @@
-#spring:
-#  application:
-#  datasource:
-#    url: ${_DATABASE_URL}
-#    driver-class-name: org.mariadb.jdbc.Driver
-#    username: ${Local_DATABASE_USERNAME}
-#    password: ${Local_DATABASE_PASSWORD}
-#    jpa:
-#      database: mysql
-#      open-in-view: false
-#      show-sql: true
-#      hibernate:
-#        properties:
-#          hibernate:
-#            format_sql: true
-#
-#  # 로깅 설정
-#  logging:
-#    level:
-#      org.hibernate.SQL: debug
-#      org.hibernate.type: trace
-#
-#  # 서버 포트 설정
-#server:
-#  port: 8080
-#
-## Eureka 클라이언트 설정
-#eureka:
-#  instance:
-#    instance-id: ${spring.application.name}:${spring.application.instance_id:${server.port}}
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka #
-#
-#
-#jwt:
-#  key:
-#    #스프링부트 마스터하고싶다
-#    access: ${JWT_ACCESS_KEY}
-#    #스프링부트 마스터하고싶다 진짜로
-#    refresh: ${JWT_ACCESS_KEY}
-#  max-age:
-#    access: 604800 # 60 * 30 테스트를 위해 원래는 1800이던걸 30으로 줄여놨습니다.
-#    refresh: 604800 # 60 * 60 * 24 * 7
-#
+spring:
+  application:
+  redis:
+    host: ${PROD_REDIS_IP}
+    port: ${PROD_REDIS_PORT}
+  datasource:
+    url: ${PROD_DATABASE_URL}
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: ${PROD_DATABASE_USERNAME}
+    password: ${PROD_DATABASE_PASSWORD}
+  jpa:
+    database: mysql
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      properties:
+        hibernate:
+          format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+            required: true
+
+  # 로깅 설정
+  logging:
+    level:
+      org.hibernate.SQL: debug
+      org.hibernate.type: trace
+
+  # 서버 포트 설정
+server:
+  port: 8080
+
+jwt:
+  key:
+    access: ${JWT_ACCESS_KEY}
+    refresh: ${JWT_REFRESH_KEY}
+  max-age:
+    access: 604800 #3시간 - 10800
+    refresh: 604800 #일주일
+
+
+jira:
+  url: ${JIRA_URL} # Jira 인스턴스의 베이스 URL
+  project:
+    key: ${JIRA_PROJECT_KEY}
+  user:
+    email: ${JIRA_USER_EMAIL} # Jira API를 사용할 사용자의 이메일
+  api:
+    token: ${JIRA_API_TOKEN} # Jira API 토큰
+
+mybatis:
+  type-aliases-package: hello.board.domain
+  config-location: classpath:mybatis-config.xml
+
+elastic:
+  url: ${ELASTIC_URL} # Elastic cloud의 elasticsearch endpoint
+  key: ${ELASTIC_API_KEY} # Elastic API KEY

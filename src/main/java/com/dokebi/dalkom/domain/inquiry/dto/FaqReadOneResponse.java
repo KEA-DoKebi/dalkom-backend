@@ -3,12 +3,16 @@ package com.dokebi.dalkom.domain.inquiry.dto;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class FaqReadOneResponse {
 	private String title;
 	private LocalDateTime createdAt;

@@ -11,6 +11,7 @@ import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.notice.dto.NoticeCreateRequest;
 import com.dokebi.dalkom.domain.notice.dto.NoticeListResponse;
 import com.dokebi.dalkom.domain.notice.dto.NoticeOneResponse;
+import com.dokebi.dalkom.domain.notice.dto.NoticeSearchCondition;
 import com.dokebi.dalkom.domain.notice.dto.NoticeUpdateRequest;
 import com.dokebi.dalkom.domain.notice.entity.Notice;
 import com.dokebi.dalkom.domain.notice.exception.NoticeNotFoundException;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class NoticeService {
@@ -28,33 +29,27 @@ public class NoticeService {
 	private final NoticeRepository noticeRepository;
 	private final AdminService adminService;
 
-	@Transactional
 	public NoticeOneResponse readNotice(Long noticeSeq) {
-
 		return noticeRepository.findNotice(noticeSeq);
 	}
 
-	@Transactional
 	public Page<NoticeListResponse> readNoticeList(Pageable pageable) {
-
 		return noticeRepository.findNoticeList(pageable);
 	}
 
 	@Transactional
 	public void createNotice(Long adminSeq, NoticeCreateRequest request) {
-
 		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		Notice notice = new Notice(admin, request.getTitle(), request.getContent(), request.getState());
 		noticeRepository.save(notice);
 	}
 
 	@Transactional
-	public void updateNotice(Long noticeSeq, NoticeUpdateRequest request) {
-
+	public void updateNotice(Long noticeSeq, Long adminSeq, NoticeUpdateRequest request) {
 		Notice notice = noticeRepository.findByNoticeSeq(noticeSeq);
 		notice.setTitle(request.getTitle());
 		notice.setContent(request.getContent());
-		Admin admin = adminService.readAdminByAdminSeq(request.getAdminSeq());
+		Admin admin = adminService.readAdminByAdminSeq(adminSeq);
 		notice.setAdmin(admin);
 		notice.setState(request.getState());
 		noticeRepository.save(notice);
@@ -69,9 +64,18 @@ public class NoticeService {
 		}
 	}
 
-	@Transactional
 	public Page<NoticeListResponse> readNoticeListBySearch(String nickName, String title, Pageable pageable) {
+		if (nickName != null) {
+			return noticeRepository.findNoticeListByNickname(nickName, pageable);
+		} else if (title != null) {
+			return noticeRepository.findNoticeListByTitle(title, pageable);
+		} else {
+			return noticeRepository.findNoticeList(pageable);
+		}
+	}
 
-		return noticeRepository.findNoticeListByNickNameOrTitle(nickName, title, pageable);
+	public Page<NoticeListResponse> readNoticeListQuerydslBySearch(NoticeSearchCondition noticeSearchCondition,
+		Pageable pageable) {
+		return noticeRepository.searchNotice(noticeSearchCondition, pageable);
 	}
 }

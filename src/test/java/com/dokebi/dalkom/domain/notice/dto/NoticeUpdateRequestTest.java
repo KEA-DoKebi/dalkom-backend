@@ -21,138 +21,103 @@ public class NoticeUpdateRequestTest {
 
 	@BeforeEach
 	void beforeEach() {
+		// Given: Validator 인스턴스 초기화
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 	}
 
 	@Test
 	void noticeUpdateRequestValidation() {
-		// Given
+		// Given: 유효한 공지 수정 요청
 		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest();
 
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
+		// When: 요청 검증
+		Set<ConstraintViolation<NoticeUpdateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertEquals(0, violations.size(), "위반 사항이 없습니다.");
+		// Then: 검증 위반 사항이 없어야 함
+		assertEquals(0, violations.size(), "No violations should be present for a valid request.");
 	}
 
 	@Test
 	void noticeUpdateRequestValidation_title_NotNull_NotBlank() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest(null, "content", 1L, "Y");
+		// Given: 제목이 null 또는 빈 문자열인 공지 수정 요청
+		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest(null, "content", "Y");
 
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
+		// When: 요청 검증
+		Set<ConstraintViolation<NoticeUpdateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertThat(violations)
-			.hasSize(2)
+		// Then: NotNull 및 NotBlank 위반 사항 확인
+		assertThat(violations).hasSize(2)
 			.extracting("message")
 			.contains("NoticeUpdateRequest title NotNull 에러", "NoticeUpdateRequest title NotBlank 에러");
 	}
 
 	@Test
 	void noticeUpdateRequestValidation_title_NotBlank() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("", "content", 1L, "Y");
+		// Given: 제목이 빈 문자열인 공지 수정 요청
+		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest("", "content", "Y");
 
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
+		// When: 요청 검증
+		Set<ConstraintViolation<NoticeUpdateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertThat(violations)
-			.hasSize(1)
+		// Then: NotBlank 위반 사항 확인
+		assertThat(violations).hasSize(1)
 			.extracting("message")
 			.contains("NoticeUpdateRequest title NotBlank 에러");
 	}
 
 	@Test
 	void noticeUpdateRequestValidation_content_NotNull_NotBlank() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", null, 1L, "Y");
+		// Given: 내용이 null인 공지 수정 요청
+		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest("title", null, "Y");
 
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
+		// When: 요청 검증
+		Set<ConstraintViolation<NoticeUpdateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertThat(violations)
-			.hasSize(2)
+		// Then: NotNull 및 NotBlank 위반 사항 확인
+		assertThat(violations).hasSize(2)
 			.extracting("message")
 			.contains("NoticeUpdateRequest content NotNull 에러", "NoticeUpdateRequest content NotBlank 에러");
 	}
 
 	@Test
 	void noticeUpdateRequestValidation_content_NotBlank() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "", 1L, "Y");
+		// Given: 내용이 빈 문자열인 공지 수정 요청
+		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest("title", "", "Y");
 
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
+		// When: 요청 검증
+		Set<ConstraintViolation<NoticeUpdateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertThat(violations)
-			.hasSize(1)
+		// Then: NotBlank 위반 사항 확인
+		assertThat(violations).hasSize(1)
 			.extracting("message")
 			.contains("NoticeUpdateRequest content NotBlank 에러");
 	}
 
 	@Test
-	void noticeUpdateRequestValidation_adminSeq_NotNull() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "content", null, "Y");
-
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
-
-		// Then
-		assertThat(violations)
-			.hasSize(1)
-			.extracting("message")
-			.contains("NoticeUpdateRequest adminSeq NotNull 에러");
-	}
-
-	@Test
 	void noticeUpdateRequestValidation_state_NotNull() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "content", 1L, null);
+		// Given: 상태 값이 null인 공지 수정 요청
+		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest("title", "content", null);
 
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
+		// When: 요청 검증
+		Set<ConstraintViolation<NoticeUpdateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertThat(violations)
-			.hasSize(1)
+		// Then: NotNull 위반 사항 확인
+		assertThat(violations).hasSize(1)
 			.extracting("message")
 			.contains("NoticeUpdateRequest state NotNull 에러");
 	}
 
 	@Test
 	void noticeUpdateRequestValidation_state_Pattern() {
-		// Given
-		NoticeUpdateRequest request = NoticeUpdateRequestFactory
-			.createNoticeUpdateRequest("title", "content", 1L, "A");
+		// Given: 상태 값이 유효한 패턴에 맞지 않는 공지 수정 요청 ('A'는 유효하지 않음)
+		NoticeUpdateRequest request = NoticeUpdateRequestFactory.createNoticeUpdateRequest("title", "content", "A");
 
-		// When
-		Set<ConstraintViolation<NoticeUpdateRequest>> violations =
-			validator.validate(request);
+		// When: 요청 검증
+		Set<ConstraintViolation<NoticeUpdateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertThat(violations)
-			.hasSize(1)
+		// Then: Pattern 위반 사항 확인
+		assertThat(violations).hasSize(1)
 			.extracting("message")
 			.contains("NoticeUpdateRequest state Pattern 에러");
 	}

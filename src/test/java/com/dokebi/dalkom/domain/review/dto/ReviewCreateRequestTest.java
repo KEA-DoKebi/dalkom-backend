@@ -11,9 +11,8 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import com.dokebi.dalkom.domain.review.factory.ReviewCreateRequestFactory;
 
 public class ReviewCreateRequestTest {
 
@@ -26,47 +25,22 @@ public class ReviewCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("올바른 리뷰 생성 요청 검증")
 	void reviewCreateRequestValidation() {
-		// Given
-		ReviewCreateRequest request = ReviewCreateRequestFactory.createReviewCreateRequest();
+		ReviewCreateRequest request = new ReviewCreateRequest("Great product!", 5);
 
-		// When
-		Set<ConstraintViolation<ReviewCreateRequest>> violations =
-			validator.validate(request);
+		Set<ConstraintViolation<ReviewCreateRequest>> violations = validator.validate(request);
 
-		// Then
-		assertEquals(0, violations.size(), "위반 사항이 없습니다.");
+		assertTrue(violations.isEmpty(), "No constraints should be violated for a valid request");
 	}
 
 	@Test
-	void reviewCreateRequestValidation_orderDetailSeq_NotNull() {
-		// Given
-		ReviewCreateRequest request = ReviewCreateRequestFactory
-			.createReviewCreateRequest(null, "content", 4);
-
-		// When
-		Set<ConstraintViolation<ReviewCreateRequest>> violations =
-			validator.validate(request);
-
-		// Then
-		assertThat(violations)
-			.hasSize(1)
-			.extracting("message")
-			.contains("ReviewCreateRequest orderDetailSeq NotNull 에러");
-	}
-
-	@Test
+	@DisplayName("리뷰 내용이 null일 때 검증")
 	void reviewCreateRequestValidation_content_NotNull_NotBlank() {
-		// null 값은 두 제약조건을 모두 위반하기 때문에 null 값이 들어왔을 때 두 조건을 모두 위반하도록 작성
-		// Given
-		ReviewCreateRequest request = ReviewCreateRequestFactory
-			.createReviewCreateRequest(1L, null, 4);
+		ReviewCreateRequest request = new ReviewCreateRequest(null, 4);
 
-		// When
-		Set<ConstraintViolation<ReviewCreateRequest>> violations =
-			validator.validate(request);
+		Set<ConstraintViolation<ReviewCreateRequest>> violations = validator.validate(request);
 
-		// Then
 		assertThat(violations)
 			.hasSize(2)
 			.extracting("message")
@@ -74,16 +48,12 @@ public class ReviewCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("리뷰 내용이 빈 문자열일 때 검증")
 	void reviewCreateRequestValidation_content_NotBlank() {
-		// Given
-		ReviewCreateRequest request = ReviewCreateRequestFactory
-			.createReviewCreateRequest(1L, "", 4);
+		ReviewCreateRequest request = new ReviewCreateRequest("", 4);
 
-		// When
-		Set<ConstraintViolation<ReviewCreateRequest>> violations =
-			validator.validate(request);
+		Set<ConstraintViolation<ReviewCreateRequest>> violations = validator.validate(request);
 
-		// Then
 		assertThat(violations)
 			.hasSize(1)
 			.extracting("message")
@@ -91,16 +61,12 @@ public class ReviewCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("리뷰 평점이 null일 때 검증")
 	void reviewCreateRequestValidation_rating_NotNull() {
-		// Given
-		ReviewCreateRequest request = ReviewCreateRequestFactory
-			.createReviewCreateRequest(1L, "content", null);
+		ReviewCreateRequest request = new ReviewCreateRequest("Good service", null);
 
-		// When
-		Set<ConstraintViolation<ReviewCreateRequest>> violations =
-			validator.validate(request);
+		Set<ConstraintViolation<ReviewCreateRequest>> violations = validator.validate(request);
 
-		// Then
 		assertThat(violations)
 			.hasSize(1)
 			.extracting("message")
@@ -108,16 +74,12 @@ public class ReviewCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("리뷰 평점이 최소값 미만일 때 검증")
 	void reviewCreateRequestValidation_rating_Min() {
-		// Given
-		ReviewCreateRequest request = ReviewCreateRequestFactory
-			.createReviewCreateRequest(1L, "content", 0);
+		ReviewCreateRequest request = new ReviewCreateRequest("Good service", 0);
 
-		// When
-		Set<ConstraintViolation<ReviewCreateRequest>> violations =
-			validator.validate(request);
+		Set<ConstraintViolation<ReviewCreateRequest>> violations = validator.validate(request);
 
-		// Then
 		assertThat(violations)
 			.hasSize(1)
 			.extracting("message")
@@ -125,16 +87,12 @@ public class ReviewCreateRequestTest {
 	}
 
 	@Test
+	@DisplayName("리뷰 평점이 최대값 초과일 때 검증")
 	void reviewCreateRequestValidation_rating_Max() {
-		// Given
-		ReviewCreateRequest request = ReviewCreateRequestFactory
-			.createReviewCreateRequest(1L, "content", 6);
+		ReviewCreateRequest request = new ReviewCreateRequest("Good service", 6);
 
-		// When
-		Set<ConstraintViolation<ReviewCreateRequest>> violations =
-			validator.validate(request);
+		Set<ConstraintViolation<ReviewCreateRequest>> violations = validator.validate(request);
 
-		// Then
 		assertThat(violations)
 			.hasSize(1)
 			.extracting("message")

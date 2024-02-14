@@ -8,14 +8,13 @@ public class NoticeUpdateRequestFactory {
 		return new NoticeUpdateRequest(
 			"updatedTitle",
 			"updatedContent",
-			1L,
 			"N"
 		);
 	}
 
 	public static NoticeUpdateRequest createNoticeUpdateRequest(
-		String title, String content, Long adminSeq, String state
+		String title, String content, String state
 	) {
-		return new NoticeUpdateRequest(title, content, adminSeq, state);
+		return new NoticeUpdateRequest(title, content, state);
 	}
 }

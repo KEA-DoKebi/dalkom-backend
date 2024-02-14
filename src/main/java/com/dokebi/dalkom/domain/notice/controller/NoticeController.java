@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.notice.dto.NoticeCreateRequest;
+import com.dokebi.dalkom.domain.notice.dto.NoticeSearchCondition;
 import com.dokebi.dalkom.domain.notice.dto.NoticeUpdateRequest;
 import com.dokebi.dalkom.domain.notice.service.NoticeService;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
@@ -25,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class NoticeController {
-
 	private final NoticeService noticeService;
 
 	// NOTICE-001 (특정 공지 조회)
@@ -46,8 +46,9 @@ public class NoticeController {
 	// NOTICE-003 (특정 공지 수정)
 	@PutMapping("/api/notice/{noticeSeq}")
 	@ResponseStatus(HttpStatus.OK)
-	public Response updateNotice(@PathVariable Long noticeSeq, @Valid @RequestBody NoticeUpdateRequest request) {
-		noticeService.updateNotice(noticeSeq, request);
+	public Response updateNotice(@PathVariable Long noticeSeq, @LoginUser Long adminSeq,
+		@Valid @RequestBody NoticeUpdateRequest request) {
+		noticeService.updateNotice(noticeSeq, adminSeq, request);
 		return Response.success();
 	}
 
@@ -69,8 +70,15 @@ public class NoticeController {
 	// NOTICE-006 (공지 검색)
 	@GetMapping("/api/notice/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readNoticeListBySearch(@RequestParam String nickname, @RequestParam String title,
-		Pageable pageable) {
+	public Response readNoticeListBySearch(@RequestParam(required = false) String nickname,
+		@RequestParam(required = false) String title, Pageable pageable) {
 		return Response.success(noticeService.readNoticeListBySearch(nickname, title, pageable));
+	}
+
+	// NOTICE-007 (공지 검색 querydsl)
+	@GetMapping("/api/notice/search/querydsl")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readNoticeListQueryDslBySearch(NoticeSearchCondition noticeSearchCondition, Pageable pageable) {
+		return Response.success(noticeService.readNoticeListQuerydslBySearch(noticeSearchCondition, pageable));
 	}
 }

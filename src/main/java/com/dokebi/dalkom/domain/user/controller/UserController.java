@@ -1,5 +1,6 @@
 package com.dokebi.dalkom.domain.user.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.user.config.LoginUser;
 import com.dokebi.dalkom.domain.user.dto.UserUpdateRequest;
 import com.dokebi.dalkom.domain.user.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,28 +31,35 @@ public class UserController {
 	// USER-003 (사용자 정보 수정)
 	@PutMapping("/api/user")
 	@ResponseStatus(HttpStatus.OK)
-	public Response updateUser(@LoginUser Long userSeq, @Valid @RequestBody UserUpdateRequest request) {
-		return userService.updateUser(userSeq, request);
+	public Response updateUser(@LoginUser Long userSeq, @Valid @RequestBody UserUpdateRequest request,
+		HttpServletRequest httpServletRequest) throws JsonProcessingException {
+		userService.updateUserByUserSeq(userSeq, request, httpServletRequest);
+
+		return Response.success();
 	}
 
-	// USER-004 (사용자 정보 조회)
+	// USER-004 (사용자 정보 목록 조회)
 	@GetMapping("/api/user")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readUserList(Pageable pageable) {
 		return Response.success(userService.readUserList(pageable));
 	}
 
-	// USER-005 (사용자 정보 조회 검색)
+	// USER-006 (사용자 정보 조회 검색)
 	@GetMapping("/api/user/search")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readUserListSearch(@RequestParam String email, @RequestParam String nickname, Pageable pageable) {
+	public Response readUserListSearch(
+		@RequestParam(required = false) String email,
+		@RequestParam(required = false) String nickname,
+		Pageable pageable) {
 		return Response.success(userService.readUserListSearch(email, nickname, pageable));
 	}
 
-	// USER-006 (사용자 정보 조회(자신))
+	// USER-007 (사용자 본인 정보 조회)
 	@GetMapping("/api/user/self")
 	@ResponseStatus(HttpStatus.OK)
-	public Response readUserSelfDetail(@LoginUser Long userSeq) {
-		return Response.success(userService.readUserSelfDetail(userSeq));
+	public Response readUserSelfDetail(@LoginUser Long userSeq, HttpServletRequest request) throws
+		JsonProcessingException {
+		return Response.success(userService.readUserSelfDetail(userSeq, request));
 	}
 }

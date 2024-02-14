@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.dokebi.dalkom.domain.review.dto.ReviewByProductResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewByUserResponse;
+import com.dokebi.dalkom.domain.review.dto.ReviewReadResponse;
 import com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto;
 import com.dokebi.dalkom.domain.review.entity.Review;
 
@@ -36,10 +37,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		+ "WHERE r.user.userSeq = :userSeq")
 	Page<ReviewByUserResponse> findReviewListByUser(@Param("userSeq") Long userSeq, Pageable pageable);
 
-	@Query("SELECT r FROM Review r "
-		+ "WHERE r.orderDetail.ordrDetailSeq =:orderDetailSeq ")
-	Optional<Review> findReviewListByOrderDetailSeq(@Param("orderDetailSeq") Long orderDetailSeq);
-
 	@Query("SELECT NEW com.dokebi.dalkom.domain.review.dto.ReviewSimpleDto( "
 		+ "r.rating, r.content) "
 		+ "FROM Review r "
@@ -47,4 +44,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		+ "WHERE od.product.productSeq = :productSeq "
 		+ "ORDER BY r.rating ")
 	List<ReviewSimpleDto> readReviewSimpleByProductSeq(@Param("productSeq") Long productSeq);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.review.dto.ReviewReadResponse( "
+		+ "od.product.name, od.product.imageUrl, od.productOption.name, od.review.rating, od.review.content) "
+		+ "FROM OrderDetail od "
+		+ "WHERE od.review.reviewSeq = :reviewSeq")
+	Optional<ReviewReadResponse> findReviewByReviewSeq(@Param("reviewSeq") Long reviewSeq);
+
+	Boolean existsByOrderDetail_OrdrDetailSeq(Long ordrDetailSeq);
 }

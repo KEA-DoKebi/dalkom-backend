@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductSearchCondition;
 import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 
@@ -55,7 +56,7 @@ public class ProductController {
 		return Response.success();
 	}
 
-	// PRODUCT-004 (상품 리스트 조회 - 관리자 화면에서 전체 상품을 보여주는 것)
+	// PRODUCT-004 (관리자 상품 리스트 조회)
 	@GetMapping("/api/product")
 	@ResponseStatus(HttpStatus.OK)
 	public Response readAdminPageProductList(Pageable pageable) {
@@ -69,7 +70,7 @@ public class ProductController {
 		return Response.success(productService.readProductListByDetailCategory(categorySeq, pageable));
 	}
 
-	// PRODUCT-006 (전체 카테고리 별 상품 목록 조회 - 메인 화면)
+	// PRODUCT-006 (메인화면 상품 목록 조회)
 	@GetMapping("/api/product/category/main")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Map<String, List<ProductMainResponse>>> readProductListByCategoryAll(
@@ -100,6 +101,21 @@ public class ProductController {
 	@ResponseStatus(HttpStatus.OK)
 	public Response readProductCompareData(@PathVariable Long productSeq) {
 		return Response.success(productService.readProductCompareDetailByProductSeq(productSeq));
+	}
+
+	// PRODUCT-011 상품 리스트 검색 메인 페이지
+	@GetMapping("/api/product/search/main")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductListSearchMain(
+		@RequestParam(required = false) String name, Pageable pageable) {
+		return Response.success(productService.readProductListSearchMain(name, pageable));
+	}
+
+	// PRODUCT-012 (상품 리스트 검색 querydsl)
+	@GetMapping("/api/product/search/querydsl")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductListQueryDsl(ProductSearchCondition condition, Pageable pageable) {
+		return Response.success(productService.readProductListSearchQueryDsl(condition, pageable));
 	}
 
 }

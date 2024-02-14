@@ -3,13 +3,11 @@ spring:
   redis:
     host: ${LOCAL_REDIS_IP}
     port: ${LOCAL_REDIS_PORT}
-    username: ${LOCAL_REDIS_USERNAME}
-    password: ${LOCAL_REDIS_PASSWORD}
   datasource:
     url: ${LOCAL_DATABASE_URL}
-    driver-class-name: org.mariadb.jdbc.Driver
     username: ${LOCAL_DATABASE_USERNAME}
     password: ${LOCAL_DATABASE_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     database: mysql
     open-in-view: false
@@ -22,6 +20,19 @@ spring:
       properties:
         hibernate:
           format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+            required: true
 
   # 로깅 설정
   logging:
@@ -50,3 +61,11 @@ jira:
     email: ${JIRA_USER_EMAIL} # Jira API를 사용할 사용자의 이메일
   api:
     token: ${JIRA_API_TOKEN} # Jira API 토큰
+
+mybatis:
+  type-aliases-package: hello.board.domain
+  config-location: classpath:mybatis-config.xml
+
+elastic:
+  url: ${ELASTIC_URL} # Elastic cloud의 elasticsearch endpoint
+  key: ${ELASTIC_API_KEY} # Elastic API KEY

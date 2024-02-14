@@ -95,7 +95,7 @@ public class User extends EntityDate {
 		this.joinedAt = joinedAt;
 		this.nickname = nickname;
 		this.mileage = mileage;
-		this.state = UserState.ACTIVE;
+		this.state = UserState.ACTIVE.getState();
 	}
 }
 

@@ -29,7 +29,8 @@ public class MileageService {
 		if (!mileageList.isEmpty()) {
 			return mileageList.get(0);
 		} else {
-			return 0;
+			User user = userService.readUserByUserSeq(userSeq);
+			return user.getMileage();
 		}
 	}
 
@@ -38,7 +39,7 @@ public class MileageService {
 		return mileageHistoryRepository.findMileageHistoryListByUserSeq(userSeq, pageable);
 	}
 
-	// 관리자가 충전을 승인하는 경우 마일리지 내역을 추가하는 서비스
+	// 관리자가 충전을 승인/미승인하는 경우 마일리지 내역을 추가하는 서비스
 	public void createMileageHistory(User user, Integer amount, Integer totalMileage, String type) {
 		MileageHistory mileageHistory = new MileageHistory(amount, totalMileage, type, user);
 		mileageHistoryRepository.save(mileageHistory);

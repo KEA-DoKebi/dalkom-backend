@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.dokebi.dalkom.domain.inquiry.factory.InquiryCreateRequestFactory;
@@ -25,7 +26,8 @@ public class InquiryCreateRequestTest {
 	}
 
 	@Test
-	void InquiryCreateRequestValidation() {
+	@DisplayName("정상 동작 테스트")
+	void inquiryCreateRequestValidation() {
 		// Given
 		InquiryCreateRequest request = InquiryCreateRequestFactory.createInquiryCreateRequest();
 
@@ -38,7 +40,8 @@ public class InquiryCreateRequestTest {
 	}
 
 	@Test
-	void InquiryCreateRequestValidation_title_NotNull() {
+	@DisplayName("title NotNull 테스트")
+	void inquiryCreateRequestValidation_title_NotNull() {
 		// Given
 		InquiryCreateRequest request = InquiryCreateRequestFactory
 			.createInquiryCreateRequest(
@@ -59,7 +62,8 @@ public class InquiryCreateRequestTest {
 	}
 
 	@Test
-	void InquiryCreateRequestValidation_title_NotBlank() {
+	@DisplayName("title NotBlank 테스트")
+	void inquiryCreateRequestValidation_title_NotBlank() {
 		// Given
 		InquiryCreateRequest request = InquiryCreateRequestFactory
 			.createInquiryCreateRequest(
@@ -79,7 +83,8 @@ public class InquiryCreateRequestTest {
 	}
 
 	@Test
-	void InquiryCreateRequestValidation_content_NotNull() {
+	@DisplayName("content NotNull 테스트")
+	void inquiryCreateRequestValidation_content_NotNull() {
 		// Given
 		InquiryCreateRequest request = InquiryCreateRequestFactory
 			.createInquiryCreateRequest(
@@ -100,7 +105,8 @@ public class InquiryCreateRequestTest {
 	}
 
 	@Test
-	void InquiryCreateRequestValidation_content_NotBlank() {
+	@DisplayName("content NotBlank 테스트")
+	void inquiryCreateRequestValidation_content_NotBlank() {
 		// Given
 		InquiryCreateRequest request = InquiryCreateRequestFactory
 			.createInquiryCreateRequest(
@@ -120,7 +126,8 @@ public class InquiryCreateRequestTest {
 	}
 
 	@Test
-	void InquiryCreateRequestValidation_categorySeq_NotNull() {
+	@DisplayName("categorySeq NotNull 테스트")
+	void inquiryCreateRequestValidation_categorySeq_NotNull() {
 		// Given
 		InquiryCreateRequest request = InquiryCreateRequestFactory
 			.createInquiryCreateRequest(
@@ -140,7 +147,8 @@ public class InquiryCreateRequestTest {
 	}
 
 	@Test
-	void InquiryCreateRequestValidation_categorySeq_PositiveOrZero() {
+	@DisplayName("categorySeq PositiveOrZero 테스트")
+	void inquiryCreateRequestValidation_categorySeq_PositiveOrZero() {
 		// Given
 		InquiryCreateRequest request = InquiryCreateRequestFactory
 			.createInquiryCreateRequest(

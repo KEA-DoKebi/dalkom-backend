@@ -24,21 +24,18 @@ import com.dokebi.dalkom.domain.mileage.dto.MileageHistoryResponse;
 import com.dokebi.dalkom.domain.mileage.entity.MileageHistory;
 import com.dokebi.dalkom.domain.mileage.repository.MileageHistoryRepository;
 import com.dokebi.dalkom.domain.user.entity.User;
-import com.dokebi.dalkom.domain.user.service.UserService;
+import com.dokebi.dalkom.domain.user.repository.UserRepository;
 
 class MileageServiceTest {
-
 	@InjectMocks
 	private MileageService mileageService;
-
 	@Mock
 	private MileageHistoryRepository mileageHistoryRepository;
-
 	@Mock
-	private UserService userService;
+	private UserRepository userRepository;
 
 	@BeforeEach
-	void setUp() {
+	void beforeEach() {
 		MockitoAnnotations.initMocks(this);
 	}
 
@@ -58,7 +55,7 @@ class MileageServiceTest {
 	}
 
 	@Test
-	@DisplayName("유저 별 마일리지 히스토리 조회 서비스")
+	@DisplayName("유저별 마일리지 내역 조회 서비스")
 	void readMileageHistoryByUserSeqTest() {
 		// Mock 데이터 설정
 		Long userSeq = 1L;
@@ -83,13 +80,14 @@ class MileageServiceTest {
 	}
 
 	@Test
-	@DisplayName("관리자가 충전 승인하는경우 마일리지 히스토리 내역에 추가 ")
+	@DisplayName("관리자가 충전을 승인하는 경우 마일리지 내역을 추가")
 	void createMileageHistoryAndUpdateUserTest() {
 		Long userSeq = 1L;
 		Integer amount = 1000;
 		String type = "2";
 
 		User user = createMockUser(); // 적절한 값으로 초기화
+		user.setUserSeq(userSeq);
 		user.setMileage(500); // 적절한 초기 마일리지 값으로 설정
 
 		Integer totalMileage = user.getMileage() + amount;
@@ -97,20 +95,13 @@ class MileageServiceTest {
 		MileageHistory savedMileageHistory = new MileageHistory(amount, totalMileage, type, user);
 
 		// Mocking
-		when(userService.readUserByUserSeq(userSeq)).thenReturn(user);
 		when(mileageHistoryRepository.save(any(MileageHistory.class))).thenReturn(savedMileageHistory);
 
 		// When
 		mileageService.createMileageHistory(user, amount, totalMileage, type);
 
 		// Then
-		verify(userService).readUserByUserSeq(userSeq);
 		verify(mileageHistoryRepository).save(any(MileageHistory.class));
-		verify(userService).updateUser(user); // updateUser 메서드가 호출되었는지 확인
-
-		// 추가적으로 다른 상호작용이 없도록 확인
-		verifyNoMoreInteractions(userService, mileageHistoryRepository);
 	}
-
 }
 

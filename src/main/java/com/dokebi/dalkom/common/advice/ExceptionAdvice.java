@@ -1,12 +1,17 @@
 package com.dokebi.dalkom.common.advice;
 
-import javax.management.InvalidApplicationException;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.dokebi.dalkom.common.email.exception.MailSendFailException;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.admin.exception.AdminNotFoundException;
 import com.dokebi.dalkom.domain.cart.exception.OrderCartNotFoundException;
@@ -26,10 +31,13 @@ import com.dokebi.dalkom.domain.order.exception.OrderNotFoundException;
 import com.dokebi.dalkom.domain.order.exception.PasswordNotValidException;
 import com.dokebi.dalkom.domain.product.exception.InvalidProductInputException;
 import com.dokebi.dalkom.domain.product.exception.ProductNotFoundException;
+import com.dokebi.dalkom.domain.review.exception.ReviewAlreadyExistsException;
 import com.dokebi.dalkom.domain.review.exception.ReviewNotFoundException;
+import com.dokebi.dalkom.domain.stock.exception.InvalidAmountException;
 import com.dokebi.dalkom.domain.stock.exception.NotEnoughStockException;
 import com.dokebi.dalkom.domain.stock.exception.ProductStockNotFoundException;
 import com.dokebi.dalkom.domain.user.exception.EmployeeNotFoundException;
+import com.dokebi.dalkom.domain.user.exception.InvalidJoinedAtException;
 import com.dokebi.dalkom.domain.user.exception.LoginFailureException;
 import com.dokebi.dalkom.domain.user.exception.UserEmailAlreadyExistsException;
 import com.dokebi.dalkom.domain.user.exception.UserNicknameAlreadyExistsException;
@@ -41,31 +49,43 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ExceptionAdvice {
 
-	// 공통 권한
-
 	@ExceptionHandler(UserNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response memberNotFoundException() {
-		return Response.failure(-1001, "요청한 회원을 찾을 수 없습니다.");
+		return Response.failure(-1001, "회원 정보를 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(EmployeeNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response employeeNotFoundException() {
-		return Response.failure(-1002, "임직원 정보가 존재하지 않습니다.");
+		return Response.failure(-1002, "임직원 정보를 찾을 수 없습니다.");
+	}
+
+	@ExceptionHandler(MissingRequestHeaderException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response missingRequestHeaderException(MissingRequestHeaderException e) {
+		return Response.failure(-1003, e.getHeaderName() + "요청 헤더가 누락되었습니다.");
 	}
 
 	@ExceptionHandler(MissingJiraRequestHeaderException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response missingJiraRequestHeaderException() {
-		return Response.failure(-1003, "Jira 요청 헤더가 누락되었습니다.");
+		return Response.failure(-1004, "Jira 요청 헤더가 누락되었습니다.");
 	}
 
-	// @ExceptionHandler(MissingRequestHeaderException.class)
-	// @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
-	// 	return Response.failure(-1009, e.getHeaderName() + "요청 헤더가 누락되었습니다.");
-	// }
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
+	public Response methodArgumentNotValidException(MethodArgumentNotValidException e) {
+		BindingResult result = e.getBindingResult();
+		List<FieldError> fieldErrorList = result.getFieldErrors();
+
+		if (!fieldErrorList.isEmpty()) {
+			return Response.failure(-1005, fieldErrorList.get(0).getDefaultMessage());
+		} else {
+			return Response.failure(-1005, "잘못된 값이 들어왔습니다.");
+		}
+
+	}
 
 	// // 사용자 + 로그인
 
@@ -86,35 +106,24 @@ public class ExceptionAdvice {
 	public Response userNicknameAlreadyExistsException(UserNicknameAlreadyExistsException e) {
 		return Response.failure(-1102, e.getMessage() + "은 중복된 닉네임 입니다.");
 	}
-	//
-	// @ExceptionHandler (UserNotFoundException.class)
-	// @ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	// public Response memberNotFoundException() {
-	// 	return Response.failure(-1007,"요청한 회원을 찾을 수 없습니다.");
-	// }
-	//
-	// @ExceptionHandler (RoleNotFoundException.class)
-	// @ResponseStatus (HttpStatus.NOT_FOUND) // 404
-	// public Response roleNotFoundException(){
-	// 	return Response.failure(-1008,"요청한 권한 등급을 찾을 수 없습니다. ");
-	// }
-	//
-	// @ExceptionHandler(MissingRequestHeaderException.class)
-	// @ResponseStatus(HttpStatus.BAD_REQUEST) // 400
-	// public Response missingRequestHeaderException(MissingRequestHeaderException e) {
-	// 	return Response.failure(-1009,e.getHeaderName()+"요청 헤더가 누락되었습니다.");
+
+	@ExceptionHandler(InvalidJoinedAtException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response invalidJoinedAtException() {
+		return Response.failure(-1103, "잘못된 입사일입니다.");
+	}
 
 	// 상품
 	@ExceptionHandler(ProductNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response productNotFoundException() {
-		return Response.failure(-1200, "해당 상품을 찾을 수 없습니다.");
+		return Response.failure(-1200, "상품을 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(InvalidProductInputException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response invalidProductInputException() {
-		return Response.failure(-1201, "입력값이 잘못되었습니다.");
+		return Response.failure(-1201, "입력된 상품 정보가 잘못되었습니다.");
 	}
 
 	// 주문
@@ -144,13 +153,13 @@ public class ExceptionAdvice {
 	}
 
 	@ExceptionHandler(MileageApplyNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response mileageApplyNotFoundException() {
 		return Response.failure(-1401, "찾고자 하는 마일리지 신청 정보를 찾을 수 없습니다.");
 	}
 
 	@ExceptionHandler(MileageAlreadyApplyException.class)
-	@ResponseStatus(HttpStatus.CONFLICT)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
 	public Response mileageAlreadyApplyException() {
 		return Response.failure(-1402, "이미 진행중인 마일리지 신청 내역이 존재합니다.");
 	}
@@ -159,12 +168,12 @@ public class ExceptionAdvice {
 	@ExceptionHandler(OrderCartNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response orderCartEmptyResultDataAccessException() {
-		return Response.failure(-1500, "삭제 혹은 수정하고자 하는 장바구니 정보를 찾을 수 없습니다.");
+		return Response.failure(-1500, "장바구니 정보를 찾을 수 없습니다.");
 	}
 
 	// 재고
-	@ExceptionHandler(InvalidApplicationException.class)
-	@ResponseStatus(HttpStatus.FORBIDDEN) // 403
+	@ExceptionHandler(InvalidAmountException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	public Response invalidAmountException() {
 		return Response.failure(-1600, "잘못된 입력값입니다.");
 	}
@@ -201,6 +210,12 @@ public class ExceptionAdvice {
 		return Response.failure(-1801, "요청하신 주문상세를 찾을 수 없습니다.");
 	}
 
+	@ExceptionHandler(ReviewAlreadyExistsException.class)
+	@ResponseStatus(HttpStatus.CONFLICT) // 409
+	public Response reviewAlreadyExistsException() {
+		return Response.failure(-1802, "이미 리뷰가 존재합니다.");
+	}
+
 	// 카테고리
 	@ExceptionHandler(CategoryNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
@@ -208,7 +223,7 @@ public class ExceptionAdvice {
 		return Response.failure(-1900, "카테고리를 찾을 수 없습니다.");
 	}
 
-	// 관리자 + 로그인
+	// 관리자
 	@ExceptionHandler(AdminNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
 	public Response adminNotFoundException() {
@@ -224,7 +239,7 @@ public class ExceptionAdvice {
 
 	@ExceptionHandler(FaqNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND) // 404
-	public Response FaqNotFoundException() {
+	public Response faqNotFoundException() {
 		return Response.failure(-2101, "해당 FAQ를 찾을 수 없습니다.");
 	}
 
@@ -238,7 +253,14 @@ public class ExceptionAdvice {
 	// ChatGPT
 	@ExceptionHandler(GptResponseFailException.class)
 	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) //503
-	public Response gptNoResponseException() {
-		return Response.failure(-2300, "리뷰 요약을 생성할 수 없습니다.");
+	public Response gptNoResponseException(GptResponseFailException e) {
+		return Response.failure(-2300, e.getMessage());
+	}
+
+	// Email
+	@ExceptionHandler(MailSendFailException.class)
+	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE) // 503
+	public Response mailSendException(MailSendFailException e) {
+		return Response.failure(-2400, e.getMessage());
 	}
 }
