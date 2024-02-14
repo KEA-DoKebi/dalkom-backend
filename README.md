@@ -9,9 +9,9 @@
 
 # 프로젝트 소개
 
-## **DALKOM_SHOP**
+<h2><strong>DALKOM SHOP</strong></h2>
 
-### **달콤한_혜택과_편안한_쇼핑공간**
+<h3><strong>달콤한 혜택과_편안한 쇼핑공간</strong></h3>
 
 DALKOM SHOP은 다음카카오(DKT)의 사내 몰로,
 ’달콤하다’와 ‘다음카카오’를 연상시켜 '달콤샵'으로 명명되었습니다.
