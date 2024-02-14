@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dokebi.dalkom.common.response.Response;
 import com.dokebi.dalkom.domain.product.dto.ProductCreateRequest;
 import com.dokebi.dalkom.domain.product.dto.ProductMainResponse;
+import com.dokebi.dalkom.domain.product.dto.ProductSearchCondition;
 import com.dokebi.dalkom.domain.product.dto.ProductUpdateRequest;
 import com.dokebi.dalkom.domain.product.service.ProductService;
 
@@ -108,6 +109,13 @@ public class ProductController {
 	public Response readProductListSearchMain(
 		@RequestParam(required = false) String name, Pageable pageable) {
 		return Response.success(productService.readProductListSearchMain(name, pageable));
+	}
+
+	// PRODUCT-012 (상품 리스트 검색 querydsl)
+	@GetMapping("/api/product/search/querydsl")
+	@ResponseStatus(HttpStatus.OK)
+	public Response readProductListQueryDsl(ProductSearchCondition condition, Pageable pageable) {
+		return Response.success(productService.readProductListSearchQueryDsl(condition, pageable));
 	}
 
 }

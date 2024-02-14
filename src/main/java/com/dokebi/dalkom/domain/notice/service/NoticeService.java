@@ -11,6 +11,7 @@ import com.dokebi.dalkom.domain.admin.service.AdminService;
 import com.dokebi.dalkom.domain.notice.dto.NoticeCreateRequest;
 import com.dokebi.dalkom.domain.notice.dto.NoticeListResponse;
 import com.dokebi.dalkom.domain.notice.dto.NoticeOneResponse;
+import com.dokebi.dalkom.domain.notice.dto.NoticeSearchCondition;
 import com.dokebi.dalkom.domain.notice.dto.NoticeUpdateRequest;
 import com.dokebi.dalkom.domain.notice.entity.Notice;
 import com.dokebi.dalkom.domain.notice.exception.NoticeNotFoundException;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class NoticeService {
@@ -28,12 +29,10 @@ public class NoticeService {
 	private final NoticeRepository noticeRepository;
 	private final AdminService adminService;
 
-	@Transactional
 	public NoticeOneResponse readNotice(Long noticeSeq) {
 		return noticeRepository.findNotice(noticeSeq);
 	}
 
-	@Transactional
 	public Page<NoticeListResponse> readNoticeList(Pageable pageable) {
 		return noticeRepository.findNoticeList(pageable);
 	}
@@ -65,7 +64,6 @@ public class NoticeService {
 		}
 	}
 
-	@Transactional
 	public Page<NoticeListResponse> readNoticeListBySearch(String nickName, String title, Pageable pageable) {
 		if (nickName != null) {
 			return noticeRepository.findNoticeListByNickname(nickName, pageable);
@@ -74,5 +72,10 @@ public class NoticeService {
 		} else {
 			return noticeRepository.findNoticeList(pageable);
 		}
+	}
+
+	public Page<NoticeListResponse> readNoticeListQuerydslBySearch(NoticeSearchCondition noticeSearchCondition,
+		Pageable pageable) {
+		return noticeRepository.searchNotice(noticeSearchCondition, pageable);
 	}
 }

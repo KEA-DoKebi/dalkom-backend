@@ -159,4 +159,15 @@ public class InquiryService {
 		Inquiry inquiry = inquiryRepository.findByInquirySeq(inquirySeq).orElseThrow(InquiryNotFoundException::new);
 		inquiryRepository.delete(inquiry);
 	}
+
+	public Page<InquiryListResponse> readInquiryListByCategorySearchQuerydsl(Long categorySeq, String title,
+		Pageable pageable) {
+		Page<InquiryListResponse> page = inquiryRepository.findSearchInquiry(
+			categorySeq, title, pageable);
+		if (page.isEmpty()) {
+			throw new InquiryNotFoundException();
+		}
+
+		return page;
+	}
 }

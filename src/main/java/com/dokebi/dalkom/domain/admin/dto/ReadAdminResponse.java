@@ -2,6 +2,7 @@ package com.dokebi.dalkom.domain.admin.dto;
 
 import com.dokebi.dalkom.common.magicnumber.AdminRole;
 import com.dokebi.dalkom.domain.admin.entity.Admin;
+import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,6 +24,7 @@ public class ReadAdminResponse {
 	public String depart;
 	public String roleName;
 
+	@QueryProjection
 	public ReadAdminResponse(Long adminSeq, String adminId, String role, String nickname, String name, String depart) {
 		this.adminSeq = adminSeq;
 		this.adminId = adminId;
