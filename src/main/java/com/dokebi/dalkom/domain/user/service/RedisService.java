@@ -44,14 +44,12 @@ public class RedisService {
 	}
 
 	// redis에 입력받은 key값에 해당하는 사용자의 개인 정보가 있을 경우 이를 반환
-	@Transactional(readOnly = true)
 	public ReadUserSelfDetailResponse getUserDetail(String key) throws JsonProcessingException {
-		String jsonValue = (String)redisTemplate.opsForValue().get(key);
+		Object jsonValue = redisTemplate.opsForValue().get(key);
 		if (jsonValue != null) {
-			return objectMapper.readValue(jsonValue, ReadUserSelfDetailResponse.class);
-		} else {
-			return null;
+			return objectMapper.readValue((String)jsonValue, ReadUserSelfDetailResponse.class);
 		}
+		return null;
 	}
 
 	// 토큰 탈취당했을 때 어떤 방법 통해 삭제해서 해커 공격 방지하는 기능 구현하면 필요할 것 같습니다.
