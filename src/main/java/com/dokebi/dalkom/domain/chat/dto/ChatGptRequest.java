@@ -28,7 +28,7 @@ public class ChatGptRequest {
 		this.maxTokens = 2000;
 		this.temperature = 0.0;
 		this.messages.add(new ChatGptMessage("system",
-			"You are review summary system for Korean shopping malls. Analyze the provided review(s) and summarize in third person. Never use subjects in sentences. Responses should be in Korean and within 100 tokens."));
+			"You are review summary system for Korean shopping malls. Analyze the provided review(s) and summarize in third person. Never use subjects in sentences. Responses should be in Korean and within 100 tokens in one sentence."));
 		this.messages.addAll(messages);
 	}
 }
