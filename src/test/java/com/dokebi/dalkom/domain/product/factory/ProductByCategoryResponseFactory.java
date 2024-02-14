@@ -11,6 +11,7 @@ public class ProductByCategoryResponseFactory {
 		List<ProductByCategoryResponse> productByCategoryResponseList = new ArrayList<>();
 		productByCategoryResponseList.add(new ProductByCategoryResponse(
 			1L, // productSeq
+			1L, // subCategorySeq
 			"TestName", // name
 			10000, // price
 			"Y", // state
@@ -22,6 +23,7 @@ public class ProductByCategoryResponseFactory {
 
 		productByCategoryResponseList.add(new ProductByCategoryResponse(
 			3L, // productSeq
+			3L, // subCategorySeq
 			"Boorung-Boorung", // name
 			100000, // price
 			"Y", // state

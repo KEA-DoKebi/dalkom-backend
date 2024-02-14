@@ -12,7 +12,7 @@ import com.dokebi.dalkom.domain.admin.entity.Admin;
 
 import io.lettuce.core.dynamic.annotation.Param;
 
-public interface AdminRepository extends JpaRepository<Admin, Long> {
+public interface AdminRepository extends JpaRepository<Admin, Long>, AdminRepositoryCustom {
 	boolean existsByNickname(String nickname);
 
 	Optional<Admin> findByAdminId(String adminId);
@@ -27,13 +27,12 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 		"a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) " +
 		"FROM Admin a WHERE a.name LIKE CONCAT('%', :name, '%')")
 	Page<ReadAdminResponse> findAdminListByName(
-		@Param("name") String name,
-		Pageable pageable);
+		@Param("name") String name, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
 		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) "
 		+ "FROM Admin a WHERE (a.adminId LIKE CONCAT('%', :adminId, '%')) ")
-	Page<ReadAdminResponse> findAdminListByAdminId(@Param("adminId") String adminId, Pageable pageable);
+	Page<ReadAdminResponse> findAdminListByAdminId(String adminId, Pageable pageable);
 
 	@Query("SELECT new com.dokebi.dalkom.domain.admin.dto.ReadAdminResponse("
 		+ "a.adminSeq, a.adminId, a.role, a.nickname, a.name, a.depart) "

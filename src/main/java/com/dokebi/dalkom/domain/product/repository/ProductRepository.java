@@ -17,10 +17,10 @@ import com.dokebi.dalkom.domain.product.dto.ReadProductDetailDto;
 import com.dokebi.dalkom.domain.product.dto.ReadProductResponse;
 import com.dokebi.dalkom.domain.product.entity.Product;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom {
 	// PRODUCT-001 - 상위 카테고리로 상품 리스트 조회
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryResponse( "
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "p.productSeq, p.category.categorySeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
 		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
@@ -55,7 +55,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	// PRODUCT-005 - 하위 카테고리 별 상품 목록 조회
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductByCategoryDetailPage( "
-		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "p.productSeq, p.category.categorySeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
 		+ "FROM Product p "
 		+ "LEFT JOIN  OrderDetail od ON p.productSeq = od.product.productSeq "
 		+ "LEFT JOIN Review r ON r.orderDetail.ordrDetailSeq = od.ordrDetailSeq "
@@ -122,6 +122,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 		+ "ORDER BY p.productSeq DESC ")
 	Page<ProductMainResponse> findProductListSearchUserByName(
 		@Param("name") String name, Pageable pageable);
+
+	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductMainResponse( "
+		+ "p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company, AVG(r.rating), COUNT(r)) "
+		+ "FROM Product p "
+		+ "LEFT JOIN OrderDetail od ON p.productSeq = od.product.productSeq "
+		+ "LEFT JOIN Review r ON od.ordrDetailSeq = r.orderDetail.ordrDetailSeq "
+		+ "WHERE p.state != 'N' AND p.productSeq IN :productSeqList "
+		+ "GROUP BY p.productSeq, p.name, p.price, p.state, p.imageUrl, p.company "
+		+ "ORDER BY FIELD(p.productSeq, :productSeqList)")
+	Page<ProductMainResponse> findProductListSearchBySearchValue(
+		@Param("productSeqList") List<Long> productSeqList, Pageable pageable);
 
 	@Query("SELECT NEW com.dokebi.dalkom.domain.product.dto.ProductCompareDetailDto( "
 		+ "p.name, p.imageUrl, p.price) "

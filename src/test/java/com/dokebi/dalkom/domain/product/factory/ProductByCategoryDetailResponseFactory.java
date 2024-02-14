@@ -11,6 +11,7 @@ public class ProductByCategoryDetailResponseFactory {
 		List<ProductByCategoryDetailPage> productByCategoryDetailPageList = new ArrayList<>();
 		productByCategoryDetailPageList.add(new ProductByCategoryDetailPage(
 			1L, // productSeq
+			1L,
 			"TestName", // name
 			10000, // price
 			"Y", // state
@@ -22,6 +23,7 @@ public class ProductByCategoryDetailResponseFactory {
 
 		productByCategoryDetailPageList.add(new ProductByCategoryDetailPage(
 			3L, // productSeq
+			3L,
 			"Boorung-Boorung", // name
 			100000, // price
 			"Y", // state

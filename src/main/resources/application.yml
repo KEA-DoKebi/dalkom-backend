@@ -3,13 +3,11 @@ spring:
   redis:
     host: ${LOCAL_REDIS_IP}
     port: ${LOCAL_REDIS_PORT}
-    username: ${LOCAL_REDIS_USERNAME}
-    password: ${LOCAL_REDIS_PASSWORD}
   datasource:
     url: ${LOCAL_DATABASE_URL}
-    driver-class-name: org.mariadb.jdbc.Driver
     username: ${LOCAL_DATABASE_USERNAME}
     password: ${LOCAL_DATABASE_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     database: mysql
     open-in-view: false
@@ -41,10 +39,6 @@ spring:
     level:
       org.hibernate.SQL: debug
       org.hibernate.type: trace
-      hello:
-        board:
-          repository:
-            mybatis: trace
 
   # 서버 포트 설정
 server:
@@ -71,3 +65,7 @@ jira:
 mybatis:
   type-aliases-package: hello.board.domain
   config-location: classpath:mybatis-config.xml
+
+elastic:
+  url: ${ELASTIC_URL} # Elastic cloud의 elasticsearch endpoint
+  key: ${ELASTIC_API_KEY} # Elastic API KEY
