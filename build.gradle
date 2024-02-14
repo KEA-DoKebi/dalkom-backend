@@ -111,6 +111,9 @@ bootJar {
     archivesBaseName = 'dalkom'
     archiveFileName = 'dalkom.jar'
 }
+clean {
+    delete file('src/main/generated')
+}
 
 sonarqube {
     properties {
