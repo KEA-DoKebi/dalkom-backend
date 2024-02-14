@@ -3,6 +3,7 @@ package com.dokebi.dalkom.domain.inquiry.dto;
 import java.time.LocalDateTime;
 
 import com.dokebi.dalkom.common.magicnumber.InquiryAnswerState;
+import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -23,6 +24,7 @@ public class InquiryListResponse {
 	private String answerState;
 	private String answerStateName;
 
+	@QueryProjection
 	public InquiryListResponse(Long inquirySeq, String title, LocalDateTime createdAt, String answerState) {
 		this.inquirySeq = inquirySeq;
 		this.title = title;
