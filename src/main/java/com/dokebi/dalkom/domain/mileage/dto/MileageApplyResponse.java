@@ -2,8 +2,6 @@ package com.dokebi.dalkom.domain.mileage.dto;
 
 import java.time.LocalDateTime;
 
-import com.dokebi.dalkom.common.magicnumber.MileageApplyState;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +38,7 @@ public class MileageApplyResponse {
 		this.approvedState = approvedState;
 		this.approvedAt = approvedAt;
 		this.createdAt = createdAt;
-		this.approvedStateName = MileageApplyState.getNameByState(approvedState);
+		this.approvedStateName = approvedState;
 	}
 
 }

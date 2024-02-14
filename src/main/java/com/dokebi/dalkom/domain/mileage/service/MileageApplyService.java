@@ -64,10 +64,10 @@ public class MileageApplyService {
 			throw new MileageApplyNotFoundException();
 		}
 
-		if (approvedState.equals(MileageApplyState.WAITING.getState())) {
+		if (approvedState.equals(MileageApplyState.WAIT)) {
 			mileageApply.setApprovedState(request.getApprovedState());
 
-			if (request.getApprovedState().equals(MileageApplyState.YES.getState())) {
+			if (request.getApprovedState().equals(MileageApplyState.YES)) {
 				mileageService.createMileageHistory(user, amount, totalMileage,
 					MileageHistoryState.CHARGED.getState());
 				user.setMileage(totalMileage);
@@ -75,7 +75,7 @@ public class MileageApplyService {
 				// 메일 전송
 				EmailMessage emailMessage = new EmailMessage(user.getEmail(), "마일리지 신청이 승인되었습니다.");
 				emailService.sendMailMileage(emailMessage, "승인", mileageApply.getCreatedAt(), mileageApply.getAmount());
-			} else if (request.getApprovedState().equals(MileageApplyState.NO.getState())) {
+			} else if (request.getApprovedState().equals(MileageApplyState.NO)) {
 				mileageService.createMileageHistory(user, 0, user.getMileage(),
 					MileageHistoryState.DENIED.getState());
 
@@ -94,7 +94,7 @@ public class MileageApplyService {
 		User user = userService.readUserByUserSeq(userSeq);
 		// 마일리지 신청 내역 테이블에 대기중인 내역이 있는지 확인.
 		isApprovedStateIsWaitByUserSeq(userSeq);
-		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAITING.getState());
+		MileageApply mileageApply = new MileageApply(user, request.getAmount(), MileageApplyState.WAIT);
 		mileageApplyRepository.save(mileageApply);
 
 	}
