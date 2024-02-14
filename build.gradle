@@ -82,6 +82,13 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+tasks.named('compileQuerydsl') {
+    enabled = false // compileQuerydsl 태스크 비활성화
+}
+
+tasks.named('initQuerydslSourcesDir') {
+    enabled = false // initQuerydslSourcesDir 태스크 비활성화
+}
 
 //querydsl 추가
 def querydslDir = "$buildDir/generated/querydsl"
