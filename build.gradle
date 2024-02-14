@@ -146,6 +146,11 @@ jacocoTestReport {
         html.required = true
     }
 
+    def QDomains = []
+
+    for (qPattern in '**/QA'..'**/QZ') {
+        QDomains.add(qPattern + '*')
+    }
 
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
@@ -158,9 +163,11 @@ jacocoTestReport {
                     "com/dokebi/dalkom/domain/**/exception",
                     "com/dokebi/dalkom/domain/chat/**",
                     "com/dokebi/dalkom/domain/user/handler",
-            ])
+
+            ] + QDomains)
         }))
     }
+    finalizedBy jacocoTestCoverageVerification
 }
 
 
