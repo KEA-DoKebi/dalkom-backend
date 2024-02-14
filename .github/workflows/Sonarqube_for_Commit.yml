@@ -32,7 +32,7 @@ jobs:
       run: chmod +x ./gradlew
 
     - name: Build with Gradle
-      run: ./gradlew test jacocoTestReport sonarqube
+      run: ./gradlew clean test jacocoTestReport sonarqube
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
