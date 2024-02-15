@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <!-- DTO 클래스의 패키지 경로는 실제 프로젝트의 경로에 맞게 수정해야 함 -->
+        <typeAlias alias="MonthlyPriceListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyPriceListDto"/>
+        <typeAlias alias="MonthlyProductListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyProductListDto"/>
+        <typeAlias alias="MonthlyCategoryListDto" type="com.dokebi.dalkom.domain.admin.dto.MonthlyCategoryListDto"/>
+    </typeAliases>
+
+    <!-- 데이터베이스 연결 및 트랜잭션 관리 설정 -->
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"
+                          value="jdbc:mysql://localhost:3306/yourDatabase?useSSL=false&amp;serverTimezone=UTC"/>
+                <property name="username" value="yourUsername"/>
+                <property name="password" value="yourPassword"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 매퍼 파일 위치 설정 -->
+    <mappers>
+        <!-- 매퍼 XML 파일의 경로는 실제 프로젝트의 경로에 맞게 수정해야 함 -->
+        <mapper resource="com/dokebi/dalkom/domain/admin/mapper/AdminMapper.xml"/>
+        <!-- 추가적인 매퍼 파일이 있다면 여기에 정의 -->
+    </mappers>
+</configuration>

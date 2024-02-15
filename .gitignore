@@ -1,6 +1,8 @@
 HELP.md
+.infisical.json
 .gradle
 build/
+htmlReport/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -16,6 +18,7 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+htmlReport/
 
 ### IntelliJ IDEA ###
 .idea

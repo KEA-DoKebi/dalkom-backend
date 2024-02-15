@@ -1,0 +1,32 @@
+name: Continuous Deployment
+
+on :
+  push :
+    branches :
+      - prod
+
+jobs:
+  Push_to_Kakao:
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configuration Injection
+        run :
+          source /root/workflow_helper/Bash_files/pull_config.sh
+
+      - name: Build and Push Images
+        run: |
+          source /root/workflow_helper/Bash_files/build_and_push.sh
+
+  Run_on_Kakao :
+    runs-on: self-hosted
+    needs: Push_to_Kakao
+
+    steps:
+      - name: Deploy to Blue
+        run: |
+          source /root/workflow_helper/Bash_files/credentials.sh
+          source /root/workflow_helper/Bash_files/deploying.sh
