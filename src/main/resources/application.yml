@@ -69,3 +69,4 @@ mybatis:
 elastic:
   url: ${ELASTIC_URL} # Elastic cloud의 elasticsearch endpoint
   key: ${ELASTIC_API_KEY} # Elastic API KEY
+  
